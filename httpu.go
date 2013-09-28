@@ -67,6 +67,7 @@ func (httpu *HTTPUClient) Do(req *http.Request, timeout time.Duration, numSends 
 			return nil, fmt.Errorf("httpu: wrote %d bytes rather than full %d in request",
 				n, len(requestBuf.Bytes()))
 		}
+		time.Sleep(10 * time.Millisecond)
 	}
 
 	// Await responses until timeout.
