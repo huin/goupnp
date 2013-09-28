@@ -1,122 +1,98 @@
+// goupnp is an implementation of a client for UPnP devices.
 package goupnp
 
 import (
 	"encoding/xml"
 	"fmt"
-	"log"
 	"net/http"
+	"net/url"
 )
 
+// Non-exhaustive set of UPnP service types.
 const (
-	// Search Target for InternetGatewayDevice.
-	SearchTargetIGD = "urn:schemas-upnp-org:device:InternetGatewayDevice:1"
+	ServiceTypeLayer3Forwarding         = "urn:schemas-upnp-org:service:Layer3Forwarding:1"
+	ServiceTypeWANCommonInterfaceConfig = "WANCommonInterfaceConfig:1"
+	// WANPPPConnection is typically useful with regard to the external IP and
+	// port forwarding.
+	ServiceTypeWANPPPConnection = "WANPPPConnection:1"
 )
 
-// DiscoverIGD attempts to find Internet Gateway Devices.
-//
-// TODO: Fix implementation to discover multiple. Currently it will find a
-// maximum of one.
-func DiscoverIGD() ([]*IGD, error) {
+// Non-exhaustive set of UPnP device types.
+const (
+	// Device type for InternetGatewayDevice.
+	// http://upnp.org/specs/gw/upnp-gw-internetgatewaydevice-v1-device.pdf
+	DeviceTypeInternetGatewayDevice = "urn:schemas-upnp-org:device:InternetGatewayDevice:1"
+)
+
+type ContextError struct {
+	Context string
+	Err     error
+}
+
+func (err ContextError) Error() string {
+	return fmt.Sprintf("%s: %v", err.Context, err.Err)
+}
+
+type MaybeRootDevice struct {
+	Root *RootDevice
+	Err  error
+}
+
+// DiscoverDevices attempts to find targets of the given type. searchTarget is
+// typically a value from a DeviceType* constant. An error is returned for
+// errors while attempting to send the query. An error or RootDevice is
+// returned for each discovered service.
+func DiscoverDevices(searchTarget string) ([]MaybeRootDevice, error) {
 	httpu, err := NewHTTPUClient()
 	if err != nil {
 		return nil, err
 	}
-	responses, err := SSDPRawSearch(httpu, SearchTargetIGD, 2, 3)
+	defer httpu.Close()
+	responses, err := SSDPRawSearch(httpu, string(searchTarget), 2, 3)
+	if err != nil {
+		return nil, err
+	}
 
-	results := make([]*IGD, 0, len(responses))
-	for _, response := range responses {
+	results := make([]MaybeRootDevice, len(responses))
+	for i, response := range responses {
+		maybe := &results[i]
 		loc, err := response.Location()
 		if err != nil {
-			log.Printf("goupnp: unexpected bad location from search: %v", err)
+			maybe.Err = ContextError{"unexpected bad location from search", err}
 			continue
 		}
-		igd, err := requestIgd(loc.String())
+		locStr := loc.String()
+		root := new(RootDevice)
+		if err := requestXml(locStr, DeviceXMLNamespace, root); err != nil {
+			maybe.Err = ContextError{fmt.Sprintf("error requesting root device details from %q", locStr), err}
+			continue
+		}
+		urlBase, err := url.Parse(root.URLBaseStr)
 		if err != nil {
-			log.Printf("goupnp: error requesting IGD: %v", err)
+			maybe.Err = ContextError{fmt.Sprintf("error parsing URLBase %q from %q: %v", root.URLBaseStr, locStr), err}
 			continue
 		}
-		results = append(results, igd)
+		root.SetURLBase(urlBase)
+		maybe.Root = root
 	}
 
 	return results, nil
 }
 
-// IGD defines the interface for an Internet Gateway Device.
-type IGD struct {
-	xml xmlRootDevice
-}
-
-func requestIgd(serviceUrl string) (*IGD, error) {
-	resp, err := http.Get(serviceUrl)
+func requestXml(url string, defaultSpace string, doc interface{}) error {
+	resp, err := http.Get(url)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
-		return nil, fmt.Errorf("goupnp: got response status %s from IGD at %q",
-			resp.Status, serviceUrl)
+		return fmt.Errorf("goupnp: got response status %s from %q",
+			resp.Status, url)
 	}
 
 	decoder := xml.NewDecoder(resp.Body)
-	decoder.DefaultSpace = deviceXmlNs
-	var xml xmlRootDevice
-	if err = decoder.Decode(&xml); err != nil {
-		return nil, err
-	}
-	log.Printf("%+v", xml)
+	decoder.DefaultSpace = defaultSpace
 
-	return &IGD{xml}, nil
-}
-
-func (igd *IGD) Device() *Device {
-	return &Device{
-		igd.xml.URLBase,
-		igd.xml.Device,
-	}
-}
-
-func (igd *IGD) String() string {
-	return fmt.Sprintf("IGD{UDN: %q friendlyName: %q}",
-		igd.xml.Device.UDN, igd.xml.Device.FriendlyName)
-}
-
-type Device struct {
-	urlBase string
-	xml     xmlDevice
-}
-
-func (device *Device) String() string {
-	return fmt.Sprintf("Device{friendlyName: %q}", device.xml.FriendlyName)
-}
-
-func (device *Device) Devices() []*Device {
-	devices := make([]*Device, len(device.xml.Devices))
-	for i, childXml := range device.xml.Devices {
-		devices[i] = &Device{
-			device.urlBase,
-			childXml,
-		}
-	}
-	return devices
-}
-
-func (device *Device) Services() []*Service {
-	srvs := make([]*Service, len(device.xml.Services))
-	for i, childXml := range device.xml.Services {
-		srvs[i] = &Service{
-			device.urlBase,
-			childXml,
-		}
-	}
-	return srvs
-}
-
-type Service struct {
-	urlBase string
-	xml     xmlService
-}
-
-func (srv *Service) String() string {
-	return fmt.Sprintf("Service{serviceType: %q}", srv.xml.ServiceType)
+	return decoder.Decode(doc)
 }
