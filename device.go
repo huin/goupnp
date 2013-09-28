@@ -54,6 +54,7 @@ type Device struct {
 func (device *Device) SetURLBase(urlBase *url.URL) {
 	device.ManufacturerURL.SetURLBase(urlBase)
 	device.ModelURL.SetURLBase(urlBase)
+	device.PresentationURL.SetURLBase(urlBase)
 	for _, icon := range device.Icons {
 		icon.SetURLBase(urlBase)
 	}
