@@ -4,14 +4,20 @@ package goupnp
 
 import (
 	"encoding/xml"
+	"errors"
 	"fmt"
 	"net/url"
 )
+
+// TODO: Do the sub-structures have to be pointers?
 
 const (
 	DeviceXMLNamespace = "urn:schemas-upnp-org:device-1-0"
 )
 
+// RootDevice is the device description as described by section 2.3 "Device
+// description" in
+// http://upnp.org/specs/arch/UPnP-arch-DeviceArchitecture-v1.1.pdf
 type RootDevice struct {
 	Name        xml.Name    `xml:"root`
 	SpecVersion SpecVersion `xml:"specVersion"`
@@ -98,6 +104,17 @@ func (srv *Service) SetURLBase(urlBase *url.URL) {
 
 func (srv *Service) String() string {
 	return fmt.Sprintf("Service ID %s : %s", srv.ServiceId, srv.ServiceType)
+}
+
+func (srv *Service) RequestSCDP() (*SCPD, error) {
+	if !srv.SCPDURL.Ok {
+		return nil, errors.New("bad/missing SCPD URL, or no URLBase has been set")
+	}
+	scpd := new(SCPD)
+	if err := requestXml(srv.SCPDURL.URL.String(), SCPDXMLNamespace, scpd); err != nil {
+		return nil, err
+	}
+	return scpd, nil
 }
 
 type URLField struct {
