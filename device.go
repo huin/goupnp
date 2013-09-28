@@ -84,15 +84,15 @@ func (icon *Icon) SetURLBase(url *url.URL) {
 type Service struct {
 	ServiceType string   `xml:"serviceType"`
 	ServiceId   string   `xml:"serviceId"`
-	SCPD        URLField `xml:"SCPDURL"`
-	Control     URLField `xml:"controlURL"`
-	EventSub    URLField `xml:"eventSubURL"`
+	SCPDURL     URLField `xml:"SCPDURL"`
+	ControlURL  URLField `xml:"controlURL"`
+	EventSubURL URLField `xml:"eventSubURL"`
 }
 
 func (srv *Service) SetURLBase(urlBase *url.URL) {
-	srv.SCPD.SetURLBase(urlBase)
-	srv.Control.SetURLBase(urlBase)
-	srv.EventSub.SetURLBase(urlBase)
+	srv.SCPDURL.SetURLBase(urlBase)
+	srv.ControlURL.SetURLBase(urlBase)
+	srv.EventSubURL.SetURLBase(urlBase)
 }
 
 func (srv *Service) String() string {
