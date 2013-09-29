@@ -30,8 +30,8 @@ func displayDevice(indent indentLevel, device *goupnp.Device) {
 			}
 		}
 	}
-	for _, subdev := range device.Devices {
-		displayDevice(indent+1, subdev)
+	for i := range device.Devices {
+		displayDevice(indent+1, &device.Devices[i])
 	}
 }
 
@@ -44,7 +44,7 @@ func main() {
 			if maybeRootDevice.Err != nil {
 				fmt.Println(maybeRootDevice.Err)
 			} else {
-				displayDevice(0, maybeRootDevice.Root.Device)
+				displayDevice(0, &maybeRootDevice.Root.Device)
 			}
 		}
 	}

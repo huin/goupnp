@@ -23,7 +23,7 @@ type RootDevice struct {
 	SpecVersion SpecVersion `xml:"specVersion"`
 	URLBase     url.URL     `xml:"-"`
 	URLBaseStr  string      `xml:"URLBase"`
-	Device      *Device     `xml:"device"`
+	Device      Device      `xml:"device"`
 }
 
 func (root *RootDevice) SetURLBase(urlBase *url.URL) {
@@ -38,20 +38,20 @@ type SpecVersion struct {
 }
 
 type Device struct {
-	DeviceType       string     `xml:"deviceType"`
-	FriendlyName     string     `xml:"friendlyName"`
-	Manufacturer     string     `xml:"manufacturer"`
-	ManufacturerURL  URLField   `xml:"manufacturerURL"`
-	ModelDescription string     `xml:"modelDescription"`
-	ModelName        string     `xml:"modelName"`
-	ModelNumber      string     `xml:"modelNumber"`
-	ModelURL         URLField   `xml:"modelURL"`
-	SerialNumber     string     `xml:"serialNumber"`
-	UDN              string     `xml:"UDN"`
-	UPC              string     `xml:"UPC,omitempty"`
-	Icons            []*Icon    `xml:"iconList>icon,omitempty"`
-	Services         []*Service `xml:"serviceList>service,omitempty"`
-	Devices          []*Device  `xml:"deviceList>device,omitempty"`
+	DeviceType       string    `xml:"deviceType"`
+	FriendlyName     string    `xml:"friendlyName"`
+	Manufacturer     string    `xml:"manufacturer"`
+	ManufacturerURL  URLField  `xml:"manufacturerURL"`
+	ModelDescription string    `xml:"modelDescription"`
+	ModelName        string    `xml:"modelName"`
+	ModelNumber      string    `xml:"modelNumber"`
+	ModelURL         URLField  `xml:"modelURL"`
+	SerialNumber     string    `xml:"serialNumber"`
+	UDN              string    `xml:"UDN"`
+	UPC              string    `xml:"UPC,omitempty"`
+	Icons            []Icon    `xml:"iconList>icon,omitempty"`
+	Services         []Service `xml:"serviceList>service,omitempty"`
+	Devices          []Device  `xml:"deviceList>device,omitempty"`
 
 	// Extra observed elements:
 	PresentationURL URLField `xml:"presentationURL"`
