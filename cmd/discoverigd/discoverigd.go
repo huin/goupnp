@@ -19,7 +19,16 @@ func (i indentLevel) String() string {
 func displayDevice(indent indentLevel, device *goupnp.Device) {
 	fmt.Println(indent.String(), device)
 	for _, srv := range device.Services {
-		fmt.Println((indent + 1).String(), srv)
+		fmt.Println((indent + 1).String(), srv, srv.SCPDURL.URL.String(), srv.ControlURL.URL.String())
+		fmt.Println(goupnp.ServiceTypeWANPPPConnection, srv.ServiceType)
+		if srv.ServiceType == goupnp.ServiceTypeWANPPPConnection {
+			results, err := goupnp.PerformSoapAction(goupnp.ServiceTypeWANPPPConnection, "GetExternalIPAddress", &srv.ControlURL.URL, nil)
+			if err != nil {
+				fmt.Println(err)
+			} else {
+				fmt.Println(results)
+			}
+		}
 	}
 	for _, subdev := range device.Devices {
 		displayDevice(indent+1, subdev)

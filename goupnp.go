@@ -11,11 +11,11 @@ import (
 // Non-exhaustive set of UPnP service types.
 const (
 	ServiceTypeLayer3Forwarding         = "urn:schemas-upnp-org:service:Layer3Forwarding:1"
-	ServiceTypeWANCommonInterfaceConfig = "urn:schemas-upnp-org:WANCommonInterfaceConfig:1"
+	ServiceTypeWANCommonInterfaceConfig = "urn:schemas-upnp-org:service:WANCommonInterfaceConfig:1"
 	// WANPPPConnection is typically useful with regard to the external IP and
 	// port forwarding.
 	// http://upnp.org/specs/gw/UPnP-gw-WANPPPConnection-v1-Service.pdf
-	ServiceTypeWANPPPConnection = "urn:schemas-upnp-org:WANPPPConnection:1"
+	ServiceTypeWANPPPConnection = "urn:schemas-upnp-org:service:WANPPPConnection:1"
 )
 
 // Non-exhaustive set of UPnP device types.
