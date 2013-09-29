@@ -36,7 +36,7 @@ func displayDevice(indent indentLevel, device *goupnp.Device) {
 }
 
 func main() {
-	if results, err := goupnp.DiscoverDevices(goupnp.DeviceTypeInternetGatewayDevice); err != nil {
+	if results, err := goupnp.DiscoverDevices(goupnp.ServiceTypeWANPPPConnection); err != nil {
 		fmt.Println("Error discovering InternetGatewayDevice with UPnP: ", err)
 	} else {
 		fmt.Printf("Discovered %d InternetGatewayDevices:\n", len(results))
