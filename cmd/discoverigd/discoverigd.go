@@ -24,7 +24,7 @@ func displayDevice(indent indentLevel, device *goupnp.Device) {
 		if srv.ServiceType == goupnp.ServiceTypeWANPPPConnection {
 			results, err := goupnp.PerformSoapAction(goupnp.ServiceTypeWANPPPConnection, "GetExternalIPAddress", &srv.ControlURL.URL, nil)
 			if err != nil {
-				fmt.Println(err)
+				fmt.Println("Error calling GetExternalIPAddress:", err)
 			} else {
 				fmt.Println(results)
 			}

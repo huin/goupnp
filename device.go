@@ -59,14 +59,14 @@ func (device *Device) SetURLBase(urlBase *url.URL) {
 	device.ManufacturerURL.SetURLBase(urlBase)
 	device.ModelURL.SetURLBase(urlBase)
 	device.PresentationURL.SetURLBase(urlBase)
-	for _, icon := range device.Icons {
-		icon.SetURLBase(urlBase)
+	for i := range device.Icons {
+		device.Icons[i].SetURLBase(urlBase)
 	}
-	for _, srv := range device.Services {
-		srv.SetURLBase(urlBase)
+	for i := range device.Services {
+		device.Services[i].SetURLBase(urlBase)
 	}
-	for _, child := range device.Devices {
-		child.SetURLBase(urlBase)
+	for i := range device.Devices {
+		device.Devices[i].SetURLBase(urlBase)
 	}
 }
 
