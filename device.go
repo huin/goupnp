@@ -9,8 +9,6 @@ import (
 	"net/url"
 )
 
-// TODO: Do the sub-structures have to be pointers?
-
 const (
 	DeviceXMLNamespace = "urn:schemas-upnp-org:device-1-0"
 )
