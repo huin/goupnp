@@ -69,7 +69,6 @@ func PerformSoapAction(actionNamespace, actionName string, url *url.URL, argumen
 	}
 
 	decoder := xml.NewDecoder(response.Body)
-	fmt.Println(response.Header)
 	var responseEnv SoapEnvelope
 	if err := decoder.Decode(&responseEnv); err != nil {
 		return nil, err
