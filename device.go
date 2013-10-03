@@ -17,7 +17,7 @@ const (
 // description" in
 // http://upnp.org/specs/arch/UPnP-arch-DeviceArchitecture-v1.1.pdf
 type RootDevice struct {
-	Name        xml.Name    `xml:"root`
+	XMLName     xml.Name    `xml:"root"`
 	SpecVersion SpecVersion `xml:"specVersion"`
 	URLBase     url.URL     `xml:"-"`
 	URLBaseStr  string      `xml:"URLBase"`
@@ -53,6 +53,32 @@ type Device struct {
 
 	// Extra observed elements:
 	PresentationURL URLField `xml:"presentationURL"`
+}
+
+func (device *Device) VisitDevices(visitor func(*Device)) {
+	visitor(device)
+	for i := range device.Devices {
+		device.Devices[i].VisitDevices(visitor)
+	}
+}
+
+func (device *Device) VisitServices(visitor func(*Service)) {
+	device.VisitDevices(func(d *Device) {
+		for i := range device.Services {
+			visitor(&d.Services[i])
+		}
+	})
+}
+
+func (device *Device) FindService(serviceType string) []*Service {
+	var services []*Service
+	device.VisitServices(func(s *Service) {
+		fmt.Println(s.ServiceType)
+		if s.ServiceType == serviceType {
+			services = append(services, s)
+		}
+	})
+	return services
 }
 
 func (device *Device) SetURLBase(urlBase *url.URL) {

@@ -19,16 +19,7 @@ func (i indentLevel) String() string {
 func displayDevice(indent indentLevel, device *goupnp.Device) {
 	fmt.Println(indent.String(), device)
 	for _, srv := range device.Services {
-		fmt.Println((indent + 1).String(), srv, srv.SCPDURL.URL.String(), srv.ControlURL.URL.String())
-		fmt.Println(goupnp.ServiceTypeWANPPPConnection, srv.ServiceType)
-		if srv.ServiceType == goupnp.ServiceTypeWANPPPConnection {
-			results, err := goupnp.PerformSoapAction(goupnp.ServiceTypeWANPPPConnection, "GetExternalIPAddress", &srv.ControlURL.URL, nil)
-			if err != nil {
-				fmt.Println("Error calling GetExternalIPAddress:", err)
-			} else {
-				fmt.Println(results)
-			}
-		}
+		fmt.Printf("%sService %s\n", indent+1, srv.ServiceType)
 	}
 	for i := range device.Devices {
 		displayDevice(indent+1, &device.Devices[i])
@@ -43,9 +34,26 @@ func main() {
 		for _, maybeRootDevice := range results {
 			if maybeRootDevice.Err != nil {
 				fmt.Println(maybeRootDevice.Err)
-			} else {
-				displayDevice(0, &maybeRootDevice.Root.Device)
+				continue
 			}
+
+			device := &maybeRootDevice.Root.Device
+
+			displayDevice(0, device)
+			wanPPPSrvs := device.FindService(goupnp.ServiceTypeWANPPPConnection)
+			if len(wanPPPSrvs) < 1 {
+				fmt.Printf("Could not find expected service on device %s\n", device.FriendlyName)
+				continue
+			} else if len(wanPPPSrvs) > 1 {
+				fmt.Printf("Got more than one expected service on device %s\n", device.FriendlyName)
+			}
+			srv := wanPPPSrvs[0]
+			results, err := goupnp.PerformSoapAction(goupnp.ServiceTypeWANPPPConnection, "GetExternalIPAddress", &srv.ControlURL.URL, nil)
+			if err != nil {
+				fmt.Printf("Failed to GetExternalIPAddress from %s: %v\n", device.FriendlyName, err)
+				continue
+			}
+			fmt.Printf("Got GetExternalIPAddress result from %s: %v\n", device.FriendlyName, results)
 		}
 	}
 }

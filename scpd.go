@@ -12,7 +12,7 @@ const (
 // description" in
 // http://upnp.org/specs/arch/UPnP-arch-DeviceArchitecture-v1.1.pdf
 type SCPD struct {
-	Name           xml.Name        `xml:"scpd"`
+	XMLName        xml.Name        `xml:"scpd"`
 	ConfigId       string          `xml:"configId,attr"`
 	SpecVersion    SpecVersion     `xml:"specVersion"`
 	Actions        []Action        `xml:"actionList>action"`

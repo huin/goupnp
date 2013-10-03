@@ -74,6 +74,10 @@ func PerformSoapAction(actionNamespace, actionName string, url *url.URL, argumen
 		return nil, err
 	}
 
+	if responseEnv.Body.Fault != nil {
+		return nil, responseEnv.Body.Fault
+	}
+
 	results := make([]NameValue, len(responseEnv.Body.Action.Arguments))
 	for i, soapArg := range responseEnv.Body.Action.Arguments {
 		results[i] = NameValue{
@@ -92,7 +96,18 @@ type SoapEnvelope struct {
 }
 
 type SoapBody struct {
+	Fault  *SoapFault `xml:"Fault"`
 	Action SoapAction `xml:",any"`
+}
+
+type SoapFault struct {
+	FaultCode   string `xml:"faultcode"`
+	FaultString string `xml:"faultstring"`
+	Detail      string `xml:"detail"`
+}
+
+func (err *SoapFault) Error() string {
+	return fmt.Sprintf("SOAP fault: %s", err.FaultString)
 }
 
 type SoapAction struct {
