@@ -44,10 +44,11 @@ type MaybeRootDevice struct {
 	Err  error
 }
 
-// DiscoverDevices attempts to find targets of the given type. searchTarget is
-// typically a value from a DeviceType* or ServiceType* constant. An error is
-// returned for errors while attempting to send the query. An error or
-// RootDevice is returned for each discovered service.
+// DiscoverDevices attempts to find targets of the given type. This is
+// typically the entry-point for this package. searchTarget is typically a
+// value from a DeviceType* or ServiceType* constant. An error is returned for
+// errors while attempting to send the query. An error or RootDevice is
+// returned for each discovered RootDevice.
 func DiscoverDevices(searchTarget string) ([]MaybeRootDevice, error) {
 	httpu, err := httpu.NewHTTPUClient()
 	if err != nil {
