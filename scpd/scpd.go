@@ -37,6 +37,49 @@ func (scpd *SCPD) Clean() {
 	}
 }
 
+var dataTypeToGoKindName = map[string]string{
+	"ui1":   "byte",
+	"ui2":   "uint16",
+	"ui4":   "uint32",
+	"i1":    "int8",
+	"i2":    "int16",
+	"i4":    "int32",
+	"int":   "int64",
+	"float": "float32",
+	"r4":    "float32",
+	"r8":    "float64",
+	// "fixed.14.4" ~ "float64"
+	"number": "float64",
+	"char":   "string",
+	"string": "string",
+	// "date"
+	// "dateTime"
+	// "dateTime.tz"
+	// "boolean"
+	// "bin.base64"
+	// "bin.hex"
+	// "uri"
+	// "uuid"
+}
+
+// Returns the name of the Go "kind" of type for the named state variable. If
+// the state variable is unknown, returns default_.
+func (scpd *SCPD) GoKindNameForVariable(variable string, default_ string) string {
+	for i := range scpd.StateVariables {
+		v := &scpd.StateVariables[i]
+		if v.Name != variable {
+			continue
+		}
+
+		if kindName, ok := dataTypeToGoKindName[v.DataType.Name]; ok {
+			return kindName
+		} else {
+			return default_
+		}
+	}
+	return default_
+}
+
 // SpecVersion is part of a SCPD document, describes the version of the
 // specification that the data adheres to.
 type SpecVersion struct {

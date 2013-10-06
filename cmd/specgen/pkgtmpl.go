@@ -32,18 +32,18 @@ type {{$srvIdent}} struct {
 
 // {{$reqType}} is the XML structure for the input arguments for action {{.Name}}.
 type {{$reqType}} struct {{"{"}}{{range .Arguments}}{{if .IsInput}}
-	{{.Name}} string
+	{{.Name}} {{$srv.SCPD.GoKindNameForVariable .RelatedStateVariable "string"}}
 {{end}}{{end}}}
 
 // {{$respType}} is the XML structure for the output arguments for action {{.Name}}.
 type {{$respType}} struct {{"{"}}{{range .Arguments}}{{if .IsOutput}}
-	{{.Name}} string
+	{{.Name}} {{$srv.SCPD.GoKindNameForVariable .RelatedStateVariable "string"}}
 {{end}}{{end}}}
 
 func (client *{{$srvIdent}}) {{.Name}}({{range .Arguments}}{{if .IsInput}}
-	{{.Name}} string,
+	{{.Name}} {{$srv.SCPD.GoKindNameForVariable .RelatedStateVariable "string"}},
 {{end}}{{end}}) ({{range .Arguments}}{{if .IsOutput}}
-	{{.Name}} string,
+	{{.Name}} {{$srv.SCPD.GoKindNameForVariable .RelatedStateVariable "string"}},
 {{end}}{{end}} err error) {
 	request := {{$reqType}}{
 {{range .Arguments}}{{if .IsInput}}
