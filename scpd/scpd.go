@@ -62,22 +62,29 @@ var dataTypeToGoKindName = map[string]string{
 	// "uuid"
 }
 
+func (scpd *SCPD) GetStateVariable(variable string) *StateVariable {
+	for i := range scpd.StateVariables {
+		v := &scpd.StateVariables[i]
+		if v.Name == variable {
+			return v
+		}
+	}
+	return nil
+}
+
 // Returns the name of the Go "kind" of type for the named state variable. If
 // the state variable is unknown, returns default_.
 func (scpd *SCPD) GoKindNameForVariable(variable string, default_ string) string {
-	for i := range scpd.StateVariables {
-		v := &scpd.StateVariables[i]
-		if v.Name != variable {
-			continue
-		}
-
-		if kindName, ok := dataTypeToGoKindName[v.DataType.Name]; ok {
-			return kindName
-		} else {
-			return default_
-		}
+	v := scpd.GetStateVariable(variable)
+	if v == nil {
+		return default_
 	}
-	return default_
+
+	if kindName, ok := dataTypeToGoKindName[v.DataType.Name]; ok {
+		return kindName
+	} else {
+		return default_
+	}
 }
 
 // SpecVersion is part of a SCPD document, describes the version of the
@@ -122,13 +129,13 @@ func (arg *Argument) IsOutput() bool {
 }
 
 type StateVariable struct {
-	Name              string            `xml:"name"`
-	SendEvents        string            `xml:"sendEvents,attr"` // yes|no
-	Multicast         string            `xml:"multicast,attr"`  // yes|no
-	DataType          DataType          `xml:"dataType"`
-	DefaultValue      string            `xml:"defaultValue"`
-	AllowedValueRange AllowedValueRange `xml:"allowedValueRange"`
-	AllowedValue      []string          `xml:"allowedValueList>allowedValue"`
+	Name              string             `xml:"name"`
+	SendEvents        string             `xml:"sendEvents,attr"` // yes|no
+	Multicast         string             `xml:"multicast,attr"`  // yes|no
+	DataType          DataType           `xml:"dataType"`
+	DefaultValue      string             `xml:"defaultValue"`
+	AllowedValueRange *AllowedValueRange `xml:"allowedValueRange"`
+	AllowedValues     []string           `xml:"allowedValueList>allowedValue"`
 }
 
 func (v *StateVariable) clean() {
@@ -137,9 +144,11 @@ func (v *StateVariable) clean() {
 	cleanWhitespace(&v.Multicast)
 	v.DataType.clean()
 	cleanWhitespace(&v.DefaultValue)
-	v.AllowedValueRange.clean()
-	for i := range v.AllowedValue {
-		cleanWhitespace(&v.AllowedValue[i])
+	if v.AllowedValueRange != nil {
+		v.AllowedValueRange.clean()
+	}
+	for i := range v.AllowedValues {
+		cleanWhitespace(&v.AllowedValues[i])
 	}
 }
 

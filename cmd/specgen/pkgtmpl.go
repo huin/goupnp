@@ -40,6 +40,28 @@ type {{$respType}} struct {{"{"}}{{range .Arguments}}{{if .IsOutput}}
 	{{.Name}} {{$srv.SCPD.GoKindNameForVariable .RelatedStateVariable "string"}}
 {{end}}{{end}}}
 
+// {{.Name}} action.
+// Arguments:
+//{{range .Arguments}}{{if .IsInput}}
+// * {{.Name}}: {{$v := $srv.SCPD.GetStateVariable .RelatedStateVariable}}
+{{if $v}}// (related state variable: {{$v.Name}})
+// - {{if $v.AllowedValueRange}}allowed range: {{$v.AllowedValueRange.Minimum}} to {{$v.AllowedValueRange.Maximum}}{{end}}
+// - {{if $v.AllowedValues}}allowed values:
+// {{range $i, $val := $v.AllowedValues}}{{if $i}}|{{end}}{{$val}}{{end}}{{end}}
+//{{else}}
+// (unknown){{end}}
+//{{end}}{{end}}
+//
+// Return values:
+//{{range .Arguments}}{{if .IsOutput}}
+// * {{.Name}}: {{$v := $srv.SCPD.GetStateVariable .RelatedStateVariable}}
+{{if $v}}// (related state variable: {{$v.Name}})
+// - {{if $v.AllowedValueRange}}allowed range: {{$v.AllowedValueRange.Minimum}} to {{$v.AllowedValueRange.Maximum}}{{end}}
+// - {{if $v.AllowedValues}}allowed values:
+// {{range $i, $val := $v.AllowedValues}}{{if $i}}|{{end}}{{$val}}{{end}}{{end}}
+//{{else}}
+// (unknown){{end}}
+//{{end}}{{end}}
 func (client *{{$srvIdent}}) {{.Name}}({{range .Arguments}}{{if .IsInput}}
 	{{.Name}} {{$srv.SCPD.GoKindNameForVariable .RelatedStateVariable "string"}},
 {{end}}{{end}}) ({{range .Arguments}}{{if .IsOutput}}
