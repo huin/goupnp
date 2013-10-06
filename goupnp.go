@@ -25,6 +25,7 @@ const (
 	DeviceTypeInternetGatewayDevice = "urn:schemas-upnp-org:device:InternetGatewayDevice:1"
 )
 
+// ContextError is an error that wraps an error with some context information.
 type ContextError struct {
 	Context string
 	Err     error
@@ -34,6 +35,7 @@ func (err ContextError) Error() string {
 	return fmt.Sprintf("%s: %v", err.Context, err.Err)
 }
 
+// MaybeRootDevice contains either a RootDevice or an error.
 type MaybeRootDevice struct {
 	Root *RootDevice
 	Err  error
