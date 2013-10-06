@@ -3,12 +3,43 @@
 package main
 
 import (
+	"encoding/xml"
 	"fmt"
 
 	"github.com/huin/goupnp"
 )
 
 var spaces = "                                     "
+
+type GetExternalIPAddressRequest struct {
+	XMLName xml.Name
+}
+
+type GetExternalIPAddressResponse struct {
+	XMLName              xml.Name
+	NewExternalIPAddress string
+}
+
+type Uint16Value struct {
+	XMLName xml.Name
+	Value   uint16 `xml:",chardata"`
+}
+
+type GetGenericPortMappingEntryRequest struct {
+	XMLName             xml.Name
+	NewPortMappingIndex Uint16Value
+}
+
+type GetGenericPortMappingEntryResponse struct {
+	XMLName           xml.Name
+	NewRemoteHost     string
+	NewExternalPort   uint16
+	NewProtocol       string
+	NewInternalPort   uint16
+	NewInternalClient string
+	NewEnabled        string // boolean
+	NewLeaseDuration  uint32
+}
 
 type indentLevel int
 
@@ -48,12 +79,39 @@ func main() {
 				fmt.Printf("Got more than one expected service on device %s\n", device.FriendlyName)
 			}
 			srv := wanPPPSrvs[0]
-			results, err := goupnp.PerformSoapAction(goupnp.ServiceTypeWANPPPConnection, "GetExternalIPAddress", &srv.ControlURL.URL, nil)
-			if err != nil {
-				fmt.Printf("Failed to GetExternalIPAddress from %s: %v\n", device.FriendlyName, err)
-				continue
+
+			if scdp, err := srv.RequestSCDP(); err != nil {
+				fmt.Printf("Error requesting SCPD: %v\n", err)
+			} else {
+				fmt.Println("Available SCPD actions:")
+				for _, action := range scdp.Actions {
+					fmt.Println(" ", action.Name)
+				}
 			}
-			fmt.Printf("Got GetExternalIPAddress result from %s: %v\n", device.FriendlyName, results)
+
+			srvClient := goupnp.NewSOAPClient(srv.ControlURL.URL)
+
+			{
+				inAction := GetExternalIPAddressRequest{XMLName: xml.Name{Space: goupnp.ServiceTypeWANPPPConnection, Local: "GetExternalIPAddress"}}
+				var outAction GetExternalIPAddressResponse
+				err := srvClient.PerformAction(goupnp.ServiceTypeWANPPPConnection, "GetExternalIPAddress", &inAction, &outAction)
+				if err != nil {
+					fmt.Printf("Failed to GetExternalIPAddress from %s: %v\n", device.FriendlyName, err)
+					continue
+				}
+				fmt.Printf("Got GetExternalIPAddress result from %s: %+v\n", device.FriendlyName, outAction)
+			}
+
+			for i := uint16(0); i < 10; i++ {
+				inAction := GetGenericPortMappingEntryRequest{XMLName: xml.Name{Space: goupnp.ServiceTypeWANPPPConnection, Local: "GetGenericPortMappingEntry"}, NewPortMappingIndex: Uint16Value{XMLName: xml.Name{"", "NewPortMappingIndex"}, Value: i}}
+				var outAction GetGenericPortMappingEntryResponse
+				err := srvClient.PerformAction(goupnp.ServiceTypeWANPPPConnection, "GetGenericPortMappingEntry", &inAction, &outAction)
+				if err != nil {
+					fmt.Printf("Failed to GetGenericPortMappingEntry on %s: %v\n", device.FriendlyName, err)
+					continue
+				}
+				fmt.Printf("Got GetGenericPortMappingEntry from %s: %+v\n", device.FriendlyName, outAction)
+			}
 		}
 	}
 }
