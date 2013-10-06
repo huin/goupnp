@@ -7,6 +7,9 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
+
+	"github.com/huin/goupnp/scpd"
+	"github.com/huin/goupnp/soap"
 )
 
 const (
@@ -147,15 +150,19 @@ func (srv *Service) String() string {
 
 // RequestSCDP requests the SCPD (soap actions and state variables description)
 // for the service.
-func (srv *Service) RequestSCDP() (*SCPD, error) {
+func (srv *Service) RequestSCDP() (*scpd.SCPD, error) {
 	if !srv.SCPDURL.Ok {
 		return nil, errors.New("bad/missing SCPD URL, or no URLBase has been set")
 	}
-	scpd := new(SCPD)
-	if err := requestXml(srv.SCPDURL.URL.String(), SCPDXMLNamespace, scpd); err != nil {
+	s := new(scpd.SCPD)
+	if err := requestXml(srv.SCPDURL.URL.String(), scpd.SCPDXMLNamespace, s); err != nil {
 		return nil, err
 	}
-	return scpd, nil
+	return s, nil
+}
+
+func (srv *Service) NewSOAPClient() *soap.SOAPClient {
+	return soap.NewSOAPClient(srv.ControlURL.URL)
 }
 
 // URLField is a URL that is part of a device description.

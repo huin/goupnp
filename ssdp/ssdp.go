@@ -1,4 +1,4 @@
-package goupnp
+package ssdp
 
 import (
 	"errors"
@@ -7,6 +7,8 @@ import (
 	"net/url"
 	"strconv"
 	"time"
+
+	"github.com/huin/goupnp/httpu"
 )
 
 const (
@@ -22,7 +24,7 @@ const (
 // implementation waits an additional 100ms for responses to arrive), 2 is a
 // reasonable value for this. numSends is the number of requests to send - 3 is
 // a reasonable value for this.
-func SSDPRawSearch(httpu *HTTPUClient, searchTarget string, maxWaitSeconds int, numSends int) ([]*http.Response, error) {
+func SSDPRawSearch(httpu *httpu.HTTPUClient, searchTarget string, maxWaitSeconds int, numSends int) ([]*http.Response, error) {
 	if maxWaitSeconds < 1 {
 		return nil, errors.New("ssdp: maxWaitSeconds must be >= 1")
 	}

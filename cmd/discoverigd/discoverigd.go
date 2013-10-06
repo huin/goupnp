@@ -89,7 +89,7 @@ func main() {
 				}
 			}
 
-			srvClient := goupnp.NewSOAPClient(srv.ControlURL.URL)
+			srvClient := srv.NewSOAPClient()
 
 			{
 				inAction := GetExternalIPAddressRequest{XMLName: xml.Name{Space: goupnp.ServiceTypeWANPPPConnection, Local: "GetExternalIPAddress"}}

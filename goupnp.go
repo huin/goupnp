@@ -6,6 +6,9 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+
+	"github.com/huin/goupnp/httpu"
+	"github.com/huin/goupnp/ssdp"
 )
 
 // Non-exhaustive set of UPnP service types.
@@ -46,12 +49,12 @@ type MaybeRootDevice struct {
 // returned for errors while attempting to send the query. An error or
 // RootDevice is returned for each discovered service.
 func DiscoverDevices(searchTarget string) ([]MaybeRootDevice, error) {
-	httpu, err := NewHTTPUClient()
+	httpu, err := httpu.NewHTTPUClient()
 	if err != nil {
 		return nil, err
 	}
 	defer httpu.Close()
-	responses, err := SSDPRawSearch(httpu, string(searchTarget), 2, 3)
+	responses, err := ssdp.SSDPRawSearch(httpu, string(searchTarget), 2, 3)
 	if err != nil {
 		return nil, err
 	}

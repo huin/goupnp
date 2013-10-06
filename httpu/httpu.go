@@ -1,4 +1,4 @@
-package goupnp
+package httpu
 
 import (
 	"bufio"

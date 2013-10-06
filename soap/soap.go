@@ -1,6 +1,6 @@
 // Definition for the SOAP structure required for UPnP's SOAP usage.
 
-package goupnp
+package soap
 
 import (
 	"bytes"
