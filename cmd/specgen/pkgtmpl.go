@@ -51,7 +51,7 @@ func (client *{{$srvIdent}}) {{.Name}}({{range .Arguments}}{{if .IsInput}}
 {{end}}{{end}}
 	}
 	var response {{$respType}}
-	err = client.SOAPClient.PerformAction({{$srv.URNParts.Const}}, {{.Name}}, &request, &response)
+	err = client.SOAPClient.PerformAction({{$srv.URNParts.Const}}, "{{.Name}}", &request, &response)
 	if err != nil {
 		return
 	}
