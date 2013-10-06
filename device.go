@@ -74,7 +74,7 @@ func (device *Device) VisitDevices(visitor func(*Device)) {
 // descendent devices.
 func (device *Device) VisitServices(visitor func(*Service)) {
 	device.VisitDevices(func(d *Device) {
-		for i := range device.Services {
+		for i := range d.Services {
 			visitor(&d.Services[i])
 		}
 	})
