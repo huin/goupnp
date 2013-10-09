@@ -9,6 +9,7 @@ import (
 	"unicode/utf8"
 )
 
+// MarshalFixed14_4 marshals float64 to SOAP "fixed.14.4" type.
 func MarshalFixed14_4(v float64) (string, error) {
 	if v >= 1e14 || v <= -1e14 {
 		return "", fmt.Errorf("soap fixed14.4: value %v out of bounds", v)
@@ -16,6 +17,7 @@ func MarshalFixed14_4(v float64) (string, error) {
 	return strconv.FormatFloat(v, 'f', 4, 64), nil
 }
 
+// UnmarshalFixed14_4 unmarshals float64 from SOAP "fixed.14.4" type.
 func UnmarshalFixed14_4(s string) (float64, error) {
 	v, err := strconv.ParseFloat(s, 64)
 	if err != nil {
@@ -27,6 +29,7 @@ func UnmarshalFixed14_4(s string) (float64, error) {
 	return v, nil
 }
 
+// MarshalChar marshals rune to SOAP "char" type.
 func MarshalChar(v rune) (string, error) {
 	if v == 0 {
 		return "", errors.New("soap char: rune 0 is not allowed")
@@ -34,6 +37,7 @@ func MarshalChar(v rune) (string, error) {
 	return string(v), nil
 }
 
+// UnmarshalChar unmarshals rune from SOAP "char" type.
 func UnmarshalChar(s string) (rune, error) {
 	if len(s) == 0 {
 		return 0, errors.New("soap char: got empty string")
