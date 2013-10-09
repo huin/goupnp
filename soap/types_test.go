@@ -57,6 +57,20 @@ func (v DateTest) Equal(result interface{}) bool {
 	return v.Time.Equal(result.(time.Time))
 }
 
+type TimeOfDayTest struct {
+	TimeOfDay
+}
+
+func (v TimeOfDayTest) Marshal() (string, error) {
+	return MarshalTimeOfDay(v.TimeOfDay)
+}
+func (v TimeOfDayTest) Unmarshal(s string) (interface{}, error) {
+	return UnmarshalTimeOfDay(s)
+}
+func (v TimeOfDayTest) Equal(result interface{}) bool {
+	return v.TimeOfDay == result.(TimeOfDay)
+}
+
 func Test(t *testing.T) {
 	tests := []testCase{
 		// Fixed14_4
@@ -78,11 +92,27 @@ func Test(t *testing.T) {
 		{str: "", value: CharTest(0), wantMarshalErr: true, wantUnmarshalErr: true},
 
 		// Date
-		{str: "2013-10-08", value: DateTest{time.Date(2013, 10, 8, 0, 0, 0, 0, time.UTC)}},
-		{str: "20131008", value: DateTest{time.Date(2013, 10, 8, 0, 0, 0, 0, time.UTC)}, noMarshal: true},
+		{str: "2013-10-08", value: DateTest{time.Date(2013, 10, 8, 0, 0, 0, 0, time.Local)}},
+		{str: "20131008", value: DateTest{time.Date(2013, 10, 8, 0, 0, 0, 0, time.Local)}, noMarshal: true},
 		{str: "2013-10-08T10:30:50", value: DateTest{}, wantUnmarshalErr: true, noMarshal: true},
 		{str: "", value: DateTest{}, wantMarshalErr: true, wantUnmarshalErr: true, noMarshal: true},
 		{str: "-1", value: DateTest{}, wantUnmarshalErr: true, noMarshal: true},
+
+		// Time
+		{str: "00:00:00", value: TimeOfDayTest{TimeOfDay{0, nil}}},
+		{str: "000000", value: TimeOfDayTest{TimeOfDay{0, nil}}, noMarshal: true},
+		{str: "01:02:03", value: TimeOfDayTest{TimeOfDay{(1*3600 + 2*60 + 3) * time.Second, nil}}},
+		{str: "010203", value: TimeOfDayTest{TimeOfDay{(1*3600 + 2*60 + 3) * time.Second, nil}}, noMarshal: true},
+		{str: "23:59:59", value: TimeOfDayTest{TimeOfDay{(23*3600 + 59*60 + 59) * time.Second, nil}}},
+		{str: "235959", value: TimeOfDayTest{TimeOfDay{(23*3600 + 59*60 + 59) * time.Second, nil}}, noMarshal: true},
+		{str: "01:02", value: TimeOfDayTest{TimeOfDay{(1*3600 + 2*60) * time.Second, nil}}, noMarshal: true},
+		{str: "0102", value: TimeOfDayTest{TimeOfDay{(1*3600 + 2*60) * time.Second, nil}}, noMarshal: true},
+		{str: "01", value: TimeOfDayTest{TimeOfDay{(1 * 3600) * time.Second, nil}}, noMarshal: true},
+		{str: "01", value: TimeOfDayTest{TimeOfDay{(1 * 3600) * time.Second, nil}}, noMarshal: true},
+		{str: "foo 01:02:03", value: TimeOfDayTest{}, wantUnmarshalErr: true, noMarshal: true},
+		{str: "foo\n01:02:03", value: TimeOfDayTest{}, wantUnmarshalErr: true, noMarshal: true},
+		{str: "01:02:03 foo", value: TimeOfDayTest{}, wantUnmarshalErr: true, noMarshal: true},
+		{str: "01:02:03\nfoo", value: TimeOfDayTest{}, wantUnmarshalErr: true, noMarshal: true},
 	}
 
 	for _, test := range tests {

@@ -3,6 +3,7 @@ package soap
 import (
 	"errors"
 	"fmt"
+	"regexp"
 	"strconv"
 	"time"
 	"unicode/utf8"
@@ -52,9 +53,43 @@ var dateFmts = []string{"2006-01-02", "20060102"}
 
 func UnmarshalDate(s string) (time.Time, error) {
 	for _, f := range dateFmts {
-		if t, err := time.Parse(f, s); err == nil {
+		if t, err := time.ParseInLocation(f, s, time.Local); err == nil {
 			return t, nil
 		}
 	}
 	return time.Time{}, fmt.Errorf("soap date: value %q is not in a recognized date format", s)
+}
+
+// TimeOfDay is used in cases where SOAP "time" or "time.tz" is used.
+type TimeOfDay struct {
+	// Duration of time since midnight.
+	FromMidnight time.Duration
+
+	// TimeZone is present only if time.tz is used. It is otherwise ignored.
+	TimeZone *time.Location
+}
+
+func MarshalTimeOfDay(v TimeOfDay) (string, error) {
+	d := int64(v.FromMidnight / time.Second)
+	hour := d / 3600
+	d = d % 3600
+	minute := d / 60
+	second := d % 60
+
+	return fmt.Sprintf("%02d:%02d:%02d", hour, minute, second), nil
+}
+
+var timeRegexp = regexp.MustCompile(`^(\d\d)(?::?(\d\d)(?::?(\d\d))?)?$`)
+
+func UnmarshalTimeOfDay(s string) (TimeOfDay, error) {
+	parts := timeRegexp.FindStringSubmatch(s)
+	if len(parts) < 2 {
+		return TimeOfDay{}, fmt.Errorf("soap time: value %q is not in ISO8601 time format", s)
+	}
+	parts = parts[1:]
+	var iParts [3]int64
+	for i, pStr := range parts {
+		iParts[i], _ = strconv.ParseInt(pStr, 10, 64)
+	}
+	return TimeOfDay{time.Duration(iParts[0]*3600+iParts[1]*60+iParts[2]) * time.Second, nil}, nil
 }
