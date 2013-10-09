@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"regexp"
 	"strconv"
+	"strings"
 	"time"
 	"unicode/utf8"
 )
@@ -181,4 +182,28 @@ func UnmarshalTimeOfDayTz(s string) (TimeOfDay, error) {
 		HasOffset:    hasOffset,
 		Offset:       int16(offset),
 	}, nil
+}
+
+// MarshalDatetime marshals time.Time to SOAP "date" type. Note that this
+// converts to local time.
+func MarshalDatetime(v time.Time) (string, error) {
+	return v.Local().Format("2006-01-02T15:04:05"), nil
+}
+
+// UnmarshalDatetime unmarshals time.Time from the SOAP "dateTime" type. This
+// returns a value in the local timezone.
+func UnmarshalDatetime(s string) (time.Time, error) {
+	parts := strings.SplitN(s, "T", 2)
+	datePart, err := UnmarshalDate(parts[0])
+	if err != nil {
+		return time.Time{}, err
+	}
+	if len(parts) == 2 {
+		timePart, err := UnmarshalTimeOfDay(parts[1])
+		if err != nil {
+			return time.Time{}, err
+		}
+		datePart = datePart.Add(timePart.FromMidnight)
+	}
+	return datePart, nil
 }

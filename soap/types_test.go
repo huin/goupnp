@@ -12,6 +12,12 @@ type convTest interface {
 	Equal(result interface{}) bool
 }
 
+// duper is an interface that convTest values may optionally also implement to
+// generate another convTest for a value in an otherwise identical testCase.
+type duper interface {
+	Dupe(tag string) convTest
+}
+
 type testCase struct {
 	value            convTest
 	str              string
@@ -57,6 +63,12 @@ func (v DateTest) Unmarshal(s string) (interface{}, error) {
 func (v DateTest) Equal(result interface{}) bool {
 	return v.Time.Equal(result.(time.Time))
 }
+func (v DateTest) Dupe(tag string) convTest {
+	if tag != "no:dateTime" {
+		return DatetimeTest{v.Time}
+	}
+	return nil
+}
 
 type TimeOfDayTest struct {
 	TimeOfDay
@@ -70,6 +82,12 @@ func (v TimeOfDayTest) Unmarshal(s string) (interface{}, error) {
 }
 func (v TimeOfDayTest) Equal(result interface{}) bool {
 	return v.TimeOfDay == result.(TimeOfDay)
+}
+func (v TimeOfDayTest) Dupe(tag string) convTest {
+	if tag != "no:time.tz" {
+		return TimeOfDayTzTest{v.TimeOfDay}
+	}
+	return nil
 }
 
 type TimeOfDayTzTest struct {
@@ -86,6 +104,18 @@ func (v TimeOfDayTzTest) Equal(result interface{}) bool {
 	return v.TimeOfDay == result.(TimeOfDay)
 }
 
+type DatetimeTest struct{ time.Time }
+
+func (v DatetimeTest) Marshal() (string, error) {
+	return MarshalDatetime(time.Time(v.Time))
+}
+func (v DatetimeTest) Unmarshal(s string) (interface{}, error) {
+	return UnmarshalDatetime(s)
+}
+func (v DatetimeTest) Equal(result interface{}) bool {
+	return v.Time.Equal(result.(time.Time))
+}
+
 func Test(t *testing.T) {
 	const time010203 time.Duration = (1*3600 + 2*60 + 3) * time.Second
 	const time0102 time.Duration = (1*3600 + 2*60) * time.Second
@@ -93,7 +123,7 @@ func Test(t *testing.T) {
 	const time235959 time.Duration = (23*3600 + 59*60 + 59) * time.Second
 
 	tests := []testCase{
-		// Fixed14_4
+		// fixed.14.4
 		{str: "0.0000", value: Fixed14_4Test(0)},
 		{str: "1.0000", value: Fixed14_4Test(1)},
 		{str: "1.2346", value: Fixed14_4Test(1.23456)},
@@ -104,21 +134,22 @@ func Test(t *testing.T) {
 		{str: "-10000000000000.0000", value: Fixed14_4Test(-1e13)},
 		{str: "-100000000000000.0000", value: Fixed14_4Test(-1e14), wantMarshalErr: true, wantUnmarshalErr: true},
 
-		// Char
+		// char
 		{str: "a", value: CharTest('a')},
 		{str: "z", value: CharTest('z')},
 		{str: "\u1234", value: CharTest(0x1234)},
 		{str: "aa", value: CharTest(0), wantMarshalErr: true, wantUnmarshalErr: true},
 		{str: "", value: CharTest(0), wantMarshalErr: true, wantUnmarshalErr: true},
 
-		// Date
-		{str: "2013-10-08", value: DateTest{time.Date(2013, 10, 8, 0, 0, 0, 0, time.Local)}},
-		{str: "20131008", value: DateTest{time.Date(2013, 10, 8, 0, 0, 0, 0, time.Local)}, noMarshal: true},
-		{str: "2013-10-08T10:30:50", value: DateTest{}, wantUnmarshalErr: true, noMarshal: true},
+		// date
+		{str: "2013-10-08", value: DateTest{time.Date(2013, 10, 8, 0, 0, 0, 0, time.Local)}, tag: "no:dateTime"},
+		{str: "20131008", value: DateTest{time.Date(2013, 10, 8, 0, 0, 0, 0, time.Local)}, noMarshal: true, tag: "no:dateTime"},
+		{str: "2013-10-08T10:30:50", value: DateTest{}, wantUnmarshalErr: true, noMarshal: true, tag: "no:dateTime"},
+		{str: "2013-10-08T10:30:50Z", value: DateTest{}, wantUnmarshalErr: true, noMarshal: true, tag: "no:dateTime"},
 		{str: "", value: DateTest{}, wantMarshalErr: true, wantUnmarshalErr: true, noMarshal: true},
 		{str: "-1", value: DateTest{}, wantUnmarshalErr: true, noMarshal: true},
 
-		// Time
+		// time
 		{str: "00:00:00", value: TimeOfDayTest{TimeOfDay{FromMidnight: 0}}},
 		{str: "000000", value: TimeOfDayTest{TimeOfDay{FromMidnight: 0}}, noMarshal: true},
 		{str: "24:00:00", value: TimeOfDayTest{TimeOfDay{FromMidnight: 24 * time.Hour}}, noMarshal: true}, // ISO8601 special case
@@ -134,19 +165,19 @@ func Test(t *testing.T) {
 		{str: "01:02", value: TimeOfDayTest{TimeOfDay{FromMidnight: time0102}}, noMarshal: true},
 		{str: "0102", value: TimeOfDayTest{TimeOfDay{FromMidnight: time0102}}, noMarshal: true},
 		{str: "01", value: TimeOfDayTest{TimeOfDay{FromMidnight: time01}}, noMarshal: true},
-		{str: "foo 01:02:03", value: TimeOfDayTest{}, wantUnmarshalErr: true, noMarshal: true, tag: "notz"},
-		{str: "foo\n01:02:03", value: TimeOfDayTest{}, wantUnmarshalErr: true, noMarshal: true, tag: "notz"},
-		{str: "01:02:03 foo", value: TimeOfDayTest{}, wantUnmarshalErr: true, noMarshal: true, tag: "notz"},
-		{str: "01:02:03\nfoo", value: TimeOfDayTest{}, wantUnmarshalErr: true, noMarshal: true, tag: "notz"},
-		{str: "01:02:03Z", value: TimeOfDayTest{}, wantUnmarshalErr: true, noMarshal: true, tag: "notz"},
-		{str: "01:02:03+01", value: TimeOfDayTest{}, wantUnmarshalErr: true, noMarshal: true, tag: "notz"},
-		{str: "01:02:03+01:23", value: TimeOfDayTest{}, wantUnmarshalErr: true, noMarshal: true, tag: "notz"},
-		{str: "01:02:03+0123", value: TimeOfDayTest{}, wantUnmarshalErr: true, noMarshal: true, tag: "notz"},
-		{str: "01:02:03-01", value: TimeOfDayTest{}, wantUnmarshalErr: true, noMarshal: true, tag: "notz"},
-		{str: "01:02:03-01:23", value: TimeOfDayTest{}, wantUnmarshalErr: true, noMarshal: true, tag: "notz"},
-		{str: "01:02:03-0123", value: TimeOfDayTest{}, wantUnmarshalErr: true, noMarshal: true, tag: "notz"},
+		{str: "foo 01:02:03", value: TimeOfDayTest{}, wantUnmarshalErr: true, noMarshal: true, tag: "no:time.tz"},
+		{str: "foo\n01:02:03", value: TimeOfDayTest{}, wantUnmarshalErr: true, noMarshal: true, tag: "no:time.tz"},
+		{str: "01:02:03 foo", value: TimeOfDayTest{}, wantUnmarshalErr: true, noMarshal: true, tag: "no:time.tz"},
+		{str: "01:02:03\nfoo", value: TimeOfDayTest{}, wantUnmarshalErr: true, noMarshal: true, tag: "no:time.tz"},
+		{str: "01:02:03Z", value: TimeOfDayTest{}, wantUnmarshalErr: true, noMarshal: true, tag: "no:time.tz"},
+		{str: "01:02:03+01", value: TimeOfDayTest{}, wantUnmarshalErr: true, noMarshal: true, tag: "no:time.tz"},
+		{str: "01:02:03+01:23", value: TimeOfDayTest{}, wantUnmarshalErr: true, noMarshal: true, tag: "no:time.tz"},
+		{str: "01:02:03+0123", value: TimeOfDayTest{}, wantUnmarshalErr: true, noMarshal: true, tag: "no:time.tz"},
+		{str: "01:02:03-01", value: TimeOfDayTest{}, wantUnmarshalErr: true, noMarshal: true, tag: "no:time.tz"},
+		{str: "01:02:03-01:23", value: TimeOfDayTest{}, wantUnmarshalErr: true, noMarshal: true, tag: "no:time.tz"},
+		{str: "01:02:03-0123", value: TimeOfDayTest{}, wantUnmarshalErr: true, noMarshal: true, tag: "no:time.tz"},
 
-		// Time.tz
+		// time.tz
 		{str: "24:00:01", value: TimeOfDayTzTest{}, wantUnmarshalErr: true, noMarshal: true},
 		{str: "01Z", value: TimeOfDayTzTest{TimeOfDay{time01, true, 0}}, noMarshal: true},
 		{str: "01:02:03Z", value: TimeOfDayTzTest{TimeOfDay{time010203, true, 0}}},
@@ -157,20 +188,24 @@ func Test(t *testing.T) {
 		{str: "01:02:03-01", value: TimeOfDayTzTest{TimeOfDay{time010203, true, -3600}}, noMarshal: true},
 		{str: "01:02:03-01:23", value: TimeOfDayTzTest{TimeOfDay{time010203, true, -(3600 + 23*60)}}},
 		{str: "01:02:03-0123", value: TimeOfDayTzTest{TimeOfDay{time010203, true, -(3600 + 23*60)}}, noMarshal: true},
+
+		// datetime
+		{str: "2013-10-08T00:00:00", value: DatetimeTest{time.Date(2013, 10, 8, 0, 0, 0, 0, time.Local)}},
+		{str: "20131008", value: DatetimeTest{time.Date(2013, 10, 8, 0, 0, 0, 0, time.Local)}, noMarshal: true},
+		{str: "2013-10-08T10:30:50", value: DatetimeTest{time.Date(2013, 10, 8, 10, 30, 50, 0, time.Local)}},
+		{str: "2013-10-08T10:30:50T", value: DatetimeTest{}, wantUnmarshalErr: true, noMarshal: true},
 	}
 
+	// Generate extra test cases from convTests that implement duper.
 	var extras []testCase
-	for i, test := range tests {
-		if value, ok := test.value.(TimeOfDayTest); ok && test.tag != "notz" {
-			// Auto-generate Time.tz cases from Time cases where the check isn't
-			// checking for a forbidden timezone offset.
-			test.value = TimeOfDayTzTest{value.TimeOfDay}
-			// Assert that we are working on a copy (just in case future code change
-			// changes tests to a slice of pointers).
-			if _, ok := tests[i].value.(TimeOfDayTest); !ok {
-				t.Fatal("Mutated original TimeOfDayTest in making TimeOfDayTzTest copy.")
+	for i := range tests {
+		if duper, ok := tests[i].value.(duper); ok {
+			duped := duper.Dupe(tests[i].tag)
+			if duped != nil {
+				dupedCase := testCase(tests[i])
+				dupedCase.value = duped
+				extras = append(extras, dupedCase)
 			}
-			extras = append(extras, test)
 		}
 	}
 	tests = append(tests, extras...)
