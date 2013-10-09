@@ -45,12 +45,16 @@ func UnmarshalChar(s string) (rune, error) {
 	return r, nil
 }
 
+// MarshalDate marshals time.Time to SOAP "date" type. Note that this converts
+// to local time, and discards the time-of-day components.
 func MarshalDate(v time.Time) (string, error) {
-	return v.Format("2006-01-02"), nil
+	return v.Local().Format("2006-01-02"), nil
 }
 
 var dateFmts = []string{"2006-01-02", "20060102"}
 
+// UnmarshalDate unmarshals time.Time from SOAP "date" type. This outputs the
+// date as midnight in the local time zone.
 func UnmarshalDate(s string) (time.Time, error) {
 	for _, f := range dateFmts {
 		if t, err := time.ParseInLocation(f, s, time.Local); err == nil {
