@@ -10,6 +10,13 @@ import (
 	"unicode/utf8"
 )
 
+var (
+	// localLoc acts like time.Local for this package, but is faked out by the
+	// unit tests to ensure that things stay constant (especially when running
+	// this test in a place where local time is UTC which might mask bugs).
+	localLoc = time.Local
+)
+
 // MarshalFixed14_4 marshals float64 to SOAP "fixed.14.4" type.
 func MarshalFixed14_4(v float64) (string, error) {
 	if v >= 1e14 || v <= -1e14 {
@@ -53,7 +60,7 @@ func UnmarshalChar(s string) (rune, error) {
 // MarshalDate marshals time.Time to SOAP "date" type. Note that this converts
 // to local time, and discards the time-of-day components.
 func MarshalDate(v time.Time) (string, error) {
-	return v.Local().Format("2006-01-02"), nil
+	return v.In(localLoc).Format("2006-01-02"), nil
 }
 
 var dateFmts = []string{"2006-01-02", "20060102"}
@@ -62,7 +69,7 @@ var dateFmts = []string{"2006-01-02", "20060102"}
 // date as midnight in the local time zone.
 func UnmarshalDate(s string) (time.Time, error) {
 	for _, f := range dateFmts {
-		if t, err := time.ParseInLocation(f, s, time.Local); err == nil {
+		if t, err := time.ParseInLocation(f, s, localLoc); err == nil {
 			return t, nil
 		}
 	}
@@ -187,7 +194,7 @@ func UnmarshalTimeOfDayTz(s string) (TimeOfDay, error) {
 // MarshalDatetime marshals time.Time to SOAP "date" type. Note that this
 // converts to local time.
 func MarshalDatetime(v time.Time) (string, error) {
-	return v.Local().Format("2006-01-02T15:04:05"), nil
+	return v.In(localLoc).Format("2006-01-02T15:04:05"), nil
 }
 
 // UnmarshalDatetime unmarshals time.Time from the SOAP "dateTime" type. This

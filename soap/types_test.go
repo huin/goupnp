@@ -122,6 +122,12 @@ func Test(t *testing.T) {
 	const time01 time.Duration = (1 * 3600) * time.Second
 	const time235959 time.Duration = (23*3600 + 59*60 + 59) * time.Second
 
+	// Fake out the local time for the implementation.
+	localLoc = time.FixedZone("Fake/Local", 6*3600)
+	defer func() {
+		localLoc = time.Local
+	}()
+
 	tests := []testCase{
 		// fixed.14.4
 		{str: "0.0000", value: Fixed14_4Test(0)},
@@ -142,8 +148,8 @@ func Test(t *testing.T) {
 		{str: "", value: CharTest(0), wantMarshalErr: true, wantUnmarshalErr: true},
 
 		// date
-		{str: "2013-10-08", value: DateTest{time.Date(2013, 10, 8, 0, 0, 0, 0, time.Local)}, tag: "no:dateTime"},
-		{str: "20131008", value: DateTest{time.Date(2013, 10, 8, 0, 0, 0, 0, time.Local)}, noMarshal: true, tag: "no:dateTime"},
+		{str: "2013-10-08", value: DateTest{time.Date(2013, 10, 8, 0, 0, 0, 0, localLoc)}, tag: "no:dateTime"},
+		{str: "20131008", value: DateTest{time.Date(2013, 10, 8, 0, 0, 0, 0, localLoc)}, noMarshal: true, tag: "no:dateTime"},
 		{str: "2013-10-08T10:30:50", value: DateTest{}, wantUnmarshalErr: true, noMarshal: true, tag: "no:dateTime"},
 		{str: "2013-10-08T10:30:50Z", value: DateTest{}, wantUnmarshalErr: true, noMarshal: true, tag: "no:dateTime"},
 		{str: "", value: DateTest{}, wantMarshalErr: true, wantUnmarshalErr: true, noMarshal: true},
@@ -190,9 +196,9 @@ func Test(t *testing.T) {
 		{str: "01:02:03-0123", value: TimeOfDayTzTest{TimeOfDay{time010203, true, -(3600 + 23*60)}}, noMarshal: true},
 
 		// datetime
-		{str: "2013-10-08T00:00:00", value: DatetimeTest{time.Date(2013, 10, 8, 0, 0, 0, 0, time.Local)}},
-		{str: "20131008", value: DatetimeTest{time.Date(2013, 10, 8, 0, 0, 0, 0, time.Local)}, noMarshal: true},
-		{str: "2013-10-08T10:30:50", value: DatetimeTest{time.Date(2013, 10, 8, 10, 30, 50, 0, time.Local)}},
+		{str: "2013-10-08T00:00:00", value: DatetimeTest{time.Date(2013, 10, 8, 0, 0, 0, 0, localLoc)}},
+		{str: "20131008", value: DatetimeTest{time.Date(2013, 10, 8, 0, 0, 0, 0, localLoc)}, noMarshal: true},
+		{str: "2013-10-08T10:30:50", value: DatetimeTest{time.Date(2013, 10, 8, 10, 30, 50, 0, localLoc)}},
 		{str: "2013-10-08T10:30:50T", value: DatetimeTest{}, wantUnmarshalErr: true, noMarshal: true},
 	}
 
