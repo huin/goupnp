@@ -377,3 +377,22 @@ func UnmarshalDateTimeTz(s string) (result time.Time, err error) {
 	result = time.Date(year, time.Month(month), day, hour, minute, second, 0, location)
 	return
 }
+
+// MarshalBoolean marshals bool to SOAP "boolean" type.
+func MarshalBoolean(v bool) (string, error) {
+	if v {
+		return "1", nil
+	}
+	return "0", nil
+}
+
+// UnmarshalBoolean unmarshals bool from the SOAP "boolean" type.
+func UnmarshalBoolean(s string) (bool, error) {
+	switch s {
+	case "0", "false", "no":
+		return false, nil
+	case "1", "true", "yes":
+		return true, nil
+	}
+	return false, fmt.Errorf("soap boolean: %q is not a valid boolean value", s)
+}

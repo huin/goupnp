@@ -134,6 +134,18 @@ func (v DateTimeTzTest) Equal(result interface{}) bool {
 	return v.Time.Equal(result.(time.Time))
 }
 
+type BooleanTest bool
+
+func (v BooleanTest) Marshal() (string, error) {
+	return MarshalBoolean(bool(v))
+}
+func (v BooleanTest) Unmarshal(s string) (interface{}, error) {
+	return UnmarshalBoolean(s)
+}
+func (v BooleanTest) Equal(result interface{}) bool {
+	return bool(v) == result.(bool)
+}
+
 func Test(t *testing.T) {
 	const time010203 time.Duration = (1*3600 + 2*60 + 3) * time.Second
 	const time0102 time.Duration = (1*3600 + 2*60) * time.Second
@@ -233,6 +245,18 @@ func Test(t *testing.T) {
 		{str: "2013-10-08T10:30:50-01", value: DateTimeTzTest{time.Date(2013, 10, 8, 10, 30, 50, 0, time.FixedZone("-01:00", -3600))}, noMarshal: true},
 		{str: "2013-10-08T10:30:50-01:23", value: DateTimeTzTest{time.Date(2013, 10, 8, 10, 30, 50, 0, time.FixedZone("-01:23", -(3600+23*60)))}},
 		{str: "2013-10-08T10:30:50-0123", value: DateTimeTzTest{time.Date(2013, 10, 8, 10, 30, 50, 0, time.FixedZone("-01:23", -(3600+23*60)))}, noMarshal: true},
+
+		// boolean
+		{str: "0", value: BooleanTest(false)},
+		{str: "1", value: BooleanTest(true)},
+		{str: "false", value: BooleanTest(false), noMarshal: true},
+		{str: "true", value: BooleanTest(true), noMarshal: true},
+		{str: "no", value: BooleanTest(false), noMarshal: true},
+		{str: "yes", value: BooleanTest(true), noMarshal: true},
+		{str: "", value: BooleanTest(false), noMarshal: true, wantUnmarshalErr: true},
+		{str: "other", value: BooleanTest(false), noMarshal: true, wantUnmarshalErr: true},
+		{str: "2", value: BooleanTest(false), noMarshal: true, wantUnmarshalErr: true},
+		{str: "-1", value: BooleanTest(false), noMarshal: true, wantUnmarshalErr: true},
 	}
 
 	// Generate extra test cases from convTests that implement duper.
