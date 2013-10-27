@@ -65,7 +65,7 @@ func (v DateTest) Equal(result interface{}) bool {
 }
 func (v DateTest) Dupe(tag string) convTest {
 	if tag != "no:dateTime" {
-		return DatetimeTest{v.Time}
+		return DateTimeTest{v.Time}
 	}
 	return nil
 }
@@ -104,15 +104,33 @@ func (v TimeOfDayTzTest) Equal(result interface{}) bool {
 	return v.TimeOfDay == result.(TimeOfDay)
 }
 
-type DatetimeTest struct{ time.Time }
+type DateTimeTest struct{ time.Time }
 
-func (v DatetimeTest) Marshal() (string, error) {
-	return MarshalDatetime(time.Time(v.Time))
+func (v DateTimeTest) Marshal() (string, error) {
+	return MarshalDateTime(time.Time(v.Time))
 }
-func (v DatetimeTest) Unmarshal(s string) (interface{}, error) {
-	return UnmarshalDatetime(s)
+func (v DateTimeTest) Unmarshal(s string) (interface{}, error) {
+	return UnmarshalDateTime(s)
 }
-func (v DatetimeTest) Equal(result interface{}) bool {
+func (v DateTimeTest) Equal(result interface{}) bool {
+	return v.Time.Equal(result.(time.Time))
+}
+func (v DateTimeTest) Dupe(tag string) convTest {
+	if tag != "no:dateTime.tz" {
+		return DateTimeTzTest{v.Time}
+	}
+	return nil
+}
+
+type DateTimeTzTest struct{ time.Time }
+
+func (v DateTimeTzTest) Marshal() (string, error) {
+	return MarshalDateTimeTz(time.Time(v.Time))
+}
+func (v DateTimeTzTest) Unmarshal(s string) (interface{}, error) {
+	return UnmarshalDateTimeTz(s)
+}
+func (v DateTimeTzTest) Equal(result interface{}) bool {
 	return v.Time.Equal(result.(time.Time))
 }
 
@@ -195,11 +213,26 @@ func Test(t *testing.T) {
 		{str: "01:02:03-01:23", value: TimeOfDayTzTest{TimeOfDay{time010203, true, -(3600 + 23*60)}}},
 		{str: "01:02:03-0123", value: TimeOfDayTzTest{TimeOfDay{time010203, true, -(3600 + 23*60)}}, noMarshal: true},
 
-		// datetime
-		{str: "2013-10-08T00:00:00", value: DatetimeTest{time.Date(2013, 10, 8, 0, 0, 0, 0, localLoc)}},
-		{str: "20131008", value: DatetimeTest{time.Date(2013, 10, 8, 0, 0, 0, 0, localLoc)}, noMarshal: true},
-		{str: "2013-10-08T10:30:50", value: DatetimeTest{time.Date(2013, 10, 8, 10, 30, 50, 0, localLoc)}},
-		{str: "2013-10-08T10:30:50T", value: DatetimeTest{}, wantUnmarshalErr: true, noMarshal: true},
+		// dateTime
+		{str: "2013-10-08T00:00:00", value: DateTimeTest{time.Date(2013, 10, 8, 0, 0, 0, 0, localLoc)}, tag: "no:dateTime.tz"},
+		{str: "20131008", value: DateTimeTest{time.Date(2013, 10, 8, 0, 0, 0, 0, localLoc)}, noMarshal: true},
+		{str: "2013-10-08T10:30:50", value: DateTimeTest{time.Date(2013, 10, 8, 10, 30, 50, 0, localLoc)}, tag: "no:dateTime.tz"},
+		{str: "2013-10-08T10:30:50T", value: DateTimeTest{}, wantUnmarshalErr: true, noMarshal: true},
+		{str: "2013-10-08T10:30:50+01", value: DateTimeTest{}, wantUnmarshalErr: true, noMarshal: true, tag: "no:dateTime.tz"},
+		{str: "2013-10-08T10:30:50+01:23", value: DateTimeTest{}, wantUnmarshalErr: true, noMarshal: true, tag: "no:dateTime.tz"},
+		{str: "2013-10-08T10:30:50+0123", value: DateTimeTest{}, wantUnmarshalErr: true, noMarshal: true, tag: "no:dateTime.tz"},
+		{str: "2013-10-08T10:30:50-01", value: DateTimeTest{}, wantUnmarshalErr: true, noMarshal: true, tag: "no:dateTime.tz"},
+		{str: "2013-10-08T10:30:50-01:23", value: DateTimeTest{}, wantUnmarshalErr: true, noMarshal: true, tag: "no:dateTime.tz"},
+		{str: "2013-10-08T10:30:50-0123", value: DateTimeTest{}, wantUnmarshalErr: true, noMarshal: true, tag: "no:dateTime.tz"},
+
+		// dateTime.tz
+		{str: "2013-10-08T10:30:50", value: DateTimeTzTest{time.Date(2013, 10, 8, 10, 30, 50, 0, localLoc)}, noMarshal: true},
+		{str: "2013-10-08T10:30:50+01", value: DateTimeTzTest{time.Date(2013, 10, 8, 10, 30, 50, 0, time.FixedZone("+01:00", 3600))}, noMarshal: true},
+		{str: "2013-10-08T10:30:50+01:23", value: DateTimeTzTest{time.Date(2013, 10, 8, 10, 30, 50, 0, time.FixedZone("+01:23", 3600+23*60))}},
+		{str: "2013-10-08T10:30:50+0123", value: DateTimeTzTest{time.Date(2013, 10, 8, 10, 30, 50, 0, time.FixedZone("+01:23", 3600+23*60))}, noMarshal: true},
+		{str: "2013-10-08T10:30:50-01", value: DateTimeTzTest{time.Date(2013, 10, 8, 10, 30, 50, 0, time.FixedZone("-01:00", -3600))}, noMarshal: true},
+		{str: "2013-10-08T10:30:50-01:23", value: DateTimeTzTest{time.Date(2013, 10, 8, 10, 30, 50, 0, time.FixedZone("-01:23", -(3600+23*60)))}},
+		{str: "2013-10-08T10:30:50-0123", value: DateTimeTzTest{time.Date(2013, 10, 8, 10, 30, 50, 0, time.FixedZone("-01:23", -(3600+23*60)))}, noMarshal: true},
 	}
 
 	// Generate extra test cases from convTests that implement duper.

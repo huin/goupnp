@@ -57,6 +57,133 @@ func UnmarshalChar(s string) (rune, error) {
 	return r, nil
 }
 
+func parseInt(s string, err *error) int {
+	v, parseErr := strconv.ParseInt(s, 10, 64)
+	if parseErr != nil {
+		*err = parseErr
+	}
+	return int(v)
+}
+
+var dateRegexps = []*regexp.Regexp{
+	// yyyy[-mm[-dd]]
+	regexp.MustCompile(`^(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?$`),
+	// yyyy[mm[dd]]
+	regexp.MustCompile(`^(\d{4})(?:(\d{2})(?:(\d{2}))?)?$`),
+}
+
+func parseDateParts(s string) (year, month, day int, err error) {
+	var parts []string
+	for _, re := range dateRegexps {
+		parts = re.FindStringSubmatch(s)
+		if parts != nil {
+			break
+		}
+	}
+	if parts == nil {
+		err = fmt.Errorf("soap date: value %q is not in a recognized ISO8601 date format", s)
+		return
+	}
+
+	year = parseInt(parts[1], &err)
+	month = 1
+	day = 1
+	if len(parts[2]) != 0 {
+		month = parseInt(parts[2], &err)
+		if len(parts[3]) != 0 {
+			day = parseInt(parts[3], &err)
+		}
+	}
+
+	if err != nil {
+		err = fmt.Errorf("soap date: %q: %v", s, err)
+	}
+
+	return
+}
+
+var timeRegexps = []*regexp.Regexp{
+	// hh[:mm[:ss]]
+	regexp.MustCompile(`^(\d{2})(?::(\d{2})(?::(\d{2}))?)?$`),
+	// hh[mm[ss]]
+	regexp.MustCompile(`^(\d{2})(?:(\d{2})(?:(\d{2}))?)?$`),
+}
+
+func parseTimeParts(s string) (hour, minute, second int, err error) {
+	var parts []string
+	for _, re := range timeRegexps {
+		parts = re.FindStringSubmatch(s)
+		if parts != nil {
+			break
+		}
+	}
+	if parts == nil {
+		err = fmt.Errorf("soap time: value %q is not in ISO8601 time format", s)
+		return
+	}
+
+	hour = parseInt(parts[1], &err)
+	if len(parts[2]) != 0 {
+		minute = parseInt(parts[2], &err)
+		if len(parts[3]) != 0 {
+			second = parseInt(parts[3], &err)
+		}
+	}
+
+	if err != nil {
+		err = fmt.Errorf("soap time: %q: %v", s, err)
+	}
+
+	return
+}
+
+// (+|-)hh[[:]mm]
+var timezoneRegexp = regexp.MustCompile(`^([+-])(\d{2})(?::?(\d{2}))?$`)
+
+func parseTimezone(s string) (offset int, err error) {
+	if s == "Z" {
+		return 0, nil
+	}
+	parts := timezoneRegexp.FindStringSubmatch(s)
+	if parts == nil {
+		err = fmt.Errorf("soap timezone: value %q is not in ISO8601 timezone format", s)
+		return
+	}
+
+	offset = parseInt(parts[2], &err) * 3600
+	if len(parts[3]) != 0 {
+		offset += parseInt(parts[3], &err) * 60
+	}
+	if parts[1] == "-" {
+		offset = -offset
+	}
+
+	if err != nil {
+		err = fmt.Errorf("soap timezone: %q: %v", s, err)
+	}
+
+	return
+}
+
+var completeDateTimeZoneRegexp = regexp.MustCompile(`^([^T]+)(?:T([^-+Z]+)(.+)?)?$`)
+
+// splitCompleteDateTimeZone splits date, time and timezone apart from an
+// ISO8601 string. It does not ensure that the contents of each part are
+// correct, it merely splits on certain delimiters.
+// e.g "2010-09-08T12:15:10+0700" => "2010-09-08", "12:15:10", "+0700".
+// Timezone can only be present if time is also present.
+func splitCompleteDateTimeZone(s string) (dateStr, timeStr, zoneStr string, err error) {
+	parts := completeDateTimeZoneRegexp.FindStringSubmatch(s)
+	if parts == nil {
+		err = fmt.Errorf("soap date/time/zone: value %q is not in ISO8601 datetime format", s)
+		return
+	}
+	dateStr = parts[1]
+	timeStr = parts[2]
+	zoneStr = parts[3]
+	return
+}
+
 // MarshalDate marshals time.Time to SOAP "date" type. Note that this converts
 // to local time, and discards the time-of-day components.
 func MarshalDate(v time.Time) (string, error) {
@@ -68,12 +195,11 @@ var dateFmts = []string{"2006-01-02", "20060102"}
 // UnmarshalDate unmarshals time.Time from SOAP "date" type. This outputs the
 // date as midnight in the local time zone.
 func UnmarshalDate(s string) (time.Time, error) {
-	for _, f := range dateFmts {
-		if t, err := time.ParseInLocation(f, s, localLoc); err == nil {
-			return t, nil
-		}
+	year, month, day, err := parseDateParts(s)
+	if err != nil {
+		return time.Time{}, err
 	}
-	return time.Time{}, fmt.Errorf("soap date: value %q is not in a recognized date format", s)
+	return time.Date(year, time.Month(month), day, 0, 0, 0, 0, localLoc), nil
 }
 
 // TimeOfDay is used in cases where SOAP "time" or "time.tz" is used.
@@ -88,7 +214,7 @@ type TimeOfDay struct {
 	// Offset is non-zero only if time.tz is used. It is otherwise ignored. If
 	// non-zero, then it is regarded as a UTC offset in seconds. Note that the
 	// sub-minutes is ignored by the marshal function.
-	Offset int16
+	Offset int
 }
 
 // MarshalTimeOfDay marshals TimeOfDay to the "time" type.
@@ -139,24 +265,27 @@ func MarshalTimeOfDayTz(v TimeOfDay) (string, error) {
 	return fmt.Sprintf("%02d:%02d:%02d%s", hour, minute, second, tz), nil
 }
 
-var timeRegexp = regexp.MustCompile(
-	`^(\d\d)(?::?(\d\d)(?::?(\d\d))?)?` + // hh[:mm[:ss]]
-		`(?:(Z)|([+-])(\d\d)(?::?(\d\d))?)?$`) // Z | ±hh[:mm]
-
 // UnmarshalTimeOfDayTz unmarshals TimeOfDay from the "time.tz" type.
-func UnmarshalTimeOfDayTz(s string) (TimeOfDay, error) {
-	parts := timeRegexp.FindStringSubmatch(s)
-	if parts == nil {
-		return TimeOfDay{}, fmt.Errorf("soap time.tz: value %q is not in ISO8601 time format", s)
+func UnmarshalTimeOfDayTz(s string) (tod TimeOfDay, err error) {
+	zoneIndex := strings.IndexAny(s, "Z+-")
+	var timePart string
+	var hasOffset bool
+	var offset int
+	if zoneIndex == -1 {
+		hasOffset = false
+		timePart = s
+	} else {
+		hasOffset = true
+		timePart = s[:zoneIndex]
+		if offset, err = parseTimezone(s[zoneIndex:]); err != nil {
+			return
+		}
 	}
 
-	// HH:MM:SS parsing.
-	parts = parts[1:]
-	var iParts [3]int64
-	for i, pStr := range parts[:3] {
-		iParts[i], _ = strconv.ParseInt(pStr, 10, 64)
+	hour, minute, second, err := parseTimeParts(timePart)
+	if err != nil {
+		return
 	}
-	hour, minute, second := iParts[0], iParts[1], iParts[2]
 
 	fromMidnight := time.Duration(hour*3600+minute*60+second) * time.Second
 
@@ -166,51 +295,85 @@ func UnmarshalTimeOfDayTz(s string) (TimeOfDay, error) {
 		return TimeOfDay{}, fmt.Errorf("soap time.tz: value %q has value(s) out of range", s)
 	}
 
-	// Timezone offset parsing.
-	hasOffset := false
-	var offset int64
-	if parts[3] == "Z" {
-		hasOffset = true
-		offset = 0
-	} else if parts[4] != "" {
-		hasOffset = true
-		hours, _ := strconv.ParseInt(parts[5], 10, 64)
-		var mins int64
-		if parts[6] != "" {
-			mins, _ = strconv.ParseInt(parts[6], 10, 64)
-		}
-		offset = hours*3600 + mins*60
-		if parts[4] == "-" {
-			offset = -offset
-		}
-	}
 	return TimeOfDay{
 		FromMidnight: time.Duration(hour*3600+minute*60+second) * time.Second,
 		HasOffset:    hasOffset,
-		Offset:       int16(offset),
+		Offset:       offset,
 	}, nil
 }
 
-// MarshalDatetime marshals time.Time to SOAP "date" type. Note that this
+// MarshalDateTime marshals time.Time to SOAP "dateTime" type. Note that this
 // converts to local time.
-func MarshalDatetime(v time.Time) (string, error) {
+func MarshalDateTime(v time.Time) (string, error) {
 	return v.In(localLoc).Format("2006-01-02T15:04:05"), nil
 }
 
-// UnmarshalDatetime unmarshals time.Time from the SOAP "dateTime" type. This
+// UnmarshalDateTime unmarshals time.Time from the SOAP "dateTime" type. This
 // returns a value in the local timezone.
-func UnmarshalDatetime(s string) (time.Time, error) {
-	parts := strings.SplitN(s, "T", 2)
-	datePart, err := UnmarshalDate(parts[0])
+func UnmarshalDateTime(s string) (result time.Time, err error) {
+	dateStr, timeStr, zoneStr, err := splitCompleteDateTimeZone(s)
 	if err != nil {
-		return time.Time{}, err
+		return
 	}
-	if len(parts) == 2 {
-		timePart, err := UnmarshalTimeOfDay(parts[1])
+
+	if len(zoneStr) != 0 {
+		err = fmt.Errorf("soap datetime: unexpected timezone in %q", s)
+		return
+	}
+
+	year, month, day, err := parseDateParts(dateStr)
+	if err != nil {
+		return
+	}
+
+	var hour, minute, second int
+	if len(timeStr) != 0 {
+		hour, minute, second, err = parseTimeParts(timeStr)
 		if err != nil {
-			return time.Time{}, err
+			return
 		}
-		datePart = datePart.Add(timePart.FromMidnight)
 	}
-	return datePart, nil
+
+	result = time.Date(year, time.Month(month), day, hour, minute, second, 0, localLoc)
+	return
+}
+
+// MarshalDateTimeTz marshals time.Time to SOAP "dateTime.tz" type.
+func MarshalDateTimeTz(v time.Time) (string, error) {
+	return v.Format("2006-01-02T15:04:05-07:00"), nil
+}
+
+// UnmarshalDateTimeTz unmarshals time.Time from the SOAP "dateTime.tz" type.
+// This returns a value in the local timezone when the timezone is unspecified.
+func UnmarshalDateTimeTz(s string) (result time.Time, err error) {
+	dateStr, timeStr, zoneStr, err := splitCompleteDateTimeZone(s)
+	if err != nil {
+		return
+	}
+
+	year, month, day, err := parseDateParts(dateStr)
+	if err != nil {
+		return
+	}
+
+	var hour, minute, second int
+	var location *time.Location = localLoc
+	if len(timeStr) != 0 {
+		hour, minute, second, err = parseTimeParts(timeStr)
+		if err != nil {
+			return
+		}
+		if len(zoneStr) != 0 {
+			var offset int
+			offset, err = parseTimezone(zoneStr)
+			if offset == 0 {
+				location = time.UTC
+			} else {
+				location = time.FixedZone("", offset)
+			}
+		}
+	}
+
+	result = time.Date(year, time.Month(month), day, hour, minute, second, 0, location)
+	return
 }
