@@ -81,6 +81,24 @@ func UnmarshalInt(s string) (int64, error) {
 	return strconv.ParseInt(s, 10, 64)
 }
 
+func MarshalR4(v float32) (string, error) {
+	return strconv.FormatFloat(float64(v), 'G', -1, 32), nil
+}
+
+func UnmarshalR4(s string) (float32, error) {
+	v, err := strconv.ParseFloat(s, 32)
+	return float32(v), err
+}
+
+func MarshalR8(v float64) (string, error) {
+	return strconv.FormatFloat(v, 'G', -1, 64), nil
+}
+
+func UnmarshalR8(s string) (float64, error) {
+	v, err := strconv.ParseFloat(s, 64)
+	return float64(v), err
+}
+
 // MarshalFixed14_4 marshals float64 to SOAP "fixed.14.4" type.
 func MarshalFixed14_4(v float64) (string, error) {
 	if v >= 1e14 || v <= -1e14 {
