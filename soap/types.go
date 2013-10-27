@@ -2,6 +2,7 @@ package soap
 
 import (
 	"encoding/base64"
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"regexp"
@@ -406,4 +407,14 @@ func MarshalBinBase64(v []byte) (string, error) {
 // UnmarshalBinBase64 unmarshals []byte from the SOAP "bin.base64" type.
 func UnmarshalBinBase64(s string) ([]byte, error) {
 	return base64.StdEncoding.DecodeString(s)
+}
+
+// MarshalBinHex marshals []byte to SOAP "bin.hex" type.
+func MarshalBinHex(v []byte) (string, error) {
+	return hex.EncodeToString(v), nil
+}
+
+// UnmarshalBinHex unmarshals []byte from the SOAP "bin.hex" type.
+func UnmarshalBinHex(s string) ([]byte, error) {
+	return hex.DecodeString(s)
 }

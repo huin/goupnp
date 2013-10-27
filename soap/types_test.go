@@ -159,6 +159,18 @@ func (v BinBase64Test) Equal(result interface{}) bool {
 	return bytes.Equal([]byte(v), result.([]byte))
 }
 
+type BinHexTest []byte
+
+func (v BinHexTest) Marshal() (string, error) {
+	return MarshalBinHex([]byte(v))
+}
+func (v BinHexTest) Unmarshal(s string) (interface{}, error) {
+	return UnmarshalBinHex(s)
+}
+func (v BinHexTest) Equal(result interface{}) bool {
+	return bytes.Equal([]byte(v), result.([]byte))
+}
+
 func Test(t *testing.T) {
 	const time010203 time.Duration = (1*3600 + 2*60 + 3) * time.Second
 	const time0102 time.Duration = (1*3600 + 2*60) * time.Second
@@ -276,6 +288,12 @@ func Test(t *testing.T) {
 		{str: "YQ==", value: BinBase64Test("a")},
 		{str: "TG9uZ2VyIFN0cmluZy4=", value: BinBase64Test("Longer String.")},
 		{str: "TG9uZ2VyIEFsaWduZWQu", value: BinBase64Test("Longer Aligned.")},
+
+		// bin.hex
+		{str: "", value: BinHexTest{}},
+		{str: "61", value: BinHexTest("a")},
+		{str: "4c6f6e67657220537472696e672e", value: BinHexTest("Longer String.")},
+		{str: "4C6F6E67657220537472696E672E", value: BinHexTest("Longer String."), noMarshal: true},
 	}
 
 	// Generate extra test cases from convTests that implement duper.
