@@ -19,6 +19,68 @@ var (
 	localLoc = time.Local
 )
 
+func MarshalUi1(v uint8) (string, error) {
+	return strconv.FormatUint(uint64(v), 10), nil
+}
+
+func UnmarshalUi1(s string) (uint8, error) {
+	v, err := strconv.ParseUint(s, 10, 8)
+	return uint8(v), err
+}
+
+func MarshalUi2(v uint16) (string, error) {
+	return strconv.FormatUint(uint64(v), 10), nil
+}
+
+func UnmarshalUi2(s string) (uint16, error) {
+	v, err := strconv.ParseUint(s, 10, 16)
+	return uint16(v), err
+}
+
+func MarshalUi4(v uint32) (string, error) {
+	return strconv.FormatUint(uint64(v), 10), nil
+}
+
+func UnmarshalUi4(s string) (uint32, error) {
+	v, err := strconv.ParseUint(s, 10, 32)
+	return uint32(v), err
+}
+
+func MarshalI1(v int8) (string, error) {
+	return strconv.FormatInt(int64(v), 10), nil
+}
+
+func UnmarshalI1(s string) (int8, error) {
+	v, err := strconv.ParseInt(s, 10, 8)
+	return int8(v), err
+}
+
+func MarshalI2(v int16) (string, error) {
+	return strconv.FormatInt(int64(v), 10), nil
+}
+
+func UnmarshalI2(s string) (int16, error) {
+	v, err := strconv.ParseInt(s, 10, 16)
+	return int16(v), err
+}
+
+func MarshalI4(v int32) (string, error) {
+	return strconv.FormatInt(int64(v), 10), nil
+}
+
+func UnmarshalI4(s string) (int32, error) {
+	v, err := strconv.ParseInt(s, 10, 32)
+	return int32(v), err
+}
+
+func MarshalInt(v int64) (string, error) {
+	return strconv.FormatInt(v, 10), nil
+}
+
+func UnmarshalInt(s string) (int64, error) {
+	return strconv.ParseInt(s, 10, 64)
+}
+
 // MarshalFixed14_4 marshals float64 to SOAP "fixed.14.4" type.
 func MarshalFixed14_4(v float64) (string, error) {
 	if v >= 1e14 || v <= -1e14 {
