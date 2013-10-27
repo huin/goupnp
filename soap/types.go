@@ -1,6 +1,7 @@
 package soap
 
 import (
+	"encoding/base64"
 	"errors"
 	"fmt"
 	"regexp"
@@ -395,4 +396,14 @@ func UnmarshalBoolean(s string) (bool, error) {
 		return true, nil
 	}
 	return false, fmt.Errorf("soap boolean: %q is not a valid boolean value", s)
+}
+
+// MarshalBinBase64 marshals []byte to SOAP "bin.base64" type.
+func MarshalBinBase64(v []byte) (string, error) {
+	return base64.StdEncoding.EncodeToString(v), nil
+}
+
+// UnmarshalBinBase64 unmarshals []byte from the SOAP "bin.base64" type.
+func UnmarshalBinBase64(s string) ([]byte, error) {
+	return base64.StdEncoding.DecodeString(s)
 }

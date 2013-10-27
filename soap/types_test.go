@@ -1,6 +1,7 @@
 package soap
 
 import (
+	"bytes"
 	"math"
 	"testing"
 	"time"
@@ -146,6 +147,18 @@ func (v BooleanTest) Equal(result interface{}) bool {
 	return bool(v) == result.(bool)
 }
 
+type BinBase64Test []byte
+
+func (v BinBase64Test) Marshal() (string, error) {
+	return MarshalBinBase64([]byte(v))
+}
+func (v BinBase64Test) Unmarshal(s string) (interface{}, error) {
+	return UnmarshalBinBase64(s)
+}
+func (v BinBase64Test) Equal(result interface{}) bool {
+	return bytes.Equal([]byte(v), result.([]byte))
+}
+
 func Test(t *testing.T) {
 	const time010203 time.Duration = (1*3600 + 2*60 + 3) * time.Second
 	const time0102 time.Duration = (1*3600 + 2*60) * time.Second
@@ -257,6 +270,12 @@ func Test(t *testing.T) {
 		{str: "other", value: BooleanTest(false), noMarshal: true, wantUnmarshalErr: true},
 		{str: "2", value: BooleanTest(false), noMarshal: true, wantUnmarshalErr: true},
 		{str: "-1", value: BooleanTest(false), noMarshal: true, wantUnmarshalErr: true},
+
+		// bin.base64
+		{str: "", value: BinBase64Test{}},
+		{str: "YQ==", value: BinBase64Test("a")},
+		{str: "TG9uZ2VyIFN0cmluZy4=", value: BinBase64Test("Longer String.")},
+		{str: "TG9uZ2VyIEFsaWduZWQu", value: BinBase64Test("Longer Aligned.")},
 	}
 
 	// Generate extra test cases from convTests that implement duper.
