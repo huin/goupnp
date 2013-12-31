@@ -34,48 +34,32 @@ type {{$srvIdent}} struct {
 
 {{range .SCPD.Actions}}{{/* loops over *SCPDWithURN values */}}
 
+{{$inargs := .InputArguments}}{{$outargs := .OutputArguments}}
 // {{.Name}} action.
-// Arguments:
-//{{range .Arguments}}{{if .IsInput}}
-// * {{.Name}}: {{$v := $srv.SCPD.GetStateVariable .RelatedStateVariable}}
-{{if $v}}// (related state variable: {{$v.Name}})
-// - {{if $v.AllowedValueRange}}allowed range: {{$v.AllowedValueRange.Minimum}} to {{$v.AllowedValueRange.Maximum}}{{end}}
-// - {{if $v.AllowedValues}}allowed values:
-// {{range $i, $val := $v.AllowedValues}}{{if $i}}|{{end}}{{$val}}{{end}}{{end}}
-//{{else}}
-// (unknown){{end}}
-//{{end}}{{end}}
 //
-// Return values:
-//{{range .Arguments}}{{if .IsOutput}}
-// * {{.Name}}: {{$v := $srv.SCPD.GetStateVariable .RelatedStateVariable}}
-{{if $v}}// (related state variable: {{$v.Name}})
-// - {{if $v.AllowedValueRange}}allowed range: {{$v.AllowedValueRange.Minimum}} to {{$v.AllowedValueRange.Maximum}}{{end}}
-// - {{if $v.AllowedValues}}allowed values:
-// {{range $i, $val := $v.AllowedValues}}{{if $i}}|{{end}}{{$val}}{{end}}{{end}}
-//{{else}}
-// (unknown){{end}}
+// {{if $inargs}}Arguments:{{range $inargs}}{{$argWrap := $srv.WrapArgument .}}
+// * {{.Name}}: {{$argWrap.Document}}
 //{{end}}{{end}}
-func (client *{{$srvIdent}}) {{.Name}}({{range .Arguments}}{{if .IsInput}}
-	{{$argWrap := $srv.Argument .}}{{$argWrap.AsParameter}},{{end}}{{end}}
-) ({{range .Arguments}}{{if .IsOutput}}
-	{{$argWrap := $srv.Argument .}}{{$argWrap.AsParameter}},{{end}}{{end}}
-	err error,
-) {
+// {{if $outargs}}Return values:{{range $outargs}}{{$argWrap := $srv.WrapArgument .}}
+// * {{.Name}}: {{$argWrap.Document}}
+//{{end}}{{end}}
+func (client *{{$srvIdent}}) {{.Name}}({{range $inargs}}{{/*
+*/}}{{$argWrap := $srv.WrapArgument .}}{{$argWrap.AsParameter}}, {{end}}{{/*
+*/}}) ({{range $outargs}}{{/*
+*/}}{{$argWrap := $srv.WrapArgument .}}{{$argWrap.AsParameter}}, {{end}} err error) {
 	// Request structure.
 	var request struct {{"{"}}{{range .Arguments}}{{if .IsInput}}{{.Name}} string
 {{end}}{{end}}}
 	// BEGIN Marshal arguments into request.
-{{range .Arguments}}{{if .IsInput}}{{$argWrap := $srv.Argument .}}
+{{range $inargs}}{{$argWrap := $srv.WrapArgument .}}
 	if request.{{.Name}}, err = {{$argWrap.Marshal}}; err != nil {
 		return
-	}
-{{end}}{{end}}
+	}{{end}}
 	// END Marshal arguments into request.
 
 	// Response structure.
-	var response struct {{"{"}}{{range .Arguments}}{{if .IsOutput}}{{.Name}} string
-{{end}}{{end}}}
+	var response struct {{"{"}}{{range $outargs}}{{.Name}} string
+{{end}}}
 
 	// Perform the SOAP call.
 	if err = client.SOAPClient.PerformAction({{$srv.URNParts.Const}}, "{{.Name}}", &request, &response); err != nil {
@@ -83,11 +67,10 @@ func (client *{{$srvIdent}}) {{.Name}}({{range .Arguments}}{{if .IsInput}}
 	}
 
 	// BEGIN Unmarshal arguments from response.
-{{range .Arguments}}{{if .IsOutput}}{{$argWrap := $srv.Argument .}}
+{{range $outargs}}{{$argWrap := $srv.WrapArgument .}}
 	if {{.Name}}, err = {{$argWrap.Unmarshal "response"}}; err != nil {
 		return
-	}
-{{end}}{{end}}
+	}{{end}}
 	// END Unmarshal arguments from response.
 	return
 }

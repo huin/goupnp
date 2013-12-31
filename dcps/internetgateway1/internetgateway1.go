@@ -43,22 +43,12 @@ type LANHostConfigManagement1 struct {
 }
 
 // SetDHCPServerConfigurable action.
+//
 // Arguments:
-//
 // * NewDHCPServerConfigurable:
-// (related state variable: DHCPServerConfigurable)
-// -
-// -
 //
 //
-//
-// Return values:
-//
-func (client *LANHostConfigManagement1) SetDHCPServerConfigurable(
-	NewDHCPServerConfigurable bool,
-) (
-	err error,
-) {
+func (client *LANHostConfigManagement1) SetDHCPServerConfigurable(NewDHCPServerConfigurable bool) (err error) {
 	// Request structure.
 	var request struct {
 		NewDHCPServerConfigurable string
@@ -68,7 +58,6 @@ func (client *LANHostConfigManagement1) SetDHCPServerConfigurable(
 	if request.NewDHCPServerConfigurable, err = soap.MarshalBoolean(NewDHCPServerConfigurable); err != nil {
 		return
 	}
-
 	// END Marshal arguments into request.
 
 	// Response structure.
@@ -86,21 +75,12 @@ func (client *LANHostConfigManagement1) SetDHCPServerConfigurable(
 }
 
 // GetDHCPServerConfigurable action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewDHCPServerConfigurable:
-// (related state variable: DHCPServerConfigurable)
-// -
-// -
 //
-//
-func (client *LANHostConfigManagement1) GetDHCPServerConfigurable() (
-	NewDHCPServerConfigurable bool,
-	err error,
-) {
+func (client *LANHostConfigManagement1) GetDHCPServerConfigurable() (NewDHCPServerConfigurable bool, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -122,28 +102,17 @@ func (client *LANHostConfigManagement1) GetDHCPServerConfigurable() (
 	if NewDHCPServerConfigurable, err = soap.UnmarshalBoolean(response.NewDHCPServerConfigurable); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // SetDHCPRelay action.
+//
 // Arguments:
-//
 // * NewDHCPRelay:
-// (related state variable: DHCPRelay)
-// -
-// -
 //
 //
-//
-// Return values:
-//
-func (client *LANHostConfigManagement1) SetDHCPRelay(
-	NewDHCPRelay bool,
-) (
-	err error,
-) {
+func (client *LANHostConfigManagement1) SetDHCPRelay(NewDHCPRelay bool) (err error) {
 	// Request structure.
 	var request struct {
 		NewDHCPRelay string
@@ -153,7 +122,6 @@ func (client *LANHostConfigManagement1) SetDHCPRelay(
 	if request.NewDHCPRelay, err = soap.MarshalBoolean(NewDHCPRelay); err != nil {
 		return
 	}
-
 	// END Marshal arguments into request.
 
 	// Response structure.
@@ -171,21 +139,12 @@ func (client *LANHostConfigManagement1) SetDHCPRelay(
 }
 
 // GetDHCPRelay action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewDHCPRelay:
-// (related state variable: DHCPRelay)
-// -
-// -
 //
-//
-func (client *LANHostConfigManagement1) GetDHCPRelay() (
-	NewDHCPRelay bool,
-	err error,
-) {
+func (client *LANHostConfigManagement1) GetDHCPRelay() (NewDHCPRelay bool, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -207,28 +166,17 @@ func (client *LANHostConfigManagement1) GetDHCPRelay() (
 	if NewDHCPRelay, err = soap.UnmarshalBoolean(response.NewDHCPRelay); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // SetSubnetMask action.
+//
 // Arguments:
-//
 // * NewSubnetMask:
-// (related state variable: SubnetMask)
-// -
-// -
 //
 //
-//
-// Return values:
-//
-func (client *LANHostConfigManagement1) SetSubnetMask(
-	NewSubnetMask string,
-) (
-	err error,
-) {
+func (client *LANHostConfigManagement1) SetSubnetMask(NewSubnetMask string) (err error) {
 	// Request structure.
 	var request struct {
 		NewSubnetMask string
@@ -238,7 +186,6 @@ func (client *LANHostConfigManagement1) SetSubnetMask(
 	if request.NewSubnetMask, err = soap.MarshalString(NewSubnetMask); err != nil {
 		return
 	}
-
 	// END Marshal arguments into request.
 
 	// Response structure.
@@ -256,21 +203,12 @@ func (client *LANHostConfigManagement1) SetSubnetMask(
 }
 
 // GetSubnetMask action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewSubnetMask:
-// (related state variable: SubnetMask)
-// -
-// -
 //
-//
-func (client *LANHostConfigManagement1) GetSubnetMask() (
-	NewSubnetMask string,
-	err error,
-) {
+func (client *LANHostConfigManagement1) GetSubnetMask() (NewSubnetMask string, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -292,28 +230,17 @@ func (client *LANHostConfigManagement1) GetSubnetMask() (
 	if NewSubnetMask, err = soap.UnmarshalString(response.NewSubnetMask); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // SetIPRouter action.
+//
 // Arguments:
-//
 // * NewIPRouters:
-// (related state variable: IPRouters)
-// -
-// -
 //
 //
-//
-// Return values:
-//
-func (client *LANHostConfigManagement1) SetIPRouter(
-	NewIPRouters string,
-) (
-	err error,
-) {
+func (client *LANHostConfigManagement1) SetIPRouter(NewIPRouters string) (err error) {
 	// Request structure.
 	var request struct {
 		NewIPRouters string
@@ -323,7 +250,6 @@ func (client *LANHostConfigManagement1) SetIPRouter(
 	if request.NewIPRouters, err = soap.MarshalString(NewIPRouters); err != nil {
 		return
 	}
-
 	// END Marshal arguments into request.
 
 	// Response structure.
@@ -341,22 +267,12 @@ func (client *LANHostConfigManagement1) SetIPRouter(
 }
 
 // DeleteIPRouter action.
+//
 // Arguments:
-//
 // * NewIPRouters:
-// (related state variable: IPRouters)
-// -
-// -
 //
 //
-//
-// Return values:
-//
-func (client *LANHostConfigManagement1) DeleteIPRouter(
-	NewIPRouters string,
-) (
-	err error,
-) {
+func (client *LANHostConfigManagement1) DeleteIPRouter(NewIPRouters string) (err error) {
 	// Request structure.
 	var request struct {
 		NewIPRouters string
@@ -366,7 +282,6 @@ func (client *LANHostConfigManagement1) DeleteIPRouter(
 	if request.NewIPRouters, err = soap.MarshalString(NewIPRouters); err != nil {
 		return
 	}
-
 	// END Marshal arguments into request.
 
 	// Response structure.
@@ -384,21 +299,12 @@ func (client *LANHostConfigManagement1) DeleteIPRouter(
 }
 
 // GetIPRoutersList action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewIPRouters:
-// (related state variable: IPRouters)
-// -
-// -
 //
-//
-func (client *LANHostConfigManagement1) GetIPRoutersList() (
-	NewIPRouters string,
-	err error,
-) {
+func (client *LANHostConfigManagement1) GetIPRoutersList() (NewIPRouters string, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -420,28 +326,17 @@ func (client *LANHostConfigManagement1) GetIPRoutersList() (
 	if NewIPRouters, err = soap.UnmarshalString(response.NewIPRouters); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // SetDomainName action.
+//
 // Arguments:
-//
 // * NewDomainName:
-// (related state variable: DomainName)
-// -
-// -
 //
 //
-//
-// Return values:
-//
-func (client *LANHostConfigManagement1) SetDomainName(
-	NewDomainName string,
-) (
-	err error,
-) {
+func (client *LANHostConfigManagement1) SetDomainName(NewDomainName string) (err error) {
 	// Request structure.
 	var request struct {
 		NewDomainName string
@@ -451,7 +346,6 @@ func (client *LANHostConfigManagement1) SetDomainName(
 	if request.NewDomainName, err = soap.MarshalString(NewDomainName); err != nil {
 		return
 	}
-
 	// END Marshal arguments into request.
 
 	// Response structure.
@@ -469,21 +363,12 @@ func (client *LANHostConfigManagement1) SetDomainName(
 }
 
 // GetDomainName action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewDomainName:
-// (related state variable: DomainName)
-// -
-// -
 //
-//
-func (client *LANHostConfigManagement1) GetDomainName() (
-	NewDomainName string,
-	err error,
-) {
+func (client *LANHostConfigManagement1) GetDomainName() (NewDomainName string, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -505,35 +390,19 @@ func (client *LANHostConfigManagement1) GetDomainName() (
 	if NewDomainName, err = soap.UnmarshalString(response.NewDomainName); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // SetAddressRange action.
+//
 // Arguments:
-//
 // * NewMinAddress:
-// (related state variable: MinAddress)
-// -
-// -
-//
 //
 // * NewMaxAddress:
-// (related state variable: MaxAddress)
-// -
-// -
 //
 //
-//
-// Return values:
-//
-func (client *LANHostConfigManagement1) SetAddressRange(
-	NewMinAddress string,
-	NewMaxAddress string,
-) (
-	err error,
-) {
+func (client *LANHostConfigManagement1) SetAddressRange(NewMinAddress string, NewMaxAddress string) (err error) {
 	// Request structure.
 	var request struct {
 		NewMinAddress string
@@ -544,11 +413,9 @@ func (client *LANHostConfigManagement1) SetAddressRange(
 	if request.NewMinAddress, err = soap.MarshalString(NewMinAddress); err != nil {
 		return
 	}
-
 	if request.NewMaxAddress, err = soap.MarshalString(NewMaxAddress); err != nil {
 		return
 	}
-
 	// END Marshal arguments into request.
 
 	// Response structure.
@@ -566,28 +433,14 @@ func (client *LANHostConfigManagement1) SetAddressRange(
 }
 
 // GetAddressRange action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewMinAddress:
-// (related state variable: MinAddress)
-// -
-// -
-//
 //
 // * NewMaxAddress:
-// (related state variable: MaxAddress)
-// -
-// -
 //
-//
-func (client *LANHostConfigManagement1) GetAddressRange() (
-	NewMinAddress string,
-	NewMaxAddress string,
-	err error,
-) {
+func (client *LANHostConfigManagement1) GetAddressRange() (NewMinAddress string, NewMaxAddress string, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -610,32 +463,20 @@ func (client *LANHostConfigManagement1) GetAddressRange() (
 	if NewMinAddress, err = soap.UnmarshalString(response.NewMinAddress); err != nil {
 		return
 	}
-
 	if NewMaxAddress, err = soap.UnmarshalString(response.NewMaxAddress); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // SetReservedAddress action.
+//
 // Arguments:
-//
 // * NewReservedAddresses:
-// (related state variable: ReservedAddresses)
-// -
-// -
 //
 //
-//
-// Return values:
-//
-func (client *LANHostConfigManagement1) SetReservedAddress(
-	NewReservedAddresses string,
-) (
-	err error,
-) {
+func (client *LANHostConfigManagement1) SetReservedAddress(NewReservedAddresses string) (err error) {
 	// Request structure.
 	var request struct {
 		NewReservedAddresses string
@@ -645,7 +486,6 @@ func (client *LANHostConfigManagement1) SetReservedAddress(
 	if request.NewReservedAddresses, err = soap.MarshalString(NewReservedAddresses); err != nil {
 		return
 	}
-
 	// END Marshal arguments into request.
 
 	// Response structure.
@@ -663,22 +503,12 @@ func (client *LANHostConfigManagement1) SetReservedAddress(
 }
 
 // DeleteReservedAddress action.
+//
 // Arguments:
-//
 // * NewReservedAddresses:
-// (related state variable: ReservedAddresses)
-// -
-// -
 //
 //
-//
-// Return values:
-//
-func (client *LANHostConfigManagement1) DeleteReservedAddress(
-	NewReservedAddresses string,
-) (
-	err error,
-) {
+func (client *LANHostConfigManagement1) DeleteReservedAddress(NewReservedAddresses string) (err error) {
 	// Request structure.
 	var request struct {
 		NewReservedAddresses string
@@ -688,7 +518,6 @@ func (client *LANHostConfigManagement1) DeleteReservedAddress(
 	if request.NewReservedAddresses, err = soap.MarshalString(NewReservedAddresses); err != nil {
 		return
 	}
-
 	// END Marshal arguments into request.
 
 	// Response structure.
@@ -706,21 +535,12 @@ func (client *LANHostConfigManagement1) DeleteReservedAddress(
 }
 
 // GetReservedAddresses action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewReservedAddresses:
-// (related state variable: ReservedAddresses)
-// -
-// -
 //
-//
-func (client *LANHostConfigManagement1) GetReservedAddresses() (
-	NewReservedAddresses string,
-	err error,
-) {
+func (client *LANHostConfigManagement1) GetReservedAddresses() (NewReservedAddresses string, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -742,28 +562,17 @@ func (client *LANHostConfigManagement1) GetReservedAddresses() (
 	if NewReservedAddresses, err = soap.UnmarshalString(response.NewReservedAddresses); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // SetDNSServer action.
+//
 // Arguments:
-//
 // * NewDNSServers:
-// (related state variable: DNSServers)
-// -
-// -
 //
 //
-//
-// Return values:
-//
-func (client *LANHostConfigManagement1) SetDNSServer(
-	NewDNSServers string,
-) (
-	err error,
-) {
+func (client *LANHostConfigManagement1) SetDNSServer(NewDNSServers string) (err error) {
 	// Request structure.
 	var request struct {
 		NewDNSServers string
@@ -773,7 +582,6 @@ func (client *LANHostConfigManagement1) SetDNSServer(
 	if request.NewDNSServers, err = soap.MarshalString(NewDNSServers); err != nil {
 		return
 	}
-
 	// END Marshal arguments into request.
 
 	// Response structure.
@@ -791,22 +599,12 @@ func (client *LANHostConfigManagement1) SetDNSServer(
 }
 
 // DeleteDNSServer action.
+//
 // Arguments:
-//
 // * NewDNSServers:
-// (related state variable: DNSServers)
-// -
-// -
 //
 //
-//
-// Return values:
-//
-func (client *LANHostConfigManagement1) DeleteDNSServer(
-	NewDNSServers string,
-) (
-	err error,
-) {
+func (client *LANHostConfigManagement1) DeleteDNSServer(NewDNSServers string) (err error) {
 	// Request structure.
 	var request struct {
 		NewDNSServers string
@@ -816,7 +614,6 @@ func (client *LANHostConfigManagement1) DeleteDNSServer(
 	if request.NewDNSServers, err = soap.MarshalString(NewDNSServers); err != nil {
 		return
 	}
-
 	// END Marshal arguments into request.
 
 	// Response structure.
@@ -834,21 +631,12 @@ func (client *LANHostConfigManagement1) DeleteDNSServer(
 }
 
 // GetDNSServers action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewDNSServers:
-// (related state variable: DNSServers)
-// -
-// -
 //
-//
-func (client *LANHostConfigManagement1) GetDNSServers() (
-	NewDNSServers string,
-	err error,
-) {
+func (client *LANHostConfigManagement1) GetDNSServers() (NewDNSServers string, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -870,7 +658,6 @@ func (client *LANHostConfigManagement1) GetDNSServers() (
 	if NewDNSServers, err = soap.UnmarshalString(response.NewDNSServers); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
@@ -881,22 +668,12 @@ type Layer3Forwarding1 struct {
 }
 
 // SetDefaultConnectionService action.
+//
 // Arguments:
-//
 // * NewDefaultConnectionService:
-// (related state variable: DefaultConnectionService)
-// -
-// -
 //
 //
-//
-// Return values:
-//
-func (client *Layer3Forwarding1) SetDefaultConnectionService(
-	NewDefaultConnectionService string,
-) (
-	err error,
-) {
+func (client *Layer3Forwarding1) SetDefaultConnectionService(NewDefaultConnectionService string) (err error) {
 	// Request structure.
 	var request struct {
 		NewDefaultConnectionService string
@@ -906,7 +683,6 @@ func (client *Layer3Forwarding1) SetDefaultConnectionService(
 	if request.NewDefaultConnectionService, err = soap.MarshalString(NewDefaultConnectionService); err != nil {
 		return
 	}
-
 	// END Marshal arguments into request.
 
 	// Response structure.
@@ -924,21 +700,12 @@ func (client *Layer3Forwarding1) SetDefaultConnectionService(
 }
 
 // GetDefaultConnectionService action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewDefaultConnectionService:
-// (related state variable: DefaultConnectionService)
-// -
-// -
 //
-//
-func (client *Layer3Forwarding1) GetDefaultConnectionService() (
-	NewDefaultConnectionService string,
-	err error,
-) {
+func (client *Layer3Forwarding1) GetDefaultConnectionService() (NewDefaultConnectionService string, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -960,7 +727,6 @@ func (client *Layer3Forwarding1) GetDefaultConnectionService() (
 	if NewDefaultConnectionService, err = soap.UnmarshalString(response.NewDefaultConnectionService); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
@@ -971,30 +737,14 @@ type WANCableLinkConfig1 struct {
 }
 
 // GetCableLinkConfigInfo action.
-// Arguments:
 //
 //
 // Return values:
+// * NewCableLinkConfigState: allowed values: notReady, dsSyncComplete, usParamAcquired, rangingComplete, ipComplete, todEstablished, paramTransferComplete, registrationComplete, operational, accessDenied
 //
-// * NewCableLinkConfigState:
-// (related state variable: CableLinkConfigState)
-// -
-// - allowed values:
-// notReady|dsSyncComplete|usParamAcquired|rangingComplete|ipComplete|todEstablished|paramTransferComplete|registrationComplete|operational|accessDenied
+// * NewLinkType: allowed values: Ethernet
 //
-//
-// * NewLinkType:
-// (related state variable: LinkType)
-// -
-// - allowed values:
-// Ethernet
-//
-//
-func (client *WANCableLinkConfig1) GetCableLinkConfigInfo() (
-	NewCableLinkConfigState string,
-	NewLinkType string,
-	err error,
-) {
+func (client *WANCableLinkConfig1) GetCableLinkConfigInfo() (NewCableLinkConfigState string, NewLinkType string, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -1017,31 +767,20 @@ func (client *WANCableLinkConfig1) GetCableLinkConfigInfo() (
 	if NewCableLinkConfigState, err = soap.UnmarshalString(response.NewCableLinkConfigState); err != nil {
 		return
 	}
-
 	if NewLinkType, err = soap.UnmarshalString(response.NewLinkType); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetDownstreamFrequency action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewDownstreamFrequency:
-// (related state variable: DownstreamFrequency)
-// -
-// -
 //
-//
-func (client *WANCableLinkConfig1) GetDownstreamFrequency() (
-	NewDownstreamFrequency uint32,
-	err error,
-) {
+func (client *WANCableLinkConfig1) GetDownstreamFrequency() (NewDownstreamFrequency uint32, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -1063,28 +802,17 @@ func (client *WANCableLinkConfig1) GetDownstreamFrequency() (
 	if NewDownstreamFrequency, err = soap.UnmarshalUi4(response.NewDownstreamFrequency); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetDownstreamModulation action.
-// Arguments:
 //
 //
 // Return values:
+// * NewDownstreamModulation: allowed values: 64QAM, 256QAM
 //
-// * NewDownstreamModulation:
-// (related state variable: DownstreamModulation)
-// -
-// - allowed values:
-// 64QAM|256QAM
-//
-//
-func (client *WANCableLinkConfig1) GetDownstreamModulation() (
-	NewDownstreamModulation string,
-	err error,
-) {
+func (client *WANCableLinkConfig1) GetDownstreamModulation() (NewDownstreamModulation string, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -1106,27 +834,17 @@ func (client *WANCableLinkConfig1) GetDownstreamModulation() (
 	if NewDownstreamModulation, err = soap.UnmarshalString(response.NewDownstreamModulation); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetUpstreamFrequency action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewUpstreamFrequency:
-// (related state variable: UpstreamFrequency)
-// -
-// -
 //
-//
-func (client *WANCableLinkConfig1) GetUpstreamFrequency() (
-	NewUpstreamFrequency uint32,
-	err error,
-) {
+func (client *WANCableLinkConfig1) GetUpstreamFrequency() (NewUpstreamFrequency uint32, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -1148,28 +866,17 @@ func (client *WANCableLinkConfig1) GetUpstreamFrequency() (
 	if NewUpstreamFrequency, err = soap.UnmarshalUi4(response.NewUpstreamFrequency); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetUpstreamModulation action.
-// Arguments:
 //
 //
 // Return values:
+// * NewUpstreamModulation: allowed values: QPSK, 16QAM
 //
-// * NewUpstreamModulation:
-// (related state variable: UpstreamModulation)
-// -
-// - allowed values:
-// QPSK|16QAM
-//
-//
-func (client *WANCableLinkConfig1) GetUpstreamModulation() (
-	NewUpstreamModulation string,
-	err error,
-) {
+func (client *WANCableLinkConfig1) GetUpstreamModulation() (NewUpstreamModulation string, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -1191,27 +898,17 @@ func (client *WANCableLinkConfig1) GetUpstreamModulation() (
 	if NewUpstreamModulation, err = soap.UnmarshalString(response.NewUpstreamModulation); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetUpstreamChannelID action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewUpstreamChannelID:
-// (related state variable: UpstreamChannelID)
-// -
-// -
 //
-//
-func (client *WANCableLinkConfig1) GetUpstreamChannelID() (
-	NewUpstreamChannelID uint32,
-	err error,
-) {
+func (client *WANCableLinkConfig1) GetUpstreamChannelID() (NewUpstreamChannelID uint32, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -1233,27 +930,17 @@ func (client *WANCableLinkConfig1) GetUpstreamChannelID() (
 	if NewUpstreamChannelID, err = soap.UnmarshalUi4(response.NewUpstreamChannelID); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetUpstreamPowerLevel action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewUpstreamPowerLevel:
-// (related state variable: UpstreamPowerLevel)
-// -
-// -
 //
-//
-func (client *WANCableLinkConfig1) GetUpstreamPowerLevel() (
-	NewUpstreamPowerLevel uint32,
-	err error,
-) {
+func (client *WANCableLinkConfig1) GetUpstreamPowerLevel() (NewUpstreamPowerLevel uint32, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -1275,27 +962,17 @@ func (client *WANCableLinkConfig1) GetUpstreamPowerLevel() (
 	if NewUpstreamPowerLevel, err = soap.UnmarshalUi4(response.NewUpstreamPowerLevel); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetBPIEncryptionEnabled action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewBPIEncryptionEnabled:
-// (related state variable: BPIEncryptionEnabled)
-// -
-// -
 //
-//
-func (client *WANCableLinkConfig1) GetBPIEncryptionEnabled() (
-	NewBPIEncryptionEnabled bool,
-	err error,
-) {
+func (client *WANCableLinkConfig1) GetBPIEncryptionEnabled() (NewBPIEncryptionEnabled bool, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -1317,27 +994,17 @@ func (client *WANCableLinkConfig1) GetBPIEncryptionEnabled() (
 	if NewBPIEncryptionEnabled, err = soap.UnmarshalBoolean(response.NewBPIEncryptionEnabled); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetConfigFile action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewConfigFile:
-// (related state variable: ConfigFile)
-// -
-// -
 //
-//
-func (client *WANCableLinkConfig1) GetConfigFile() (
-	NewConfigFile string,
-	err error,
-) {
+func (client *WANCableLinkConfig1) GetConfigFile() (NewConfigFile string, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -1359,27 +1026,17 @@ func (client *WANCableLinkConfig1) GetConfigFile() (
 	if NewConfigFile, err = soap.UnmarshalString(response.NewConfigFile); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetTFTPServer action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewTFTPServer:
-// (related state variable: TFTPServer)
-// -
-// -
 //
-//
-func (client *WANCableLinkConfig1) GetTFTPServer() (
-	NewTFTPServer string,
-	err error,
-) {
+func (client *WANCableLinkConfig1) GetTFTPServer() (NewTFTPServer string, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -1401,7 +1058,6 @@ func (client *WANCableLinkConfig1) GetTFTPServer() (
 	if NewTFTPServer, err = soap.UnmarshalString(response.NewTFTPServer); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
@@ -1412,22 +1068,12 @@ type WANCommonInterfaceConfig1 struct {
 }
 
 // SetEnabledForInternet action.
+//
 // Arguments:
-//
 // * NewEnabledForInternet:
-// (related state variable: EnabledForInternet)
-// -
-// -
 //
 //
-//
-// Return values:
-//
-func (client *WANCommonInterfaceConfig1) SetEnabledForInternet(
-	NewEnabledForInternet bool,
-) (
-	err error,
-) {
+func (client *WANCommonInterfaceConfig1) SetEnabledForInternet(NewEnabledForInternet bool) (err error) {
 	// Request structure.
 	var request struct {
 		NewEnabledForInternet string
@@ -1437,7 +1083,6 @@ func (client *WANCommonInterfaceConfig1) SetEnabledForInternet(
 	if request.NewEnabledForInternet, err = soap.MarshalBoolean(NewEnabledForInternet); err != nil {
 		return
 	}
-
 	// END Marshal arguments into request.
 
 	// Response structure.
@@ -1455,21 +1100,12 @@ func (client *WANCommonInterfaceConfig1) SetEnabledForInternet(
 }
 
 // GetEnabledForInternet action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewEnabledForInternet:
-// (related state variable: EnabledForInternet)
-// -
-// -
 //
-//
-func (client *WANCommonInterfaceConfig1) GetEnabledForInternet() (
-	NewEnabledForInternet bool,
-	err error,
-) {
+func (client *WANCommonInterfaceConfig1) GetEnabledForInternet() (NewEnabledForInternet bool, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -1491,50 +1127,23 @@ func (client *WANCommonInterfaceConfig1) GetEnabledForInternet() (
 	if NewEnabledForInternet, err = soap.UnmarshalBoolean(response.NewEnabledForInternet); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetCommonLinkProperties action.
-// Arguments:
 //
 //
 // Return values:
-//
-// * NewWANAccessType:
-// (related state variable: WANAccessType)
-// -
-// - allowed values:
-// DSL|POTS|Cable|Ethernet
-//
+// * NewWANAccessType: allowed values: DSL, POTS, Cable, Ethernet
 //
 // * NewLayer1UpstreamMaxBitRate:
-// (related state variable: Layer1UpstreamMaxBitRate)
-// -
-// -
-//
 //
 // * NewLayer1DownstreamMaxBitRate:
-// (related state variable: Layer1DownstreamMaxBitRate)
-// -
-// -
 //
+// * NewPhysicalLinkStatus: allowed values: Up, Down
 //
-// * NewPhysicalLinkStatus:
-// (related state variable: PhysicalLinkStatus)
-// -
-// - allowed values:
-// Up|Down
-//
-//
-func (client *WANCommonInterfaceConfig1) GetCommonLinkProperties() (
-	NewWANAccessType string,
-	NewLayer1UpstreamMaxBitRate uint32,
-	NewLayer1DownstreamMaxBitRate uint32,
-	NewPhysicalLinkStatus string,
-	err error,
-) {
+func (client *WANCommonInterfaceConfig1) GetCommonLinkProperties() (NewWANAccessType string, NewLayer1UpstreamMaxBitRate uint32, NewLayer1DownstreamMaxBitRate uint32, NewPhysicalLinkStatus string, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -1559,39 +1168,26 @@ func (client *WANCommonInterfaceConfig1) GetCommonLinkProperties() (
 	if NewWANAccessType, err = soap.UnmarshalString(response.NewWANAccessType); err != nil {
 		return
 	}
-
 	if NewLayer1UpstreamMaxBitRate, err = soap.UnmarshalUi4(response.NewLayer1UpstreamMaxBitRate); err != nil {
 		return
 	}
-
 	if NewLayer1DownstreamMaxBitRate, err = soap.UnmarshalUi4(response.NewLayer1DownstreamMaxBitRate); err != nil {
 		return
 	}
-
 	if NewPhysicalLinkStatus, err = soap.UnmarshalString(response.NewPhysicalLinkStatus); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetWANAccessProvider action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewWANAccessProvider:
-// (related state variable: WANAccessProvider)
-// -
-// -
 //
-//
-func (client *WANCommonInterfaceConfig1) GetWANAccessProvider() (
-	NewWANAccessProvider string,
-	err error,
-) {
+func (client *WANCommonInterfaceConfig1) GetWANAccessProvider() (NewWANAccessProvider string, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -1613,27 +1209,17 @@ func (client *WANCommonInterfaceConfig1) GetWANAccessProvider() (
 	if NewWANAccessProvider, err = soap.UnmarshalString(response.NewWANAccessProvider); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetMaximumActiveConnections action.
-// Arguments:
 //
 //
 // Return values:
+// * NewMaximumActiveConnections: allowed value range: minimum=1, step=1
 //
-// * NewMaximumActiveConnections:
-// (related state variable: MaximumActiveConnections)
-// - allowed range: 1 to
-// -
-//
-//
-func (client *WANCommonInterfaceConfig1) GetMaximumActiveConnections() (
-	NewMaximumActiveConnections uint16,
-	err error,
-) {
+func (client *WANCommonInterfaceConfig1) GetMaximumActiveConnections() (NewMaximumActiveConnections uint16, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -1655,27 +1241,17 @@ func (client *WANCommonInterfaceConfig1) GetMaximumActiveConnections() (
 	if NewMaximumActiveConnections, err = soap.UnmarshalUi2(response.NewMaximumActiveConnections); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetTotalBytesSent action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewTotalBytesSent:
-// (related state variable: TotalBytesSent)
-// -
-// -
 //
-//
-func (client *WANCommonInterfaceConfig1) GetTotalBytesSent() (
-	NewTotalBytesSent uint32,
-	err error,
-) {
+func (client *WANCommonInterfaceConfig1) GetTotalBytesSent() (NewTotalBytesSent uint32, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -1697,27 +1273,17 @@ func (client *WANCommonInterfaceConfig1) GetTotalBytesSent() (
 	if NewTotalBytesSent, err = soap.UnmarshalUi4(response.NewTotalBytesSent); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetTotalBytesReceived action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewTotalBytesReceived:
-// (related state variable: TotalBytesReceived)
-// -
-// -
 //
-//
-func (client *WANCommonInterfaceConfig1) GetTotalBytesReceived() (
-	NewTotalBytesReceived uint32,
-	err error,
-) {
+func (client *WANCommonInterfaceConfig1) GetTotalBytesReceived() (NewTotalBytesReceived uint32, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -1739,27 +1305,17 @@ func (client *WANCommonInterfaceConfig1) GetTotalBytesReceived() (
 	if NewTotalBytesReceived, err = soap.UnmarshalUi4(response.NewTotalBytesReceived); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetTotalPacketsSent action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewTotalPacketsSent:
-// (related state variable: TotalPacketsSent)
-// -
-// -
 //
-//
-func (client *WANCommonInterfaceConfig1) GetTotalPacketsSent() (
-	NewTotalPacketsSent uint32,
-	err error,
-) {
+func (client *WANCommonInterfaceConfig1) GetTotalPacketsSent() (NewTotalPacketsSent uint32, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -1781,27 +1337,17 @@ func (client *WANCommonInterfaceConfig1) GetTotalPacketsSent() (
 	if NewTotalPacketsSent, err = soap.UnmarshalUi4(response.NewTotalPacketsSent); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetTotalPacketsReceived action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewTotalPacketsReceived:
-// (related state variable: TotalPacketsReceived)
-// -
-// -
 //
-//
-func (client *WANCommonInterfaceConfig1) GetTotalPacketsReceived() (
-	NewTotalPacketsReceived uint32,
-	err error,
-) {
+func (client *WANCommonInterfaceConfig1) GetTotalPacketsReceived() (NewTotalPacketsReceived uint32, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -1823,42 +1369,21 @@ func (client *WANCommonInterfaceConfig1) GetTotalPacketsReceived() (
 	if NewTotalPacketsReceived, err = soap.UnmarshalUi4(response.NewTotalPacketsReceived); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetActiveConnection action.
+//
 // Arguments:
-//
 // * NewActiveConnectionIndex:
-// (related state variable: NumberOfActiveConnections)
-// -
-// -
-//
-//
 //
 // Return values:
-//
 // * NewActiveConnDeviceContainer:
-// (related state variable: ActiveConnectionDeviceContainer)
-// -
-// -
-//
 //
 // * NewActiveConnectionServiceID:
-// (related state variable: ActiveConnectionServiceID)
-// -
-// -
 //
-//
-func (client *WANCommonInterfaceConfig1) GetActiveConnection(
-	NewActiveConnectionIndex uint16,
-) (
-	NewActiveConnDeviceContainer string,
-	NewActiveConnectionServiceID string,
-	err error,
-) {
+func (client *WANCommonInterfaceConfig1) GetActiveConnection(NewActiveConnectionIndex uint16) (NewActiveConnDeviceContainer string, NewActiveConnectionServiceID string, err error) {
 	// Request structure.
 	var request struct {
 		NewActiveConnectionIndex string
@@ -1868,7 +1393,6 @@ func (client *WANCommonInterfaceConfig1) GetActiveConnection(
 	if request.NewActiveConnectionIndex, err = soap.MarshalUi2(NewActiveConnectionIndex); err != nil {
 		return
 	}
-
 	// END Marshal arguments into request.
 
 	// Response structure.
@@ -1887,11 +1411,9 @@ func (client *WANCommonInterfaceConfig1) GetActiveConnection(
 	if NewActiveConnDeviceContainer, err = soap.UnmarshalString(response.NewActiveConnDeviceContainer); err != nil {
 		return
 	}
-
 	if NewActiveConnectionServiceID, err = soap.UnmarshalString(response.NewActiveConnectionServiceID); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
@@ -1902,22 +1424,12 @@ type WANDSLLinkConfig1 struct {
 }
 
 // SetDSLLinkType action.
+//
 // Arguments:
-//
 // * NewLinkType:
-// (related state variable: LinkType)
-// -
-// -
 //
 //
-//
-// Return values:
-//
-func (client *WANDSLLinkConfig1) SetDSLLinkType(
-	NewLinkType string,
-) (
-	err error,
-) {
+func (client *WANDSLLinkConfig1) SetDSLLinkType(NewLinkType string) (err error) {
 	// Request structure.
 	var request struct {
 		NewLinkType string
@@ -1927,7 +1439,6 @@ func (client *WANDSLLinkConfig1) SetDSLLinkType(
 	if request.NewLinkType, err = soap.MarshalString(NewLinkType); err != nil {
 		return
 	}
-
 	// END Marshal arguments into request.
 
 	// Response structure.
@@ -1945,29 +1456,14 @@ func (client *WANDSLLinkConfig1) SetDSLLinkType(
 }
 
 // GetDSLLinkInfo action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewLinkType:
-// (related state variable: LinkType)
-// -
-// -
 //
+// * NewLinkStatus: allowed values: Up, Down
 //
-// * NewLinkStatus:
-// (related state variable: LinkStatus)
-// -
-// - allowed values:
-// Up|Down
-//
-//
-func (client *WANDSLLinkConfig1) GetDSLLinkInfo() (
-	NewLinkType string,
-	NewLinkStatus string,
-	err error,
-) {
+func (client *WANDSLLinkConfig1) GetDSLLinkInfo() (NewLinkType string, NewLinkStatus string, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -1990,31 +1486,20 @@ func (client *WANDSLLinkConfig1) GetDSLLinkInfo() (
 	if NewLinkType, err = soap.UnmarshalString(response.NewLinkType); err != nil {
 		return
 	}
-
 	if NewLinkStatus, err = soap.UnmarshalString(response.NewLinkStatus); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetAutoConfig action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewAutoConfig:
-// (related state variable: AutoConfig)
-// -
-// -
 //
-//
-func (client *WANDSLLinkConfig1) GetAutoConfig() (
-	NewAutoConfig bool,
-	err error,
-) {
+func (client *WANDSLLinkConfig1) GetAutoConfig() (NewAutoConfig bool, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -2036,27 +1521,17 @@ func (client *WANDSLLinkConfig1) GetAutoConfig() (
 	if NewAutoConfig, err = soap.UnmarshalBoolean(response.NewAutoConfig); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetModulationType action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewModulationType:
-// (related state variable: ModulationType)
-// -
-// -
 //
-//
-func (client *WANDSLLinkConfig1) GetModulationType() (
-	NewModulationType string,
-	err error,
-) {
+func (client *WANDSLLinkConfig1) GetModulationType() (NewModulationType string, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -2078,28 +1553,17 @@ func (client *WANDSLLinkConfig1) GetModulationType() (
 	if NewModulationType, err = soap.UnmarshalString(response.NewModulationType); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // SetDestinationAddress action.
+//
 // Arguments:
-//
 // * NewDestinationAddress:
-// (related state variable: DestinationAddress)
-// -
-// -
 //
 //
-//
-// Return values:
-//
-func (client *WANDSLLinkConfig1) SetDestinationAddress(
-	NewDestinationAddress string,
-) (
-	err error,
-) {
+func (client *WANDSLLinkConfig1) SetDestinationAddress(NewDestinationAddress string) (err error) {
 	// Request structure.
 	var request struct {
 		NewDestinationAddress string
@@ -2109,7 +1573,6 @@ func (client *WANDSLLinkConfig1) SetDestinationAddress(
 	if request.NewDestinationAddress, err = soap.MarshalString(NewDestinationAddress); err != nil {
 		return
 	}
-
 	// END Marshal arguments into request.
 
 	// Response structure.
@@ -2127,21 +1590,12 @@ func (client *WANDSLLinkConfig1) SetDestinationAddress(
 }
 
 // GetDestinationAddress action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewDestinationAddress:
-// (related state variable: DestinationAddress)
-// -
-// -
 //
-//
-func (client *WANDSLLinkConfig1) GetDestinationAddress() (
-	NewDestinationAddress string,
-	err error,
-) {
+func (client *WANDSLLinkConfig1) GetDestinationAddress() (NewDestinationAddress string, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -2163,28 +1617,17 @@ func (client *WANDSLLinkConfig1) GetDestinationAddress() (
 	if NewDestinationAddress, err = soap.UnmarshalString(response.NewDestinationAddress); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // SetATMEncapsulation action.
+//
 // Arguments:
-//
 // * NewATMEncapsulation:
-// (related state variable: ATMEncapsulation)
-// -
-// -
 //
 //
-//
-// Return values:
-//
-func (client *WANDSLLinkConfig1) SetATMEncapsulation(
-	NewATMEncapsulation string,
-) (
-	err error,
-) {
+func (client *WANDSLLinkConfig1) SetATMEncapsulation(NewATMEncapsulation string) (err error) {
 	// Request structure.
 	var request struct {
 		NewATMEncapsulation string
@@ -2194,7 +1637,6 @@ func (client *WANDSLLinkConfig1) SetATMEncapsulation(
 	if request.NewATMEncapsulation, err = soap.MarshalString(NewATMEncapsulation); err != nil {
 		return
 	}
-
 	// END Marshal arguments into request.
 
 	// Response structure.
@@ -2212,21 +1654,12 @@ func (client *WANDSLLinkConfig1) SetATMEncapsulation(
 }
 
 // GetATMEncapsulation action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewATMEncapsulation:
-// (related state variable: ATMEncapsulation)
-// -
-// -
 //
-//
-func (client *WANDSLLinkConfig1) GetATMEncapsulation() (
-	NewATMEncapsulation string,
-	err error,
-) {
+func (client *WANDSLLinkConfig1) GetATMEncapsulation() (NewATMEncapsulation string, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -2248,28 +1681,17 @@ func (client *WANDSLLinkConfig1) GetATMEncapsulation() (
 	if NewATMEncapsulation, err = soap.UnmarshalString(response.NewATMEncapsulation); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // SetFCSPreserved action.
+//
 // Arguments:
-//
 // * NewFCSPreserved:
-// (related state variable: FCSPreserved)
-// -
-// -
 //
 //
-//
-// Return values:
-//
-func (client *WANDSLLinkConfig1) SetFCSPreserved(
-	NewFCSPreserved bool,
-) (
-	err error,
-) {
+func (client *WANDSLLinkConfig1) SetFCSPreserved(NewFCSPreserved bool) (err error) {
 	// Request structure.
 	var request struct {
 		NewFCSPreserved string
@@ -2279,7 +1701,6 @@ func (client *WANDSLLinkConfig1) SetFCSPreserved(
 	if request.NewFCSPreserved, err = soap.MarshalBoolean(NewFCSPreserved); err != nil {
 		return
 	}
-
 	// END Marshal arguments into request.
 
 	// Response structure.
@@ -2297,21 +1718,12 @@ func (client *WANDSLLinkConfig1) SetFCSPreserved(
 }
 
 // GetFCSPreserved action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewFCSPreserved:
-// (related state variable: FCSPreserved)
-// -
-// -
 //
-//
-func (client *WANDSLLinkConfig1) GetFCSPreserved() (
-	NewFCSPreserved bool,
-	err error,
-) {
+func (client *WANDSLLinkConfig1) GetFCSPreserved() (NewFCSPreserved bool, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -2333,7 +1745,6 @@ func (client *WANDSLLinkConfig1) GetFCSPreserved() (
 	if NewFCSPreserved, err = soap.UnmarshalBoolean(response.NewFCSPreserved); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
@@ -2344,22 +1755,12 @@ type WANEthernetLinkConfig1 struct {
 }
 
 // GetEthernetLinkStatus action.
-// Arguments:
 //
 //
 // Return values:
+// * NewEthernetLinkStatus: allowed values: Up, Down
 //
-// * NewEthernetLinkStatus:
-// (related state variable: EthernetLinkStatus)
-// -
-// - allowed values:
-// Up|Down
-//
-//
-func (client *WANEthernetLinkConfig1) GetEthernetLinkStatus() (
-	NewEthernetLinkStatus string,
-	err error,
-) {
+func (client *WANEthernetLinkConfig1) GetEthernetLinkStatus() (NewEthernetLinkStatus string, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -2381,7 +1782,6 @@ func (client *WANEthernetLinkConfig1) GetEthernetLinkStatus() (
 	if NewEthernetLinkStatus, err = soap.UnmarshalString(response.NewEthernetLinkStatus); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
@@ -2392,22 +1792,12 @@ type WANIPConnection1 struct {
 }
 
 // SetConnectionType action.
+//
 // Arguments:
-//
 // * NewConnectionType:
-// (related state variable: ConnectionType)
-// -
-// -
 //
 //
-//
-// Return values:
-//
-func (client *WANIPConnection1) SetConnectionType(
-	NewConnectionType string,
-) (
-	err error,
-) {
+func (client *WANIPConnection1) SetConnectionType(NewConnectionType string) (err error) {
 	// Request structure.
 	var request struct {
 		NewConnectionType string
@@ -2417,7 +1807,6 @@ func (client *WANIPConnection1) SetConnectionType(
 	if request.NewConnectionType, err = soap.MarshalString(NewConnectionType); err != nil {
 		return
 	}
-
 	// END Marshal arguments into request.
 
 	// Response structure.
@@ -2435,29 +1824,14 @@ func (client *WANIPConnection1) SetConnectionType(
 }
 
 // GetConnectionTypeInfo action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewConnectionType:
-// (related state variable: ConnectionType)
-// -
-// -
 //
+// * NewPossibleConnectionTypes: allowed values: Unconfigured, IP_Routed, IP_Bridged
 //
-// * NewPossibleConnectionTypes:
-// (related state variable: PossibleConnectionTypes)
-// -
-// - allowed values:
-// Unconfigured|IP_Routed|IP_Bridged
-//
-//
-func (client *WANIPConnection1) GetConnectionTypeInfo() (
-	NewConnectionType string,
-	NewPossibleConnectionTypes string,
-	err error,
-) {
+func (client *WANIPConnection1) GetConnectionTypeInfo() (NewConnectionType string, NewPossibleConnectionTypes string, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -2480,24 +1854,18 @@ func (client *WANIPConnection1) GetConnectionTypeInfo() (
 	if NewConnectionType, err = soap.UnmarshalString(response.NewConnectionType); err != nil {
 		return
 	}
-
 	if NewPossibleConnectionTypes, err = soap.UnmarshalString(response.NewPossibleConnectionTypes); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // RequestConnection action.
-// Arguments:
 //
 //
-// Return values:
 //
-func (client *WANIPConnection1) RequestConnection() (
-	err error,
-) {
+func (client *WANIPConnection1) RequestConnection() (err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -2519,14 +1887,10 @@ func (client *WANIPConnection1) RequestConnection() (
 }
 
 // RequestTermination action.
-// Arguments:
 //
 //
-// Return values:
 //
-func (client *WANIPConnection1) RequestTermination() (
-	err error,
-) {
+func (client *WANIPConnection1) RequestTermination() (err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -2548,14 +1912,10 @@ func (client *WANIPConnection1) RequestTermination() (
 }
 
 // ForceTermination action.
-// Arguments:
 //
 //
-// Return values:
 //
-func (client *WANIPConnection1) ForceTermination() (
-	err error,
-) {
+func (client *WANIPConnection1) ForceTermination() (err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -2577,22 +1937,12 @@ func (client *WANIPConnection1) ForceTermination() (
 }
 
 // SetAutoDisconnectTime action.
+//
 // Arguments:
-//
 // * NewAutoDisconnectTime:
-// (related state variable: AutoDisconnectTime)
-// -
-// -
 //
 //
-//
-// Return values:
-//
-func (client *WANIPConnection1) SetAutoDisconnectTime(
-	NewAutoDisconnectTime uint32,
-) (
-	err error,
-) {
+func (client *WANIPConnection1) SetAutoDisconnectTime(NewAutoDisconnectTime uint32) (err error) {
 	// Request structure.
 	var request struct {
 		NewAutoDisconnectTime string
@@ -2602,7 +1952,6 @@ func (client *WANIPConnection1) SetAutoDisconnectTime(
 	if request.NewAutoDisconnectTime, err = soap.MarshalUi4(NewAutoDisconnectTime); err != nil {
 		return
 	}
-
 	// END Marshal arguments into request.
 
 	// Response structure.
@@ -2620,22 +1969,12 @@ func (client *WANIPConnection1) SetAutoDisconnectTime(
 }
 
 // SetIdleDisconnectTime action.
+//
 // Arguments:
-//
 // * NewIdleDisconnectTime:
-// (related state variable: IdleDisconnectTime)
-// -
-// -
 //
 //
-//
-// Return values:
-//
-func (client *WANIPConnection1) SetIdleDisconnectTime(
-	NewIdleDisconnectTime uint32,
-) (
-	err error,
-) {
+func (client *WANIPConnection1) SetIdleDisconnectTime(NewIdleDisconnectTime uint32) (err error) {
 	// Request structure.
 	var request struct {
 		NewIdleDisconnectTime string
@@ -2645,7 +1984,6 @@ func (client *WANIPConnection1) SetIdleDisconnectTime(
 	if request.NewIdleDisconnectTime, err = soap.MarshalUi4(NewIdleDisconnectTime); err != nil {
 		return
 	}
-
 	// END Marshal arguments into request.
 
 	// Response structure.
@@ -2663,22 +2001,12 @@ func (client *WANIPConnection1) SetIdleDisconnectTime(
 }
 
 // SetWarnDisconnectDelay action.
+//
 // Arguments:
-//
 // * NewWarnDisconnectDelay:
-// (related state variable: WarnDisconnectDelay)
-// -
-// -
 //
 //
-//
-// Return values:
-//
-func (client *WANIPConnection1) SetWarnDisconnectDelay(
-	NewWarnDisconnectDelay uint32,
-) (
-	err error,
-) {
+func (client *WANIPConnection1) SetWarnDisconnectDelay(NewWarnDisconnectDelay uint32) (err error) {
 	// Request structure.
 	var request struct {
 		NewWarnDisconnectDelay string
@@ -2688,7 +2016,6 @@ func (client *WANIPConnection1) SetWarnDisconnectDelay(
 	if request.NewWarnDisconnectDelay, err = soap.MarshalUi4(NewWarnDisconnectDelay); err != nil {
 		return
 	}
-
 	// END Marshal arguments into request.
 
 	// Response structure.
@@ -2706,37 +2033,16 @@ func (client *WANIPConnection1) SetWarnDisconnectDelay(
 }
 
 // GetStatusInfo action.
-// Arguments:
 //
 //
 // Return values:
+// * NewConnectionStatus: allowed values: Unconfigured, Connected, Disconnected
 //
-// * NewConnectionStatus:
-// (related state variable: ConnectionStatus)
-// -
-// - allowed values:
-// Unconfigured|Connected|Disconnected
-//
-//
-// * NewLastConnectionError:
-// (related state variable: LastConnectionError)
-// -
-// - allowed values:
-// ERROR_NONE
-//
+// * NewLastConnectionError: allowed values: ERROR_NONE
 //
 // * NewUptime:
-// (related state variable: Uptime)
-// -
-// -
 //
-//
-func (client *WANIPConnection1) GetStatusInfo() (
-	NewConnectionStatus string,
-	NewLastConnectionError string,
-	NewUptime uint32,
-	err error,
-) {
+func (client *WANIPConnection1) GetStatusInfo() (NewConnectionStatus string, NewLastConnectionError string, NewUptime uint32, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -2760,35 +2066,23 @@ func (client *WANIPConnection1) GetStatusInfo() (
 	if NewConnectionStatus, err = soap.UnmarshalString(response.NewConnectionStatus); err != nil {
 		return
 	}
-
 	if NewLastConnectionError, err = soap.UnmarshalString(response.NewLastConnectionError); err != nil {
 		return
 	}
-
 	if NewUptime, err = soap.UnmarshalUi4(response.NewUptime); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetAutoDisconnectTime action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewAutoDisconnectTime:
-// (related state variable: AutoDisconnectTime)
-// -
-// -
 //
-//
-func (client *WANIPConnection1) GetAutoDisconnectTime() (
-	NewAutoDisconnectTime uint32,
-	err error,
-) {
+func (client *WANIPConnection1) GetAutoDisconnectTime() (NewAutoDisconnectTime uint32, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -2810,27 +2104,17 @@ func (client *WANIPConnection1) GetAutoDisconnectTime() (
 	if NewAutoDisconnectTime, err = soap.UnmarshalUi4(response.NewAutoDisconnectTime); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetIdleDisconnectTime action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewIdleDisconnectTime:
-// (related state variable: IdleDisconnectTime)
-// -
-// -
 //
-//
-func (client *WANIPConnection1) GetIdleDisconnectTime() (
-	NewIdleDisconnectTime uint32,
-	err error,
-) {
+func (client *WANIPConnection1) GetIdleDisconnectTime() (NewIdleDisconnectTime uint32, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -2852,27 +2136,17 @@ func (client *WANIPConnection1) GetIdleDisconnectTime() (
 	if NewIdleDisconnectTime, err = soap.UnmarshalUi4(response.NewIdleDisconnectTime); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetWarnDisconnectDelay action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewWarnDisconnectDelay:
-// (related state variable: WarnDisconnectDelay)
-// -
-// -
 //
-//
-func (client *WANIPConnection1) GetWarnDisconnectDelay() (
-	NewWarnDisconnectDelay uint32,
-	err error,
-) {
+func (client *WANIPConnection1) GetWarnDisconnectDelay() (NewWarnDisconnectDelay uint32, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -2894,34 +2168,19 @@ func (client *WANIPConnection1) GetWarnDisconnectDelay() (
 	if NewWarnDisconnectDelay, err = soap.UnmarshalUi4(response.NewWarnDisconnectDelay); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetNATRSIPStatus action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewRSIPAvailable:
-// (related state variable: RSIPAvailable)
-// -
-// -
-//
 //
 // * NewNATEnabled:
-// (related state variable: NATEnabled)
-// -
-// -
 //
-//
-func (client *WANIPConnection1) GetNATRSIPStatus() (
-	NewRSIPAvailable bool,
-	NewNATEnabled bool,
-	err error,
-) {
+func (client *WANIPConnection1) GetNATRSIPStatus() (NewRSIPAvailable bool, NewNATEnabled bool, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -2944,89 +2203,36 @@ func (client *WANIPConnection1) GetNATRSIPStatus() (
 	if NewRSIPAvailable, err = soap.UnmarshalBoolean(response.NewRSIPAvailable); err != nil {
 		return
 	}
-
 	if NewNATEnabled, err = soap.UnmarshalBoolean(response.NewNATEnabled); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetGenericPortMappingEntry action.
+//
 // Arguments:
-//
 // * NewPortMappingIndex:
-// (related state variable: PortMappingNumberOfEntries)
-// -
-// -
-//
-//
 //
 // Return values:
-//
 // * NewRemoteHost:
-// (related state variable: RemoteHost)
-// -
-// -
-//
 //
 // * NewExternalPort:
-// (related state variable: ExternalPort)
-// -
-// -
 //
-//
-// * NewProtocol:
-// (related state variable: PortMappingProtocol)
-// -
-// - allowed values:
-// TCP|UDP
-//
+// * NewProtocol: allowed values: TCP, UDP
 //
 // * NewInternalPort:
-// (related state variable: InternalPort)
-// -
-// -
-//
 //
 // * NewInternalClient:
-// (related state variable: InternalClient)
-// -
-// -
-//
 //
 // * NewEnabled:
-// (related state variable: PortMappingEnabled)
-// -
-// -
-//
 //
 // * NewPortMappingDescription:
-// (related state variable: PortMappingDescription)
-// -
-// -
-//
 //
 // * NewLeaseDuration:
-// (related state variable: PortMappingLeaseDuration)
-// -
-// -
 //
-//
-func (client *WANIPConnection1) GetGenericPortMappingEntry(
-	NewPortMappingIndex uint16,
-) (
-	NewRemoteHost string,
-	NewExternalPort uint16,
-	NewProtocol string,
-	NewInternalPort uint16,
-	NewInternalClient string,
-	NewEnabled bool,
-	NewPortMappingDescription string,
-	NewLeaseDuration uint32,
-	err error,
-) {
+func (client *WANIPConnection1) GetGenericPortMappingEntry(NewPortMappingIndex uint16) (NewRemoteHost string, NewExternalPort uint16, NewProtocol string, NewInternalPort uint16, NewInternalClient string, NewEnabled bool, NewPortMappingDescription string, NewLeaseDuration uint32, err error) {
 	// Request structure.
 	var request struct {
 		NewPortMappingIndex string
@@ -3036,7 +2242,6 @@ func (client *WANIPConnection1) GetGenericPortMappingEntry(
 	if request.NewPortMappingIndex, err = soap.MarshalUi2(NewPortMappingIndex); err != nil {
 		return
 	}
-
 	// END Marshal arguments into request.
 
 	// Response structure.
@@ -3061,106 +2266,52 @@ func (client *WANIPConnection1) GetGenericPortMappingEntry(
 	if NewRemoteHost, err = soap.UnmarshalString(response.NewRemoteHost); err != nil {
 		return
 	}
-
 	if NewExternalPort, err = soap.UnmarshalUi2(response.NewExternalPort); err != nil {
 		return
 	}
-
 	if NewProtocol, err = soap.UnmarshalString(response.NewProtocol); err != nil {
 		return
 	}
-
 	if NewInternalPort, err = soap.UnmarshalUi2(response.NewInternalPort); err != nil {
 		return
 	}
-
 	if NewInternalClient, err = soap.UnmarshalString(response.NewInternalClient); err != nil {
 		return
 	}
-
 	if NewEnabled, err = soap.UnmarshalBoolean(response.NewEnabled); err != nil {
 		return
 	}
-
 	if NewPortMappingDescription, err = soap.UnmarshalString(response.NewPortMappingDescription); err != nil {
 		return
 	}
-
 	if NewLeaseDuration, err = soap.UnmarshalUi4(response.NewLeaseDuration); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetSpecificPortMappingEntry action.
+//
 // Arguments:
-//
 // * NewRemoteHost:
-// (related state variable: RemoteHost)
-// -
-// -
-//
 //
 // * NewExternalPort:
-// (related state variable: ExternalPort)
-// -
-// -
 //
-//
-// * NewProtocol:
-// (related state variable: PortMappingProtocol)
-// -
-// - allowed values:
-// TCP|UDP
-//
-//
+// * NewProtocol: allowed values: TCP, UDP
 //
 // Return values:
-//
 // * NewInternalPort:
-// (related state variable: InternalPort)
-// -
-// -
-//
 //
 // * NewInternalClient:
-// (related state variable: InternalClient)
-// -
-// -
-//
 //
 // * NewEnabled:
-// (related state variable: PortMappingEnabled)
-// -
-// -
-//
 //
 // * NewPortMappingDescription:
-// (related state variable: PortMappingDescription)
-// -
-// -
-//
 //
 // * NewLeaseDuration:
-// (related state variable: PortMappingLeaseDuration)
-// -
-// -
 //
-//
-func (client *WANIPConnection1) GetSpecificPortMappingEntry(
-	NewRemoteHost string,
-	NewExternalPort uint16,
-	NewProtocol string,
-) (
-	NewInternalPort uint16,
-	NewInternalClient string,
-	NewEnabled bool,
-	NewPortMappingDescription string,
-	NewLeaseDuration uint32,
-	err error,
-) {
+func (client *WANIPConnection1) GetSpecificPortMappingEntry(NewRemoteHost string, NewExternalPort uint16, NewProtocol string) (NewInternalPort uint16, NewInternalClient string, NewEnabled bool, NewPortMappingDescription string, NewLeaseDuration uint32, err error) {
 	// Request structure.
 	var request struct {
 		NewRemoteHost   string
@@ -3172,15 +2323,12 @@ func (client *WANIPConnection1) GetSpecificPortMappingEntry(
 	if request.NewRemoteHost, err = soap.MarshalString(NewRemoteHost); err != nil {
 		return
 	}
-
 	if request.NewExternalPort, err = soap.MarshalUi2(NewExternalPort); err != nil {
 		return
 	}
-
 	if request.NewProtocol, err = soap.MarshalString(NewProtocol); err != nil {
 		return
 	}
-
 	// END Marshal arguments into request.
 
 	// Response structure.
@@ -3202,94 +2350,43 @@ func (client *WANIPConnection1) GetSpecificPortMappingEntry(
 	if NewInternalPort, err = soap.UnmarshalUi2(response.NewInternalPort); err != nil {
 		return
 	}
-
 	if NewInternalClient, err = soap.UnmarshalString(response.NewInternalClient); err != nil {
 		return
 	}
-
 	if NewEnabled, err = soap.UnmarshalBoolean(response.NewEnabled); err != nil {
 		return
 	}
-
 	if NewPortMappingDescription, err = soap.UnmarshalString(response.NewPortMappingDescription); err != nil {
 		return
 	}
-
 	if NewLeaseDuration, err = soap.UnmarshalUi4(response.NewLeaseDuration); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // AddPortMapping action.
+//
 // Arguments:
-//
 // * NewRemoteHost:
-// (related state variable: RemoteHost)
-// -
-// -
-//
 //
 // * NewExternalPort:
-// (related state variable: ExternalPort)
-// -
-// -
 //
-//
-// * NewProtocol:
-// (related state variable: PortMappingProtocol)
-// -
-// - allowed values:
-// TCP|UDP
-//
+// * NewProtocol: allowed values: TCP, UDP
 //
 // * NewInternalPort:
-// (related state variable: InternalPort)
-// -
-// -
-//
 //
 // * NewInternalClient:
-// (related state variable: InternalClient)
-// -
-// -
-//
 //
 // * NewEnabled:
-// (related state variable: PortMappingEnabled)
-// -
-// -
-//
 //
 // * NewPortMappingDescription:
-// (related state variable: PortMappingDescription)
-// -
-// -
-//
 //
 // * NewLeaseDuration:
-// (related state variable: PortMappingLeaseDuration)
-// -
-// -
 //
 //
-//
-// Return values:
-//
-func (client *WANIPConnection1) AddPortMapping(
-	NewRemoteHost string,
-	NewExternalPort uint16,
-	NewProtocol string,
-	NewInternalPort uint16,
-	NewInternalClient string,
-	NewEnabled bool,
-	NewPortMappingDescription string,
-	NewLeaseDuration uint32,
-) (
-	err error,
-) {
+func (client *WANIPConnection1) AddPortMapping(NewRemoteHost string, NewExternalPort uint16, NewProtocol string, NewInternalPort uint16, NewInternalClient string, NewEnabled bool, NewPortMappingDescription string, NewLeaseDuration uint32) (err error) {
 	// Request structure.
 	var request struct {
 		NewRemoteHost             string
@@ -3306,35 +2403,27 @@ func (client *WANIPConnection1) AddPortMapping(
 	if request.NewRemoteHost, err = soap.MarshalString(NewRemoteHost); err != nil {
 		return
 	}
-
 	if request.NewExternalPort, err = soap.MarshalUi2(NewExternalPort); err != nil {
 		return
 	}
-
 	if request.NewProtocol, err = soap.MarshalString(NewProtocol); err != nil {
 		return
 	}
-
 	if request.NewInternalPort, err = soap.MarshalUi2(NewInternalPort); err != nil {
 		return
 	}
-
 	if request.NewInternalClient, err = soap.MarshalString(NewInternalClient); err != nil {
 		return
 	}
-
 	if request.NewEnabled, err = soap.MarshalBoolean(NewEnabled); err != nil {
 		return
 	}
-
 	if request.NewPortMappingDescription, err = soap.MarshalString(NewPortMappingDescription); err != nil {
 		return
 	}
-
 	if request.NewLeaseDuration, err = soap.MarshalUi4(NewLeaseDuration); err != nil {
 		return
 	}
-
 	// END Marshal arguments into request.
 
 	// Response structure.
@@ -3352,37 +2441,16 @@ func (client *WANIPConnection1) AddPortMapping(
 }
 
 // DeletePortMapping action.
+//
 // Arguments:
-//
 // * NewRemoteHost:
-// (related state variable: RemoteHost)
-// -
-// -
-//
 //
 // * NewExternalPort:
-// (related state variable: ExternalPort)
-// -
-// -
+//
+// * NewProtocol: allowed values: TCP, UDP
 //
 //
-// * NewProtocol:
-// (related state variable: PortMappingProtocol)
-// -
-// - allowed values:
-// TCP|UDP
-//
-//
-//
-// Return values:
-//
-func (client *WANIPConnection1) DeletePortMapping(
-	NewRemoteHost string,
-	NewExternalPort uint16,
-	NewProtocol string,
-) (
-	err error,
-) {
+func (client *WANIPConnection1) DeletePortMapping(NewRemoteHost string, NewExternalPort uint16, NewProtocol string) (err error) {
 	// Request structure.
 	var request struct {
 		NewRemoteHost   string
@@ -3394,15 +2462,12 @@ func (client *WANIPConnection1) DeletePortMapping(
 	if request.NewRemoteHost, err = soap.MarshalString(NewRemoteHost); err != nil {
 		return
 	}
-
 	if request.NewExternalPort, err = soap.MarshalUi2(NewExternalPort); err != nil {
 		return
 	}
-
 	if request.NewProtocol, err = soap.MarshalString(NewProtocol); err != nil {
 		return
 	}
-
 	// END Marshal arguments into request.
 
 	// Response structure.
@@ -3420,21 +2485,12 @@ func (client *WANIPConnection1) DeletePortMapping(
 }
 
 // GetExternalIPAddress action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewExternalIPAddress:
-// (related state variable: ExternalIPAddress)
-// -
-// -
 //
-//
-func (client *WANIPConnection1) GetExternalIPAddress() (
-	NewExternalIPAddress string,
-	err error,
-) {
+func (client *WANIPConnection1) GetExternalIPAddress() (NewExternalIPAddress string, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -3456,7 +2512,6 @@ func (client *WANIPConnection1) GetExternalIPAddress() (
 	if NewExternalIPAddress, err = soap.UnmarshalString(response.NewExternalIPAddress); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
@@ -3467,37 +2522,16 @@ type WANPOTSLinkConfig1 struct {
 }
 
 // SetISPInfo action.
+//
 // Arguments:
-//
 // * NewISPPhoneNumber:
-// (related state variable: ISPPhoneNumber)
-// -
-// -
-//
 //
 // * NewISPInfo:
-// (related state variable: ISPInfo)
-// -
-// -
+//
+// * NewLinkType: allowed values: PPP_Dialup
 //
 //
-// * NewLinkType:
-// (related state variable: LinkType)
-// -
-// - allowed values:
-// PPP_Dialup
-//
-//
-//
-// Return values:
-//
-func (client *WANPOTSLinkConfig1) SetISPInfo(
-	NewISPPhoneNumber string,
-	NewISPInfo string,
-	NewLinkType string,
-) (
-	err error,
-) {
+func (client *WANPOTSLinkConfig1) SetISPInfo(NewISPPhoneNumber string, NewISPInfo string, NewLinkType string) (err error) {
 	// Request structure.
 	var request struct {
 		NewISPPhoneNumber string
@@ -3509,15 +2543,12 @@ func (client *WANPOTSLinkConfig1) SetISPInfo(
 	if request.NewISPPhoneNumber, err = soap.MarshalString(NewISPPhoneNumber); err != nil {
 		return
 	}
-
 	if request.NewISPInfo, err = soap.MarshalString(NewISPInfo); err != nil {
 		return
 	}
-
 	if request.NewLinkType, err = soap.MarshalString(NewLinkType); err != nil {
 		return
 	}
-
 	// END Marshal arguments into request.
 
 	// Response structure.
@@ -3535,29 +2566,14 @@ func (client *WANPOTSLinkConfig1) SetISPInfo(
 }
 
 // SetCallRetryInfo action.
+//
 // Arguments:
-//
 // * NewNumberOfRetries:
-// (related state variable: NumberOfRetries)
-// -
-// -
-//
 //
 // * NewDelayBetweenRetries:
-// (related state variable: DelayBetweenRetries)
-// -
-// -
 //
 //
-//
-// Return values:
-//
-func (client *WANPOTSLinkConfig1) SetCallRetryInfo(
-	NewNumberOfRetries uint32,
-	NewDelayBetweenRetries uint32,
-) (
-	err error,
-) {
+func (client *WANPOTSLinkConfig1) SetCallRetryInfo(NewNumberOfRetries uint32, NewDelayBetweenRetries uint32) (err error) {
 	// Request structure.
 	var request struct {
 		NewNumberOfRetries     string
@@ -3568,11 +2584,9 @@ func (client *WANPOTSLinkConfig1) SetCallRetryInfo(
 	if request.NewNumberOfRetries, err = soap.MarshalUi4(NewNumberOfRetries); err != nil {
 		return
 	}
-
 	if request.NewDelayBetweenRetries, err = soap.MarshalUi4(NewDelayBetweenRetries); err != nil {
 		return
 	}
-
 	// END Marshal arguments into request.
 
 	// Response structure.
@@ -3590,36 +2604,16 @@ func (client *WANPOTSLinkConfig1) SetCallRetryInfo(
 }
 
 // GetISPInfo action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewISPPhoneNumber:
-// (related state variable: ISPPhoneNumber)
-// -
-// -
-//
 //
 // * NewISPInfo:
-// (related state variable: ISPInfo)
-// -
-// -
 //
+// * NewLinkType: allowed values: PPP_Dialup
 //
-// * NewLinkType:
-// (related state variable: LinkType)
-// -
-// - allowed values:
-// PPP_Dialup
-//
-//
-func (client *WANPOTSLinkConfig1) GetISPInfo() (
-	NewISPPhoneNumber string,
-	NewISPInfo string,
-	NewLinkType string,
-	err error,
-) {
+func (client *WANPOTSLinkConfig1) GetISPInfo() (NewISPPhoneNumber string, NewISPInfo string, NewLinkType string, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -3643,42 +2637,25 @@ func (client *WANPOTSLinkConfig1) GetISPInfo() (
 	if NewISPPhoneNumber, err = soap.UnmarshalString(response.NewISPPhoneNumber); err != nil {
 		return
 	}
-
 	if NewISPInfo, err = soap.UnmarshalString(response.NewISPInfo); err != nil {
 		return
 	}
-
 	if NewLinkType, err = soap.UnmarshalString(response.NewLinkType); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetCallRetryInfo action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewNumberOfRetries:
-// (related state variable: NumberOfRetries)
-// -
-// -
-//
 //
 // * NewDelayBetweenRetries:
-// (related state variable: DelayBetweenRetries)
-// -
-// -
 //
-//
-func (client *WANPOTSLinkConfig1) GetCallRetryInfo() (
-	NewNumberOfRetries uint32,
-	NewDelayBetweenRetries uint32,
-	err error,
-) {
+func (client *WANPOTSLinkConfig1) GetCallRetryInfo() (NewNumberOfRetries uint32, NewDelayBetweenRetries uint32, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -3701,31 +2678,20 @@ func (client *WANPOTSLinkConfig1) GetCallRetryInfo() (
 	if NewNumberOfRetries, err = soap.UnmarshalUi4(response.NewNumberOfRetries); err != nil {
 		return
 	}
-
 	if NewDelayBetweenRetries, err = soap.UnmarshalUi4(response.NewDelayBetweenRetries); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetFclass action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewFclass:
-// (related state variable: Fclass)
-// -
-// -
 //
-//
-func (client *WANPOTSLinkConfig1) GetFclass() (
-	NewFclass string,
-	err error,
-) {
+func (client *WANPOTSLinkConfig1) GetFclass() (NewFclass string, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -3747,27 +2713,17 @@ func (client *WANPOTSLinkConfig1) GetFclass() (
 	if NewFclass, err = soap.UnmarshalString(response.NewFclass); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetDataModulationSupported action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewDataModulationSupported:
-// (related state variable: DataModulationSupported)
-// -
-// -
 //
-//
-func (client *WANPOTSLinkConfig1) GetDataModulationSupported() (
-	NewDataModulationSupported string,
-	err error,
-) {
+func (client *WANPOTSLinkConfig1) GetDataModulationSupported() (NewDataModulationSupported string, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -3789,27 +2745,17 @@ func (client *WANPOTSLinkConfig1) GetDataModulationSupported() (
 	if NewDataModulationSupported, err = soap.UnmarshalString(response.NewDataModulationSupported); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetDataProtocol action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewDataProtocol:
-// (related state variable: DataProtocol)
-// -
-// -
 //
-//
-func (client *WANPOTSLinkConfig1) GetDataProtocol() (
-	NewDataProtocol string,
-	err error,
-) {
+func (client *WANPOTSLinkConfig1) GetDataProtocol() (NewDataProtocol string, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -3831,27 +2777,17 @@ func (client *WANPOTSLinkConfig1) GetDataProtocol() (
 	if NewDataProtocol, err = soap.UnmarshalString(response.NewDataProtocol); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetDataCompression action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewDataCompression:
-// (related state variable: DataCompression)
-// -
-// -
 //
-//
-func (client *WANPOTSLinkConfig1) GetDataCompression() (
-	NewDataCompression string,
-	err error,
-) {
+func (client *WANPOTSLinkConfig1) GetDataCompression() (NewDataCompression string, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -3873,27 +2809,17 @@ func (client *WANPOTSLinkConfig1) GetDataCompression() (
 	if NewDataCompression, err = soap.UnmarshalString(response.NewDataCompression); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetPlusVTRCommandSupported action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewPlusVTRCommandSupported:
-// (related state variable: PlusVTRCommandSupported)
-// -
-// -
 //
-//
-func (client *WANPOTSLinkConfig1) GetPlusVTRCommandSupported() (
-	NewPlusVTRCommandSupported bool,
-	err error,
-) {
+func (client *WANPOTSLinkConfig1) GetPlusVTRCommandSupported() (NewPlusVTRCommandSupported bool, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -3915,7 +2841,6 @@ func (client *WANPOTSLinkConfig1) GetPlusVTRCommandSupported() (
 	if NewPlusVTRCommandSupported, err = soap.UnmarshalBoolean(response.NewPlusVTRCommandSupported); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
@@ -3926,22 +2851,12 @@ type WANPPPConnection1 struct {
 }
 
 // SetConnectionType action.
+//
 // Arguments:
-//
 // * NewConnectionType:
-// (related state variable: ConnectionType)
-// -
-// -
 //
 //
-//
-// Return values:
-//
-func (client *WANPPPConnection1) SetConnectionType(
-	NewConnectionType string,
-) (
-	err error,
-) {
+func (client *WANPPPConnection1) SetConnectionType(NewConnectionType string) (err error) {
 	// Request structure.
 	var request struct {
 		NewConnectionType string
@@ -3951,7 +2866,6 @@ func (client *WANPPPConnection1) SetConnectionType(
 	if request.NewConnectionType, err = soap.MarshalString(NewConnectionType); err != nil {
 		return
 	}
-
 	// END Marshal arguments into request.
 
 	// Response structure.
@@ -3969,29 +2883,14 @@ func (client *WANPPPConnection1) SetConnectionType(
 }
 
 // GetConnectionTypeInfo action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewConnectionType:
-// (related state variable: ConnectionType)
-// -
-// -
 //
+// * NewPossibleConnectionTypes: allowed values: Unconfigured, IP_Routed, DHCP_Spoofed, PPPoE_Bridged, PPTP_Relay, L2TP_Relay, PPPoE_Relay
 //
-// * NewPossibleConnectionTypes:
-// (related state variable: PossibleConnectionTypes)
-// -
-// - allowed values:
-// Unconfigured|IP_Routed|DHCP_Spoofed|PPPoE_Bridged|PPTP_Relay|L2TP_Relay|PPPoE_Relay
-//
-//
-func (client *WANPPPConnection1) GetConnectionTypeInfo() (
-	NewConnectionType string,
-	NewPossibleConnectionTypes string,
-	err error,
-) {
+func (client *WANPPPConnection1) GetConnectionTypeInfo() (NewConnectionType string, NewPossibleConnectionTypes string, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -4014,39 +2913,22 @@ func (client *WANPPPConnection1) GetConnectionTypeInfo() (
 	if NewConnectionType, err = soap.UnmarshalString(response.NewConnectionType); err != nil {
 		return
 	}
-
 	if NewPossibleConnectionTypes, err = soap.UnmarshalString(response.NewPossibleConnectionTypes); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // ConfigureConnection action.
+//
 // Arguments:
-//
 // * NewUserName:
-// (related state variable: UserName)
-// -
-// -
-//
 //
 // * NewPassword:
-// (related state variable: Password)
-// -
-// -
 //
 //
-//
-// Return values:
-//
-func (client *WANPPPConnection1) ConfigureConnection(
-	NewUserName string,
-	NewPassword string,
-) (
-	err error,
-) {
+func (client *WANPPPConnection1) ConfigureConnection(NewUserName string, NewPassword string) (err error) {
 	// Request structure.
 	var request struct {
 		NewUserName string
@@ -4057,11 +2939,9 @@ func (client *WANPPPConnection1) ConfigureConnection(
 	if request.NewUserName, err = soap.MarshalString(NewUserName); err != nil {
 		return
 	}
-
 	if request.NewPassword, err = soap.MarshalString(NewPassword); err != nil {
 		return
 	}
-
 	// END Marshal arguments into request.
 
 	// Response structure.
@@ -4079,14 +2959,10 @@ func (client *WANPPPConnection1) ConfigureConnection(
 }
 
 // RequestConnection action.
-// Arguments:
 //
 //
-// Return values:
 //
-func (client *WANPPPConnection1) RequestConnection() (
-	err error,
-) {
+func (client *WANPPPConnection1) RequestConnection() (err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -4108,14 +2984,10 @@ func (client *WANPPPConnection1) RequestConnection() (
 }
 
 // RequestTermination action.
-// Arguments:
 //
 //
-// Return values:
 //
-func (client *WANPPPConnection1) RequestTermination() (
-	err error,
-) {
+func (client *WANPPPConnection1) RequestTermination() (err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -4137,14 +3009,10 @@ func (client *WANPPPConnection1) RequestTermination() (
 }
 
 // ForceTermination action.
-// Arguments:
 //
 //
-// Return values:
 //
-func (client *WANPPPConnection1) ForceTermination() (
-	err error,
-) {
+func (client *WANPPPConnection1) ForceTermination() (err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -4166,22 +3034,12 @@ func (client *WANPPPConnection1) ForceTermination() (
 }
 
 // SetAutoDisconnectTime action.
+//
 // Arguments:
-//
 // * NewAutoDisconnectTime:
-// (related state variable: AutoDisconnectTime)
-// -
-// -
 //
 //
-//
-// Return values:
-//
-func (client *WANPPPConnection1) SetAutoDisconnectTime(
-	NewAutoDisconnectTime uint32,
-) (
-	err error,
-) {
+func (client *WANPPPConnection1) SetAutoDisconnectTime(NewAutoDisconnectTime uint32) (err error) {
 	// Request structure.
 	var request struct {
 		NewAutoDisconnectTime string
@@ -4191,7 +3049,6 @@ func (client *WANPPPConnection1) SetAutoDisconnectTime(
 	if request.NewAutoDisconnectTime, err = soap.MarshalUi4(NewAutoDisconnectTime); err != nil {
 		return
 	}
-
 	// END Marshal arguments into request.
 
 	// Response structure.
@@ -4209,22 +3066,12 @@ func (client *WANPPPConnection1) SetAutoDisconnectTime(
 }
 
 // SetIdleDisconnectTime action.
+//
 // Arguments:
-//
 // * NewIdleDisconnectTime:
-// (related state variable: IdleDisconnectTime)
-// -
-// -
 //
 //
-//
-// Return values:
-//
-func (client *WANPPPConnection1) SetIdleDisconnectTime(
-	NewIdleDisconnectTime uint32,
-) (
-	err error,
-) {
+func (client *WANPPPConnection1) SetIdleDisconnectTime(NewIdleDisconnectTime uint32) (err error) {
 	// Request structure.
 	var request struct {
 		NewIdleDisconnectTime string
@@ -4234,7 +3081,6 @@ func (client *WANPPPConnection1) SetIdleDisconnectTime(
 	if request.NewIdleDisconnectTime, err = soap.MarshalUi4(NewIdleDisconnectTime); err != nil {
 		return
 	}
-
 	// END Marshal arguments into request.
 
 	// Response structure.
@@ -4252,22 +3098,12 @@ func (client *WANPPPConnection1) SetIdleDisconnectTime(
 }
 
 // SetWarnDisconnectDelay action.
+//
 // Arguments:
-//
 // * NewWarnDisconnectDelay:
-// (related state variable: WarnDisconnectDelay)
-// -
-// -
 //
 //
-//
-// Return values:
-//
-func (client *WANPPPConnection1) SetWarnDisconnectDelay(
-	NewWarnDisconnectDelay uint32,
-) (
-	err error,
-) {
+func (client *WANPPPConnection1) SetWarnDisconnectDelay(NewWarnDisconnectDelay uint32) (err error) {
 	// Request structure.
 	var request struct {
 		NewWarnDisconnectDelay string
@@ -4277,7 +3113,6 @@ func (client *WANPPPConnection1) SetWarnDisconnectDelay(
 	if request.NewWarnDisconnectDelay, err = soap.MarshalUi4(NewWarnDisconnectDelay); err != nil {
 		return
 	}
-
 	// END Marshal arguments into request.
 
 	// Response structure.
@@ -4295,37 +3130,16 @@ func (client *WANPPPConnection1) SetWarnDisconnectDelay(
 }
 
 // GetStatusInfo action.
-// Arguments:
 //
 //
 // Return values:
+// * NewConnectionStatus: allowed values: Unconfigured, Connected, Disconnected
 //
-// * NewConnectionStatus:
-// (related state variable: ConnectionStatus)
-// -
-// - allowed values:
-// Unconfigured|Connected|Disconnected
-//
-//
-// * NewLastConnectionError:
-// (related state variable: LastConnectionError)
-// -
-// - allowed values:
-// ERROR_NONE
-//
+// * NewLastConnectionError: allowed values: ERROR_NONE
 //
 // * NewUptime:
-// (related state variable: Uptime)
-// -
-// -
 //
-//
-func (client *WANPPPConnection1) GetStatusInfo() (
-	NewConnectionStatus string,
-	NewLastConnectionError string,
-	NewUptime uint32,
-	err error,
-) {
+func (client *WANPPPConnection1) GetStatusInfo() (NewConnectionStatus string, NewLastConnectionError string, NewUptime uint32, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -4349,42 +3163,25 @@ func (client *WANPPPConnection1) GetStatusInfo() (
 	if NewConnectionStatus, err = soap.UnmarshalString(response.NewConnectionStatus); err != nil {
 		return
 	}
-
 	if NewLastConnectionError, err = soap.UnmarshalString(response.NewLastConnectionError); err != nil {
 		return
 	}
-
 	if NewUptime, err = soap.UnmarshalUi4(response.NewUptime); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetLinkLayerMaxBitRates action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewUpstreamMaxBitRate:
-// (related state variable: UpstreamMaxBitRate)
-// -
-// -
-//
 //
 // * NewDownstreamMaxBitRate:
-// (related state variable: DownstreamMaxBitRate)
-// -
-// -
 //
-//
-func (client *WANPPPConnection1) GetLinkLayerMaxBitRates() (
-	NewUpstreamMaxBitRate uint32,
-	NewDownstreamMaxBitRate uint32,
-	err error,
-) {
+func (client *WANPPPConnection1) GetLinkLayerMaxBitRates() (NewUpstreamMaxBitRate uint32, NewDownstreamMaxBitRate uint32, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -4407,31 +3204,20 @@ func (client *WANPPPConnection1) GetLinkLayerMaxBitRates() (
 	if NewUpstreamMaxBitRate, err = soap.UnmarshalUi4(response.NewUpstreamMaxBitRate); err != nil {
 		return
 	}
-
 	if NewDownstreamMaxBitRate, err = soap.UnmarshalUi4(response.NewDownstreamMaxBitRate); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetPPPEncryptionProtocol action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewPPPEncryptionProtocol:
-// (related state variable: PPPEncryptionProtocol)
-// -
-// -
 //
-//
-func (client *WANPPPConnection1) GetPPPEncryptionProtocol() (
-	NewPPPEncryptionProtocol string,
-	err error,
-) {
+func (client *WANPPPConnection1) GetPPPEncryptionProtocol() (NewPPPEncryptionProtocol string, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -4453,27 +3239,17 @@ func (client *WANPPPConnection1) GetPPPEncryptionProtocol() (
 	if NewPPPEncryptionProtocol, err = soap.UnmarshalString(response.NewPPPEncryptionProtocol); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetPPPCompressionProtocol action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewPPPCompressionProtocol:
-// (related state variable: PPPCompressionProtocol)
-// -
-// -
 //
-//
-func (client *WANPPPConnection1) GetPPPCompressionProtocol() (
-	NewPPPCompressionProtocol string,
-	err error,
-) {
+func (client *WANPPPConnection1) GetPPPCompressionProtocol() (NewPPPCompressionProtocol string, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -4495,27 +3271,17 @@ func (client *WANPPPConnection1) GetPPPCompressionProtocol() (
 	if NewPPPCompressionProtocol, err = soap.UnmarshalString(response.NewPPPCompressionProtocol); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetPPPAuthenticationProtocol action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewPPPAuthenticationProtocol:
-// (related state variable: PPPAuthenticationProtocol)
-// -
-// -
 //
-//
-func (client *WANPPPConnection1) GetPPPAuthenticationProtocol() (
-	NewPPPAuthenticationProtocol string,
-	err error,
-) {
+func (client *WANPPPConnection1) GetPPPAuthenticationProtocol() (NewPPPAuthenticationProtocol string, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -4537,27 +3303,17 @@ func (client *WANPPPConnection1) GetPPPAuthenticationProtocol() (
 	if NewPPPAuthenticationProtocol, err = soap.UnmarshalString(response.NewPPPAuthenticationProtocol); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetUserName action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewUserName:
-// (related state variable: UserName)
-// -
-// -
 //
-//
-func (client *WANPPPConnection1) GetUserName() (
-	NewUserName string,
-	err error,
-) {
+func (client *WANPPPConnection1) GetUserName() (NewUserName string, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -4579,27 +3335,17 @@ func (client *WANPPPConnection1) GetUserName() (
 	if NewUserName, err = soap.UnmarshalString(response.NewUserName); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetPassword action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewPassword:
-// (related state variable: Password)
-// -
-// -
 //
-//
-func (client *WANPPPConnection1) GetPassword() (
-	NewPassword string,
-	err error,
-) {
+func (client *WANPPPConnection1) GetPassword() (NewPassword string, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -4621,27 +3367,17 @@ func (client *WANPPPConnection1) GetPassword() (
 	if NewPassword, err = soap.UnmarshalString(response.NewPassword); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetAutoDisconnectTime action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewAutoDisconnectTime:
-// (related state variable: AutoDisconnectTime)
-// -
-// -
 //
-//
-func (client *WANPPPConnection1) GetAutoDisconnectTime() (
-	NewAutoDisconnectTime uint32,
-	err error,
-) {
+func (client *WANPPPConnection1) GetAutoDisconnectTime() (NewAutoDisconnectTime uint32, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -4663,27 +3399,17 @@ func (client *WANPPPConnection1) GetAutoDisconnectTime() (
 	if NewAutoDisconnectTime, err = soap.UnmarshalUi4(response.NewAutoDisconnectTime); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetIdleDisconnectTime action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewIdleDisconnectTime:
-// (related state variable: IdleDisconnectTime)
-// -
-// -
 //
-//
-func (client *WANPPPConnection1) GetIdleDisconnectTime() (
-	NewIdleDisconnectTime uint32,
-	err error,
-) {
+func (client *WANPPPConnection1) GetIdleDisconnectTime() (NewIdleDisconnectTime uint32, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -4705,27 +3431,17 @@ func (client *WANPPPConnection1) GetIdleDisconnectTime() (
 	if NewIdleDisconnectTime, err = soap.UnmarshalUi4(response.NewIdleDisconnectTime); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetWarnDisconnectDelay action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewWarnDisconnectDelay:
-// (related state variable: WarnDisconnectDelay)
-// -
-// -
 //
-//
-func (client *WANPPPConnection1) GetWarnDisconnectDelay() (
-	NewWarnDisconnectDelay uint32,
-	err error,
-) {
+func (client *WANPPPConnection1) GetWarnDisconnectDelay() (NewWarnDisconnectDelay uint32, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -4747,34 +3463,19 @@ func (client *WANPPPConnection1) GetWarnDisconnectDelay() (
 	if NewWarnDisconnectDelay, err = soap.UnmarshalUi4(response.NewWarnDisconnectDelay); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetNATRSIPStatus action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewRSIPAvailable:
-// (related state variable: RSIPAvailable)
-// -
-// -
-//
 //
 // * NewNATEnabled:
-// (related state variable: NATEnabled)
-// -
-// -
 //
-//
-func (client *WANPPPConnection1) GetNATRSIPStatus() (
-	NewRSIPAvailable bool,
-	NewNATEnabled bool,
-	err error,
-) {
+func (client *WANPPPConnection1) GetNATRSIPStatus() (NewRSIPAvailable bool, NewNATEnabled bool, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -4797,89 +3498,36 @@ func (client *WANPPPConnection1) GetNATRSIPStatus() (
 	if NewRSIPAvailable, err = soap.UnmarshalBoolean(response.NewRSIPAvailable); err != nil {
 		return
 	}
-
 	if NewNATEnabled, err = soap.UnmarshalBoolean(response.NewNATEnabled); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetGenericPortMappingEntry action.
+//
 // Arguments:
-//
 // * NewPortMappingIndex:
-// (related state variable: PortMappingNumberOfEntries)
-// -
-// -
-//
-//
 //
 // Return values:
-//
 // * NewRemoteHost:
-// (related state variable: RemoteHost)
-// -
-// -
-//
 //
 // * NewExternalPort:
-// (related state variable: ExternalPort)
-// -
-// -
 //
-//
-// * NewProtocol:
-// (related state variable: PortMappingProtocol)
-// -
-// - allowed values:
-// TCP|UDP
-//
+// * NewProtocol: allowed values: TCP, UDP
 //
 // * NewInternalPort:
-// (related state variable: InternalPort)
-// -
-// -
-//
 //
 // * NewInternalClient:
-// (related state variable: InternalClient)
-// -
-// -
-//
 //
 // * NewEnabled:
-// (related state variable: PortMappingEnabled)
-// -
-// -
-//
 //
 // * NewPortMappingDescription:
-// (related state variable: PortMappingDescription)
-// -
-// -
-//
 //
 // * NewLeaseDuration:
-// (related state variable: PortMappingLeaseDuration)
-// -
-// -
 //
-//
-func (client *WANPPPConnection1) GetGenericPortMappingEntry(
-	NewPortMappingIndex uint16,
-) (
-	NewRemoteHost string,
-	NewExternalPort uint16,
-	NewProtocol string,
-	NewInternalPort uint16,
-	NewInternalClient string,
-	NewEnabled bool,
-	NewPortMappingDescription string,
-	NewLeaseDuration uint32,
-	err error,
-) {
+func (client *WANPPPConnection1) GetGenericPortMappingEntry(NewPortMappingIndex uint16) (NewRemoteHost string, NewExternalPort uint16, NewProtocol string, NewInternalPort uint16, NewInternalClient string, NewEnabled bool, NewPortMappingDescription string, NewLeaseDuration uint32, err error) {
 	// Request structure.
 	var request struct {
 		NewPortMappingIndex string
@@ -4889,7 +3537,6 @@ func (client *WANPPPConnection1) GetGenericPortMappingEntry(
 	if request.NewPortMappingIndex, err = soap.MarshalUi2(NewPortMappingIndex); err != nil {
 		return
 	}
-
 	// END Marshal arguments into request.
 
 	// Response structure.
@@ -4914,106 +3561,52 @@ func (client *WANPPPConnection1) GetGenericPortMappingEntry(
 	if NewRemoteHost, err = soap.UnmarshalString(response.NewRemoteHost); err != nil {
 		return
 	}
-
 	if NewExternalPort, err = soap.UnmarshalUi2(response.NewExternalPort); err != nil {
 		return
 	}
-
 	if NewProtocol, err = soap.UnmarshalString(response.NewProtocol); err != nil {
 		return
 	}
-
 	if NewInternalPort, err = soap.UnmarshalUi2(response.NewInternalPort); err != nil {
 		return
 	}
-
 	if NewInternalClient, err = soap.UnmarshalString(response.NewInternalClient); err != nil {
 		return
 	}
-
 	if NewEnabled, err = soap.UnmarshalBoolean(response.NewEnabled); err != nil {
 		return
 	}
-
 	if NewPortMappingDescription, err = soap.UnmarshalString(response.NewPortMappingDescription); err != nil {
 		return
 	}
-
 	if NewLeaseDuration, err = soap.UnmarshalUi4(response.NewLeaseDuration); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // GetSpecificPortMappingEntry action.
+//
 // Arguments:
-//
 // * NewRemoteHost:
-// (related state variable: RemoteHost)
-// -
-// -
-//
 //
 // * NewExternalPort:
-// (related state variable: ExternalPort)
-// -
-// -
 //
-//
-// * NewProtocol:
-// (related state variable: PortMappingProtocol)
-// -
-// - allowed values:
-// TCP|UDP
-//
-//
+// * NewProtocol: allowed values: TCP, UDP
 //
 // Return values:
-//
 // * NewInternalPort:
-// (related state variable: InternalPort)
-// -
-// -
-//
 //
 // * NewInternalClient:
-// (related state variable: InternalClient)
-// -
-// -
-//
 //
 // * NewEnabled:
-// (related state variable: PortMappingEnabled)
-// -
-// -
-//
 //
 // * NewPortMappingDescription:
-// (related state variable: PortMappingDescription)
-// -
-// -
-//
 //
 // * NewLeaseDuration:
-// (related state variable: PortMappingLeaseDuration)
-// -
-// -
 //
-//
-func (client *WANPPPConnection1) GetSpecificPortMappingEntry(
-	NewRemoteHost string,
-	NewExternalPort uint16,
-	NewProtocol string,
-) (
-	NewInternalPort uint16,
-	NewInternalClient string,
-	NewEnabled bool,
-	NewPortMappingDescription string,
-	NewLeaseDuration uint32,
-	err error,
-) {
+func (client *WANPPPConnection1) GetSpecificPortMappingEntry(NewRemoteHost string, NewExternalPort uint16, NewProtocol string) (NewInternalPort uint16, NewInternalClient string, NewEnabled bool, NewPortMappingDescription string, NewLeaseDuration uint32, err error) {
 	// Request structure.
 	var request struct {
 		NewRemoteHost   string
@@ -5025,15 +3618,12 @@ func (client *WANPPPConnection1) GetSpecificPortMappingEntry(
 	if request.NewRemoteHost, err = soap.MarshalString(NewRemoteHost); err != nil {
 		return
 	}
-
 	if request.NewExternalPort, err = soap.MarshalUi2(NewExternalPort); err != nil {
 		return
 	}
-
 	if request.NewProtocol, err = soap.MarshalString(NewProtocol); err != nil {
 		return
 	}
-
 	// END Marshal arguments into request.
 
 	// Response structure.
@@ -5055,94 +3645,43 @@ func (client *WANPPPConnection1) GetSpecificPortMappingEntry(
 	if NewInternalPort, err = soap.UnmarshalUi2(response.NewInternalPort); err != nil {
 		return
 	}
-
 	if NewInternalClient, err = soap.UnmarshalString(response.NewInternalClient); err != nil {
 		return
 	}
-
 	if NewEnabled, err = soap.UnmarshalBoolean(response.NewEnabled); err != nil {
 		return
 	}
-
 	if NewPortMappingDescription, err = soap.UnmarshalString(response.NewPortMappingDescription); err != nil {
 		return
 	}
-
 	if NewLeaseDuration, err = soap.UnmarshalUi4(response.NewLeaseDuration); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }
 
 // AddPortMapping action.
+//
 // Arguments:
-//
 // * NewRemoteHost:
-// (related state variable: RemoteHost)
-// -
-// -
-//
 //
 // * NewExternalPort:
-// (related state variable: ExternalPort)
-// -
-// -
 //
-//
-// * NewProtocol:
-// (related state variable: PortMappingProtocol)
-// -
-// - allowed values:
-// TCP|UDP
-//
+// * NewProtocol: allowed values: TCP, UDP
 //
 // * NewInternalPort:
-// (related state variable: InternalPort)
-// -
-// -
-//
 //
 // * NewInternalClient:
-// (related state variable: InternalClient)
-// -
-// -
-//
 //
 // * NewEnabled:
-// (related state variable: PortMappingEnabled)
-// -
-// -
-//
 //
 // * NewPortMappingDescription:
-// (related state variable: PortMappingDescription)
-// -
-// -
-//
 //
 // * NewLeaseDuration:
-// (related state variable: PortMappingLeaseDuration)
-// -
-// -
 //
 //
-//
-// Return values:
-//
-func (client *WANPPPConnection1) AddPortMapping(
-	NewRemoteHost string,
-	NewExternalPort uint16,
-	NewProtocol string,
-	NewInternalPort uint16,
-	NewInternalClient string,
-	NewEnabled bool,
-	NewPortMappingDescription string,
-	NewLeaseDuration uint32,
-) (
-	err error,
-) {
+func (client *WANPPPConnection1) AddPortMapping(NewRemoteHost string, NewExternalPort uint16, NewProtocol string, NewInternalPort uint16, NewInternalClient string, NewEnabled bool, NewPortMappingDescription string, NewLeaseDuration uint32) (err error) {
 	// Request structure.
 	var request struct {
 		NewRemoteHost             string
@@ -5159,35 +3698,27 @@ func (client *WANPPPConnection1) AddPortMapping(
 	if request.NewRemoteHost, err = soap.MarshalString(NewRemoteHost); err != nil {
 		return
 	}
-
 	if request.NewExternalPort, err = soap.MarshalUi2(NewExternalPort); err != nil {
 		return
 	}
-
 	if request.NewProtocol, err = soap.MarshalString(NewProtocol); err != nil {
 		return
 	}
-
 	if request.NewInternalPort, err = soap.MarshalUi2(NewInternalPort); err != nil {
 		return
 	}
-
 	if request.NewInternalClient, err = soap.MarshalString(NewInternalClient); err != nil {
 		return
 	}
-
 	if request.NewEnabled, err = soap.MarshalBoolean(NewEnabled); err != nil {
 		return
 	}
-
 	if request.NewPortMappingDescription, err = soap.MarshalString(NewPortMappingDescription); err != nil {
 		return
 	}
-
 	if request.NewLeaseDuration, err = soap.MarshalUi4(NewLeaseDuration); err != nil {
 		return
 	}
-
 	// END Marshal arguments into request.
 
 	// Response structure.
@@ -5205,37 +3736,16 @@ func (client *WANPPPConnection1) AddPortMapping(
 }
 
 // DeletePortMapping action.
+//
 // Arguments:
-//
 // * NewRemoteHost:
-// (related state variable: RemoteHost)
-// -
-// -
-//
 //
 // * NewExternalPort:
-// (related state variable: ExternalPort)
-// -
-// -
+//
+// * NewProtocol: allowed values: TCP, UDP
 //
 //
-// * NewProtocol:
-// (related state variable: PortMappingProtocol)
-// -
-// - allowed values:
-// TCP|UDP
-//
-//
-//
-// Return values:
-//
-func (client *WANPPPConnection1) DeletePortMapping(
-	NewRemoteHost string,
-	NewExternalPort uint16,
-	NewProtocol string,
-) (
-	err error,
-) {
+func (client *WANPPPConnection1) DeletePortMapping(NewRemoteHost string, NewExternalPort uint16, NewProtocol string) (err error) {
 	// Request structure.
 	var request struct {
 		NewRemoteHost   string
@@ -5247,15 +3757,12 @@ func (client *WANPPPConnection1) DeletePortMapping(
 	if request.NewRemoteHost, err = soap.MarshalString(NewRemoteHost); err != nil {
 		return
 	}
-
 	if request.NewExternalPort, err = soap.MarshalUi2(NewExternalPort); err != nil {
 		return
 	}
-
 	if request.NewProtocol, err = soap.MarshalString(NewProtocol); err != nil {
 		return
 	}
-
 	// END Marshal arguments into request.
 
 	// Response structure.
@@ -5273,21 +3780,12 @@ func (client *WANPPPConnection1) DeletePortMapping(
 }
 
 // GetExternalIPAddress action.
-// Arguments:
 //
 //
 // Return values:
-//
 // * NewExternalIPAddress:
-// (related state variable: ExternalIPAddress)
-// -
-// -
 //
-//
-func (client *WANPPPConnection1) GetExternalIPAddress() (
-	NewExternalIPAddress string,
-	err error,
-) {
+func (client *WANPPPConnection1) GetExternalIPAddress() (NewExternalIPAddress string, err error) {
 	// Request structure.
 	var request struct{}
 	// BEGIN Marshal arguments into request.
@@ -5309,7 +3807,6 @@ func (client *WANPPPConnection1) GetExternalIPAddress() (
 	if NewExternalIPAddress, err = soap.UnmarshalString(response.NewExternalIPAddress); err != nil {
 		return
 	}
-
 	// END Unmarshal arguments from response.
 	return
 }

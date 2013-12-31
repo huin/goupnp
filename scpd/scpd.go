@@ -66,6 +66,28 @@ func (action *Action) clean() {
 	}
 }
 
+func (action *Action) InputArguments() []*Argument {
+	var result []*Argument
+	for i := range action.Arguments {
+		arg := &action.Arguments[i]
+		if arg.IsInput() {
+			result = append(result, arg)
+		}
+	}
+	return result
+}
+
+func (action *Action) OutputArguments() []*Argument {
+	var result []*Argument
+	for i := range action.Arguments {
+		arg := &action.Arguments[i]
+		if arg.IsOutput() {
+			result = append(result, arg)
+		}
+	}
+	return result
+}
+
 type Argument struct {
 	Name                 string `xml:"name"`
 	Direction            string `xml:"direction"`            // in|out

@@ -215,7 +215,7 @@ type SCPDWithURN struct {
 	SCPD *scpd.SCPD
 }
 
-func (s *SCPDWithURN) Argument(arg scpd.Argument) (*argumentWrapper, error) {
+func (s *SCPDWithURN) WrapArgument(arg scpd.Argument) (*argumentWrapper, error) {
 	relVar := s.SCPD.GetStateVariable(arg.RelatedStateVariable)
 	if relVar == nil {
 		return nil, fmt.Errorf("no such state variable: %q, for argument %q", arg.RelatedStateVariable, arg.Name)
@@ -239,6 +239,27 @@ type argumentWrapper struct {
 
 func (arg *argumentWrapper) AsParameter() string {
 	return fmt.Sprintf("%s %s", arg.Name, arg.conv.ExtType)
+}
+
+func (arg *argumentWrapper) Document() string {
+	relVar := arg.relVar
+	if rng := relVar.AllowedValueRange; rng != nil {
+		var parts []string
+		if rng.Minimum != "" {
+			parts = append(parts, fmt.Sprintf("minimum=%s", rng.Minimum))
+		}
+		if rng.Maximum != "" {
+			parts = append(parts, fmt.Sprintf("maximum=%s", rng.Maximum))
+		}
+		if rng.Step != "" {
+			parts = append(parts, fmt.Sprintf("step=%s", rng.Step))
+		}
+		return "allowed value range: " + strings.Join(parts, ", ")
+	}
+	if len(relVar.AllowedValues) != 0 {
+		return "allowed values: " + strings.Join(relVar.AllowedValues, ", ")
+	}
+	return ""
 }
 
 func (arg *argumentWrapper) Marshal() string {
