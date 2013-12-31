@@ -31,7 +31,7 @@ const ({{range .ServiceTypes}}
 
 // {{$srvIdent}} is a client for UPnP SOAP service with URN "{{.URN}}".
 type {{$srvIdent}} struct {
-	SOAPClient soap.SOAPClient
+	SOAPClient *soap.SOAPClient
 }
 
 {{range .SCPD.Actions}}{{/* loops over *SCPDWithURN values */}}

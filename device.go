@@ -85,7 +85,6 @@ func (device *Device) VisitServices(visitor func(*Service)) {
 func (device *Device) FindService(serviceType string) []*Service {
 	var services []*Service
 	device.VisitServices(func(s *Service) {
-		fmt.Println(s.ServiceType)
 		if s.ServiceType == serviceType {
 			services = append(services, s)
 		}

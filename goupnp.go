@@ -11,23 +11,6 @@ import (
 	"github.com/huin/goupnp/ssdp"
 )
 
-// Non-exhaustive set of UPnP service types.
-const (
-	ServiceTypeLayer3Forwarding         = "urn:schemas-upnp-org:service:Layer3Forwarding:1"
-	ServiceTypeWANCommonInterfaceConfig = "urn:schemas-upnp-org:service:WANCommonInterfaceConfig:1"
-	// WANPPPConnection is typically useful with regard to the external IP and
-	// port forwarding.
-	// http://upnp.org/specs/gw/UPnP-gw-WANPPPConnection-v1-Service.pdf
-	ServiceTypeWANPPPConnection = "urn:schemas-upnp-org:service:WANPPPConnection:1"
-)
-
-// Non-exhaustive set of UPnP device types.
-const (
-	// Device type for InternetGatewayDevice.
-	// http://upnp.org/specs/gw/upnp-gw-internetgatewaydevice-v1-device.pdf
-	DeviceTypeInternetGatewayDevice = "urn:schemas-upnp-org:device:InternetGatewayDevice:1"
-)
-
 // ContextError is an error that wraps an error with some context information.
 type ContextError struct {
 	Context string
@@ -45,10 +28,11 @@ type MaybeRootDevice struct {
 }
 
 // DiscoverDevices attempts to find targets of the given type. This is
-// typically the entry-point for this package. searchTarget is typically a
-// value from a DeviceType* or ServiceType* constant. An error is returned for
-// errors while attempting to send the query. An error or RootDevice is
-// returned for each discovered RootDevice.
+// typically the entry-point for this package. searchTarget is typically a URN
+// in the form "urn:schemas-upnp-org:device:..." or
+// "urn:schemas-upnp-org:service:...". A single error is returned for errors
+// while attempting to send the query. An error or RootDevice is returned for
+// each discovered RootDevice.
 func DiscoverDevices(searchTarget string) ([]MaybeRootDevice, error) {
 	httpu, err := httpu.NewHTTPUClient()
 	if err != nil {

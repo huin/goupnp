@@ -31,7 +31,7 @@ const (
 
 // LANHostConfigManagement1 is a client for UPnP SOAP service with URN "urn:schemas-upnp-org:service:LANHostConfigManagement:1".
 type LANHostConfigManagement1 struct {
-	SOAPClient soap.SOAPClient
+	SOAPClient *soap.SOAPClient
 }
 
 // Arguments:
@@ -637,7 +637,7 @@ func (client *LANHostConfigManagement1) GetDNSServers() (NewDNSServers string, e
 
 // Layer3Forwarding1 is a client for UPnP SOAP service with URN "urn:schemas-upnp-org:service:Layer3Forwarding:1".
 type Layer3Forwarding1 struct {
-	SOAPClient soap.SOAPClient
+	SOAPClient *soap.SOAPClient
 }
 
 // Arguments:
@@ -704,7 +704,7 @@ func (client *Layer3Forwarding1) GetDefaultConnectionService() (NewDefaultConnec
 
 // WANCableLinkConfig1 is a client for UPnP SOAP service with URN "urn:schemas-upnp-org:service:WANCableLinkConfig:1".
 type WANCableLinkConfig1 struct {
-	SOAPClient soap.SOAPClient
+	SOAPClient *soap.SOAPClient
 }
 
 //
@@ -1025,7 +1025,7 @@ func (client *WANCableLinkConfig1) GetTFTPServer() (NewTFTPServer string, err er
 
 // WANCommonInterfaceConfig1 is a client for UPnP SOAP service with URN "urn:schemas-upnp-org:service:WANCommonInterfaceConfig:1".
 type WANCommonInterfaceConfig1 struct {
-	SOAPClient soap.SOAPClient
+	SOAPClient *soap.SOAPClient
 }
 
 // Arguments:
@@ -1371,7 +1371,7 @@ func (client *WANCommonInterfaceConfig1) GetActiveConnection(NewActiveConnection
 
 // WANDSLLinkConfig1 is a client for UPnP SOAP service with URN "urn:schemas-upnp-org:service:WANDSLLinkConfig:1".
 type WANDSLLinkConfig1 struct {
-	SOAPClient soap.SOAPClient
+	SOAPClient *soap.SOAPClient
 }
 
 // Arguments:
@@ -1692,7 +1692,7 @@ func (client *WANDSLLinkConfig1) GetFCSPreserved() (NewFCSPreserved bool, err er
 
 // WANEthernetLinkConfig1 is a client for UPnP SOAP service with URN "urn:schemas-upnp-org:service:WANEthernetLinkConfig:1".
 type WANEthernetLinkConfig1 struct {
-	SOAPClient soap.SOAPClient
+	SOAPClient *soap.SOAPClient
 }
 
 //
@@ -1728,7 +1728,7 @@ func (client *WANEthernetLinkConfig1) GetEthernetLinkStatus() (NewEthernetLinkSt
 
 // WANIPConnection1 is a client for UPnP SOAP service with URN "urn:schemas-upnp-org:service:WANIPConnection:1".
 type WANIPConnection1 struct {
-	SOAPClient soap.SOAPClient
+	SOAPClient *soap.SOAPClient
 }
 
 // Arguments:
@@ -2440,7 +2440,7 @@ func (client *WANIPConnection1) GetExternalIPAddress() (NewExternalIPAddress str
 
 // WANPOTSLinkConfig1 is a client for UPnP SOAP service with URN "urn:schemas-upnp-org:service:WANPOTSLinkConfig:1".
 type WANPOTSLinkConfig1 struct {
-	SOAPClient soap.SOAPClient
+	SOAPClient *soap.SOAPClient
 }
 
 // Arguments:
@@ -2760,7 +2760,7 @@ func (client *WANPOTSLinkConfig1) GetPlusVTRCommandSupported() (NewPlusVTRComman
 
 // WANPPPConnection1 is a client for UPnP SOAP service with URN "urn:schemas-upnp-org:service:WANPPPConnection:1".
 type WANPPPConnection1 struct {
-	SOAPClient soap.SOAPClient
+	SOAPClient *soap.SOAPClient
 }
 
 // Arguments:
