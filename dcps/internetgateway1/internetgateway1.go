@@ -34,8 +34,6 @@ type LANHostConfigManagement1 struct {
 	SOAPClient soap.SOAPClient
 }
 
-// SetDHCPServerConfigurable action.
-//
 // Arguments:
 //
 // * NewDHCPServerConfigurable:
@@ -67,8 +65,6 @@ func (client *LANHostConfigManagement1) SetDHCPServerConfigurable(NewDHCPServerC
 	return
 }
 
-// GetDHCPServerConfigurable action.
-//
 //
 //
 // Return values:
@@ -100,8 +96,6 @@ func (client *LANHostConfigManagement1) GetDHCPServerConfigurable() (NewDHCPServ
 	return
 }
 
-// SetDHCPRelay action.
-//
 // Arguments:
 //
 // * NewDHCPRelay:
@@ -133,8 +127,6 @@ func (client *LANHostConfigManagement1) SetDHCPRelay(NewDHCPRelay bool) (err err
 	return
 }
 
-// GetDHCPRelay action.
-//
 //
 //
 // Return values:
@@ -166,8 +158,6 @@ func (client *LANHostConfigManagement1) GetDHCPRelay() (NewDHCPRelay bool, err e
 	return
 }
 
-// SetSubnetMask action.
-//
 // Arguments:
 //
 // * NewSubnetMask:
@@ -199,8 +189,6 @@ func (client *LANHostConfigManagement1) SetSubnetMask(NewSubnetMask string) (err
 	return
 }
 
-// GetSubnetMask action.
-//
 //
 //
 // Return values:
@@ -232,8 +220,6 @@ func (client *LANHostConfigManagement1) GetSubnetMask() (NewSubnetMask string, e
 	return
 }
 
-// SetIPRouter action.
-//
 // Arguments:
 //
 // * NewIPRouters:
@@ -265,8 +251,6 @@ func (client *LANHostConfigManagement1) SetIPRouter(NewIPRouters string) (err er
 	return
 }
 
-// DeleteIPRouter action.
-//
 // Arguments:
 //
 // * NewIPRouters:
@@ -298,8 +282,6 @@ func (client *LANHostConfigManagement1) DeleteIPRouter(NewIPRouters string) (err
 	return
 }
 
-// GetIPRoutersList action.
-//
 //
 //
 // Return values:
@@ -331,8 +313,6 @@ func (client *LANHostConfigManagement1) GetIPRoutersList() (NewIPRouters string,
 	return
 }
 
-// SetDomainName action.
-//
 // Arguments:
 //
 // * NewDomainName:
@@ -364,8 +344,6 @@ func (client *LANHostConfigManagement1) SetDomainName(NewDomainName string) (err
 	return
 }
 
-// GetDomainName action.
-//
 //
 //
 // Return values:
@@ -397,8 +375,6 @@ func (client *LANHostConfigManagement1) GetDomainName() (NewDomainName string, e
 	return
 }
 
-// SetAddressRange action.
-//
 // Arguments:
 //
 // * NewMinAddress:
@@ -436,8 +412,6 @@ func (client *LANHostConfigManagement1) SetAddressRange(NewMinAddress string, Ne
 	return
 }
 
-// GetAddressRange action.
-//
 //
 //
 // Return values:
@@ -475,8 +449,6 @@ func (client *LANHostConfigManagement1) GetAddressRange() (NewMinAddress string,
 	return
 }
 
-// SetReservedAddress action.
-//
 // Arguments:
 //
 // * NewReservedAddresses:
@@ -508,8 +480,6 @@ func (client *LANHostConfigManagement1) SetReservedAddress(NewReservedAddresses 
 	return
 }
 
-// DeleteReservedAddress action.
-//
 // Arguments:
 //
 // * NewReservedAddresses:
@@ -541,8 +511,6 @@ func (client *LANHostConfigManagement1) DeleteReservedAddress(NewReservedAddress
 	return
 }
 
-// GetReservedAddresses action.
-//
 //
 //
 // Return values:
@@ -574,8 +542,6 @@ func (client *LANHostConfigManagement1) GetReservedAddresses() (NewReservedAddre
 	return
 }
 
-// SetDNSServer action.
-//
 // Arguments:
 //
 // * NewDNSServers:
@@ -607,8 +573,6 @@ func (client *LANHostConfigManagement1) SetDNSServer(NewDNSServers string) (err 
 	return
 }
 
-// DeleteDNSServer action.
-//
 // Arguments:
 //
 // * NewDNSServers:
@@ -640,8 +604,6 @@ func (client *LANHostConfigManagement1) DeleteDNSServer(NewDNSServers string) (e
 	return
 }
 
-// GetDNSServers action.
-//
 //
 //
 // Return values:
@@ -678,8 +640,6 @@ type Layer3Forwarding1 struct {
 	SOAPClient soap.SOAPClient
 }
 
-// SetDefaultConnectionService action.
-//
 // Arguments:
 //
 // * NewDefaultConnectionService:
@@ -711,8 +671,6 @@ func (client *Layer3Forwarding1) SetDefaultConnectionService(NewDefaultConnectio
 	return
 }
 
-// GetDefaultConnectionService action.
-//
 //
 //
 // Return values:
@@ -749,8 +707,6 @@ type WANCableLinkConfig1 struct {
 	SOAPClient soap.SOAPClient
 }
 
-// GetCableLinkConfigInfo action.
-//
 //
 //
 // Return values:
@@ -788,8 +744,6 @@ func (client *WANCableLinkConfig1) GetCableLinkConfigInfo() (NewCableLinkConfigS
 	return
 }
 
-// GetDownstreamFrequency action.
-//
 //
 //
 // Return values:
@@ -821,8 +775,6 @@ func (client *WANCableLinkConfig1) GetDownstreamFrequency() (NewDownstreamFreque
 	return
 }
 
-// GetDownstreamModulation action.
-//
 //
 //
 // Return values:
@@ -854,8 +806,6 @@ func (client *WANCableLinkConfig1) GetDownstreamModulation() (NewDownstreamModul
 	return
 }
 
-// GetUpstreamFrequency action.
-//
 //
 //
 // Return values:
@@ -887,8 +837,6 @@ func (client *WANCableLinkConfig1) GetUpstreamFrequency() (NewUpstreamFrequency 
 	return
 }
 
-// GetUpstreamModulation action.
-//
 //
 //
 // Return values:
@@ -920,8 +868,6 @@ func (client *WANCableLinkConfig1) GetUpstreamModulation() (NewUpstreamModulatio
 	return
 }
 
-// GetUpstreamChannelID action.
-//
 //
 //
 // Return values:
@@ -953,8 +899,6 @@ func (client *WANCableLinkConfig1) GetUpstreamChannelID() (NewUpstreamChannelID 
 	return
 }
 
-// GetUpstreamPowerLevel action.
-//
 //
 //
 // Return values:
@@ -986,8 +930,6 @@ func (client *WANCableLinkConfig1) GetUpstreamPowerLevel() (NewUpstreamPowerLeve
 	return
 }
 
-// GetBPIEncryptionEnabled action.
-//
 //
 //
 // Return values:
@@ -1019,8 +961,6 @@ func (client *WANCableLinkConfig1) GetBPIEncryptionEnabled() (NewBPIEncryptionEn
 	return
 }
 
-// GetConfigFile action.
-//
 //
 //
 // Return values:
@@ -1052,8 +992,6 @@ func (client *WANCableLinkConfig1) GetConfigFile() (NewConfigFile string, err er
 	return
 }
 
-// GetTFTPServer action.
-//
 //
 //
 // Return values:
@@ -1090,8 +1028,6 @@ type WANCommonInterfaceConfig1 struct {
 	SOAPClient soap.SOAPClient
 }
 
-// SetEnabledForInternet action.
-//
 // Arguments:
 //
 // * NewEnabledForInternet:
@@ -1123,8 +1059,6 @@ func (client *WANCommonInterfaceConfig1) SetEnabledForInternet(NewEnabledForInte
 	return
 }
 
-// GetEnabledForInternet action.
-//
 //
 //
 // Return values:
@@ -1156,8 +1090,6 @@ func (client *WANCommonInterfaceConfig1) GetEnabledForInternet() (NewEnabledForI
 	return
 }
 
-// GetCommonLinkProperties action.
-//
 //
 //
 // Return values:
@@ -1207,8 +1139,6 @@ func (client *WANCommonInterfaceConfig1) GetCommonLinkProperties() (NewWANAccess
 	return
 }
 
-// GetWANAccessProvider action.
-//
 //
 //
 // Return values:
@@ -1240,8 +1170,6 @@ func (client *WANCommonInterfaceConfig1) GetWANAccessProvider() (NewWANAccessPro
 	return
 }
 
-// GetMaximumActiveConnections action.
-//
 //
 //
 // Return values:
@@ -1273,8 +1201,6 @@ func (client *WANCommonInterfaceConfig1) GetMaximumActiveConnections() (NewMaxim
 	return
 }
 
-// GetTotalBytesSent action.
-//
 //
 //
 // Return values:
@@ -1306,8 +1232,6 @@ func (client *WANCommonInterfaceConfig1) GetTotalBytesSent() (NewTotalBytesSent 
 	return
 }
 
-// GetTotalBytesReceived action.
-//
 //
 //
 // Return values:
@@ -1339,8 +1263,6 @@ func (client *WANCommonInterfaceConfig1) GetTotalBytesReceived() (NewTotalBytesR
 	return
 }
 
-// GetTotalPacketsSent action.
-//
 //
 //
 // Return values:
@@ -1372,8 +1294,6 @@ func (client *WANCommonInterfaceConfig1) GetTotalPacketsSent() (NewTotalPacketsS
 	return
 }
 
-// GetTotalPacketsReceived action.
-//
 //
 //
 // Return values:
@@ -1405,8 +1325,6 @@ func (client *WANCommonInterfaceConfig1) GetTotalPacketsReceived() (NewTotalPack
 	return
 }
 
-// GetActiveConnection action.
-//
 // Arguments:
 //
 // * NewActiveConnectionIndex:
@@ -1456,8 +1374,6 @@ type WANDSLLinkConfig1 struct {
 	SOAPClient soap.SOAPClient
 }
 
-// SetDSLLinkType action.
-//
 // Arguments:
 //
 // * NewLinkType:
@@ -1489,8 +1405,6 @@ func (client *WANDSLLinkConfig1) SetDSLLinkType(NewLinkType string) (err error) 
 	return
 }
 
-// GetDSLLinkInfo action.
-//
 //
 //
 // Return values:
@@ -1528,8 +1442,6 @@ func (client *WANDSLLinkConfig1) GetDSLLinkInfo() (NewLinkType string, NewLinkSt
 	return
 }
 
-// GetAutoConfig action.
-//
 //
 //
 // Return values:
@@ -1561,8 +1473,6 @@ func (client *WANDSLLinkConfig1) GetAutoConfig() (NewAutoConfig bool, err error)
 	return
 }
 
-// GetModulationType action.
-//
 //
 //
 // Return values:
@@ -1594,8 +1504,6 @@ func (client *WANDSLLinkConfig1) GetModulationType() (NewModulationType string, 
 	return
 }
 
-// SetDestinationAddress action.
-//
 // Arguments:
 //
 // * NewDestinationAddress:
@@ -1627,8 +1535,6 @@ func (client *WANDSLLinkConfig1) SetDestinationAddress(NewDestinationAddress str
 	return
 }
 
-// GetDestinationAddress action.
-//
 //
 //
 // Return values:
@@ -1660,8 +1566,6 @@ func (client *WANDSLLinkConfig1) GetDestinationAddress() (NewDestinationAddress 
 	return
 }
 
-// SetATMEncapsulation action.
-//
 // Arguments:
 //
 // * NewATMEncapsulation:
@@ -1693,8 +1597,6 @@ func (client *WANDSLLinkConfig1) SetATMEncapsulation(NewATMEncapsulation string)
 	return
 }
 
-// GetATMEncapsulation action.
-//
 //
 //
 // Return values:
@@ -1726,8 +1628,6 @@ func (client *WANDSLLinkConfig1) GetATMEncapsulation() (NewATMEncapsulation stri
 	return
 }
 
-// SetFCSPreserved action.
-//
 // Arguments:
 //
 // * NewFCSPreserved:
@@ -1759,8 +1659,6 @@ func (client *WANDSLLinkConfig1) SetFCSPreserved(NewFCSPreserved bool) (err erro
 	return
 }
 
-// GetFCSPreserved action.
-//
 //
 //
 // Return values:
@@ -1797,8 +1695,6 @@ type WANEthernetLinkConfig1 struct {
 	SOAPClient soap.SOAPClient
 }
 
-// GetEthernetLinkStatus action.
-//
 //
 //
 // Return values:
@@ -1835,8 +1731,6 @@ type WANIPConnection1 struct {
 	SOAPClient soap.SOAPClient
 }
 
-// SetConnectionType action.
-//
 // Arguments:
 //
 // * NewConnectionType:
@@ -1868,8 +1762,6 @@ func (client *WANIPConnection1) SetConnectionType(NewConnectionType string) (err
 	return
 }
 
-// GetConnectionTypeInfo action.
-//
 //
 //
 // Return values:
@@ -1907,8 +1799,6 @@ func (client *WANIPConnection1) GetConnectionTypeInfo() (NewConnectionType strin
 	return
 }
 
-// RequestConnection action.
-//
 //
 //
 //
@@ -1933,8 +1823,6 @@ func (client *WANIPConnection1) RequestConnection() (err error) {
 	return
 }
 
-// RequestTermination action.
-//
 //
 //
 //
@@ -1959,8 +1847,6 @@ func (client *WANIPConnection1) RequestTermination() (err error) {
 	return
 }
 
-// ForceTermination action.
-//
 //
 //
 //
@@ -1985,8 +1871,6 @@ func (client *WANIPConnection1) ForceTermination() (err error) {
 	return
 }
 
-// SetAutoDisconnectTime action.
-//
 // Arguments:
 //
 // * NewAutoDisconnectTime:
@@ -2018,8 +1902,6 @@ func (client *WANIPConnection1) SetAutoDisconnectTime(NewAutoDisconnectTime uint
 	return
 }
 
-// SetIdleDisconnectTime action.
-//
 // Arguments:
 //
 // * NewIdleDisconnectTime:
@@ -2051,8 +1933,6 @@ func (client *WANIPConnection1) SetIdleDisconnectTime(NewIdleDisconnectTime uint
 	return
 }
 
-// SetWarnDisconnectDelay action.
-//
 // Arguments:
 //
 // * NewWarnDisconnectDelay:
@@ -2084,8 +1964,6 @@ func (client *WANIPConnection1) SetWarnDisconnectDelay(NewWarnDisconnectDelay ui
 	return
 }
 
-// GetStatusInfo action.
-//
 //
 //
 // Return values:
@@ -2129,8 +2007,6 @@ func (client *WANIPConnection1) GetStatusInfo() (NewConnectionStatus string, New
 	return
 }
 
-// GetAutoDisconnectTime action.
-//
 //
 //
 // Return values:
@@ -2162,8 +2038,6 @@ func (client *WANIPConnection1) GetAutoDisconnectTime() (NewAutoDisconnectTime u
 	return
 }
 
-// GetIdleDisconnectTime action.
-//
 //
 //
 // Return values:
@@ -2195,8 +2069,6 @@ func (client *WANIPConnection1) GetIdleDisconnectTime() (NewIdleDisconnectTime u
 	return
 }
 
-// GetWarnDisconnectDelay action.
-//
 //
 //
 // Return values:
@@ -2228,8 +2100,6 @@ func (client *WANIPConnection1) GetWarnDisconnectDelay() (NewWarnDisconnectDelay
 	return
 }
 
-// GetNATRSIPStatus action.
-//
 //
 //
 // Return values:
@@ -2267,8 +2137,6 @@ func (client *WANIPConnection1) GetNATRSIPStatus() (NewRSIPAvailable bool, NewNA
 	return
 }
 
-// GetGenericPortMappingEntry action.
-//
 // Arguments:
 //
 // * NewPortMappingIndex:
@@ -2349,8 +2217,6 @@ func (client *WANIPConnection1) GetGenericPortMappingEntry(NewPortMappingIndex u
 	return
 }
 
-// GetSpecificPortMappingEntry action.
-//
 // Arguments:
 //
 // * NewRemoteHost:
@@ -2425,8 +2291,6 @@ func (client *WANIPConnection1) GetSpecificPortMappingEntry(NewRemoteHost string
 	return
 }
 
-// AddPortMapping action.
-//
 // Arguments:
 //
 // * NewRemoteHost:
@@ -2500,8 +2364,6 @@ func (client *WANIPConnection1) AddPortMapping(NewRemoteHost string, NewExternal
 	return
 }
 
-// DeletePortMapping action.
-//
 // Arguments:
 //
 // * NewRemoteHost:
@@ -2545,8 +2407,6 @@ func (client *WANIPConnection1) DeletePortMapping(NewRemoteHost string, NewExter
 	return
 }
 
-// GetExternalIPAddress action.
-//
 //
 //
 // Return values:
@@ -2583,8 +2443,6 @@ type WANPOTSLinkConfig1 struct {
 	SOAPClient soap.SOAPClient
 }
 
-// SetISPInfo action.
-//
 // Arguments:
 //
 // * NewISPPhoneNumber:
@@ -2628,8 +2486,6 @@ func (client *WANPOTSLinkConfig1) SetISPInfo(NewISPPhoneNumber string, NewISPInf
 	return
 }
 
-// SetCallRetryInfo action.
-//
 // Arguments:
 //
 // * NewNumberOfRetries:
@@ -2667,8 +2523,6 @@ func (client *WANPOTSLinkConfig1) SetCallRetryInfo(NewNumberOfRetries uint32, Ne
 	return
 }
 
-// GetISPInfo action.
-//
 //
 //
 // Return values:
@@ -2712,8 +2566,6 @@ func (client *WANPOTSLinkConfig1) GetISPInfo() (NewISPPhoneNumber string, NewISP
 	return
 }
 
-// GetCallRetryInfo action.
-//
 //
 //
 // Return values:
@@ -2751,8 +2603,6 @@ func (client *WANPOTSLinkConfig1) GetCallRetryInfo() (NewNumberOfRetries uint32,
 	return
 }
 
-// GetFclass action.
-//
 //
 //
 // Return values:
@@ -2784,8 +2634,6 @@ func (client *WANPOTSLinkConfig1) GetFclass() (NewFclass string, err error) {
 	return
 }
 
-// GetDataModulationSupported action.
-//
 //
 //
 // Return values:
@@ -2817,8 +2665,6 @@ func (client *WANPOTSLinkConfig1) GetDataModulationSupported() (NewDataModulatio
 	return
 }
 
-// GetDataProtocol action.
-//
 //
 //
 // Return values:
@@ -2850,8 +2696,6 @@ func (client *WANPOTSLinkConfig1) GetDataProtocol() (NewDataProtocol string, err
 	return
 }
 
-// GetDataCompression action.
-//
 //
 //
 // Return values:
@@ -2883,8 +2727,6 @@ func (client *WANPOTSLinkConfig1) GetDataCompression() (NewDataCompression strin
 	return
 }
 
-// GetPlusVTRCommandSupported action.
-//
 //
 //
 // Return values:
@@ -2921,8 +2763,6 @@ type WANPPPConnection1 struct {
 	SOAPClient soap.SOAPClient
 }
 
-// SetConnectionType action.
-//
 // Arguments:
 //
 // * NewConnectionType:
@@ -2954,8 +2794,6 @@ func (client *WANPPPConnection1) SetConnectionType(NewConnectionType string) (er
 	return
 }
 
-// GetConnectionTypeInfo action.
-//
 //
 //
 // Return values:
@@ -2993,8 +2831,6 @@ func (client *WANPPPConnection1) GetConnectionTypeInfo() (NewConnectionType stri
 	return
 }
 
-// ConfigureConnection action.
-//
 // Arguments:
 //
 // * NewUserName:
@@ -3032,8 +2868,6 @@ func (client *WANPPPConnection1) ConfigureConnection(NewUserName string, NewPass
 	return
 }
 
-// RequestConnection action.
-//
 //
 //
 //
@@ -3058,8 +2892,6 @@ func (client *WANPPPConnection1) RequestConnection() (err error) {
 	return
 }
 
-// RequestTermination action.
-//
 //
 //
 //
@@ -3084,8 +2916,6 @@ func (client *WANPPPConnection1) RequestTermination() (err error) {
 	return
 }
 
-// ForceTermination action.
-//
 //
 //
 //
@@ -3110,8 +2940,6 @@ func (client *WANPPPConnection1) ForceTermination() (err error) {
 	return
 }
 
-// SetAutoDisconnectTime action.
-//
 // Arguments:
 //
 // * NewAutoDisconnectTime:
@@ -3143,8 +2971,6 @@ func (client *WANPPPConnection1) SetAutoDisconnectTime(NewAutoDisconnectTime uin
 	return
 }
 
-// SetIdleDisconnectTime action.
-//
 // Arguments:
 //
 // * NewIdleDisconnectTime:
@@ -3176,8 +3002,6 @@ func (client *WANPPPConnection1) SetIdleDisconnectTime(NewIdleDisconnectTime uin
 	return
 }
 
-// SetWarnDisconnectDelay action.
-//
 // Arguments:
 //
 // * NewWarnDisconnectDelay:
@@ -3209,8 +3033,6 @@ func (client *WANPPPConnection1) SetWarnDisconnectDelay(NewWarnDisconnectDelay u
 	return
 }
 
-// GetStatusInfo action.
-//
 //
 //
 // Return values:
@@ -3254,8 +3076,6 @@ func (client *WANPPPConnection1) GetStatusInfo() (NewConnectionStatus string, Ne
 	return
 }
 
-// GetLinkLayerMaxBitRates action.
-//
 //
 //
 // Return values:
@@ -3293,8 +3113,6 @@ func (client *WANPPPConnection1) GetLinkLayerMaxBitRates() (NewUpstreamMaxBitRat
 	return
 }
 
-// GetPPPEncryptionProtocol action.
-//
 //
 //
 // Return values:
@@ -3326,8 +3144,6 @@ func (client *WANPPPConnection1) GetPPPEncryptionProtocol() (NewPPPEncryptionPro
 	return
 }
 
-// GetPPPCompressionProtocol action.
-//
 //
 //
 // Return values:
@@ -3359,8 +3175,6 @@ func (client *WANPPPConnection1) GetPPPCompressionProtocol() (NewPPPCompressionP
 	return
 }
 
-// GetPPPAuthenticationProtocol action.
-//
 //
 //
 // Return values:
@@ -3392,8 +3206,6 @@ func (client *WANPPPConnection1) GetPPPAuthenticationProtocol() (NewPPPAuthentic
 	return
 }
 
-// GetUserName action.
-//
 //
 //
 // Return values:
@@ -3425,8 +3237,6 @@ func (client *WANPPPConnection1) GetUserName() (NewUserName string, err error) {
 	return
 }
 
-// GetPassword action.
-//
 //
 //
 // Return values:
@@ -3458,8 +3268,6 @@ func (client *WANPPPConnection1) GetPassword() (NewPassword string, err error) {
 	return
 }
 
-// GetAutoDisconnectTime action.
-//
 //
 //
 // Return values:
@@ -3491,8 +3299,6 @@ func (client *WANPPPConnection1) GetAutoDisconnectTime() (NewAutoDisconnectTime 
 	return
 }
 
-// GetIdleDisconnectTime action.
-//
 //
 //
 // Return values:
@@ -3524,8 +3330,6 @@ func (client *WANPPPConnection1) GetIdleDisconnectTime() (NewIdleDisconnectTime 
 	return
 }
 
-// GetWarnDisconnectDelay action.
-//
 //
 //
 // Return values:
@@ -3557,8 +3361,6 @@ func (client *WANPPPConnection1) GetWarnDisconnectDelay() (NewWarnDisconnectDela
 	return
 }
 
-// GetNATRSIPStatus action.
-//
 //
 //
 // Return values:
@@ -3596,8 +3398,6 @@ func (client *WANPPPConnection1) GetNATRSIPStatus() (NewRSIPAvailable bool, NewN
 	return
 }
 
-// GetGenericPortMappingEntry action.
-//
 // Arguments:
 //
 // * NewPortMappingIndex:
@@ -3678,8 +3478,6 @@ func (client *WANPPPConnection1) GetGenericPortMappingEntry(NewPortMappingIndex 
 	return
 }
 
-// GetSpecificPortMappingEntry action.
-//
 // Arguments:
 //
 // * NewRemoteHost:
@@ -3754,8 +3552,6 @@ func (client *WANPPPConnection1) GetSpecificPortMappingEntry(NewRemoteHost strin
 	return
 }
 
-// AddPortMapping action.
-//
 // Arguments:
 //
 // * NewRemoteHost:
@@ -3829,8 +3625,6 @@ func (client *WANPPPConnection1) AddPortMapping(NewRemoteHost string, NewExterna
 	return
 }
 
-// DeletePortMapping action.
-//
 // Arguments:
 //
 // * NewRemoteHost:
@@ -3874,8 +3668,6 @@ func (client *WANPPPConnection1) DeletePortMapping(NewRemoteHost string, NewExte
 	return
 }
 
-// GetExternalIPAddress action.
-//
 //
 //
 // Return values:

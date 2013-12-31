@@ -37,8 +37,6 @@ type {{$srvIdent}} struct {
 {{range .SCPD.Actions}}{{/* loops over *SCPDWithURN values */}}
 
 {{$inargs := .InputArguments}}{{$outargs := .OutputArguments}}
-// {{.Name}} action.
-//
 // {{if $inargs}}Arguments:{{range $inargs}}{{$argWrap := $srv.WrapArgument .}}
 //
 // * {{.Name}}: {{$argWrap.Document}}{{end}}{{end}}
