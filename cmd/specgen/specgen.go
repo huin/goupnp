@@ -14,6 +14,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"os/exec"
 	"path"
 	"path/filepath"
 	"regexp"
@@ -173,7 +174,22 @@ func (dcp *DCP) writePackage(outDir string) error {
 		return err
 	}
 	defer packageFile.Close()
-	return packageTmpl.Execute(packageFile, dcp)
+	gofmt := exec.Command("gofmt")
+	gofmt.Stdout = packageFile
+	gofmtWriter, err := gofmt.StdinPipe()
+	if err != nil {
+		return err
+	}
+	if err = gofmt.Start(); err != nil {
+		return err
+	}
+	if err = packageTmpl.Execute(gofmtWriter, dcp); err != nil {
+		gofmtWriter.Close()
+		gofmt.Wait()
+		return err
+	}
+	gofmtWriter.Close()
+	return gofmt.Wait()
 }
 
 func (dcp *DCP) processSCPDFile(file *zip.File) {
