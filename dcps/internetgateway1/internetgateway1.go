@@ -42,14 +42,6 @@ type LANHostConfigManagement1 struct {
 	SOAPClient soap.SOAPClient
 }
 
-// _LANHostConfigManagement1_SetDHCPServerConfigurable_Request is the XML structure for the input arguments for action SetDHCPServerConfigurable.
-type _LANHostConfigManagement1_SetDHCPServerConfigurable_Request struct {
-	NewDHCPServerConfigurable string
-}
-
-// _LANHostConfigManagement1_SetDHCPServerConfigurable_Response is the XML structure for the output arguments for action SetDHCPServerConfigurable.
-type _LANHostConfigManagement1_SetDHCPServerConfigurable_Response struct{}
-
 // SetDHCPServerConfigurable action.
 // Arguments:
 //
@@ -67,7 +59,10 @@ func (client *LANHostConfigManagement1) SetDHCPServerConfigurable(
 ) (
 	err error,
 ) {
-	var request _LANHostConfigManagement1_SetDHCPServerConfigurable_Request
+	// Request structure.
+	var request struct {
+		NewDHCPServerConfigurable string
+	}
 	// BEGIN Marshal arguments into request.
 
 	if request.NewDHCPServerConfigurable, err = soap.MarshalBoolean(NewDHCPServerConfigurable); err != nil {
@@ -76,8 +71,10 @@ func (client *LANHostConfigManagement1) SetDHCPServerConfigurable(
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct{}
+
 	// Perform the SOAP call.
-	var response _LANHostConfigManagement1_SetDHCPServerConfigurable_Response
 	if err = client.SOAPClient.PerformAction(URN_LANHostConfigManagement_1, "SetDHCPServerConfigurable", &request, &response); err != nil {
 		return
 	}
@@ -86,14 +83,6 @@ func (client *LANHostConfigManagement1) SetDHCPServerConfigurable(
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _LANHostConfigManagement1_GetDHCPServerConfigurable_Request is the XML structure for the input arguments for action GetDHCPServerConfigurable.
-type _LANHostConfigManagement1_GetDHCPServerConfigurable_Request struct{}
-
-// _LANHostConfigManagement1_GetDHCPServerConfigurable_Response is the XML structure for the output arguments for action GetDHCPServerConfigurable.
-type _LANHostConfigManagement1_GetDHCPServerConfigurable_Response struct {
-	NewDHCPServerConfigurable string
 }
 
 // GetDHCPServerConfigurable action.
@@ -112,13 +101,18 @@ func (client *LANHostConfigManagement1) GetDHCPServerConfigurable() (
 	NewDHCPServerConfigurable bool,
 	err error,
 ) {
-	var request _LANHostConfigManagement1_GetDHCPServerConfigurable_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewDHCPServerConfigurable string
+	}
+
 	// Perform the SOAP call.
-	var response _LANHostConfigManagement1_GetDHCPServerConfigurable_Response
 	if err = client.SOAPClient.PerformAction(URN_LANHostConfigManagement_1, "GetDHCPServerConfigurable", &request, &response); err != nil {
 		return
 	}
@@ -132,14 +126,6 @@ func (client *LANHostConfigManagement1) GetDHCPServerConfigurable() (
 	// END Unmarshal arguments from response.
 	return
 }
-
-// _LANHostConfigManagement1_SetDHCPRelay_Request is the XML structure for the input arguments for action SetDHCPRelay.
-type _LANHostConfigManagement1_SetDHCPRelay_Request struct {
-	NewDHCPRelay string
-}
-
-// _LANHostConfigManagement1_SetDHCPRelay_Response is the XML structure for the output arguments for action SetDHCPRelay.
-type _LANHostConfigManagement1_SetDHCPRelay_Response struct{}
 
 // SetDHCPRelay action.
 // Arguments:
@@ -158,7 +144,10 @@ func (client *LANHostConfigManagement1) SetDHCPRelay(
 ) (
 	err error,
 ) {
-	var request _LANHostConfigManagement1_SetDHCPRelay_Request
+	// Request structure.
+	var request struct {
+		NewDHCPRelay string
+	}
 	// BEGIN Marshal arguments into request.
 
 	if request.NewDHCPRelay, err = soap.MarshalBoolean(NewDHCPRelay); err != nil {
@@ -167,8 +156,10 @@ func (client *LANHostConfigManagement1) SetDHCPRelay(
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct{}
+
 	// Perform the SOAP call.
-	var response _LANHostConfigManagement1_SetDHCPRelay_Response
 	if err = client.SOAPClient.PerformAction(URN_LANHostConfigManagement_1, "SetDHCPRelay", &request, &response); err != nil {
 		return
 	}
@@ -177,14 +168,6 @@ func (client *LANHostConfigManagement1) SetDHCPRelay(
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _LANHostConfigManagement1_GetDHCPRelay_Request is the XML structure for the input arguments for action GetDHCPRelay.
-type _LANHostConfigManagement1_GetDHCPRelay_Request struct{}
-
-// _LANHostConfigManagement1_GetDHCPRelay_Response is the XML structure for the output arguments for action GetDHCPRelay.
-type _LANHostConfigManagement1_GetDHCPRelay_Response struct {
-	NewDHCPRelay string
 }
 
 // GetDHCPRelay action.
@@ -203,13 +186,18 @@ func (client *LANHostConfigManagement1) GetDHCPRelay() (
 	NewDHCPRelay bool,
 	err error,
 ) {
-	var request _LANHostConfigManagement1_GetDHCPRelay_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewDHCPRelay string
+	}
+
 	// Perform the SOAP call.
-	var response _LANHostConfigManagement1_GetDHCPRelay_Response
 	if err = client.SOAPClient.PerformAction(URN_LANHostConfigManagement_1, "GetDHCPRelay", &request, &response); err != nil {
 		return
 	}
@@ -223,14 +211,6 @@ func (client *LANHostConfigManagement1) GetDHCPRelay() (
 	// END Unmarshal arguments from response.
 	return
 }
-
-// _LANHostConfigManagement1_SetSubnetMask_Request is the XML structure for the input arguments for action SetSubnetMask.
-type _LANHostConfigManagement1_SetSubnetMask_Request struct {
-	NewSubnetMask string
-}
-
-// _LANHostConfigManagement1_SetSubnetMask_Response is the XML structure for the output arguments for action SetSubnetMask.
-type _LANHostConfigManagement1_SetSubnetMask_Response struct{}
 
 // SetSubnetMask action.
 // Arguments:
@@ -249,7 +229,10 @@ func (client *LANHostConfigManagement1) SetSubnetMask(
 ) (
 	err error,
 ) {
-	var request _LANHostConfigManagement1_SetSubnetMask_Request
+	// Request structure.
+	var request struct {
+		NewSubnetMask string
+	}
 	// BEGIN Marshal arguments into request.
 
 	if request.NewSubnetMask, err = soap.MarshalString(NewSubnetMask); err != nil {
@@ -258,8 +241,10 @@ func (client *LANHostConfigManagement1) SetSubnetMask(
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct{}
+
 	// Perform the SOAP call.
-	var response _LANHostConfigManagement1_SetSubnetMask_Response
 	if err = client.SOAPClient.PerformAction(URN_LANHostConfigManagement_1, "SetSubnetMask", &request, &response); err != nil {
 		return
 	}
@@ -268,14 +253,6 @@ func (client *LANHostConfigManagement1) SetSubnetMask(
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _LANHostConfigManagement1_GetSubnetMask_Request is the XML structure for the input arguments for action GetSubnetMask.
-type _LANHostConfigManagement1_GetSubnetMask_Request struct{}
-
-// _LANHostConfigManagement1_GetSubnetMask_Response is the XML structure for the output arguments for action GetSubnetMask.
-type _LANHostConfigManagement1_GetSubnetMask_Response struct {
-	NewSubnetMask string
 }
 
 // GetSubnetMask action.
@@ -294,13 +271,18 @@ func (client *LANHostConfigManagement1) GetSubnetMask() (
 	NewSubnetMask string,
 	err error,
 ) {
-	var request _LANHostConfigManagement1_GetSubnetMask_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewSubnetMask string
+	}
+
 	// Perform the SOAP call.
-	var response _LANHostConfigManagement1_GetSubnetMask_Response
 	if err = client.SOAPClient.PerformAction(URN_LANHostConfigManagement_1, "GetSubnetMask", &request, &response); err != nil {
 		return
 	}
@@ -314,14 +296,6 @@ func (client *LANHostConfigManagement1) GetSubnetMask() (
 	// END Unmarshal arguments from response.
 	return
 }
-
-// _LANHostConfigManagement1_SetIPRouter_Request is the XML structure for the input arguments for action SetIPRouter.
-type _LANHostConfigManagement1_SetIPRouter_Request struct {
-	NewIPRouters string
-}
-
-// _LANHostConfigManagement1_SetIPRouter_Response is the XML structure for the output arguments for action SetIPRouter.
-type _LANHostConfigManagement1_SetIPRouter_Response struct{}
 
 // SetIPRouter action.
 // Arguments:
@@ -340,7 +314,10 @@ func (client *LANHostConfigManagement1) SetIPRouter(
 ) (
 	err error,
 ) {
-	var request _LANHostConfigManagement1_SetIPRouter_Request
+	// Request structure.
+	var request struct {
+		NewIPRouters string
+	}
 	// BEGIN Marshal arguments into request.
 
 	if request.NewIPRouters, err = soap.MarshalString(NewIPRouters); err != nil {
@@ -349,8 +326,10 @@ func (client *LANHostConfigManagement1) SetIPRouter(
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct{}
+
 	// Perform the SOAP call.
-	var response _LANHostConfigManagement1_SetIPRouter_Response
 	if err = client.SOAPClient.PerformAction(URN_LANHostConfigManagement_1, "SetIPRouter", &request, &response); err != nil {
 		return
 	}
@@ -360,14 +339,6 @@ func (client *LANHostConfigManagement1) SetIPRouter(
 	// END Unmarshal arguments from response.
 	return
 }
-
-// _LANHostConfigManagement1_DeleteIPRouter_Request is the XML structure for the input arguments for action DeleteIPRouter.
-type _LANHostConfigManagement1_DeleteIPRouter_Request struct {
-	NewIPRouters string
-}
-
-// _LANHostConfigManagement1_DeleteIPRouter_Response is the XML structure for the output arguments for action DeleteIPRouter.
-type _LANHostConfigManagement1_DeleteIPRouter_Response struct{}
 
 // DeleteIPRouter action.
 // Arguments:
@@ -386,7 +357,10 @@ func (client *LANHostConfigManagement1) DeleteIPRouter(
 ) (
 	err error,
 ) {
-	var request _LANHostConfigManagement1_DeleteIPRouter_Request
+	// Request structure.
+	var request struct {
+		NewIPRouters string
+	}
 	// BEGIN Marshal arguments into request.
 
 	if request.NewIPRouters, err = soap.MarshalString(NewIPRouters); err != nil {
@@ -395,8 +369,10 @@ func (client *LANHostConfigManagement1) DeleteIPRouter(
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct{}
+
 	// Perform the SOAP call.
-	var response _LANHostConfigManagement1_DeleteIPRouter_Response
 	if err = client.SOAPClient.PerformAction(URN_LANHostConfigManagement_1, "DeleteIPRouter", &request, &response); err != nil {
 		return
 	}
@@ -405,14 +381,6 @@ func (client *LANHostConfigManagement1) DeleteIPRouter(
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _LANHostConfigManagement1_GetIPRoutersList_Request is the XML structure for the input arguments for action GetIPRoutersList.
-type _LANHostConfigManagement1_GetIPRoutersList_Request struct{}
-
-// _LANHostConfigManagement1_GetIPRoutersList_Response is the XML structure for the output arguments for action GetIPRoutersList.
-type _LANHostConfigManagement1_GetIPRoutersList_Response struct {
-	NewIPRouters string
 }
 
 // GetIPRoutersList action.
@@ -431,13 +399,18 @@ func (client *LANHostConfigManagement1) GetIPRoutersList() (
 	NewIPRouters string,
 	err error,
 ) {
-	var request _LANHostConfigManagement1_GetIPRoutersList_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewIPRouters string
+	}
+
 	// Perform the SOAP call.
-	var response _LANHostConfigManagement1_GetIPRoutersList_Response
 	if err = client.SOAPClient.PerformAction(URN_LANHostConfigManagement_1, "GetIPRoutersList", &request, &response); err != nil {
 		return
 	}
@@ -451,14 +424,6 @@ func (client *LANHostConfigManagement1) GetIPRoutersList() (
 	// END Unmarshal arguments from response.
 	return
 }
-
-// _LANHostConfigManagement1_SetDomainName_Request is the XML structure for the input arguments for action SetDomainName.
-type _LANHostConfigManagement1_SetDomainName_Request struct {
-	NewDomainName string
-}
-
-// _LANHostConfigManagement1_SetDomainName_Response is the XML structure for the output arguments for action SetDomainName.
-type _LANHostConfigManagement1_SetDomainName_Response struct{}
 
 // SetDomainName action.
 // Arguments:
@@ -477,7 +442,10 @@ func (client *LANHostConfigManagement1) SetDomainName(
 ) (
 	err error,
 ) {
-	var request _LANHostConfigManagement1_SetDomainName_Request
+	// Request structure.
+	var request struct {
+		NewDomainName string
+	}
 	// BEGIN Marshal arguments into request.
 
 	if request.NewDomainName, err = soap.MarshalString(NewDomainName); err != nil {
@@ -486,8 +454,10 @@ func (client *LANHostConfigManagement1) SetDomainName(
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct{}
+
 	// Perform the SOAP call.
-	var response _LANHostConfigManagement1_SetDomainName_Response
 	if err = client.SOAPClient.PerformAction(URN_LANHostConfigManagement_1, "SetDomainName", &request, &response); err != nil {
 		return
 	}
@@ -496,14 +466,6 @@ func (client *LANHostConfigManagement1) SetDomainName(
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _LANHostConfigManagement1_GetDomainName_Request is the XML structure for the input arguments for action GetDomainName.
-type _LANHostConfigManagement1_GetDomainName_Request struct{}
-
-// _LANHostConfigManagement1_GetDomainName_Response is the XML structure for the output arguments for action GetDomainName.
-type _LANHostConfigManagement1_GetDomainName_Response struct {
-	NewDomainName string
 }
 
 // GetDomainName action.
@@ -522,13 +484,18 @@ func (client *LANHostConfigManagement1) GetDomainName() (
 	NewDomainName string,
 	err error,
 ) {
-	var request _LANHostConfigManagement1_GetDomainName_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewDomainName string
+	}
+
 	// Perform the SOAP call.
-	var response _LANHostConfigManagement1_GetDomainName_Response
 	if err = client.SOAPClient.PerformAction(URN_LANHostConfigManagement_1, "GetDomainName", &request, &response); err != nil {
 		return
 	}
@@ -542,16 +509,6 @@ func (client *LANHostConfigManagement1) GetDomainName() (
 	// END Unmarshal arguments from response.
 	return
 }
-
-// _LANHostConfigManagement1_SetAddressRange_Request is the XML structure for the input arguments for action SetAddressRange.
-type _LANHostConfigManagement1_SetAddressRange_Request struct {
-	NewMinAddress string
-
-	NewMaxAddress string
-}
-
-// _LANHostConfigManagement1_SetAddressRange_Response is the XML structure for the output arguments for action SetAddressRange.
-type _LANHostConfigManagement1_SetAddressRange_Response struct{}
 
 // SetAddressRange action.
 // Arguments:
@@ -577,7 +534,11 @@ func (client *LANHostConfigManagement1) SetAddressRange(
 ) (
 	err error,
 ) {
-	var request _LANHostConfigManagement1_SetAddressRange_Request
+	// Request structure.
+	var request struct {
+		NewMinAddress string
+		NewMaxAddress string
+	}
 	// BEGIN Marshal arguments into request.
 
 	if request.NewMinAddress, err = soap.MarshalString(NewMinAddress); err != nil {
@@ -590,8 +551,10 @@ func (client *LANHostConfigManagement1) SetAddressRange(
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct{}
+
 	// Perform the SOAP call.
-	var response _LANHostConfigManagement1_SetAddressRange_Response
 	if err = client.SOAPClient.PerformAction(URN_LANHostConfigManagement_1, "SetAddressRange", &request, &response); err != nil {
 		return
 	}
@@ -600,16 +563,6 @@ func (client *LANHostConfigManagement1) SetAddressRange(
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _LANHostConfigManagement1_GetAddressRange_Request is the XML structure for the input arguments for action GetAddressRange.
-type _LANHostConfigManagement1_GetAddressRange_Request struct{}
-
-// _LANHostConfigManagement1_GetAddressRange_Response is the XML structure for the output arguments for action GetAddressRange.
-type _LANHostConfigManagement1_GetAddressRange_Response struct {
-	NewMinAddress string
-
-	NewMaxAddress string
 }
 
 // GetAddressRange action.
@@ -635,13 +588,19 @@ func (client *LANHostConfigManagement1) GetAddressRange() (
 	NewMaxAddress string,
 	err error,
 ) {
-	var request _LANHostConfigManagement1_GetAddressRange_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewMinAddress string
+		NewMaxAddress string
+	}
+
 	// Perform the SOAP call.
-	var response _LANHostConfigManagement1_GetAddressRange_Response
 	if err = client.SOAPClient.PerformAction(URN_LANHostConfigManagement_1, "GetAddressRange", &request, &response); err != nil {
 		return
 	}
@@ -660,14 +619,6 @@ func (client *LANHostConfigManagement1) GetAddressRange() (
 	return
 }
 
-// _LANHostConfigManagement1_SetReservedAddress_Request is the XML structure for the input arguments for action SetReservedAddress.
-type _LANHostConfigManagement1_SetReservedAddress_Request struct {
-	NewReservedAddresses string
-}
-
-// _LANHostConfigManagement1_SetReservedAddress_Response is the XML structure for the output arguments for action SetReservedAddress.
-type _LANHostConfigManagement1_SetReservedAddress_Response struct{}
-
 // SetReservedAddress action.
 // Arguments:
 //
@@ -685,7 +636,10 @@ func (client *LANHostConfigManagement1) SetReservedAddress(
 ) (
 	err error,
 ) {
-	var request _LANHostConfigManagement1_SetReservedAddress_Request
+	// Request structure.
+	var request struct {
+		NewReservedAddresses string
+	}
 	// BEGIN Marshal arguments into request.
 
 	if request.NewReservedAddresses, err = soap.MarshalString(NewReservedAddresses); err != nil {
@@ -694,8 +648,10 @@ func (client *LANHostConfigManagement1) SetReservedAddress(
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct{}
+
 	// Perform the SOAP call.
-	var response _LANHostConfigManagement1_SetReservedAddress_Response
 	if err = client.SOAPClient.PerformAction(URN_LANHostConfigManagement_1, "SetReservedAddress", &request, &response); err != nil {
 		return
 	}
@@ -705,14 +661,6 @@ func (client *LANHostConfigManagement1) SetReservedAddress(
 	// END Unmarshal arguments from response.
 	return
 }
-
-// _LANHostConfigManagement1_DeleteReservedAddress_Request is the XML structure for the input arguments for action DeleteReservedAddress.
-type _LANHostConfigManagement1_DeleteReservedAddress_Request struct {
-	NewReservedAddresses string
-}
-
-// _LANHostConfigManagement1_DeleteReservedAddress_Response is the XML structure for the output arguments for action DeleteReservedAddress.
-type _LANHostConfigManagement1_DeleteReservedAddress_Response struct{}
 
 // DeleteReservedAddress action.
 // Arguments:
@@ -731,7 +679,10 @@ func (client *LANHostConfigManagement1) DeleteReservedAddress(
 ) (
 	err error,
 ) {
-	var request _LANHostConfigManagement1_DeleteReservedAddress_Request
+	// Request structure.
+	var request struct {
+		NewReservedAddresses string
+	}
 	// BEGIN Marshal arguments into request.
 
 	if request.NewReservedAddresses, err = soap.MarshalString(NewReservedAddresses); err != nil {
@@ -740,8 +691,10 @@ func (client *LANHostConfigManagement1) DeleteReservedAddress(
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct{}
+
 	// Perform the SOAP call.
-	var response _LANHostConfigManagement1_DeleteReservedAddress_Response
 	if err = client.SOAPClient.PerformAction(URN_LANHostConfigManagement_1, "DeleteReservedAddress", &request, &response); err != nil {
 		return
 	}
@@ -750,14 +703,6 @@ func (client *LANHostConfigManagement1) DeleteReservedAddress(
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _LANHostConfigManagement1_GetReservedAddresses_Request is the XML structure for the input arguments for action GetReservedAddresses.
-type _LANHostConfigManagement1_GetReservedAddresses_Request struct{}
-
-// _LANHostConfigManagement1_GetReservedAddresses_Response is the XML structure for the output arguments for action GetReservedAddresses.
-type _LANHostConfigManagement1_GetReservedAddresses_Response struct {
-	NewReservedAddresses string
 }
 
 // GetReservedAddresses action.
@@ -776,13 +721,18 @@ func (client *LANHostConfigManagement1) GetReservedAddresses() (
 	NewReservedAddresses string,
 	err error,
 ) {
-	var request _LANHostConfigManagement1_GetReservedAddresses_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewReservedAddresses string
+	}
+
 	// Perform the SOAP call.
-	var response _LANHostConfigManagement1_GetReservedAddresses_Response
 	if err = client.SOAPClient.PerformAction(URN_LANHostConfigManagement_1, "GetReservedAddresses", &request, &response); err != nil {
 		return
 	}
@@ -796,14 +746,6 @@ func (client *LANHostConfigManagement1) GetReservedAddresses() (
 	// END Unmarshal arguments from response.
 	return
 }
-
-// _LANHostConfigManagement1_SetDNSServer_Request is the XML structure for the input arguments for action SetDNSServer.
-type _LANHostConfigManagement1_SetDNSServer_Request struct {
-	NewDNSServers string
-}
-
-// _LANHostConfigManagement1_SetDNSServer_Response is the XML structure for the output arguments for action SetDNSServer.
-type _LANHostConfigManagement1_SetDNSServer_Response struct{}
 
 // SetDNSServer action.
 // Arguments:
@@ -822,7 +764,10 @@ func (client *LANHostConfigManagement1) SetDNSServer(
 ) (
 	err error,
 ) {
-	var request _LANHostConfigManagement1_SetDNSServer_Request
+	// Request structure.
+	var request struct {
+		NewDNSServers string
+	}
 	// BEGIN Marshal arguments into request.
 
 	if request.NewDNSServers, err = soap.MarshalString(NewDNSServers); err != nil {
@@ -831,8 +776,10 @@ func (client *LANHostConfigManagement1) SetDNSServer(
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct{}
+
 	// Perform the SOAP call.
-	var response _LANHostConfigManagement1_SetDNSServer_Response
 	if err = client.SOAPClient.PerformAction(URN_LANHostConfigManagement_1, "SetDNSServer", &request, &response); err != nil {
 		return
 	}
@@ -842,14 +789,6 @@ func (client *LANHostConfigManagement1) SetDNSServer(
 	// END Unmarshal arguments from response.
 	return
 }
-
-// _LANHostConfigManagement1_DeleteDNSServer_Request is the XML structure for the input arguments for action DeleteDNSServer.
-type _LANHostConfigManagement1_DeleteDNSServer_Request struct {
-	NewDNSServers string
-}
-
-// _LANHostConfigManagement1_DeleteDNSServer_Response is the XML structure for the output arguments for action DeleteDNSServer.
-type _LANHostConfigManagement1_DeleteDNSServer_Response struct{}
 
 // DeleteDNSServer action.
 // Arguments:
@@ -868,7 +807,10 @@ func (client *LANHostConfigManagement1) DeleteDNSServer(
 ) (
 	err error,
 ) {
-	var request _LANHostConfigManagement1_DeleteDNSServer_Request
+	// Request structure.
+	var request struct {
+		NewDNSServers string
+	}
 	// BEGIN Marshal arguments into request.
 
 	if request.NewDNSServers, err = soap.MarshalString(NewDNSServers); err != nil {
@@ -877,8 +819,10 @@ func (client *LANHostConfigManagement1) DeleteDNSServer(
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct{}
+
 	// Perform the SOAP call.
-	var response _LANHostConfigManagement1_DeleteDNSServer_Response
 	if err = client.SOAPClient.PerformAction(URN_LANHostConfigManagement_1, "DeleteDNSServer", &request, &response); err != nil {
 		return
 	}
@@ -887,14 +831,6 @@ func (client *LANHostConfigManagement1) DeleteDNSServer(
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _LANHostConfigManagement1_GetDNSServers_Request is the XML structure for the input arguments for action GetDNSServers.
-type _LANHostConfigManagement1_GetDNSServers_Request struct{}
-
-// _LANHostConfigManagement1_GetDNSServers_Response is the XML structure for the output arguments for action GetDNSServers.
-type _LANHostConfigManagement1_GetDNSServers_Response struct {
-	NewDNSServers string
 }
 
 // GetDNSServers action.
@@ -913,13 +849,18 @@ func (client *LANHostConfigManagement1) GetDNSServers() (
 	NewDNSServers string,
 	err error,
 ) {
-	var request _LANHostConfigManagement1_GetDNSServers_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewDNSServers string
+	}
+
 	// Perform the SOAP call.
-	var response _LANHostConfigManagement1_GetDNSServers_Response
 	if err = client.SOAPClient.PerformAction(URN_LANHostConfigManagement_1, "GetDNSServers", &request, &response); err != nil {
 		return
 	}
@@ -939,14 +880,6 @@ type Layer3Forwarding1 struct {
 	SOAPClient soap.SOAPClient
 }
 
-// _Layer3Forwarding1_SetDefaultConnectionService_Request is the XML structure for the input arguments for action SetDefaultConnectionService.
-type _Layer3Forwarding1_SetDefaultConnectionService_Request struct {
-	NewDefaultConnectionService string
-}
-
-// _Layer3Forwarding1_SetDefaultConnectionService_Response is the XML structure for the output arguments for action SetDefaultConnectionService.
-type _Layer3Forwarding1_SetDefaultConnectionService_Response struct{}
-
 // SetDefaultConnectionService action.
 // Arguments:
 //
@@ -964,7 +897,10 @@ func (client *Layer3Forwarding1) SetDefaultConnectionService(
 ) (
 	err error,
 ) {
-	var request _Layer3Forwarding1_SetDefaultConnectionService_Request
+	// Request structure.
+	var request struct {
+		NewDefaultConnectionService string
+	}
 	// BEGIN Marshal arguments into request.
 
 	if request.NewDefaultConnectionService, err = soap.MarshalString(NewDefaultConnectionService); err != nil {
@@ -973,8 +909,10 @@ func (client *Layer3Forwarding1) SetDefaultConnectionService(
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct{}
+
 	// Perform the SOAP call.
-	var response _Layer3Forwarding1_SetDefaultConnectionService_Response
 	if err = client.SOAPClient.PerformAction(URN_Layer3Forwarding_1, "SetDefaultConnectionService", &request, &response); err != nil {
 		return
 	}
@@ -983,14 +921,6 @@ func (client *Layer3Forwarding1) SetDefaultConnectionService(
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _Layer3Forwarding1_GetDefaultConnectionService_Request is the XML structure for the input arguments for action GetDefaultConnectionService.
-type _Layer3Forwarding1_GetDefaultConnectionService_Request struct{}
-
-// _Layer3Forwarding1_GetDefaultConnectionService_Response is the XML structure for the output arguments for action GetDefaultConnectionService.
-type _Layer3Forwarding1_GetDefaultConnectionService_Response struct {
-	NewDefaultConnectionService string
 }
 
 // GetDefaultConnectionService action.
@@ -1009,13 +939,18 @@ func (client *Layer3Forwarding1) GetDefaultConnectionService() (
 	NewDefaultConnectionService string,
 	err error,
 ) {
-	var request _Layer3Forwarding1_GetDefaultConnectionService_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewDefaultConnectionService string
+	}
+
 	// Perform the SOAP call.
-	var response _Layer3Forwarding1_GetDefaultConnectionService_Response
 	if err = client.SOAPClient.PerformAction(URN_Layer3Forwarding_1, "GetDefaultConnectionService", &request, &response); err != nil {
 		return
 	}
@@ -1033,16 +968,6 @@ func (client *Layer3Forwarding1) GetDefaultConnectionService() (
 // WANCableLinkConfig1 is a client for UPnP SOAP service with URN "urn:schemas-upnp-org:service:WANCableLinkConfig:1".
 type WANCableLinkConfig1 struct {
 	SOAPClient soap.SOAPClient
-}
-
-// _WANCableLinkConfig1_GetCableLinkConfigInfo_Request is the XML structure for the input arguments for action GetCableLinkConfigInfo.
-type _WANCableLinkConfig1_GetCableLinkConfigInfo_Request struct{}
-
-// _WANCableLinkConfig1_GetCableLinkConfigInfo_Response is the XML structure for the output arguments for action GetCableLinkConfigInfo.
-type _WANCableLinkConfig1_GetCableLinkConfigInfo_Response struct {
-	NewCableLinkConfigState string
-
-	NewLinkType string
 }
 
 // GetCableLinkConfigInfo action.
@@ -1070,13 +995,19 @@ func (client *WANCableLinkConfig1) GetCableLinkConfigInfo() (
 	NewLinkType string,
 	err error,
 ) {
-	var request _WANCableLinkConfig1_GetCableLinkConfigInfo_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewCableLinkConfigState string
+		NewLinkType             string
+	}
+
 	// Perform the SOAP call.
-	var response _WANCableLinkConfig1_GetCableLinkConfigInfo_Response
 	if err = client.SOAPClient.PerformAction(URN_WANCableLinkConfig_1, "GetCableLinkConfigInfo", &request, &response); err != nil {
 		return
 	}
@@ -1095,14 +1026,6 @@ func (client *WANCableLinkConfig1) GetCableLinkConfigInfo() (
 	return
 }
 
-// _WANCableLinkConfig1_GetDownstreamFrequency_Request is the XML structure for the input arguments for action GetDownstreamFrequency.
-type _WANCableLinkConfig1_GetDownstreamFrequency_Request struct{}
-
-// _WANCableLinkConfig1_GetDownstreamFrequency_Response is the XML structure for the output arguments for action GetDownstreamFrequency.
-type _WANCableLinkConfig1_GetDownstreamFrequency_Response struct {
-	NewDownstreamFrequency string
-}
-
 // GetDownstreamFrequency action.
 // Arguments:
 //
@@ -1119,13 +1042,18 @@ func (client *WANCableLinkConfig1) GetDownstreamFrequency() (
 	NewDownstreamFrequency uint32,
 	err error,
 ) {
-	var request _WANCableLinkConfig1_GetDownstreamFrequency_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewDownstreamFrequency string
+	}
+
 	// Perform the SOAP call.
-	var response _WANCableLinkConfig1_GetDownstreamFrequency_Response
 	if err = client.SOAPClient.PerformAction(URN_WANCableLinkConfig_1, "GetDownstreamFrequency", &request, &response); err != nil {
 		return
 	}
@@ -1138,14 +1066,6 @@ func (client *WANCableLinkConfig1) GetDownstreamFrequency() (
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANCableLinkConfig1_GetDownstreamModulation_Request is the XML structure for the input arguments for action GetDownstreamModulation.
-type _WANCableLinkConfig1_GetDownstreamModulation_Request struct{}
-
-// _WANCableLinkConfig1_GetDownstreamModulation_Response is the XML structure for the output arguments for action GetDownstreamModulation.
-type _WANCableLinkConfig1_GetDownstreamModulation_Response struct {
-	NewDownstreamModulation string
 }
 
 // GetDownstreamModulation action.
@@ -1165,13 +1085,18 @@ func (client *WANCableLinkConfig1) GetDownstreamModulation() (
 	NewDownstreamModulation string,
 	err error,
 ) {
-	var request _WANCableLinkConfig1_GetDownstreamModulation_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewDownstreamModulation string
+	}
+
 	// Perform the SOAP call.
-	var response _WANCableLinkConfig1_GetDownstreamModulation_Response
 	if err = client.SOAPClient.PerformAction(URN_WANCableLinkConfig_1, "GetDownstreamModulation", &request, &response); err != nil {
 		return
 	}
@@ -1184,14 +1109,6 @@ func (client *WANCableLinkConfig1) GetDownstreamModulation() (
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANCableLinkConfig1_GetUpstreamFrequency_Request is the XML structure for the input arguments for action GetUpstreamFrequency.
-type _WANCableLinkConfig1_GetUpstreamFrequency_Request struct{}
-
-// _WANCableLinkConfig1_GetUpstreamFrequency_Response is the XML structure for the output arguments for action GetUpstreamFrequency.
-type _WANCableLinkConfig1_GetUpstreamFrequency_Response struct {
-	NewUpstreamFrequency string
 }
 
 // GetUpstreamFrequency action.
@@ -1210,13 +1127,18 @@ func (client *WANCableLinkConfig1) GetUpstreamFrequency() (
 	NewUpstreamFrequency uint32,
 	err error,
 ) {
-	var request _WANCableLinkConfig1_GetUpstreamFrequency_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewUpstreamFrequency string
+	}
+
 	// Perform the SOAP call.
-	var response _WANCableLinkConfig1_GetUpstreamFrequency_Response
 	if err = client.SOAPClient.PerformAction(URN_WANCableLinkConfig_1, "GetUpstreamFrequency", &request, &response); err != nil {
 		return
 	}
@@ -1229,14 +1151,6 @@ func (client *WANCableLinkConfig1) GetUpstreamFrequency() (
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANCableLinkConfig1_GetUpstreamModulation_Request is the XML structure for the input arguments for action GetUpstreamModulation.
-type _WANCableLinkConfig1_GetUpstreamModulation_Request struct{}
-
-// _WANCableLinkConfig1_GetUpstreamModulation_Response is the XML structure for the output arguments for action GetUpstreamModulation.
-type _WANCableLinkConfig1_GetUpstreamModulation_Response struct {
-	NewUpstreamModulation string
 }
 
 // GetUpstreamModulation action.
@@ -1256,13 +1170,18 @@ func (client *WANCableLinkConfig1) GetUpstreamModulation() (
 	NewUpstreamModulation string,
 	err error,
 ) {
-	var request _WANCableLinkConfig1_GetUpstreamModulation_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewUpstreamModulation string
+	}
+
 	// Perform the SOAP call.
-	var response _WANCableLinkConfig1_GetUpstreamModulation_Response
 	if err = client.SOAPClient.PerformAction(URN_WANCableLinkConfig_1, "GetUpstreamModulation", &request, &response); err != nil {
 		return
 	}
@@ -1275,14 +1194,6 @@ func (client *WANCableLinkConfig1) GetUpstreamModulation() (
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANCableLinkConfig1_GetUpstreamChannelID_Request is the XML structure for the input arguments for action GetUpstreamChannelID.
-type _WANCableLinkConfig1_GetUpstreamChannelID_Request struct{}
-
-// _WANCableLinkConfig1_GetUpstreamChannelID_Response is the XML structure for the output arguments for action GetUpstreamChannelID.
-type _WANCableLinkConfig1_GetUpstreamChannelID_Response struct {
-	NewUpstreamChannelID string
 }
 
 // GetUpstreamChannelID action.
@@ -1301,13 +1212,18 @@ func (client *WANCableLinkConfig1) GetUpstreamChannelID() (
 	NewUpstreamChannelID uint32,
 	err error,
 ) {
-	var request _WANCableLinkConfig1_GetUpstreamChannelID_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewUpstreamChannelID string
+	}
+
 	// Perform the SOAP call.
-	var response _WANCableLinkConfig1_GetUpstreamChannelID_Response
 	if err = client.SOAPClient.PerformAction(URN_WANCableLinkConfig_1, "GetUpstreamChannelID", &request, &response); err != nil {
 		return
 	}
@@ -1320,14 +1236,6 @@ func (client *WANCableLinkConfig1) GetUpstreamChannelID() (
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANCableLinkConfig1_GetUpstreamPowerLevel_Request is the XML structure for the input arguments for action GetUpstreamPowerLevel.
-type _WANCableLinkConfig1_GetUpstreamPowerLevel_Request struct{}
-
-// _WANCableLinkConfig1_GetUpstreamPowerLevel_Response is the XML structure for the output arguments for action GetUpstreamPowerLevel.
-type _WANCableLinkConfig1_GetUpstreamPowerLevel_Response struct {
-	NewUpstreamPowerLevel string
 }
 
 // GetUpstreamPowerLevel action.
@@ -1346,13 +1254,18 @@ func (client *WANCableLinkConfig1) GetUpstreamPowerLevel() (
 	NewUpstreamPowerLevel uint32,
 	err error,
 ) {
-	var request _WANCableLinkConfig1_GetUpstreamPowerLevel_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewUpstreamPowerLevel string
+	}
+
 	// Perform the SOAP call.
-	var response _WANCableLinkConfig1_GetUpstreamPowerLevel_Response
 	if err = client.SOAPClient.PerformAction(URN_WANCableLinkConfig_1, "GetUpstreamPowerLevel", &request, &response); err != nil {
 		return
 	}
@@ -1365,14 +1278,6 @@ func (client *WANCableLinkConfig1) GetUpstreamPowerLevel() (
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANCableLinkConfig1_GetBPIEncryptionEnabled_Request is the XML structure for the input arguments for action GetBPIEncryptionEnabled.
-type _WANCableLinkConfig1_GetBPIEncryptionEnabled_Request struct{}
-
-// _WANCableLinkConfig1_GetBPIEncryptionEnabled_Response is the XML structure for the output arguments for action GetBPIEncryptionEnabled.
-type _WANCableLinkConfig1_GetBPIEncryptionEnabled_Response struct {
-	NewBPIEncryptionEnabled string
 }
 
 // GetBPIEncryptionEnabled action.
@@ -1391,13 +1296,18 @@ func (client *WANCableLinkConfig1) GetBPIEncryptionEnabled() (
 	NewBPIEncryptionEnabled bool,
 	err error,
 ) {
-	var request _WANCableLinkConfig1_GetBPIEncryptionEnabled_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewBPIEncryptionEnabled string
+	}
+
 	// Perform the SOAP call.
-	var response _WANCableLinkConfig1_GetBPIEncryptionEnabled_Response
 	if err = client.SOAPClient.PerformAction(URN_WANCableLinkConfig_1, "GetBPIEncryptionEnabled", &request, &response); err != nil {
 		return
 	}
@@ -1410,14 +1320,6 @@ func (client *WANCableLinkConfig1) GetBPIEncryptionEnabled() (
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANCableLinkConfig1_GetConfigFile_Request is the XML structure for the input arguments for action GetConfigFile.
-type _WANCableLinkConfig1_GetConfigFile_Request struct{}
-
-// _WANCableLinkConfig1_GetConfigFile_Response is the XML structure for the output arguments for action GetConfigFile.
-type _WANCableLinkConfig1_GetConfigFile_Response struct {
-	NewConfigFile string
 }
 
 // GetConfigFile action.
@@ -1436,13 +1338,18 @@ func (client *WANCableLinkConfig1) GetConfigFile() (
 	NewConfigFile string,
 	err error,
 ) {
-	var request _WANCableLinkConfig1_GetConfigFile_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewConfigFile string
+	}
+
 	// Perform the SOAP call.
-	var response _WANCableLinkConfig1_GetConfigFile_Response
 	if err = client.SOAPClient.PerformAction(URN_WANCableLinkConfig_1, "GetConfigFile", &request, &response); err != nil {
 		return
 	}
@@ -1455,14 +1362,6 @@ func (client *WANCableLinkConfig1) GetConfigFile() (
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANCableLinkConfig1_GetTFTPServer_Request is the XML structure for the input arguments for action GetTFTPServer.
-type _WANCableLinkConfig1_GetTFTPServer_Request struct{}
-
-// _WANCableLinkConfig1_GetTFTPServer_Response is the XML structure for the output arguments for action GetTFTPServer.
-type _WANCableLinkConfig1_GetTFTPServer_Response struct {
-	NewTFTPServer string
 }
 
 // GetTFTPServer action.
@@ -1481,13 +1380,18 @@ func (client *WANCableLinkConfig1) GetTFTPServer() (
 	NewTFTPServer string,
 	err error,
 ) {
-	var request _WANCableLinkConfig1_GetTFTPServer_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewTFTPServer string
+	}
+
 	// Perform the SOAP call.
-	var response _WANCableLinkConfig1_GetTFTPServer_Response
 	if err = client.SOAPClient.PerformAction(URN_WANCableLinkConfig_1, "GetTFTPServer", &request, &response); err != nil {
 		return
 	}
@@ -1507,14 +1411,6 @@ type WANCommonInterfaceConfig1 struct {
 	SOAPClient soap.SOAPClient
 }
 
-// _WANCommonInterfaceConfig1_SetEnabledForInternet_Request is the XML structure for the input arguments for action SetEnabledForInternet.
-type _WANCommonInterfaceConfig1_SetEnabledForInternet_Request struct {
-	NewEnabledForInternet string
-}
-
-// _WANCommonInterfaceConfig1_SetEnabledForInternet_Response is the XML structure for the output arguments for action SetEnabledForInternet.
-type _WANCommonInterfaceConfig1_SetEnabledForInternet_Response struct{}
-
 // SetEnabledForInternet action.
 // Arguments:
 //
@@ -1532,7 +1428,10 @@ func (client *WANCommonInterfaceConfig1) SetEnabledForInternet(
 ) (
 	err error,
 ) {
-	var request _WANCommonInterfaceConfig1_SetEnabledForInternet_Request
+	// Request structure.
+	var request struct {
+		NewEnabledForInternet string
+	}
 	// BEGIN Marshal arguments into request.
 
 	if request.NewEnabledForInternet, err = soap.MarshalBoolean(NewEnabledForInternet); err != nil {
@@ -1541,8 +1440,10 @@ func (client *WANCommonInterfaceConfig1) SetEnabledForInternet(
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct{}
+
 	// Perform the SOAP call.
-	var response _WANCommonInterfaceConfig1_SetEnabledForInternet_Response
 	if err = client.SOAPClient.PerformAction(URN_WANCommonInterfaceConfig_1, "SetEnabledForInternet", &request, &response); err != nil {
 		return
 	}
@@ -1551,14 +1452,6 @@ func (client *WANCommonInterfaceConfig1) SetEnabledForInternet(
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANCommonInterfaceConfig1_GetEnabledForInternet_Request is the XML structure for the input arguments for action GetEnabledForInternet.
-type _WANCommonInterfaceConfig1_GetEnabledForInternet_Request struct{}
-
-// _WANCommonInterfaceConfig1_GetEnabledForInternet_Response is the XML structure for the output arguments for action GetEnabledForInternet.
-type _WANCommonInterfaceConfig1_GetEnabledForInternet_Response struct {
-	NewEnabledForInternet string
 }
 
 // GetEnabledForInternet action.
@@ -1577,13 +1470,18 @@ func (client *WANCommonInterfaceConfig1) GetEnabledForInternet() (
 	NewEnabledForInternet bool,
 	err error,
 ) {
-	var request _WANCommonInterfaceConfig1_GetEnabledForInternet_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewEnabledForInternet string
+	}
+
 	// Perform the SOAP call.
-	var response _WANCommonInterfaceConfig1_GetEnabledForInternet_Response
 	if err = client.SOAPClient.PerformAction(URN_WANCommonInterfaceConfig_1, "GetEnabledForInternet", &request, &response); err != nil {
 		return
 	}
@@ -1596,20 +1494,6 @@ func (client *WANCommonInterfaceConfig1) GetEnabledForInternet() (
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANCommonInterfaceConfig1_GetCommonLinkProperties_Request is the XML structure for the input arguments for action GetCommonLinkProperties.
-type _WANCommonInterfaceConfig1_GetCommonLinkProperties_Request struct{}
-
-// _WANCommonInterfaceConfig1_GetCommonLinkProperties_Response is the XML structure for the output arguments for action GetCommonLinkProperties.
-type _WANCommonInterfaceConfig1_GetCommonLinkProperties_Response struct {
-	NewWANAccessType string
-
-	NewLayer1UpstreamMaxBitRate string
-
-	NewLayer1DownstreamMaxBitRate string
-
-	NewPhysicalLinkStatus string
 }
 
 // GetCommonLinkProperties action.
@@ -1651,13 +1535,21 @@ func (client *WANCommonInterfaceConfig1) GetCommonLinkProperties() (
 	NewPhysicalLinkStatus string,
 	err error,
 ) {
-	var request _WANCommonInterfaceConfig1_GetCommonLinkProperties_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewWANAccessType              string
+		NewLayer1UpstreamMaxBitRate   string
+		NewLayer1DownstreamMaxBitRate string
+		NewPhysicalLinkStatus         string
+	}
+
 	// Perform the SOAP call.
-	var response _WANCommonInterfaceConfig1_GetCommonLinkProperties_Response
 	if err = client.SOAPClient.PerformAction(URN_WANCommonInterfaceConfig_1, "GetCommonLinkProperties", &request, &response); err != nil {
 		return
 	}
@@ -1684,14 +1576,6 @@ func (client *WANCommonInterfaceConfig1) GetCommonLinkProperties() (
 	return
 }
 
-// _WANCommonInterfaceConfig1_GetWANAccessProvider_Request is the XML structure for the input arguments for action GetWANAccessProvider.
-type _WANCommonInterfaceConfig1_GetWANAccessProvider_Request struct{}
-
-// _WANCommonInterfaceConfig1_GetWANAccessProvider_Response is the XML structure for the output arguments for action GetWANAccessProvider.
-type _WANCommonInterfaceConfig1_GetWANAccessProvider_Response struct {
-	NewWANAccessProvider string
-}
-
 // GetWANAccessProvider action.
 // Arguments:
 //
@@ -1708,13 +1592,18 @@ func (client *WANCommonInterfaceConfig1) GetWANAccessProvider() (
 	NewWANAccessProvider string,
 	err error,
 ) {
-	var request _WANCommonInterfaceConfig1_GetWANAccessProvider_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewWANAccessProvider string
+	}
+
 	// Perform the SOAP call.
-	var response _WANCommonInterfaceConfig1_GetWANAccessProvider_Response
 	if err = client.SOAPClient.PerformAction(URN_WANCommonInterfaceConfig_1, "GetWANAccessProvider", &request, &response); err != nil {
 		return
 	}
@@ -1727,14 +1616,6 @@ func (client *WANCommonInterfaceConfig1) GetWANAccessProvider() (
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANCommonInterfaceConfig1_GetMaximumActiveConnections_Request is the XML structure for the input arguments for action GetMaximumActiveConnections.
-type _WANCommonInterfaceConfig1_GetMaximumActiveConnections_Request struct{}
-
-// _WANCommonInterfaceConfig1_GetMaximumActiveConnections_Response is the XML structure for the output arguments for action GetMaximumActiveConnections.
-type _WANCommonInterfaceConfig1_GetMaximumActiveConnections_Response struct {
-	NewMaximumActiveConnections string
 }
 
 // GetMaximumActiveConnections action.
@@ -1753,13 +1634,18 @@ func (client *WANCommonInterfaceConfig1) GetMaximumActiveConnections() (
 	NewMaximumActiveConnections uint16,
 	err error,
 ) {
-	var request _WANCommonInterfaceConfig1_GetMaximumActiveConnections_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewMaximumActiveConnections string
+	}
+
 	// Perform the SOAP call.
-	var response _WANCommonInterfaceConfig1_GetMaximumActiveConnections_Response
 	if err = client.SOAPClient.PerformAction(URN_WANCommonInterfaceConfig_1, "GetMaximumActiveConnections", &request, &response); err != nil {
 		return
 	}
@@ -1772,14 +1658,6 @@ func (client *WANCommonInterfaceConfig1) GetMaximumActiveConnections() (
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANCommonInterfaceConfig1_GetTotalBytesSent_Request is the XML structure for the input arguments for action GetTotalBytesSent.
-type _WANCommonInterfaceConfig1_GetTotalBytesSent_Request struct{}
-
-// _WANCommonInterfaceConfig1_GetTotalBytesSent_Response is the XML structure for the output arguments for action GetTotalBytesSent.
-type _WANCommonInterfaceConfig1_GetTotalBytesSent_Response struct {
-	NewTotalBytesSent string
 }
 
 // GetTotalBytesSent action.
@@ -1798,13 +1676,18 @@ func (client *WANCommonInterfaceConfig1) GetTotalBytesSent() (
 	NewTotalBytesSent uint32,
 	err error,
 ) {
-	var request _WANCommonInterfaceConfig1_GetTotalBytesSent_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewTotalBytesSent string
+	}
+
 	// Perform the SOAP call.
-	var response _WANCommonInterfaceConfig1_GetTotalBytesSent_Response
 	if err = client.SOAPClient.PerformAction(URN_WANCommonInterfaceConfig_1, "GetTotalBytesSent", &request, &response); err != nil {
 		return
 	}
@@ -1817,14 +1700,6 @@ func (client *WANCommonInterfaceConfig1) GetTotalBytesSent() (
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANCommonInterfaceConfig1_GetTotalBytesReceived_Request is the XML structure for the input arguments for action GetTotalBytesReceived.
-type _WANCommonInterfaceConfig1_GetTotalBytesReceived_Request struct{}
-
-// _WANCommonInterfaceConfig1_GetTotalBytesReceived_Response is the XML structure for the output arguments for action GetTotalBytesReceived.
-type _WANCommonInterfaceConfig1_GetTotalBytesReceived_Response struct {
-	NewTotalBytesReceived string
 }
 
 // GetTotalBytesReceived action.
@@ -1843,13 +1718,18 @@ func (client *WANCommonInterfaceConfig1) GetTotalBytesReceived() (
 	NewTotalBytesReceived uint32,
 	err error,
 ) {
-	var request _WANCommonInterfaceConfig1_GetTotalBytesReceived_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewTotalBytesReceived string
+	}
+
 	// Perform the SOAP call.
-	var response _WANCommonInterfaceConfig1_GetTotalBytesReceived_Response
 	if err = client.SOAPClient.PerformAction(URN_WANCommonInterfaceConfig_1, "GetTotalBytesReceived", &request, &response); err != nil {
 		return
 	}
@@ -1862,14 +1742,6 @@ func (client *WANCommonInterfaceConfig1) GetTotalBytesReceived() (
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANCommonInterfaceConfig1_GetTotalPacketsSent_Request is the XML structure for the input arguments for action GetTotalPacketsSent.
-type _WANCommonInterfaceConfig1_GetTotalPacketsSent_Request struct{}
-
-// _WANCommonInterfaceConfig1_GetTotalPacketsSent_Response is the XML structure for the output arguments for action GetTotalPacketsSent.
-type _WANCommonInterfaceConfig1_GetTotalPacketsSent_Response struct {
-	NewTotalPacketsSent string
 }
 
 // GetTotalPacketsSent action.
@@ -1888,13 +1760,18 @@ func (client *WANCommonInterfaceConfig1) GetTotalPacketsSent() (
 	NewTotalPacketsSent uint32,
 	err error,
 ) {
-	var request _WANCommonInterfaceConfig1_GetTotalPacketsSent_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewTotalPacketsSent string
+	}
+
 	// Perform the SOAP call.
-	var response _WANCommonInterfaceConfig1_GetTotalPacketsSent_Response
 	if err = client.SOAPClient.PerformAction(URN_WANCommonInterfaceConfig_1, "GetTotalPacketsSent", &request, &response); err != nil {
 		return
 	}
@@ -1907,14 +1784,6 @@ func (client *WANCommonInterfaceConfig1) GetTotalPacketsSent() (
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANCommonInterfaceConfig1_GetTotalPacketsReceived_Request is the XML structure for the input arguments for action GetTotalPacketsReceived.
-type _WANCommonInterfaceConfig1_GetTotalPacketsReceived_Request struct{}
-
-// _WANCommonInterfaceConfig1_GetTotalPacketsReceived_Response is the XML structure for the output arguments for action GetTotalPacketsReceived.
-type _WANCommonInterfaceConfig1_GetTotalPacketsReceived_Response struct {
-	NewTotalPacketsReceived string
 }
 
 // GetTotalPacketsReceived action.
@@ -1933,13 +1802,18 @@ func (client *WANCommonInterfaceConfig1) GetTotalPacketsReceived() (
 	NewTotalPacketsReceived uint32,
 	err error,
 ) {
-	var request _WANCommonInterfaceConfig1_GetTotalPacketsReceived_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewTotalPacketsReceived string
+	}
+
 	// Perform the SOAP call.
-	var response _WANCommonInterfaceConfig1_GetTotalPacketsReceived_Response
 	if err = client.SOAPClient.PerformAction(URN_WANCommonInterfaceConfig_1, "GetTotalPacketsReceived", &request, &response); err != nil {
 		return
 	}
@@ -1952,18 +1826,6 @@ func (client *WANCommonInterfaceConfig1) GetTotalPacketsReceived() (
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANCommonInterfaceConfig1_GetActiveConnection_Request is the XML structure for the input arguments for action GetActiveConnection.
-type _WANCommonInterfaceConfig1_GetActiveConnection_Request struct {
-	NewActiveConnectionIndex string
-}
-
-// _WANCommonInterfaceConfig1_GetActiveConnection_Response is the XML structure for the output arguments for action GetActiveConnection.
-type _WANCommonInterfaceConfig1_GetActiveConnection_Response struct {
-	NewActiveConnDeviceContainer string
-
-	NewActiveConnectionServiceID string
 }
 
 // GetActiveConnection action.
@@ -1997,7 +1859,10 @@ func (client *WANCommonInterfaceConfig1) GetActiveConnection(
 	NewActiveConnectionServiceID string,
 	err error,
 ) {
-	var request _WANCommonInterfaceConfig1_GetActiveConnection_Request
+	// Request structure.
+	var request struct {
+		NewActiveConnectionIndex string
+	}
 	// BEGIN Marshal arguments into request.
 
 	if request.NewActiveConnectionIndex, err = soap.MarshalUi2(NewActiveConnectionIndex); err != nil {
@@ -2006,8 +1871,13 @@ func (client *WANCommonInterfaceConfig1) GetActiveConnection(
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewActiveConnDeviceContainer string
+		NewActiveConnectionServiceID string
+	}
+
 	// Perform the SOAP call.
-	var response _WANCommonInterfaceConfig1_GetActiveConnection_Response
 	if err = client.SOAPClient.PerformAction(URN_WANCommonInterfaceConfig_1, "GetActiveConnection", &request, &response); err != nil {
 		return
 	}
@@ -2031,14 +1901,6 @@ type WANDSLLinkConfig1 struct {
 	SOAPClient soap.SOAPClient
 }
 
-// _WANDSLLinkConfig1_SetDSLLinkType_Request is the XML structure for the input arguments for action SetDSLLinkType.
-type _WANDSLLinkConfig1_SetDSLLinkType_Request struct {
-	NewLinkType string
-}
-
-// _WANDSLLinkConfig1_SetDSLLinkType_Response is the XML structure for the output arguments for action SetDSLLinkType.
-type _WANDSLLinkConfig1_SetDSLLinkType_Response struct{}
-
 // SetDSLLinkType action.
 // Arguments:
 //
@@ -2056,7 +1918,10 @@ func (client *WANDSLLinkConfig1) SetDSLLinkType(
 ) (
 	err error,
 ) {
-	var request _WANDSLLinkConfig1_SetDSLLinkType_Request
+	// Request structure.
+	var request struct {
+		NewLinkType string
+	}
 	// BEGIN Marshal arguments into request.
 
 	if request.NewLinkType, err = soap.MarshalString(NewLinkType); err != nil {
@@ -2065,8 +1930,10 @@ func (client *WANDSLLinkConfig1) SetDSLLinkType(
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct{}
+
 	// Perform the SOAP call.
-	var response _WANDSLLinkConfig1_SetDSLLinkType_Response
 	if err = client.SOAPClient.PerformAction(URN_WANDSLLinkConfig_1, "SetDSLLinkType", &request, &response); err != nil {
 		return
 	}
@@ -2075,16 +1942,6 @@ func (client *WANDSLLinkConfig1) SetDSLLinkType(
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANDSLLinkConfig1_GetDSLLinkInfo_Request is the XML structure for the input arguments for action GetDSLLinkInfo.
-type _WANDSLLinkConfig1_GetDSLLinkInfo_Request struct{}
-
-// _WANDSLLinkConfig1_GetDSLLinkInfo_Response is the XML structure for the output arguments for action GetDSLLinkInfo.
-type _WANDSLLinkConfig1_GetDSLLinkInfo_Response struct {
-	NewLinkType string
-
-	NewLinkStatus string
 }
 
 // GetDSLLinkInfo action.
@@ -2111,13 +1968,19 @@ func (client *WANDSLLinkConfig1) GetDSLLinkInfo() (
 	NewLinkStatus string,
 	err error,
 ) {
-	var request _WANDSLLinkConfig1_GetDSLLinkInfo_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewLinkType   string
+		NewLinkStatus string
+	}
+
 	// Perform the SOAP call.
-	var response _WANDSLLinkConfig1_GetDSLLinkInfo_Response
 	if err = client.SOAPClient.PerformAction(URN_WANDSLLinkConfig_1, "GetDSLLinkInfo", &request, &response); err != nil {
 		return
 	}
@@ -2136,14 +1999,6 @@ func (client *WANDSLLinkConfig1) GetDSLLinkInfo() (
 	return
 }
 
-// _WANDSLLinkConfig1_GetAutoConfig_Request is the XML structure for the input arguments for action GetAutoConfig.
-type _WANDSLLinkConfig1_GetAutoConfig_Request struct{}
-
-// _WANDSLLinkConfig1_GetAutoConfig_Response is the XML structure for the output arguments for action GetAutoConfig.
-type _WANDSLLinkConfig1_GetAutoConfig_Response struct {
-	NewAutoConfig string
-}
-
 // GetAutoConfig action.
 // Arguments:
 //
@@ -2160,13 +2015,18 @@ func (client *WANDSLLinkConfig1) GetAutoConfig() (
 	NewAutoConfig bool,
 	err error,
 ) {
-	var request _WANDSLLinkConfig1_GetAutoConfig_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewAutoConfig string
+	}
+
 	// Perform the SOAP call.
-	var response _WANDSLLinkConfig1_GetAutoConfig_Response
 	if err = client.SOAPClient.PerformAction(URN_WANDSLLinkConfig_1, "GetAutoConfig", &request, &response); err != nil {
 		return
 	}
@@ -2179,14 +2039,6 @@ func (client *WANDSLLinkConfig1) GetAutoConfig() (
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANDSLLinkConfig1_GetModulationType_Request is the XML structure for the input arguments for action GetModulationType.
-type _WANDSLLinkConfig1_GetModulationType_Request struct{}
-
-// _WANDSLLinkConfig1_GetModulationType_Response is the XML structure for the output arguments for action GetModulationType.
-type _WANDSLLinkConfig1_GetModulationType_Response struct {
-	NewModulationType string
 }
 
 // GetModulationType action.
@@ -2205,13 +2057,18 @@ func (client *WANDSLLinkConfig1) GetModulationType() (
 	NewModulationType string,
 	err error,
 ) {
-	var request _WANDSLLinkConfig1_GetModulationType_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewModulationType string
+	}
+
 	// Perform the SOAP call.
-	var response _WANDSLLinkConfig1_GetModulationType_Response
 	if err = client.SOAPClient.PerformAction(URN_WANDSLLinkConfig_1, "GetModulationType", &request, &response); err != nil {
 		return
 	}
@@ -2225,14 +2082,6 @@ func (client *WANDSLLinkConfig1) GetModulationType() (
 	// END Unmarshal arguments from response.
 	return
 }
-
-// _WANDSLLinkConfig1_SetDestinationAddress_Request is the XML structure for the input arguments for action SetDestinationAddress.
-type _WANDSLLinkConfig1_SetDestinationAddress_Request struct {
-	NewDestinationAddress string
-}
-
-// _WANDSLLinkConfig1_SetDestinationAddress_Response is the XML structure for the output arguments for action SetDestinationAddress.
-type _WANDSLLinkConfig1_SetDestinationAddress_Response struct{}
 
 // SetDestinationAddress action.
 // Arguments:
@@ -2251,7 +2100,10 @@ func (client *WANDSLLinkConfig1) SetDestinationAddress(
 ) (
 	err error,
 ) {
-	var request _WANDSLLinkConfig1_SetDestinationAddress_Request
+	// Request structure.
+	var request struct {
+		NewDestinationAddress string
+	}
 	// BEGIN Marshal arguments into request.
 
 	if request.NewDestinationAddress, err = soap.MarshalString(NewDestinationAddress); err != nil {
@@ -2260,8 +2112,10 @@ func (client *WANDSLLinkConfig1) SetDestinationAddress(
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct{}
+
 	// Perform the SOAP call.
-	var response _WANDSLLinkConfig1_SetDestinationAddress_Response
 	if err = client.SOAPClient.PerformAction(URN_WANDSLLinkConfig_1, "SetDestinationAddress", &request, &response); err != nil {
 		return
 	}
@@ -2270,14 +2124,6 @@ func (client *WANDSLLinkConfig1) SetDestinationAddress(
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANDSLLinkConfig1_GetDestinationAddress_Request is the XML structure for the input arguments for action GetDestinationAddress.
-type _WANDSLLinkConfig1_GetDestinationAddress_Request struct{}
-
-// _WANDSLLinkConfig1_GetDestinationAddress_Response is the XML structure for the output arguments for action GetDestinationAddress.
-type _WANDSLLinkConfig1_GetDestinationAddress_Response struct {
-	NewDestinationAddress string
 }
 
 // GetDestinationAddress action.
@@ -2296,13 +2142,18 @@ func (client *WANDSLLinkConfig1) GetDestinationAddress() (
 	NewDestinationAddress string,
 	err error,
 ) {
-	var request _WANDSLLinkConfig1_GetDestinationAddress_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewDestinationAddress string
+	}
+
 	// Perform the SOAP call.
-	var response _WANDSLLinkConfig1_GetDestinationAddress_Response
 	if err = client.SOAPClient.PerformAction(URN_WANDSLLinkConfig_1, "GetDestinationAddress", &request, &response); err != nil {
 		return
 	}
@@ -2316,14 +2167,6 @@ func (client *WANDSLLinkConfig1) GetDestinationAddress() (
 	// END Unmarshal arguments from response.
 	return
 }
-
-// _WANDSLLinkConfig1_SetATMEncapsulation_Request is the XML structure for the input arguments for action SetATMEncapsulation.
-type _WANDSLLinkConfig1_SetATMEncapsulation_Request struct {
-	NewATMEncapsulation string
-}
-
-// _WANDSLLinkConfig1_SetATMEncapsulation_Response is the XML structure for the output arguments for action SetATMEncapsulation.
-type _WANDSLLinkConfig1_SetATMEncapsulation_Response struct{}
 
 // SetATMEncapsulation action.
 // Arguments:
@@ -2342,7 +2185,10 @@ func (client *WANDSLLinkConfig1) SetATMEncapsulation(
 ) (
 	err error,
 ) {
-	var request _WANDSLLinkConfig1_SetATMEncapsulation_Request
+	// Request structure.
+	var request struct {
+		NewATMEncapsulation string
+	}
 	// BEGIN Marshal arguments into request.
 
 	if request.NewATMEncapsulation, err = soap.MarshalString(NewATMEncapsulation); err != nil {
@@ -2351,8 +2197,10 @@ func (client *WANDSLLinkConfig1) SetATMEncapsulation(
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct{}
+
 	// Perform the SOAP call.
-	var response _WANDSLLinkConfig1_SetATMEncapsulation_Response
 	if err = client.SOAPClient.PerformAction(URN_WANDSLLinkConfig_1, "SetATMEncapsulation", &request, &response); err != nil {
 		return
 	}
@@ -2361,14 +2209,6 @@ func (client *WANDSLLinkConfig1) SetATMEncapsulation(
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANDSLLinkConfig1_GetATMEncapsulation_Request is the XML structure for the input arguments for action GetATMEncapsulation.
-type _WANDSLLinkConfig1_GetATMEncapsulation_Request struct{}
-
-// _WANDSLLinkConfig1_GetATMEncapsulation_Response is the XML structure for the output arguments for action GetATMEncapsulation.
-type _WANDSLLinkConfig1_GetATMEncapsulation_Response struct {
-	NewATMEncapsulation string
 }
 
 // GetATMEncapsulation action.
@@ -2387,13 +2227,18 @@ func (client *WANDSLLinkConfig1) GetATMEncapsulation() (
 	NewATMEncapsulation string,
 	err error,
 ) {
-	var request _WANDSLLinkConfig1_GetATMEncapsulation_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewATMEncapsulation string
+	}
+
 	// Perform the SOAP call.
-	var response _WANDSLLinkConfig1_GetATMEncapsulation_Response
 	if err = client.SOAPClient.PerformAction(URN_WANDSLLinkConfig_1, "GetATMEncapsulation", &request, &response); err != nil {
 		return
 	}
@@ -2407,14 +2252,6 @@ func (client *WANDSLLinkConfig1) GetATMEncapsulation() (
 	// END Unmarshal arguments from response.
 	return
 }
-
-// _WANDSLLinkConfig1_SetFCSPreserved_Request is the XML structure for the input arguments for action SetFCSPreserved.
-type _WANDSLLinkConfig1_SetFCSPreserved_Request struct {
-	NewFCSPreserved string
-}
-
-// _WANDSLLinkConfig1_SetFCSPreserved_Response is the XML structure for the output arguments for action SetFCSPreserved.
-type _WANDSLLinkConfig1_SetFCSPreserved_Response struct{}
 
 // SetFCSPreserved action.
 // Arguments:
@@ -2433,7 +2270,10 @@ func (client *WANDSLLinkConfig1) SetFCSPreserved(
 ) (
 	err error,
 ) {
-	var request _WANDSLLinkConfig1_SetFCSPreserved_Request
+	// Request structure.
+	var request struct {
+		NewFCSPreserved string
+	}
 	// BEGIN Marshal arguments into request.
 
 	if request.NewFCSPreserved, err = soap.MarshalBoolean(NewFCSPreserved); err != nil {
@@ -2442,8 +2282,10 @@ func (client *WANDSLLinkConfig1) SetFCSPreserved(
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct{}
+
 	// Perform the SOAP call.
-	var response _WANDSLLinkConfig1_SetFCSPreserved_Response
 	if err = client.SOAPClient.PerformAction(URN_WANDSLLinkConfig_1, "SetFCSPreserved", &request, &response); err != nil {
 		return
 	}
@@ -2452,14 +2294,6 @@ func (client *WANDSLLinkConfig1) SetFCSPreserved(
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANDSLLinkConfig1_GetFCSPreserved_Request is the XML structure for the input arguments for action GetFCSPreserved.
-type _WANDSLLinkConfig1_GetFCSPreserved_Request struct{}
-
-// _WANDSLLinkConfig1_GetFCSPreserved_Response is the XML structure for the output arguments for action GetFCSPreserved.
-type _WANDSLLinkConfig1_GetFCSPreserved_Response struct {
-	NewFCSPreserved string
 }
 
 // GetFCSPreserved action.
@@ -2478,13 +2312,18 @@ func (client *WANDSLLinkConfig1) GetFCSPreserved() (
 	NewFCSPreserved bool,
 	err error,
 ) {
-	var request _WANDSLLinkConfig1_GetFCSPreserved_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewFCSPreserved string
+	}
+
 	// Perform the SOAP call.
-	var response _WANDSLLinkConfig1_GetFCSPreserved_Response
 	if err = client.SOAPClient.PerformAction(URN_WANDSLLinkConfig_1, "GetFCSPreserved", &request, &response); err != nil {
 		return
 	}
@@ -2504,14 +2343,6 @@ type WANEthernetLinkConfig1 struct {
 	SOAPClient soap.SOAPClient
 }
 
-// _WANEthernetLinkConfig1_GetEthernetLinkStatus_Request is the XML structure for the input arguments for action GetEthernetLinkStatus.
-type _WANEthernetLinkConfig1_GetEthernetLinkStatus_Request struct{}
-
-// _WANEthernetLinkConfig1_GetEthernetLinkStatus_Response is the XML structure for the output arguments for action GetEthernetLinkStatus.
-type _WANEthernetLinkConfig1_GetEthernetLinkStatus_Response struct {
-	NewEthernetLinkStatus string
-}
-
 // GetEthernetLinkStatus action.
 // Arguments:
 //
@@ -2529,13 +2360,18 @@ func (client *WANEthernetLinkConfig1) GetEthernetLinkStatus() (
 	NewEthernetLinkStatus string,
 	err error,
 ) {
-	var request _WANEthernetLinkConfig1_GetEthernetLinkStatus_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewEthernetLinkStatus string
+	}
+
 	// Perform the SOAP call.
-	var response _WANEthernetLinkConfig1_GetEthernetLinkStatus_Response
 	if err = client.SOAPClient.PerformAction(URN_WANEthernetLinkConfig_1, "GetEthernetLinkStatus", &request, &response); err != nil {
 		return
 	}
@@ -2555,14 +2391,6 @@ type WANIPConnection1 struct {
 	SOAPClient soap.SOAPClient
 }
 
-// _WANIPConnection1_SetConnectionType_Request is the XML structure for the input arguments for action SetConnectionType.
-type _WANIPConnection1_SetConnectionType_Request struct {
-	NewConnectionType string
-}
-
-// _WANIPConnection1_SetConnectionType_Response is the XML structure for the output arguments for action SetConnectionType.
-type _WANIPConnection1_SetConnectionType_Response struct{}
-
 // SetConnectionType action.
 // Arguments:
 //
@@ -2580,7 +2408,10 @@ func (client *WANIPConnection1) SetConnectionType(
 ) (
 	err error,
 ) {
-	var request _WANIPConnection1_SetConnectionType_Request
+	// Request structure.
+	var request struct {
+		NewConnectionType string
+	}
 	// BEGIN Marshal arguments into request.
 
 	if request.NewConnectionType, err = soap.MarshalString(NewConnectionType); err != nil {
@@ -2589,8 +2420,10 @@ func (client *WANIPConnection1) SetConnectionType(
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct{}
+
 	// Perform the SOAP call.
-	var response _WANIPConnection1_SetConnectionType_Response
 	if err = client.SOAPClient.PerformAction(URN_WANIPConnection_1, "SetConnectionType", &request, &response); err != nil {
 		return
 	}
@@ -2599,16 +2432,6 @@ func (client *WANIPConnection1) SetConnectionType(
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANIPConnection1_GetConnectionTypeInfo_Request is the XML structure for the input arguments for action GetConnectionTypeInfo.
-type _WANIPConnection1_GetConnectionTypeInfo_Request struct{}
-
-// _WANIPConnection1_GetConnectionTypeInfo_Response is the XML structure for the output arguments for action GetConnectionTypeInfo.
-type _WANIPConnection1_GetConnectionTypeInfo_Response struct {
-	NewConnectionType string
-
-	NewPossibleConnectionTypes string
 }
 
 // GetConnectionTypeInfo action.
@@ -2635,13 +2458,19 @@ func (client *WANIPConnection1) GetConnectionTypeInfo() (
 	NewPossibleConnectionTypes string,
 	err error,
 ) {
-	var request _WANIPConnection1_GetConnectionTypeInfo_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewConnectionType          string
+		NewPossibleConnectionTypes string
+	}
+
 	// Perform the SOAP call.
-	var response _WANIPConnection1_GetConnectionTypeInfo_Response
 	if err = client.SOAPClient.PerformAction(URN_WANIPConnection_1, "GetConnectionTypeInfo", &request, &response); err != nil {
 		return
 	}
@@ -2660,12 +2489,6 @@ func (client *WANIPConnection1) GetConnectionTypeInfo() (
 	return
 }
 
-// _WANIPConnection1_RequestConnection_Request is the XML structure for the input arguments for action RequestConnection.
-type _WANIPConnection1_RequestConnection_Request struct{}
-
-// _WANIPConnection1_RequestConnection_Response is the XML structure for the output arguments for action RequestConnection.
-type _WANIPConnection1_RequestConnection_Response struct{}
-
 // RequestConnection action.
 // Arguments:
 //
@@ -2675,13 +2498,16 @@ type _WANIPConnection1_RequestConnection_Response struct{}
 func (client *WANIPConnection1) RequestConnection() (
 	err error,
 ) {
-	var request _WANIPConnection1_RequestConnection_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct{}
+
 	// Perform the SOAP call.
-	var response _WANIPConnection1_RequestConnection_Response
 	if err = client.SOAPClient.PerformAction(URN_WANIPConnection_1, "RequestConnection", &request, &response); err != nil {
 		return
 	}
@@ -2692,12 +2518,6 @@ func (client *WANIPConnection1) RequestConnection() (
 	return
 }
 
-// _WANIPConnection1_RequestTermination_Request is the XML structure for the input arguments for action RequestTermination.
-type _WANIPConnection1_RequestTermination_Request struct{}
-
-// _WANIPConnection1_RequestTermination_Response is the XML structure for the output arguments for action RequestTermination.
-type _WANIPConnection1_RequestTermination_Response struct{}
-
 // RequestTermination action.
 // Arguments:
 //
@@ -2707,13 +2527,16 @@ type _WANIPConnection1_RequestTermination_Response struct{}
 func (client *WANIPConnection1) RequestTermination() (
 	err error,
 ) {
-	var request _WANIPConnection1_RequestTermination_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct{}
+
 	// Perform the SOAP call.
-	var response _WANIPConnection1_RequestTermination_Response
 	if err = client.SOAPClient.PerformAction(URN_WANIPConnection_1, "RequestTermination", &request, &response); err != nil {
 		return
 	}
@@ -2724,12 +2547,6 @@ func (client *WANIPConnection1) RequestTermination() (
 	return
 }
 
-// _WANIPConnection1_ForceTermination_Request is the XML structure for the input arguments for action ForceTermination.
-type _WANIPConnection1_ForceTermination_Request struct{}
-
-// _WANIPConnection1_ForceTermination_Response is the XML structure for the output arguments for action ForceTermination.
-type _WANIPConnection1_ForceTermination_Response struct{}
-
 // ForceTermination action.
 // Arguments:
 //
@@ -2739,13 +2556,16 @@ type _WANIPConnection1_ForceTermination_Response struct{}
 func (client *WANIPConnection1) ForceTermination() (
 	err error,
 ) {
-	var request _WANIPConnection1_ForceTermination_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct{}
+
 	// Perform the SOAP call.
-	var response _WANIPConnection1_ForceTermination_Response
 	if err = client.SOAPClient.PerformAction(URN_WANIPConnection_1, "ForceTermination", &request, &response); err != nil {
 		return
 	}
@@ -2755,14 +2575,6 @@ func (client *WANIPConnection1) ForceTermination() (
 	// END Unmarshal arguments from response.
 	return
 }
-
-// _WANIPConnection1_SetAutoDisconnectTime_Request is the XML structure for the input arguments for action SetAutoDisconnectTime.
-type _WANIPConnection1_SetAutoDisconnectTime_Request struct {
-	NewAutoDisconnectTime string
-}
-
-// _WANIPConnection1_SetAutoDisconnectTime_Response is the XML structure for the output arguments for action SetAutoDisconnectTime.
-type _WANIPConnection1_SetAutoDisconnectTime_Response struct{}
 
 // SetAutoDisconnectTime action.
 // Arguments:
@@ -2781,7 +2593,10 @@ func (client *WANIPConnection1) SetAutoDisconnectTime(
 ) (
 	err error,
 ) {
-	var request _WANIPConnection1_SetAutoDisconnectTime_Request
+	// Request structure.
+	var request struct {
+		NewAutoDisconnectTime string
+	}
 	// BEGIN Marshal arguments into request.
 
 	if request.NewAutoDisconnectTime, err = soap.MarshalUi4(NewAutoDisconnectTime); err != nil {
@@ -2790,8 +2605,10 @@ func (client *WANIPConnection1) SetAutoDisconnectTime(
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct{}
+
 	// Perform the SOAP call.
-	var response _WANIPConnection1_SetAutoDisconnectTime_Response
 	if err = client.SOAPClient.PerformAction(URN_WANIPConnection_1, "SetAutoDisconnectTime", &request, &response); err != nil {
 		return
 	}
@@ -2801,14 +2618,6 @@ func (client *WANIPConnection1) SetAutoDisconnectTime(
 	// END Unmarshal arguments from response.
 	return
 }
-
-// _WANIPConnection1_SetIdleDisconnectTime_Request is the XML structure for the input arguments for action SetIdleDisconnectTime.
-type _WANIPConnection1_SetIdleDisconnectTime_Request struct {
-	NewIdleDisconnectTime string
-}
-
-// _WANIPConnection1_SetIdleDisconnectTime_Response is the XML structure for the output arguments for action SetIdleDisconnectTime.
-type _WANIPConnection1_SetIdleDisconnectTime_Response struct{}
 
 // SetIdleDisconnectTime action.
 // Arguments:
@@ -2827,7 +2636,10 @@ func (client *WANIPConnection1) SetIdleDisconnectTime(
 ) (
 	err error,
 ) {
-	var request _WANIPConnection1_SetIdleDisconnectTime_Request
+	// Request structure.
+	var request struct {
+		NewIdleDisconnectTime string
+	}
 	// BEGIN Marshal arguments into request.
 
 	if request.NewIdleDisconnectTime, err = soap.MarshalUi4(NewIdleDisconnectTime); err != nil {
@@ -2836,8 +2648,10 @@ func (client *WANIPConnection1) SetIdleDisconnectTime(
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct{}
+
 	// Perform the SOAP call.
-	var response _WANIPConnection1_SetIdleDisconnectTime_Response
 	if err = client.SOAPClient.PerformAction(URN_WANIPConnection_1, "SetIdleDisconnectTime", &request, &response); err != nil {
 		return
 	}
@@ -2847,14 +2661,6 @@ func (client *WANIPConnection1) SetIdleDisconnectTime(
 	// END Unmarshal arguments from response.
 	return
 }
-
-// _WANIPConnection1_SetWarnDisconnectDelay_Request is the XML structure for the input arguments for action SetWarnDisconnectDelay.
-type _WANIPConnection1_SetWarnDisconnectDelay_Request struct {
-	NewWarnDisconnectDelay string
-}
-
-// _WANIPConnection1_SetWarnDisconnectDelay_Response is the XML structure for the output arguments for action SetWarnDisconnectDelay.
-type _WANIPConnection1_SetWarnDisconnectDelay_Response struct{}
 
 // SetWarnDisconnectDelay action.
 // Arguments:
@@ -2873,7 +2679,10 @@ func (client *WANIPConnection1) SetWarnDisconnectDelay(
 ) (
 	err error,
 ) {
-	var request _WANIPConnection1_SetWarnDisconnectDelay_Request
+	// Request structure.
+	var request struct {
+		NewWarnDisconnectDelay string
+	}
 	// BEGIN Marshal arguments into request.
 
 	if request.NewWarnDisconnectDelay, err = soap.MarshalUi4(NewWarnDisconnectDelay); err != nil {
@@ -2882,8 +2691,10 @@ func (client *WANIPConnection1) SetWarnDisconnectDelay(
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct{}
+
 	// Perform the SOAP call.
-	var response _WANIPConnection1_SetWarnDisconnectDelay_Response
 	if err = client.SOAPClient.PerformAction(URN_WANIPConnection_1, "SetWarnDisconnectDelay", &request, &response); err != nil {
 		return
 	}
@@ -2892,18 +2703,6 @@ func (client *WANIPConnection1) SetWarnDisconnectDelay(
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANIPConnection1_GetStatusInfo_Request is the XML structure for the input arguments for action GetStatusInfo.
-type _WANIPConnection1_GetStatusInfo_Request struct{}
-
-// _WANIPConnection1_GetStatusInfo_Response is the XML structure for the output arguments for action GetStatusInfo.
-type _WANIPConnection1_GetStatusInfo_Response struct {
-	NewConnectionStatus string
-
-	NewLastConnectionError string
-
-	NewUptime string
 }
 
 // GetStatusInfo action.
@@ -2938,13 +2737,20 @@ func (client *WANIPConnection1) GetStatusInfo() (
 	NewUptime uint32,
 	err error,
 ) {
-	var request _WANIPConnection1_GetStatusInfo_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewConnectionStatus    string
+		NewLastConnectionError string
+		NewUptime              string
+	}
+
 	// Perform the SOAP call.
-	var response _WANIPConnection1_GetStatusInfo_Response
 	if err = client.SOAPClient.PerformAction(URN_WANIPConnection_1, "GetStatusInfo", &request, &response); err != nil {
 		return
 	}
@@ -2967,14 +2773,6 @@ func (client *WANIPConnection1) GetStatusInfo() (
 	return
 }
 
-// _WANIPConnection1_GetAutoDisconnectTime_Request is the XML structure for the input arguments for action GetAutoDisconnectTime.
-type _WANIPConnection1_GetAutoDisconnectTime_Request struct{}
-
-// _WANIPConnection1_GetAutoDisconnectTime_Response is the XML structure for the output arguments for action GetAutoDisconnectTime.
-type _WANIPConnection1_GetAutoDisconnectTime_Response struct {
-	NewAutoDisconnectTime string
-}
-
 // GetAutoDisconnectTime action.
 // Arguments:
 //
@@ -2991,13 +2789,18 @@ func (client *WANIPConnection1) GetAutoDisconnectTime() (
 	NewAutoDisconnectTime uint32,
 	err error,
 ) {
-	var request _WANIPConnection1_GetAutoDisconnectTime_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewAutoDisconnectTime string
+	}
+
 	// Perform the SOAP call.
-	var response _WANIPConnection1_GetAutoDisconnectTime_Response
 	if err = client.SOAPClient.PerformAction(URN_WANIPConnection_1, "GetAutoDisconnectTime", &request, &response); err != nil {
 		return
 	}
@@ -3010,14 +2813,6 @@ func (client *WANIPConnection1) GetAutoDisconnectTime() (
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANIPConnection1_GetIdleDisconnectTime_Request is the XML structure for the input arguments for action GetIdleDisconnectTime.
-type _WANIPConnection1_GetIdleDisconnectTime_Request struct{}
-
-// _WANIPConnection1_GetIdleDisconnectTime_Response is the XML structure for the output arguments for action GetIdleDisconnectTime.
-type _WANIPConnection1_GetIdleDisconnectTime_Response struct {
-	NewIdleDisconnectTime string
 }
 
 // GetIdleDisconnectTime action.
@@ -3036,13 +2831,18 @@ func (client *WANIPConnection1) GetIdleDisconnectTime() (
 	NewIdleDisconnectTime uint32,
 	err error,
 ) {
-	var request _WANIPConnection1_GetIdleDisconnectTime_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewIdleDisconnectTime string
+	}
+
 	// Perform the SOAP call.
-	var response _WANIPConnection1_GetIdleDisconnectTime_Response
 	if err = client.SOAPClient.PerformAction(URN_WANIPConnection_1, "GetIdleDisconnectTime", &request, &response); err != nil {
 		return
 	}
@@ -3055,14 +2855,6 @@ func (client *WANIPConnection1) GetIdleDisconnectTime() (
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANIPConnection1_GetWarnDisconnectDelay_Request is the XML structure for the input arguments for action GetWarnDisconnectDelay.
-type _WANIPConnection1_GetWarnDisconnectDelay_Request struct{}
-
-// _WANIPConnection1_GetWarnDisconnectDelay_Response is the XML structure for the output arguments for action GetWarnDisconnectDelay.
-type _WANIPConnection1_GetWarnDisconnectDelay_Response struct {
-	NewWarnDisconnectDelay string
 }
 
 // GetWarnDisconnectDelay action.
@@ -3081,13 +2873,18 @@ func (client *WANIPConnection1) GetWarnDisconnectDelay() (
 	NewWarnDisconnectDelay uint32,
 	err error,
 ) {
-	var request _WANIPConnection1_GetWarnDisconnectDelay_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewWarnDisconnectDelay string
+	}
+
 	// Perform the SOAP call.
-	var response _WANIPConnection1_GetWarnDisconnectDelay_Response
 	if err = client.SOAPClient.PerformAction(URN_WANIPConnection_1, "GetWarnDisconnectDelay", &request, &response); err != nil {
 		return
 	}
@@ -3100,16 +2897,6 @@ func (client *WANIPConnection1) GetWarnDisconnectDelay() (
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANIPConnection1_GetNATRSIPStatus_Request is the XML structure for the input arguments for action GetNATRSIPStatus.
-type _WANIPConnection1_GetNATRSIPStatus_Request struct{}
-
-// _WANIPConnection1_GetNATRSIPStatus_Response is the XML structure for the output arguments for action GetNATRSIPStatus.
-type _WANIPConnection1_GetNATRSIPStatus_Response struct {
-	NewRSIPAvailable string
-
-	NewNATEnabled string
 }
 
 // GetNATRSIPStatus action.
@@ -3135,13 +2922,19 @@ func (client *WANIPConnection1) GetNATRSIPStatus() (
 	NewNATEnabled bool,
 	err error,
 ) {
-	var request _WANIPConnection1_GetNATRSIPStatus_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewRSIPAvailable string
+		NewNATEnabled    string
+	}
+
 	// Perform the SOAP call.
-	var response _WANIPConnection1_GetNATRSIPStatus_Response
 	if err = client.SOAPClient.PerformAction(URN_WANIPConnection_1, "GetNATRSIPStatus", &request, &response); err != nil {
 		return
 	}
@@ -3158,30 +2951,6 @@ func (client *WANIPConnection1) GetNATRSIPStatus() (
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANIPConnection1_GetGenericPortMappingEntry_Request is the XML structure for the input arguments for action GetGenericPortMappingEntry.
-type _WANIPConnection1_GetGenericPortMappingEntry_Request struct {
-	NewPortMappingIndex string
-}
-
-// _WANIPConnection1_GetGenericPortMappingEntry_Response is the XML structure for the output arguments for action GetGenericPortMappingEntry.
-type _WANIPConnection1_GetGenericPortMappingEntry_Response struct {
-	NewRemoteHost string
-
-	NewExternalPort string
-
-	NewProtocol string
-
-	NewInternalPort string
-
-	NewInternalClient string
-
-	NewEnabled string
-
-	NewPortMappingDescription string
-
-	NewLeaseDuration string
 }
 
 // GetGenericPortMappingEntry action.
@@ -3258,7 +3027,10 @@ func (client *WANIPConnection1) GetGenericPortMappingEntry(
 	NewLeaseDuration uint32,
 	err error,
 ) {
-	var request _WANIPConnection1_GetGenericPortMappingEntry_Request
+	// Request structure.
+	var request struct {
+		NewPortMappingIndex string
+	}
 	// BEGIN Marshal arguments into request.
 
 	if request.NewPortMappingIndex, err = soap.MarshalUi2(NewPortMappingIndex); err != nil {
@@ -3267,8 +3039,19 @@ func (client *WANIPConnection1) GetGenericPortMappingEntry(
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewRemoteHost             string
+		NewExternalPort           string
+		NewProtocol               string
+		NewInternalPort           string
+		NewInternalClient         string
+		NewEnabled                string
+		NewPortMappingDescription string
+		NewLeaseDuration          string
+	}
+
 	// Perform the SOAP call.
-	var response _WANIPConnection1_GetGenericPortMappingEntry_Response
 	if err = client.SOAPClient.PerformAction(URN_WANIPConnection_1, "GetGenericPortMappingEntry", &request, &response); err != nil {
 		return
 	}
@@ -3309,28 +3092,6 @@ func (client *WANIPConnection1) GetGenericPortMappingEntry(
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANIPConnection1_GetSpecificPortMappingEntry_Request is the XML structure for the input arguments for action GetSpecificPortMappingEntry.
-type _WANIPConnection1_GetSpecificPortMappingEntry_Request struct {
-	NewRemoteHost string
-
-	NewExternalPort string
-
-	NewProtocol string
-}
-
-// _WANIPConnection1_GetSpecificPortMappingEntry_Response is the XML structure for the output arguments for action GetSpecificPortMappingEntry.
-type _WANIPConnection1_GetSpecificPortMappingEntry_Response struct {
-	NewInternalPort string
-
-	NewInternalClient string
-
-	NewEnabled string
-
-	NewPortMappingDescription string
-
-	NewLeaseDuration string
 }
 
 // GetSpecificPortMappingEntry action.
@@ -3400,7 +3161,12 @@ func (client *WANIPConnection1) GetSpecificPortMappingEntry(
 	NewLeaseDuration uint32,
 	err error,
 ) {
-	var request _WANIPConnection1_GetSpecificPortMappingEntry_Request
+	// Request structure.
+	var request struct {
+		NewRemoteHost   string
+		NewExternalPort string
+		NewProtocol     string
+	}
 	// BEGIN Marshal arguments into request.
 
 	if request.NewRemoteHost, err = soap.MarshalString(NewRemoteHost); err != nil {
@@ -3417,8 +3183,16 @@ func (client *WANIPConnection1) GetSpecificPortMappingEntry(
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewInternalPort           string
+		NewInternalClient         string
+		NewEnabled                string
+		NewPortMappingDescription string
+		NewLeaseDuration          string
+	}
+
 	// Perform the SOAP call.
-	var response _WANIPConnection1_GetSpecificPortMappingEntry_Response
 	if err = client.SOAPClient.PerformAction(URN_WANIPConnection_1, "GetSpecificPortMappingEntry", &request, &response); err != nil {
 		return
 	}
@@ -3448,28 +3222,6 @@ func (client *WANIPConnection1) GetSpecificPortMappingEntry(
 	// END Unmarshal arguments from response.
 	return
 }
-
-// _WANIPConnection1_AddPortMapping_Request is the XML structure for the input arguments for action AddPortMapping.
-type _WANIPConnection1_AddPortMapping_Request struct {
-	NewRemoteHost string
-
-	NewExternalPort string
-
-	NewProtocol string
-
-	NewInternalPort string
-
-	NewInternalClient string
-
-	NewEnabled string
-
-	NewPortMappingDescription string
-
-	NewLeaseDuration string
-}
-
-// _WANIPConnection1_AddPortMapping_Response is the XML structure for the output arguments for action AddPortMapping.
-type _WANIPConnection1_AddPortMapping_Response struct{}
 
 // AddPortMapping action.
 // Arguments:
@@ -3538,7 +3290,17 @@ func (client *WANIPConnection1) AddPortMapping(
 ) (
 	err error,
 ) {
-	var request _WANIPConnection1_AddPortMapping_Request
+	// Request structure.
+	var request struct {
+		NewRemoteHost             string
+		NewExternalPort           string
+		NewProtocol               string
+		NewInternalPort           string
+		NewInternalClient         string
+		NewEnabled                string
+		NewPortMappingDescription string
+		NewLeaseDuration          string
+	}
 	// BEGIN Marshal arguments into request.
 
 	if request.NewRemoteHost, err = soap.MarshalString(NewRemoteHost); err != nil {
@@ -3575,8 +3337,10 @@ func (client *WANIPConnection1) AddPortMapping(
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct{}
+
 	// Perform the SOAP call.
-	var response _WANIPConnection1_AddPortMapping_Response
 	if err = client.SOAPClient.PerformAction(URN_WANIPConnection_1, "AddPortMapping", &request, &response); err != nil {
 		return
 	}
@@ -3586,18 +3350,6 @@ func (client *WANIPConnection1) AddPortMapping(
 	// END Unmarshal arguments from response.
 	return
 }
-
-// _WANIPConnection1_DeletePortMapping_Request is the XML structure for the input arguments for action DeletePortMapping.
-type _WANIPConnection1_DeletePortMapping_Request struct {
-	NewRemoteHost string
-
-	NewExternalPort string
-
-	NewProtocol string
-}
-
-// _WANIPConnection1_DeletePortMapping_Response is the XML structure for the output arguments for action DeletePortMapping.
-type _WANIPConnection1_DeletePortMapping_Response struct{}
 
 // DeletePortMapping action.
 // Arguments:
@@ -3631,7 +3383,12 @@ func (client *WANIPConnection1) DeletePortMapping(
 ) (
 	err error,
 ) {
-	var request _WANIPConnection1_DeletePortMapping_Request
+	// Request structure.
+	var request struct {
+		NewRemoteHost   string
+		NewExternalPort string
+		NewProtocol     string
+	}
 	// BEGIN Marshal arguments into request.
 
 	if request.NewRemoteHost, err = soap.MarshalString(NewRemoteHost); err != nil {
@@ -3648,8 +3405,10 @@ func (client *WANIPConnection1) DeletePortMapping(
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct{}
+
 	// Perform the SOAP call.
-	var response _WANIPConnection1_DeletePortMapping_Response
 	if err = client.SOAPClient.PerformAction(URN_WANIPConnection_1, "DeletePortMapping", &request, &response); err != nil {
 		return
 	}
@@ -3658,14 +3417,6 @@ func (client *WANIPConnection1) DeletePortMapping(
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANIPConnection1_GetExternalIPAddress_Request is the XML structure for the input arguments for action GetExternalIPAddress.
-type _WANIPConnection1_GetExternalIPAddress_Request struct{}
-
-// _WANIPConnection1_GetExternalIPAddress_Response is the XML structure for the output arguments for action GetExternalIPAddress.
-type _WANIPConnection1_GetExternalIPAddress_Response struct {
-	NewExternalIPAddress string
 }
 
 // GetExternalIPAddress action.
@@ -3684,13 +3435,18 @@ func (client *WANIPConnection1) GetExternalIPAddress() (
 	NewExternalIPAddress string,
 	err error,
 ) {
-	var request _WANIPConnection1_GetExternalIPAddress_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewExternalIPAddress string
+	}
+
 	// Perform the SOAP call.
-	var response _WANIPConnection1_GetExternalIPAddress_Response
 	if err = client.SOAPClient.PerformAction(URN_WANIPConnection_1, "GetExternalIPAddress", &request, &response); err != nil {
 		return
 	}
@@ -3709,18 +3465,6 @@ func (client *WANIPConnection1) GetExternalIPAddress() (
 type WANPOTSLinkConfig1 struct {
 	SOAPClient soap.SOAPClient
 }
-
-// _WANPOTSLinkConfig1_SetISPInfo_Request is the XML structure for the input arguments for action SetISPInfo.
-type _WANPOTSLinkConfig1_SetISPInfo_Request struct {
-	NewISPPhoneNumber string
-
-	NewISPInfo string
-
-	NewLinkType string
-}
-
-// _WANPOTSLinkConfig1_SetISPInfo_Response is the XML structure for the output arguments for action SetISPInfo.
-type _WANPOTSLinkConfig1_SetISPInfo_Response struct{}
 
 // SetISPInfo action.
 // Arguments:
@@ -3754,7 +3498,12 @@ func (client *WANPOTSLinkConfig1) SetISPInfo(
 ) (
 	err error,
 ) {
-	var request _WANPOTSLinkConfig1_SetISPInfo_Request
+	// Request structure.
+	var request struct {
+		NewISPPhoneNumber string
+		NewISPInfo        string
+		NewLinkType       string
+	}
 	// BEGIN Marshal arguments into request.
 
 	if request.NewISPPhoneNumber, err = soap.MarshalString(NewISPPhoneNumber); err != nil {
@@ -3771,8 +3520,10 @@ func (client *WANPOTSLinkConfig1) SetISPInfo(
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct{}
+
 	// Perform the SOAP call.
-	var response _WANPOTSLinkConfig1_SetISPInfo_Response
 	if err = client.SOAPClient.PerformAction(URN_WANPOTSLinkConfig_1, "SetISPInfo", &request, &response); err != nil {
 		return
 	}
@@ -3782,16 +3533,6 @@ func (client *WANPOTSLinkConfig1) SetISPInfo(
 	// END Unmarshal arguments from response.
 	return
 }
-
-// _WANPOTSLinkConfig1_SetCallRetryInfo_Request is the XML structure for the input arguments for action SetCallRetryInfo.
-type _WANPOTSLinkConfig1_SetCallRetryInfo_Request struct {
-	NewNumberOfRetries string
-
-	NewDelayBetweenRetries string
-}
-
-// _WANPOTSLinkConfig1_SetCallRetryInfo_Response is the XML structure for the output arguments for action SetCallRetryInfo.
-type _WANPOTSLinkConfig1_SetCallRetryInfo_Response struct{}
 
 // SetCallRetryInfo action.
 // Arguments:
@@ -3817,7 +3558,11 @@ func (client *WANPOTSLinkConfig1) SetCallRetryInfo(
 ) (
 	err error,
 ) {
-	var request _WANPOTSLinkConfig1_SetCallRetryInfo_Request
+	// Request structure.
+	var request struct {
+		NewNumberOfRetries     string
+		NewDelayBetweenRetries string
+	}
 	// BEGIN Marshal arguments into request.
 
 	if request.NewNumberOfRetries, err = soap.MarshalUi4(NewNumberOfRetries); err != nil {
@@ -3830,8 +3575,10 @@ func (client *WANPOTSLinkConfig1) SetCallRetryInfo(
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct{}
+
 	// Perform the SOAP call.
-	var response _WANPOTSLinkConfig1_SetCallRetryInfo_Response
 	if err = client.SOAPClient.PerformAction(URN_WANPOTSLinkConfig_1, "SetCallRetryInfo", &request, &response); err != nil {
 		return
 	}
@@ -3840,18 +3587,6 @@ func (client *WANPOTSLinkConfig1) SetCallRetryInfo(
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANPOTSLinkConfig1_GetISPInfo_Request is the XML structure for the input arguments for action GetISPInfo.
-type _WANPOTSLinkConfig1_GetISPInfo_Request struct{}
-
-// _WANPOTSLinkConfig1_GetISPInfo_Response is the XML structure for the output arguments for action GetISPInfo.
-type _WANPOTSLinkConfig1_GetISPInfo_Response struct {
-	NewISPPhoneNumber string
-
-	NewISPInfo string
-
-	NewLinkType string
 }
 
 // GetISPInfo action.
@@ -3885,13 +3620,20 @@ func (client *WANPOTSLinkConfig1) GetISPInfo() (
 	NewLinkType string,
 	err error,
 ) {
-	var request _WANPOTSLinkConfig1_GetISPInfo_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewISPPhoneNumber string
+		NewISPInfo        string
+		NewLinkType       string
+	}
+
 	// Perform the SOAP call.
-	var response _WANPOTSLinkConfig1_GetISPInfo_Response
 	if err = client.SOAPClient.PerformAction(URN_WANPOTSLinkConfig_1, "GetISPInfo", &request, &response); err != nil {
 		return
 	}
@@ -3912,16 +3654,6 @@ func (client *WANPOTSLinkConfig1) GetISPInfo() (
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANPOTSLinkConfig1_GetCallRetryInfo_Request is the XML structure for the input arguments for action GetCallRetryInfo.
-type _WANPOTSLinkConfig1_GetCallRetryInfo_Request struct{}
-
-// _WANPOTSLinkConfig1_GetCallRetryInfo_Response is the XML structure for the output arguments for action GetCallRetryInfo.
-type _WANPOTSLinkConfig1_GetCallRetryInfo_Response struct {
-	NewNumberOfRetries string
-
-	NewDelayBetweenRetries string
 }
 
 // GetCallRetryInfo action.
@@ -3947,13 +3679,19 @@ func (client *WANPOTSLinkConfig1) GetCallRetryInfo() (
 	NewDelayBetweenRetries uint32,
 	err error,
 ) {
-	var request _WANPOTSLinkConfig1_GetCallRetryInfo_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewNumberOfRetries     string
+		NewDelayBetweenRetries string
+	}
+
 	// Perform the SOAP call.
-	var response _WANPOTSLinkConfig1_GetCallRetryInfo_Response
 	if err = client.SOAPClient.PerformAction(URN_WANPOTSLinkConfig_1, "GetCallRetryInfo", &request, &response); err != nil {
 		return
 	}
@@ -3972,14 +3710,6 @@ func (client *WANPOTSLinkConfig1) GetCallRetryInfo() (
 	return
 }
 
-// _WANPOTSLinkConfig1_GetFclass_Request is the XML structure for the input arguments for action GetFclass.
-type _WANPOTSLinkConfig1_GetFclass_Request struct{}
-
-// _WANPOTSLinkConfig1_GetFclass_Response is the XML structure for the output arguments for action GetFclass.
-type _WANPOTSLinkConfig1_GetFclass_Response struct {
-	NewFclass string
-}
-
 // GetFclass action.
 // Arguments:
 //
@@ -3996,13 +3726,18 @@ func (client *WANPOTSLinkConfig1) GetFclass() (
 	NewFclass string,
 	err error,
 ) {
-	var request _WANPOTSLinkConfig1_GetFclass_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewFclass string
+	}
+
 	// Perform the SOAP call.
-	var response _WANPOTSLinkConfig1_GetFclass_Response
 	if err = client.SOAPClient.PerformAction(URN_WANPOTSLinkConfig_1, "GetFclass", &request, &response); err != nil {
 		return
 	}
@@ -4015,14 +3750,6 @@ func (client *WANPOTSLinkConfig1) GetFclass() (
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANPOTSLinkConfig1_GetDataModulationSupported_Request is the XML structure for the input arguments for action GetDataModulationSupported.
-type _WANPOTSLinkConfig1_GetDataModulationSupported_Request struct{}
-
-// _WANPOTSLinkConfig1_GetDataModulationSupported_Response is the XML structure for the output arguments for action GetDataModulationSupported.
-type _WANPOTSLinkConfig1_GetDataModulationSupported_Response struct {
-	NewDataModulationSupported string
 }
 
 // GetDataModulationSupported action.
@@ -4041,13 +3768,18 @@ func (client *WANPOTSLinkConfig1) GetDataModulationSupported() (
 	NewDataModulationSupported string,
 	err error,
 ) {
-	var request _WANPOTSLinkConfig1_GetDataModulationSupported_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewDataModulationSupported string
+	}
+
 	// Perform the SOAP call.
-	var response _WANPOTSLinkConfig1_GetDataModulationSupported_Response
 	if err = client.SOAPClient.PerformAction(URN_WANPOTSLinkConfig_1, "GetDataModulationSupported", &request, &response); err != nil {
 		return
 	}
@@ -4060,14 +3792,6 @@ func (client *WANPOTSLinkConfig1) GetDataModulationSupported() (
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANPOTSLinkConfig1_GetDataProtocol_Request is the XML structure for the input arguments for action GetDataProtocol.
-type _WANPOTSLinkConfig1_GetDataProtocol_Request struct{}
-
-// _WANPOTSLinkConfig1_GetDataProtocol_Response is the XML structure for the output arguments for action GetDataProtocol.
-type _WANPOTSLinkConfig1_GetDataProtocol_Response struct {
-	NewDataProtocol string
 }
 
 // GetDataProtocol action.
@@ -4086,13 +3810,18 @@ func (client *WANPOTSLinkConfig1) GetDataProtocol() (
 	NewDataProtocol string,
 	err error,
 ) {
-	var request _WANPOTSLinkConfig1_GetDataProtocol_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewDataProtocol string
+	}
+
 	// Perform the SOAP call.
-	var response _WANPOTSLinkConfig1_GetDataProtocol_Response
 	if err = client.SOAPClient.PerformAction(URN_WANPOTSLinkConfig_1, "GetDataProtocol", &request, &response); err != nil {
 		return
 	}
@@ -4105,14 +3834,6 @@ func (client *WANPOTSLinkConfig1) GetDataProtocol() (
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANPOTSLinkConfig1_GetDataCompression_Request is the XML structure for the input arguments for action GetDataCompression.
-type _WANPOTSLinkConfig1_GetDataCompression_Request struct{}
-
-// _WANPOTSLinkConfig1_GetDataCompression_Response is the XML structure for the output arguments for action GetDataCompression.
-type _WANPOTSLinkConfig1_GetDataCompression_Response struct {
-	NewDataCompression string
 }
 
 // GetDataCompression action.
@@ -4131,13 +3852,18 @@ func (client *WANPOTSLinkConfig1) GetDataCompression() (
 	NewDataCompression string,
 	err error,
 ) {
-	var request _WANPOTSLinkConfig1_GetDataCompression_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewDataCompression string
+	}
+
 	// Perform the SOAP call.
-	var response _WANPOTSLinkConfig1_GetDataCompression_Response
 	if err = client.SOAPClient.PerformAction(URN_WANPOTSLinkConfig_1, "GetDataCompression", &request, &response); err != nil {
 		return
 	}
@@ -4150,14 +3876,6 @@ func (client *WANPOTSLinkConfig1) GetDataCompression() (
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANPOTSLinkConfig1_GetPlusVTRCommandSupported_Request is the XML structure for the input arguments for action GetPlusVTRCommandSupported.
-type _WANPOTSLinkConfig1_GetPlusVTRCommandSupported_Request struct{}
-
-// _WANPOTSLinkConfig1_GetPlusVTRCommandSupported_Response is the XML structure for the output arguments for action GetPlusVTRCommandSupported.
-type _WANPOTSLinkConfig1_GetPlusVTRCommandSupported_Response struct {
-	NewPlusVTRCommandSupported string
 }
 
 // GetPlusVTRCommandSupported action.
@@ -4176,13 +3894,18 @@ func (client *WANPOTSLinkConfig1) GetPlusVTRCommandSupported() (
 	NewPlusVTRCommandSupported bool,
 	err error,
 ) {
-	var request _WANPOTSLinkConfig1_GetPlusVTRCommandSupported_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewPlusVTRCommandSupported string
+	}
+
 	// Perform the SOAP call.
-	var response _WANPOTSLinkConfig1_GetPlusVTRCommandSupported_Response
 	if err = client.SOAPClient.PerformAction(URN_WANPOTSLinkConfig_1, "GetPlusVTRCommandSupported", &request, &response); err != nil {
 		return
 	}
@@ -4202,14 +3925,6 @@ type WANPPPConnection1 struct {
 	SOAPClient soap.SOAPClient
 }
 
-// _WANPPPConnection1_SetConnectionType_Request is the XML structure for the input arguments for action SetConnectionType.
-type _WANPPPConnection1_SetConnectionType_Request struct {
-	NewConnectionType string
-}
-
-// _WANPPPConnection1_SetConnectionType_Response is the XML structure for the output arguments for action SetConnectionType.
-type _WANPPPConnection1_SetConnectionType_Response struct{}
-
 // SetConnectionType action.
 // Arguments:
 //
@@ -4227,7 +3942,10 @@ func (client *WANPPPConnection1) SetConnectionType(
 ) (
 	err error,
 ) {
-	var request _WANPPPConnection1_SetConnectionType_Request
+	// Request structure.
+	var request struct {
+		NewConnectionType string
+	}
 	// BEGIN Marshal arguments into request.
 
 	if request.NewConnectionType, err = soap.MarshalString(NewConnectionType); err != nil {
@@ -4236,8 +3954,10 @@ func (client *WANPPPConnection1) SetConnectionType(
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct{}
+
 	// Perform the SOAP call.
-	var response _WANPPPConnection1_SetConnectionType_Response
 	if err = client.SOAPClient.PerformAction(URN_WANPPPConnection_1, "SetConnectionType", &request, &response); err != nil {
 		return
 	}
@@ -4246,16 +3966,6 @@ func (client *WANPPPConnection1) SetConnectionType(
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANPPPConnection1_GetConnectionTypeInfo_Request is the XML structure for the input arguments for action GetConnectionTypeInfo.
-type _WANPPPConnection1_GetConnectionTypeInfo_Request struct{}
-
-// _WANPPPConnection1_GetConnectionTypeInfo_Response is the XML structure for the output arguments for action GetConnectionTypeInfo.
-type _WANPPPConnection1_GetConnectionTypeInfo_Response struct {
-	NewConnectionType string
-
-	NewPossibleConnectionTypes string
 }
 
 // GetConnectionTypeInfo action.
@@ -4282,13 +3992,19 @@ func (client *WANPPPConnection1) GetConnectionTypeInfo() (
 	NewPossibleConnectionTypes string,
 	err error,
 ) {
-	var request _WANPPPConnection1_GetConnectionTypeInfo_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewConnectionType          string
+		NewPossibleConnectionTypes string
+	}
+
 	// Perform the SOAP call.
-	var response _WANPPPConnection1_GetConnectionTypeInfo_Response
 	if err = client.SOAPClient.PerformAction(URN_WANPPPConnection_1, "GetConnectionTypeInfo", &request, &response); err != nil {
 		return
 	}
@@ -4306,16 +4022,6 @@ func (client *WANPPPConnection1) GetConnectionTypeInfo() (
 	// END Unmarshal arguments from response.
 	return
 }
-
-// _WANPPPConnection1_ConfigureConnection_Request is the XML structure for the input arguments for action ConfigureConnection.
-type _WANPPPConnection1_ConfigureConnection_Request struct {
-	NewUserName string
-
-	NewPassword string
-}
-
-// _WANPPPConnection1_ConfigureConnection_Response is the XML structure for the output arguments for action ConfigureConnection.
-type _WANPPPConnection1_ConfigureConnection_Response struct{}
 
 // ConfigureConnection action.
 // Arguments:
@@ -4341,7 +4047,11 @@ func (client *WANPPPConnection1) ConfigureConnection(
 ) (
 	err error,
 ) {
-	var request _WANPPPConnection1_ConfigureConnection_Request
+	// Request structure.
+	var request struct {
+		NewUserName string
+		NewPassword string
+	}
 	// BEGIN Marshal arguments into request.
 
 	if request.NewUserName, err = soap.MarshalString(NewUserName); err != nil {
@@ -4354,8 +4064,10 @@ func (client *WANPPPConnection1) ConfigureConnection(
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct{}
+
 	// Perform the SOAP call.
-	var response _WANPPPConnection1_ConfigureConnection_Response
 	if err = client.SOAPClient.PerformAction(URN_WANPPPConnection_1, "ConfigureConnection", &request, &response); err != nil {
 		return
 	}
@@ -4366,12 +4078,6 @@ func (client *WANPPPConnection1) ConfigureConnection(
 	return
 }
 
-// _WANPPPConnection1_RequestConnection_Request is the XML structure for the input arguments for action RequestConnection.
-type _WANPPPConnection1_RequestConnection_Request struct{}
-
-// _WANPPPConnection1_RequestConnection_Response is the XML structure for the output arguments for action RequestConnection.
-type _WANPPPConnection1_RequestConnection_Response struct{}
-
 // RequestConnection action.
 // Arguments:
 //
@@ -4381,13 +4087,16 @@ type _WANPPPConnection1_RequestConnection_Response struct{}
 func (client *WANPPPConnection1) RequestConnection() (
 	err error,
 ) {
-	var request _WANPPPConnection1_RequestConnection_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct{}
+
 	// Perform the SOAP call.
-	var response _WANPPPConnection1_RequestConnection_Response
 	if err = client.SOAPClient.PerformAction(URN_WANPPPConnection_1, "RequestConnection", &request, &response); err != nil {
 		return
 	}
@@ -4398,12 +4107,6 @@ func (client *WANPPPConnection1) RequestConnection() (
 	return
 }
 
-// _WANPPPConnection1_RequestTermination_Request is the XML structure for the input arguments for action RequestTermination.
-type _WANPPPConnection1_RequestTermination_Request struct{}
-
-// _WANPPPConnection1_RequestTermination_Response is the XML structure for the output arguments for action RequestTermination.
-type _WANPPPConnection1_RequestTermination_Response struct{}
-
 // RequestTermination action.
 // Arguments:
 //
@@ -4413,13 +4116,16 @@ type _WANPPPConnection1_RequestTermination_Response struct{}
 func (client *WANPPPConnection1) RequestTermination() (
 	err error,
 ) {
-	var request _WANPPPConnection1_RequestTermination_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct{}
+
 	// Perform the SOAP call.
-	var response _WANPPPConnection1_RequestTermination_Response
 	if err = client.SOAPClient.PerformAction(URN_WANPPPConnection_1, "RequestTermination", &request, &response); err != nil {
 		return
 	}
@@ -4430,12 +4136,6 @@ func (client *WANPPPConnection1) RequestTermination() (
 	return
 }
 
-// _WANPPPConnection1_ForceTermination_Request is the XML structure for the input arguments for action ForceTermination.
-type _WANPPPConnection1_ForceTermination_Request struct{}
-
-// _WANPPPConnection1_ForceTermination_Response is the XML structure for the output arguments for action ForceTermination.
-type _WANPPPConnection1_ForceTermination_Response struct{}
-
 // ForceTermination action.
 // Arguments:
 //
@@ -4445,13 +4145,16 @@ type _WANPPPConnection1_ForceTermination_Response struct{}
 func (client *WANPPPConnection1) ForceTermination() (
 	err error,
 ) {
-	var request _WANPPPConnection1_ForceTermination_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct{}
+
 	// Perform the SOAP call.
-	var response _WANPPPConnection1_ForceTermination_Response
 	if err = client.SOAPClient.PerformAction(URN_WANPPPConnection_1, "ForceTermination", &request, &response); err != nil {
 		return
 	}
@@ -4461,14 +4164,6 @@ func (client *WANPPPConnection1) ForceTermination() (
 	// END Unmarshal arguments from response.
 	return
 }
-
-// _WANPPPConnection1_SetAutoDisconnectTime_Request is the XML structure for the input arguments for action SetAutoDisconnectTime.
-type _WANPPPConnection1_SetAutoDisconnectTime_Request struct {
-	NewAutoDisconnectTime string
-}
-
-// _WANPPPConnection1_SetAutoDisconnectTime_Response is the XML structure for the output arguments for action SetAutoDisconnectTime.
-type _WANPPPConnection1_SetAutoDisconnectTime_Response struct{}
 
 // SetAutoDisconnectTime action.
 // Arguments:
@@ -4487,7 +4182,10 @@ func (client *WANPPPConnection1) SetAutoDisconnectTime(
 ) (
 	err error,
 ) {
-	var request _WANPPPConnection1_SetAutoDisconnectTime_Request
+	// Request structure.
+	var request struct {
+		NewAutoDisconnectTime string
+	}
 	// BEGIN Marshal arguments into request.
 
 	if request.NewAutoDisconnectTime, err = soap.MarshalUi4(NewAutoDisconnectTime); err != nil {
@@ -4496,8 +4194,10 @@ func (client *WANPPPConnection1) SetAutoDisconnectTime(
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct{}
+
 	// Perform the SOAP call.
-	var response _WANPPPConnection1_SetAutoDisconnectTime_Response
 	if err = client.SOAPClient.PerformAction(URN_WANPPPConnection_1, "SetAutoDisconnectTime", &request, &response); err != nil {
 		return
 	}
@@ -4507,14 +4207,6 @@ func (client *WANPPPConnection1) SetAutoDisconnectTime(
 	// END Unmarshal arguments from response.
 	return
 }
-
-// _WANPPPConnection1_SetIdleDisconnectTime_Request is the XML structure for the input arguments for action SetIdleDisconnectTime.
-type _WANPPPConnection1_SetIdleDisconnectTime_Request struct {
-	NewIdleDisconnectTime string
-}
-
-// _WANPPPConnection1_SetIdleDisconnectTime_Response is the XML structure for the output arguments for action SetIdleDisconnectTime.
-type _WANPPPConnection1_SetIdleDisconnectTime_Response struct{}
 
 // SetIdleDisconnectTime action.
 // Arguments:
@@ -4533,7 +4225,10 @@ func (client *WANPPPConnection1) SetIdleDisconnectTime(
 ) (
 	err error,
 ) {
-	var request _WANPPPConnection1_SetIdleDisconnectTime_Request
+	// Request structure.
+	var request struct {
+		NewIdleDisconnectTime string
+	}
 	// BEGIN Marshal arguments into request.
 
 	if request.NewIdleDisconnectTime, err = soap.MarshalUi4(NewIdleDisconnectTime); err != nil {
@@ -4542,8 +4237,10 @@ func (client *WANPPPConnection1) SetIdleDisconnectTime(
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct{}
+
 	// Perform the SOAP call.
-	var response _WANPPPConnection1_SetIdleDisconnectTime_Response
 	if err = client.SOAPClient.PerformAction(URN_WANPPPConnection_1, "SetIdleDisconnectTime", &request, &response); err != nil {
 		return
 	}
@@ -4553,14 +4250,6 @@ func (client *WANPPPConnection1) SetIdleDisconnectTime(
 	// END Unmarshal arguments from response.
 	return
 }
-
-// _WANPPPConnection1_SetWarnDisconnectDelay_Request is the XML structure for the input arguments for action SetWarnDisconnectDelay.
-type _WANPPPConnection1_SetWarnDisconnectDelay_Request struct {
-	NewWarnDisconnectDelay string
-}
-
-// _WANPPPConnection1_SetWarnDisconnectDelay_Response is the XML structure for the output arguments for action SetWarnDisconnectDelay.
-type _WANPPPConnection1_SetWarnDisconnectDelay_Response struct{}
 
 // SetWarnDisconnectDelay action.
 // Arguments:
@@ -4579,7 +4268,10 @@ func (client *WANPPPConnection1) SetWarnDisconnectDelay(
 ) (
 	err error,
 ) {
-	var request _WANPPPConnection1_SetWarnDisconnectDelay_Request
+	// Request structure.
+	var request struct {
+		NewWarnDisconnectDelay string
+	}
 	// BEGIN Marshal arguments into request.
 
 	if request.NewWarnDisconnectDelay, err = soap.MarshalUi4(NewWarnDisconnectDelay); err != nil {
@@ -4588,8 +4280,10 @@ func (client *WANPPPConnection1) SetWarnDisconnectDelay(
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct{}
+
 	// Perform the SOAP call.
-	var response _WANPPPConnection1_SetWarnDisconnectDelay_Response
 	if err = client.SOAPClient.PerformAction(URN_WANPPPConnection_1, "SetWarnDisconnectDelay", &request, &response); err != nil {
 		return
 	}
@@ -4598,18 +4292,6 @@ func (client *WANPPPConnection1) SetWarnDisconnectDelay(
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANPPPConnection1_GetStatusInfo_Request is the XML structure for the input arguments for action GetStatusInfo.
-type _WANPPPConnection1_GetStatusInfo_Request struct{}
-
-// _WANPPPConnection1_GetStatusInfo_Response is the XML structure for the output arguments for action GetStatusInfo.
-type _WANPPPConnection1_GetStatusInfo_Response struct {
-	NewConnectionStatus string
-
-	NewLastConnectionError string
-
-	NewUptime string
 }
 
 // GetStatusInfo action.
@@ -4644,13 +4326,20 @@ func (client *WANPPPConnection1) GetStatusInfo() (
 	NewUptime uint32,
 	err error,
 ) {
-	var request _WANPPPConnection1_GetStatusInfo_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewConnectionStatus    string
+		NewLastConnectionError string
+		NewUptime              string
+	}
+
 	// Perform the SOAP call.
-	var response _WANPPPConnection1_GetStatusInfo_Response
 	if err = client.SOAPClient.PerformAction(URN_WANPPPConnection_1, "GetStatusInfo", &request, &response); err != nil {
 		return
 	}
@@ -4671,16 +4360,6 @@ func (client *WANPPPConnection1) GetStatusInfo() (
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANPPPConnection1_GetLinkLayerMaxBitRates_Request is the XML structure for the input arguments for action GetLinkLayerMaxBitRates.
-type _WANPPPConnection1_GetLinkLayerMaxBitRates_Request struct{}
-
-// _WANPPPConnection1_GetLinkLayerMaxBitRates_Response is the XML structure for the output arguments for action GetLinkLayerMaxBitRates.
-type _WANPPPConnection1_GetLinkLayerMaxBitRates_Response struct {
-	NewUpstreamMaxBitRate string
-
-	NewDownstreamMaxBitRate string
 }
 
 // GetLinkLayerMaxBitRates action.
@@ -4706,13 +4385,19 @@ func (client *WANPPPConnection1) GetLinkLayerMaxBitRates() (
 	NewDownstreamMaxBitRate uint32,
 	err error,
 ) {
-	var request _WANPPPConnection1_GetLinkLayerMaxBitRates_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewUpstreamMaxBitRate   string
+		NewDownstreamMaxBitRate string
+	}
+
 	// Perform the SOAP call.
-	var response _WANPPPConnection1_GetLinkLayerMaxBitRates_Response
 	if err = client.SOAPClient.PerformAction(URN_WANPPPConnection_1, "GetLinkLayerMaxBitRates", &request, &response); err != nil {
 		return
 	}
@@ -4731,14 +4416,6 @@ func (client *WANPPPConnection1) GetLinkLayerMaxBitRates() (
 	return
 }
 
-// _WANPPPConnection1_GetPPPEncryptionProtocol_Request is the XML structure for the input arguments for action GetPPPEncryptionProtocol.
-type _WANPPPConnection1_GetPPPEncryptionProtocol_Request struct{}
-
-// _WANPPPConnection1_GetPPPEncryptionProtocol_Response is the XML structure for the output arguments for action GetPPPEncryptionProtocol.
-type _WANPPPConnection1_GetPPPEncryptionProtocol_Response struct {
-	NewPPPEncryptionProtocol string
-}
-
 // GetPPPEncryptionProtocol action.
 // Arguments:
 //
@@ -4755,13 +4432,18 @@ func (client *WANPPPConnection1) GetPPPEncryptionProtocol() (
 	NewPPPEncryptionProtocol string,
 	err error,
 ) {
-	var request _WANPPPConnection1_GetPPPEncryptionProtocol_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewPPPEncryptionProtocol string
+	}
+
 	// Perform the SOAP call.
-	var response _WANPPPConnection1_GetPPPEncryptionProtocol_Response
 	if err = client.SOAPClient.PerformAction(URN_WANPPPConnection_1, "GetPPPEncryptionProtocol", &request, &response); err != nil {
 		return
 	}
@@ -4774,14 +4456,6 @@ func (client *WANPPPConnection1) GetPPPEncryptionProtocol() (
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANPPPConnection1_GetPPPCompressionProtocol_Request is the XML structure for the input arguments for action GetPPPCompressionProtocol.
-type _WANPPPConnection1_GetPPPCompressionProtocol_Request struct{}
-
-// _WANPPPConnection1_GetPPPCompressionProtocol_Response is the XML structure for the output arguments for action GetPPPCompressionProtocol.
-type _WANPPPConnection1_GetPPPCompressionProtocol_Response struct {
-	NewPPPCompressionProtocol string
 }
 
 // GetPPPCompressionProtocol action.
@@ -4800,13 +4474,18 @@ func (client *WANPPPConnection1) GetPPPCompressionProtocol() (
 	NewPPPCompressionProtocol string,
 	err error,
 ) {
-	var request _WANPPPConnection1_GetPPPCompressionProtocol_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewPPPCompressionProtocol string
+	}
+
 	// Perform the SOAP call.
-	var response _WANPPPConnection1_GetPPPCompressionProtocol_Response
 	if err = client.SOAPClient.PerformAction(URN_WANPPPConnection_1, "GetPPPCompressionProtocol", &request, &response); err != nil {
 		return
 	}
@@ -4819,14 +4498,6 @@ func (client *WANPPPConnection1) GetPPPCompressionProtocol() (
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANPPPConnection1_GetPPPAuthenticationProtocol_Request is the XML structure for the input arguments for action GetPPPAuthenticationProtocol.
-type _WANPPPConnection1_GetPPPAuthenticationProtocol_Request struct{}
-
-// _WANPPPConnection1_GetPPPAuthenticationProtocol_Response is the XML structure for the output arguments for action GetPPPAuthenticationProtocol.
-type _WANPPPConnection1_GetPPPAuthenticationProtocol_Response struct {
-	NewPPPAuthenticationProtocol string
 }
 
 // GetPPPAuthenticationProtocol action.
@@ -4845,13 +4516,18 @@ func (client *WANPPPConnection1) GetPPPAuthenticationProtocol() (
 	NewPPPAuthenticationProtocol string,
 	err error,
 ) {
-	var request _WANPPPConnection1_GetPPPAuthenticationProtocol_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewPPPAuthenticationProtocol string
+	}
+
 	// Perform the SOAP call.
-	var response _WANPPPConnection1_GetPPPAuthenticationProtocol_Response
 	if err = client.SOAPClient.PerformAction(URN_WANPPPConnection_1, "GetPPPAuthenticationProtocol", &request, &response); err != nil {
 		return
 	}
@@ -4864,14 +4540,6 @@ func (client *WANPPPConnection1) GetPPPAuthenticationProtocol() (
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANPPPConnection1_GetUserName_Request is the XML structure for the input arguments for action GetUserName.
-type _WANPPPConnection1_GetUserName_Request struct{}
-
-// _WANPPPConnection1_GetUserName_Response is the XML structure for the output arguments for action GetUserName.
-type _WANPPPConnection1_GetUserName_Response struct {
-	NewUserName string
 }
 
 // GetUserName action.
@@ -4890,13 +4558,18 @@ func (client *WANPPPConnection1) GetUserName() (
 	NewUserName string,
 	err error,
 ) {
-	var request _WANPPPConnection1_GetUserName_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewUserName string
+	}
+
 	// Perform the SOAP call.
-	var response _WANPPPConnection1_GetUserName_Response
 	if err = client.SOAPClient.PerformAction(URN_WANPPPConnection_1, "GetUserName", &request, &response); err != nil {
 		return
 	}
@@ -4909,14 +4582,6 @@ func (client *WANPPPConnection1) GetUserName() (
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANPPPConnection1_GetPassword_Request is the XML structure for the input arguments for action GetPassword.
-type _WANPPPConnection1_GetPassword_Request struct{}
-
-// _WANPPPConnection1_GetPassword_Response is the XML structure for the output arguments for action GetPassword.
-type _WANPPPConnection1_GetPassword_Response struct {
-	NewPassword string
 }
 
 // GetPassword action.
@@ -4935,13 +4600,18 @@ func (client *WANPPPConnection1) GetPassword() (
 	NewPassword string,
 	err error,
 ) {
-	var request _WANPPPConnection1_GetPassword_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewPassword string
+	}
+
 	// Perform the SOAP call.
-	var response _WANPPPConnection1_GetPassword_Response
 	if err = client.SOAPClient.PerformAction(URN_WANPPPConnection_1, "GetPassword", &request, &response); err != nil {
 		return
 	}
@@ -4954,14 +4624,6 @@ func (client *WANPPPConnection1) GetPassword() (
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANPPPConnection1_GetAutoDisconnectTime_Request is the XML structure for the input arguments for action GetAutoDisconnectTime.
-type _WANPPPConnection1_GetAutoDisconnectTime_Request struct{}
-
-// _WANPPPConnection1_GetAutoDisconnectTime_Response is the XML structure for the output arguments for action GetAutoDisconnectTime.
-type _WANPPPConnection1_GetAutoDisconnectTime_Response struct {
-	NewAutoDisconnectTime string
 }
 
 // GetAutoDisconnectTime action.
@@ -4980,13 +4642,18 @@ func (client *WANPPPConnection1) GetAutoDisconnectTime() (
 	NewAutoDisconnectTime uint32,
 	err error,
 ) {
-	var request _WANPPPConnection1_GetAutoDisconnectTime_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewAutoDisconnectTime string
+	}
+
 	// Perform the SOAP call.
-	var response _WANPPPConnection1_GetAutoDisconnectTime_Response
 	if err = client.SOAPClient.PerformAction(URN_WANPPPConnection_1, "GetAutoDisconnectTime", &request, &response); err != nil {
 		return
 	}
@@ -4999,14 +4666,6 @@ func (client *WANPPPConnection1) GetAutoDisconnectTime() (
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANPPPConnection1_GetIdleDisconnectTime_Request is the XML structure for the input arguments for action GetIdleDisconnectTime.
-type _WANPPPConnection1_GetIdleDisconnectTime_Request struct{}
-
-// _WANPPPConnection1_GetIdleDisconnectTime_Response is the XML structure for the output arguments for action GetIdleDisconnectTime.
-type _WANPPPConnection1_GetIdleDisconnectTime_Response struct {
-	NewIdleDisconnectTime string
 }
 
 // GetIdleDisconnectTime action.
@@ -5025,13 +4684,18 @@ func (client *WANPPPConnection1) GetIdleDisconnectTime() (
 	NewIdleDisconnectTime uint32,
 	err error,
 ) {
-	var request _WANPPPConnection1_GetIdleDisconnectTime_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewIdleDisconnectTime string
+	}
+
 	// Perform the SOAP call.
-	var response _WANPPPConnection1_GetIdleDisconnectTime_Response
 	if err = client.SOAPClient.PerformAction(URN_WANPPPConnection_1, "GetIdleDisconnectTime", &request, &response); err != nil {
 		return
 	}
@@ -5044,14 +4708,6 @@ func (client *WANPPPConnection1) GetIdleDisconnectTime() (
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANPPPConnection1_GetWarnDisconnectDelay_Request is the XML structure for the input arguments for action GetWarnDisconnectDelay.
-type _WANPPPConnection1_GetWarnDisconnectDelay_Request struct{}
-
-// _WANPPPConnection1_GetWarnDisconnectDelay_Response is the XML structure for the output arguments for action GetWarnDisconnectDelay.
-type _WANPPPConnection1_GetWarnDisconnectDelay_Response struct {
-	NewWarnDisconnectDelay string
 }
 
 // GetWarnDisconnectDelay action.
@@ -5070,13 +4726,18 @@ func (client *WANPPPConnection1) GetWarnDisconnectDelay() (
 	NewWarnDisconnectDelay uint32,
 	err error,
 ) {
-	var request _WANPPPConnection1_GetWarnDisconnectDelay_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewWarnDisconnectDelay string
+	}
+
 	// Perform the SOAP call.
-	var response _WANPPPConnection1_GetWarnDisconnectDelay_Response
 	if err = client.SOAPClient.PerformAction(URN_WANPPPConnection_1, "GetWarnDisconnectDelay", &request, &response); err != nil {
 		return
 	}
@@ -5089,16 +4750,6 @@ func (client *WANPPPConnection1) GetWarnDisconnectDelay() (
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANPPPConnection1_GetNATRSIPStatus_Request is the XML structure for the input arguments for action GetNATRSIPStatus.
-type _WANPPPConnection1_GetNATRSIPStatus_Request struct{}
-
-// _WANPPPConnection1_GetNATRSIPStatus_Response is the XML structure for the output arguments for action GetNATRSIPStatus.
-type _WANPPPConnection1_GetNATRSIPStatus_Response struct {
-	NewRSIPAvailable string
-
-	NewNATEnabled string
 }
 
 // GetNATRSIPStatus action.
@@ -5124,13 +4775,19 @@ func (client *WANPPPConnection1) GetNATRSIPStatus() (
 	NewNATEnabled bool,
 	err error,
 ) {
-	var request _WANPPPConnection1_GetNATRSIPStatus_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewRSIPAvailable string
+		NewNATEnabled    string
+	}
+
 	// Perform the SOAP call.
-	var response _WANPPPConnection1_GetNATRSIPStatus_Response
 	if err = client.SOAPClient.PerformAction(URN_WANPPPConnection_1, "GetNATRSIPStatus", &request, &response); err != nil {
 		return
 	}
@@ -5147,30 +4804,6 @@ func (client *WANPPPConnection1) GetNATRSIPStatus() (
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANPPPConnection1_GetGenericPortMappingEntry_Request is the XML structure for the input arguments for action GetGenericPortMappingEntry.
-type _WANPPPConnection1_GetGenericPortMappingEntry_Request struct {
-	NewPortMappingIndex string
-}
-
-// _WANPPPConnection1_GetGenericPortMappingEntry_Response is the XML structure for the output arguments for action GetGenericPortMappingEntry.
-type _WANPPPConnection1_GetGenericPortMappingEntry_Response struct {
-	NewRemoteHost string
-
-	NewExternalPort string
-
-	NewProtocol string
-
-	NewInternalPort string
-
-	NewInternalClient string
-
-	NewEnabled string
-
-	NewPortMappingDescription string
-
-	NewLeaseDuration string
 }
 
 // GetGenericPortMappingEntry action.
@@ -5247,7 +4880,10 @@ func (client *WANPPPConnection1) GetGenericPortMappingEntry(
 	NewLeaseDuration uint32,
 	err error,
 ) {
-	var request _WANPPPConnection1_GetGenericPortMappingEntry_Request
+	// Request structure.
+	var request struct {
+		NewPortMappingIndex string
+	}
 	// BEGIN Marshal arguments into request.
 
 	if request.NewPortMappingIndex, err = soap.MarshalUi2(NewPortMappingIndex); err != nil {
@@ -5256,8 +4892,19 @@ func (client *WANPPPConnection1) GetGenericPortMappingEntry(
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewRemoteHost             string
+		NewExternalPort           string
+		NewProtocol               string
+		NewInternalPort           string
+		NewInternalClient         string
+		NewEnabled                string
+		NewPortMappingDescription string
+		NewLeaseDuration          string
+	}
+
 	// Perform the SOAP call.
-	var response _WANPPPConnection1_GetGenericPortMappingEntry_Response
 	if err = client.SOAPClient.PerformAction(URN_WANPPPConnection_1, "GetGenericPortMappingEntry", &request, &response); err != nil {
 		return
 	}
@@ -5298,28 +4945,6 @@ func (client *WANPPPConnection1) GetGenericPortMappingEntry(
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANPPPConnection1_GetSpecificPortMappingEntry_Request is the XML structure for the input arguments for action GetSpecificPortMappingEntry.
-type _WANPPPConnection1_GetSpecificPortMappingEntry_Request struct {
-	NewRemoteHost string
-
-	NewExternalPort string
-
-	NewProtocol string
-}
-
-// _WANPPPConnection1_GetSpecificPortMappingEntry_Response is the XML structure for the output arguments for action GetSpecificPortMappingEntry.
-type _WANPPPConnection1_GetSpecificPortMappingEntry_Response struct {
-	NewInternalPort string
-
-	NewInternalClient string
-
-	NewEnabled string
-
-	NewPortMappingDescription string
-
-	NewLeaseDuration string
 }
 
 // GetSpecificPortMappingEntry action.
@@ -5389,7 +5014,12 @@ func (client *WANPPPConnection1) GetSpecificPortMappingEntry(
 	NewLeaseDuration uint32,
 	err error,
 ) {
-	var request _WANPPPConnection1_GetSpecificPortMappingEntry_Request
+	// Request structure.
+	var request struct {
+		NewRemoteHost   string
+		NewExternalPort string
+		NewProtocol     string
+	}
 	// BEGIN Marshal arguments into request.
 
 	if request.NewRemoteHost, err = soap.MarshalString(NewRemoteHost); err != nil {
@@ -5406,8 +5036,16 @@ func (client *WANPPPConnection1) GetSpecificPortMappingEntry(
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewInternalPort           string
+		NewInternalClient         string
+		NewEnabled                string
+		NewPortMappingDescription string
+		NewLeaseDuration          string
+	}
+
 	// Perform the SOAP call.
-	var response _WANPPPConnection1_GetSpecificPortMappingEntry_Response
 	if err = client.SOAPClient.PerformAction(URN_WANPPPConnection_1, "GetSpecificPortMappingEntry", &request, &response); err != nil {
 		return
 	}
@@ -5437,28 +5075,6 @@ func (client *WANPPPConnection1) GetSpecificPortMappingEntry(
 	// END Unmarshal arguments from response.
 	return
 }
-
-// _WANPPPConnection1_AddPortMapping_Request is the XML structure for the input arguments for action AddPortMapping.
-type _WANPPPConnection1_AddPortMapping_Request struct {
-	NewRemoteHost string
-
-	NewExternalPort string
-
-	NewProtocol string
-
-	NewInternalPort string
-
-	NewInternalClient string
-
-	NewEnabled string
-
-	NewPortMappingDescription string
-
-	NewLeaseDuration string
-}
-
-// _WANPPPConnection1_AddPortMapping_Response is the XML structure for the output arguments for action AddPortMapping.
-type _WANPPPConnection1_AddPortMapping_Response struct{}
 
 // AddPortMapping action.
 // Arguments:
@@ -5527,7 +5143,17 @@ func (client *WANPPPConnection1) AddPortMapping(
 ) (
 	err error,
 ) {
-	var request _WANPPPConnection1_AddPortMapping_Request
+	// Request structure.
+	var request struct {
+		NewRemoteHost             string
+		NewExternalPort           string
+		NewProtocol               string
+		NewInternalPort           string
+		NewInternalClient         string
+		NewEnabled                string
+		NewPortMappingDescription string
+		NewLeaseDuration          string
+	}
 	// BEGIN Marshal arguments into request.
 
 	if request.NewRemoteHost, err = soap.MarshalString(NewRemoteHost); err != nil {
@@ -5564,8 +5190,10 @@ func (client *WANPPPConnection1) AddPortMapping(
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct{}
+
 	// Perform the SOAP call.
-	var response _WANPPPConnection1_AddPortMapping_Response
 	if err = client.SOAPClient.PerformAction(URN_WANPPPConnection_1, "AddPortMapping", &request, &response); err != nil {
 		return
 	}
@@ -5575,18 +5203,6 @@ func (client *WANPPPConnection1) AddPortMapping(
 	// END Unmarshal arguments from response.
 	return
 }
-
-// _WANPPPConnection1_DeletePortMapping_Request is the XML structure for the input arguments for action DeletePortMapping.
-type _WANPPPConnection1_DeletePortMapping_Request struct {
-	NewRemoteHost string
-
-	NewExternalPort string
-
-	NewProtocol string
-}
-
-// _WANPPPConnection1_DeletePortMapping_Response is the XML structure for the output arguments for action DeletePortMapping.
-type _WANPPPConnection1_DeletePortMapping_Response struct{}
 
 // DeletePortMapping action.
 // Arguments:
@@ -5620,7 +5236,12 @@ func (client *WANPPPConnection1) DeletePortMapping(
 ) (
 	err error,
 ) {
-	var request _WANPPPConnection1_DeletePortMapping_Request
+	// Request structure.
+	var request struct {
+		NewRemoteHost   string
+		NewExternalPort string
+		NewProtocol     string
+	}
 	// BEGIN Marshal arguments into request.
 
 	if request.NewRemoteHost, err = soap.MarshalString(NewRemoteHost); err != nil {
@@ -5637,8 +5258,10 @@ func (client *WANPPPConnection1) DeletePortMapping(
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct{}
+
 	// Perform the SOAP call.
-	var response _WANPPPConnection1_DeletePortMapping_Response
 	if err = client.SOAPClient.PerformAction(URN_WANPPPConnection_1, "DeletePortMapping", &request, &response); err != nil {
 		return
 	}
@@ -5647,14 +5270,6 @@ func (client *WANPPPConnection1) DeletePortMapping(
 
 	// END Unmarshal arguments from response.
 	return
-}
-
-// _WANPPPConnection1_GetExternalIPAddress_Request is the XML structure for the input arguments for action GetExternalIPAddress.
-type _WANPPPConnection1_GetExternalIPAddress_Request struct{}
-
-// _WANPPPConnection1_GetExternalIPAddress_Response is the XML structure for the output arguments for action GetExternalIPAddress.
-type _WANPPPConnection1_GetExternalIPAddress_Response struct {
-	NewExternalIPAddress string
 }
 
 // GetExternalIPAddress action.
@@ -5673,13 +5288,18 @@ func (client *WANPPPConnection1) GetExternalIPAddress() (
 	NewExternalIPAddress string,
 	err error,
 ) {
-	var request _WANPPPConnection1_GetExternalIPAddress_Request
+	// Request structure.
+	var request struct{}
 	// BEGIN Marshal arguments into request.
 
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {
+		NewExternalIPAddress string
+	}
+
 	// Perform the SOAP call.
-	var response _WANPPPConnection1_GetExternalIPAddress_Response
 	if err = client.SOAPClient.PerformAction(URN_WANPPPConnection_1, "GetExternalIPAddress", &request, &response); err != nil {
 		return
 	}

@@ -34,19 +34,6 @@ type {{$srvIdent}} struct {
 
 {{range .SCPD.Actions}}{{/* loops over *SCPDWithURN values */}}
 
-{{$reqType := printf "_%s_%s_Request" $srvIdent .Name}}
-{{$respType := printf "_%s_%s_Response" $srvIdent .Name}}
-
-// {{$reqType}} is the XML structure for the input arguments for action {{.Name}}.
-type {{$reqType}} struct {{"{"}}{{range .Arguments}}{{if .IsInput}}
-	{{.Name}} string
-{{end}}{{end}}}
-
-// {{$respType}} is the XML structure for the output arguments for action {{.Name}}.
-type {{$respType}} struct {{"{"}}{{range .Arguments}}{{if .IsOutput}}
-	{{.Name}} string
-{{end}}{{end}}}
-
 // {{.Name}} action.
 // Arguments:
 //{{range .Arguments}}{{if .IsInput}}
@@ -75,7 +62,9 @@ func (client *{{$srvIdent}}) {{.Name}}({{range .Arguments}}{{if .IsInput}}
 	{{$argWrap := $srv.Argument .}}{{$argWrap.AsParameter}},{{end}}{{end}}
 	err error,
 ) {
-	var request {{$reqType}}
+	// Request structure.
+	var request struct {{"{"}}{{range .Arguments}}{{if .IsInput}}{{.Name}} string
+{{end}}{{end}}}
 	// BEGIN Marshal arguments into request.
 {{range .Arguments}}{{if .IsInput}}{{$argWrap := $srv.Argument .}}
 	if request.{{.Name}}, err = {{$argWrap.Marshal}}; err != nil {
@@ -84,8 +73,11 @@ func (client *{{$srvIdent}}) {{.Name}}({{range .Arguments}}{{if .IsInput}}
 {{end}}{{end}}
 	// END Marshal arguments into request.
 
+	// Response structure.
+	var response struct {{"{"}}{{range .Arguments}}{{if .IsOutput}}{{.Name}} string
+{{end}}{{end}}}
+
 	// Perform the SOAP call.
-	var response {{$respType}}
 	if err = client.SOAPClient.PerformAction({{$srv.URNParts.Const}}, "{{.Name}}", &request, &response); err != nil {
 		return
 	}
