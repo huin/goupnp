@@ -9,6 +9,7 @@ var packageTmpl = template.Must(template.New("package").Parse(`package {{.Name}}
 import (
 	"time"
 
+	"github.com/huin/goupnp"
 	"github.com/huin/goupnp/soap"
 )
 
@@ -29,9 +30,29 @@ const ({{range .ServiceTypes}}
 {{$srv := .}}
 {{$srvIdent := printf "%s%s" .Name .Version}}
 
-// {{$srvIdent}} is a client for UPnP SOAP service with URN "{{.URN}}".
+// {{$srvIdent}} is a client for UPnP SOAP service with URN "{{.URN}}". See
+// goupnp.ServiceClient, which contains RootDevice and Service attributes which
+// are provided for informational value.
 type {{$srvIdent}} struct {
-	SOAPClient *soap.SOAPClient
+	goupnp.ServiceClient
+}
+
+// New{{$srvIdent}}Clients discovers instances of the service on the network,
+// and returns clients to any that are found. errors will contain an error for
+// any devices that replied but which could not be queried, and err will be set
+// if the discovery process failed outright.
+//
+// This is a typical entry calling point into this package.
+func New{{$srvIdent}}Clients() (clients []*{{$srvIdent}}, errors []error, err error) {
+	var genericClients []goupnp.ServiceClient
+	if genericClients, errors, err = goupnp.NewServiceClients({{$srv.Const}}); err != nil {
+		return
+	}
+	clients = make([]*{{$srvIdent}}, len(genericClients))
+	for i := range genericClients {
+		clients[i] = &{{$srvIdent}}{genericClients[i]}
+	}
+	return
 }
 
 {{range .SCPD.Actions}}{{/* loops over *SCPDWithURN values */}}

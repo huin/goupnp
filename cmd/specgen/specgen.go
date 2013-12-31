@@ -176,6 +176,7 @@ func (dcp *DCP) writePackage(outDir string) error {
 	defer packageFile.Close()
 	gofmt := exec.Command("gofmt")
 	gofmt.Stdout = packageFile
+	gofmt.Stderr = os.Stderr
 	gofmtWriter, err := gofmt.StdinPipe()
 	if err != nil {
 		return err

@@ -5,40 +5,32 @@ package main
 import (
 	"fmt"
 
-	"github.com/huin/goupnp"
 	"github.com/huin/goupnp/dcps/internetgateway1"
 )
 
 func main() {
-	results, err := goupnp.DiscoverDevices(internetgateway1.URN_WANPPPConnection_1)
+	clients, errors, err := internetgateway1.NewWANPPPConnection1Clients()
 	if err != nil {
-		fmt.Println("Error discovering InternetGatewayDevice with UPnP: ", err)
+		fmt.Println("Error discovering service with UPnP: ", err)
 		return
 	}
 
-	fmt.Printf("Discovered %d InternetGatewayDevices:\n", len(results))
-	for _, maybeRootDevice := range results {
-		if maybeRootDevice.Err != nil {
-			fmt.Println(maybeRootDevice.Err)
-			continue
+	if len(errors) > 0 {
+		fmt.Printf("Error discovering %d services:\n", len(errors))
+		for _, err := range errors {
+			fmt.Println("  ", err)
 		}
+	}
 
-		device := &maybeRootDevice.Root.Device
+	fmt.Printf("Successfully discovered %d services:\n", len(clients))
+	for _, client := range clients {
+		device := &client.RootDevice.Device
 
-		fmt.Println("Device ", device.FriendlyName)
-		wanPPPSrvs := device.FindService(internetgateway1.URN_WANPPPConnection_1)
-		if len(wanPPPSrvs) < 1 {
-			fmt.Printf("Could not find expected service on device %s\n", device.FriendlyName)
-			continue
-		}
-
-		for _, srv := range wanPPPSrvs {
-			client := internetgateway1.WANPPPConnection1{srv.NewSOAPClient()}
-			if addr, err := client.GetExternalIPAddress(); err != nil {
-				fmt.Printf("Failed to get external IP address: %v\n", err)
-			} else {
-				fmt.Printf("External IP address: %v\n", addr)
-			}
+		fmt.Println("  Device:", device.FriendlyName)
+		if addr, err := client.GetExternalIPAddress(); err != nil {
+			fmt.Printf("    Failed to get external IP address: %v\n", err)
+		} else {
+			fmt.Printf("    External IP address: %v\n", addr)
 		}
 	}
 }

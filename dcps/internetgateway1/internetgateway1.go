@@ -3,6 +3,7 @@ package internetgateway1
 import (
 	"time"
 
+	"github.com/huin/goupnp"
 	"github.com/huin/goupnp/soap"
 )
 
@@ -29,9 +30,29 @@ const (
 	URN_WANPPPConnection_1         = "urn:schemas-upnp-org:service:WANPPPConnection:1"
 )
 
-// LANHostConfigManagement1 is a client for UPnP SOAP service with URN "urn:schemas-upnp-org:service:LANHostConfigManagement:1".
+// LANHostConfigManagement1 is a client for UPnP SOAP service with URN "urn:schemas-upnp-org:service:LANHostConfigManagement:1". See
+// goupnp.ServiceClient, which contains RootDevice and Service attributes which
+// are provided for informational value.
 type LANHostConfigManagement1 struct {
-	SOAPClient *soap.SOAPClient
+	goupnp.ServiceClient
+}
+
+// NewLANHostConfigManagement1Clients discovers instances of the service on the network,
+// and returns clients to any that are found. errors will contain an error for
+// any devices that replied but which could not be queried, and err will be set
+// if the discovery process failed outright.
+//
+// This is a typical entry calling point into this package.
+func NewLANHostConfigManagement1Clients() (clients []*LANHostConfigManagement1, errors []error, err error) {
+	var genericClients []goupnp.ServiceClient
+	if genericClients, errors, err = goupnp.NewServiceClients(URN_LANHostConfigManagement_1); err != nil {
+		return
+	}
+	clients = make([]*LANHostConfigManagement1, len(genericClients))
+	for i := range genericClients {
+		clients[i] = &LANHostConfigManagement1{genericClients[i]}
+	}
+	return
 }
 
 // Arguments:
@@ -635,9 +656,29 @@ func (client *LANHostConfigManagement1) GetDNSServers() (NewDNSServers string, e
 	return
 }
 
-// Layer3Forwarding1 is a client for UPnP SOAP service with URN "urn:schemas-upnp-org:service:Layer3Forwarding:1".
+// Layer3Forwarding1 is a client for UPnP SOAP service with URN "urn:schemas-upnp-org:service:Layer3Forwarding:1". See
+// goupnp.ServiceClient, which contains RootDevice and Service attributes which
+// are provided for informational value.
 type Layer3Forwarding1 struct {
-	SOAPClient *soap.SOAPClient
+	goupnp.ServiceClient
+}
+
+// NewLayer3Forwarding1Clients discovers instances of the service on the network,
+// and returns clients to any that are found. errors will contain an error for
+// any devices that replied but which could not be queried, and err will be set
+// if the discovery process failed outright.
+//
+// This is a typical entry calling point into this package.
+func NewLayer3Forwarding1Clients() (clients []*Layer3Forwarding1, errors []error, err error) {
+	var genericClients []goupnp.ServiceClient
+	if genericClients, errors, err = goupnp.NewServiceClients(URN_Layer3Forwarding_1); err != nil {
+		return
+	}
+	clients = make([]*Layer3Forwarding1, len(genericClients))
+	for i := range genericClients {
+		clients[i] = &Layer3Forwarding1{genericClients[i]}
+	}
+	return
 }
 
 // Arguments:
@@ -702,9 +743,29 @@ func (client *Layer3Forwarding1) GetDefaultConnectionService() (NewDefaultConnec
 	return
 }
 
-// WANCableLinkConfig1 is a client for UPnP SOAP service with URN "urn:schemas-upnp-org:service:WANCableLinkConfig:1".
+// WANCableLinkConfig1 is a client for UPnP SOAP service with URN "urn:schemas-upnp-org:service:WANCableLinkConfig:1". See
+// goupnp.ServiceClient, which contains RootDevice and Service attributes which
+// are provided for informational value.
 type WANCableLinkConfig1 struct {
-	SOAPClient *soap.SOAPClient
+	goupnp.ServiceClient
+}
+
+// NewWANCableLinkConfig1Clients discovers instances of the service on the network,
+// and returns clients to any that are found. errors will contain an error for
+// any devices that replied but which could not be queried, and err will be set
+// if the discovery process failed outright.
+//
+// This is a typical entry calling point into this package.
+func NewWANCableLinkConfig1Clients() (clients []*WANCableLinkConfig1, errors []error, err error) {
+	var genericClients []goupnp.ServiceClient
+	if genericClients, errors, err = goupnp.NewServiceClients(URN_WANCableLinkConfig_1); err != nil {
+		return
+	}
+	clients = make([]*WANCableLinkConfig1, len(genericClients))
+	for i := range genericClients {
+		clients[i] = &WANCableLinkConfig1{genericClients[i]}
+	}
+	return
 }
 
 //
@@ -1023,9 +1084,29 @@ func (client *WANCableLinkConfig1) GetTFTPServer() (NewTFTPServer string, err er
 	return
 }
 
-// WANCommonInterfaceConfig1 is a client for UPnP SOAP service with URN "urn:schemas-upnp-org:service:WANCommonInterfaceConfig:1".
+// WANCommonInterfaceConfig1 is a client for UPnP SOAP service with URN "urn:schemas-upnp-org:service:WANCommonInterfaceConfig:1". See
+// goupnp.ServiceClient, which contains RootDevice and Service attributes which
+// are provided for informational value.
 type WANCommonInterfaceConfig1 struct {
-	SOAPClient *soap.SOAPClient
+	goupnp.ServiceClient
+}
+
+// NewWANCommonInterfaceConfig1Clients discovers instances of the service on the network,
+// and returns clients to any that are found. errors will contain an error for
+// any devices that replied but which could not be queried, and err will be set
+// if the discovery process failed outright.
+//
+// This is a typical entry calling point into this package.
+func NewWANCommonInterfaceConfig1Clients() (clients []*WANCommonInterfaceConfig1, errors []error, err error) {
+	var genericClients []goupnp.ServiceClient
+	if genericClients, errors, err = goupnp.NewServiceClients(URN_WANCommonInterfaceConfig_1); err != nil {
+		return
+	}
+	clients = make([]*WANCommonInterfaceConfig1, len(genericClients))
+	for i := range genericClients {
+		clients[i] = &WANCommonInterfaceConfig1{genericClients[i]}
+	}
+	return
 }
 
 // Arguments:
@@ -1369,9 +1450,29 @@ func (client *WANCommonInterfaceConfig1) GetActiveConnection(NewActiveConnection
 	return
 }
 
-// WANDSLLinkConfig1 is a client for UPnP SOAP service with URN "urn:schemas-upnp-org:service:WANDSLLinkConfig:1".
+// WANDSLLinkConfig1 is a client for UPnP SOAP service with URN "urn:schemas-upnp-org:service:WANDSLLinkConfig:1". See
+// goupnp.ServiceClient, which contains RootDevice and Service attributes which
+// are provided for informational value.
 type WANDSLLinkConfig1 struct {
-	SOAPClient *soap.SOAPClient
+	goupnp.ServiceClient
+}
+
+// NewWANDSLLinkConfig1Clients discovers instances of the service on the network,
+// and returns clients to any that are found. errors will contain an error for
+// any devices that replied but which could not be queried, and err will be set
+// if the discovery process failed outright.
+//
+// This is a typical entry calling point into this package.
+func NewWANDSLLinkConfig1Clients() (clients []*WANDSLLinkConfig1, errors []error, err error) {
+	var genericClients []goupnp.ServiceClient
+	if genericClients, errors, err = goupnp.NewServiceClients(URN_WANDSLLinkConfig_1); err != nil {
+		return
+	}
+	clients = make([]*WANDSLLinkConfig1, len(genericClients))
+	for i := range genericClients {
+		clients[i] = &WANDSLLinkConfig1{genericClients[i]}
+	}
+	return
 }
 
 // Arguments:
@@ -1690,9 +1791,29 @@ func (client *WANDSLLinkConfig1) GetFCSPreserved() (NewFCSPreserved bool, err er
 	return
 }
 
-// WANEthernetLinkConfig1 is a client for UPnP SOAP service with URN "urn:schemas-upnp-org:service:WANEthernetLinkConfig:1".
+// WANEthernetLinkConfig1 is a client for UPnP SOAP service with URN "urn:schemas-upnp-org:service:WANEthernetLinkConfig:1". See
+// goupnp.ServiceClient, which contains RootDevice and Service attributes which
+// are provided for informational value.
 type WANEthernetLinkConfig1 struct {
-	SOAPClient *soap.SOAPClient
+	goupnp.ServiceClient
+}
+
+// NewWANEthernetLinkConfig1Clients discovers instances of the service on the network,
+// and returns clients to any that are found. errors will contain an error for
+// any devices that replied but which could not be queried, and err will be set
+// if the discovery process failed outright.
+//
+// This is a typical entry calling point into this package.
+func NewWANEthernetLinkConfig1Clients() (clients []*WANEthernetLinkConfig1, errors []error, err error) {
+	var genericClients []goupnp.ServiceClient
+	if genericClients, errors, err = goupnp.NewServiceClients(URN_WANEthernetLinkConfig_1); err != nil {
+		return
+	}
+	clients = make([]*WANEthernetLinkConfig1, len(genericClients))
+	for i := range genericClients {
+		clients[i] = &WANEthernetLinkConfig1{genericClients[i]}
+	}
+	return
 }
 
 //
@@ -1726,9 +1847,29 @@ func (client *WANEthernetLinkConfig1) GetEthernetLinkStatus() (NewEthernetLinkSt
 	return
 }
 
-// WANIPConnection1 is a client for UPnP SOAP service with URN "urn:schemas-upnp-org:service:WANIPConnection:1".
+// WANIPConnection1 is a client for UPnP SOAP service with URN "urn:schemas-upnp-org:service:WANIPConnection:1". See
+// goupnp.ServiceClient, which contains RootDevice and Service attributes which
+// are provided for informational value.
 type WANIPConnection1 struct {
-	SOAPClient *soap.SOAPClient
+	goupnp.ServiceClient
+}
+
+// NewWANIPConnection1Clients discovers instances of the service on the network,
+// and returns clients to any that are found. errors will contain an error for
+// any devices that replied but which could not be queried, and err will be set
+// if the discovery process failed outright.
+//
+// This is a typical entry calling point into this package.
+func NewWANIPConnection1Clients() (clients []*WANIPConnection1, errors []error, err error) {
+	var genericClients []goupnp.ServiceClient
+	if genericClients, errors, err = goupnp.NewServiceClients(URN_WANIPConnection_1); err != nil {
+		return
+	}
+	clients = make([]*WANIPConnection1, len(genericClients))
+	for i := range genericClients {
+		clients[i] = &WANIPConnection1{genericClients[i]}
+	}
+	return
 }
 
 // Arguments:
@@ -2438,9 +2579,29 @@ func (client *WANIPConnection1) GetExternalIPAddress() (NewExternalIPAddress str
 	return
 }
 
-// WANPOTSLinkConfig1 is a client for UPnP SOAP service with URN "urn:schemas-upnp-org:service:WANPOTSLinkConfig:1".
+// WANPOTSLinkConfig1 is a client for UPnP SOAP service with URN "urn:schemas-upnp-org:service:WANPOTSLinkConfig:1". See
+// goupnp.ServiceClient, which contains RootDevice and Service attributes which
+// are provided for informational value.
 type WANPOTSLinkConfig1 struct {
-	SOAPClient *soap.SOAPClient
+	goupnp.ServiceClient
+}
+
+// NewWANPOTSLinkConfig1Clients discovers instances of the service on the network,
+// and returns clients to any that are found. errors will contain an error for
+// any devices that replied but which could not be queried, and err will be set
+// if the discovery process failed outright.
+//
+// This is a typical entry calling point into this package.
+func NewWANPOTSLinkConfig1Clients() (clients []*WANPOTSLinkConfig1, errors []error, err error) {
+	var genericClients []goupnp.ServiceClient
+	if genericClients, errors, err = goupnp.NewServiceClients(URN_WANPOTSLinkConfig_1); err != nil {
+		return
+	}
+	clients = make([]*WANPOTSLinkConfig1, len(genericClients))
+	for i := range genericClients {
+		clients[i] = &WANPOTSLinkConfig1{genericClients[i]}
+	}
+	return
 }
 
 // Arguments:
@@ -2758,9 +2919,29 @@ func (client *WANPOTSLinkConfig1) GetPlusVTRCommandSupported() (NewPlusVTRComman
 	return
 }
 
-// WANPPPConnection1 is a client for UPnP SOAP service with URN "urn:schemas-upnp-org:service:WANPPPConnection:1".
+// WANPPPConnection1 is a client for UPnP SOAP service with URN "urn:schemas-upnp-org:service:WANPPPConnection:1". See
+// goupnp.ServiceClient, which contains RootDevice and Service attributes which
+// are provided for informational value.
 type WANPPPConnection1 struct {
-	SOAPClient *soap.SOAPClient
+	goupnp.ServiceClient
+}
+
+// NewWANPPPConnection1Clients discovers instances of the service on the network,
+// and returns clients to any that are found. errors will contain an error for
+// any devices that replied but which could not be queried, and err will be set
+// if the discovery process failed outright.
+//
+// This is a typical entry calling point into this package.
+func NewWANPPPConnection1Clients() (clients []*WANPPPConnection1, errors []error, err error) {
+	var genericClients []goupnp.ServiceClient
+	if genericClients, errors, err = goupnp.NewServiceClients(URN_WANPPPConnection_1); err != nil {
+		return
+	}
+	clients = make([]*WANPPPConnection1, len(genericClients))
+	for i := range genericClients {
+		clients[i] = &WANPPPConnection1{genericClients[i]}
+	}
+	return
 }
 
 // Arguments:
