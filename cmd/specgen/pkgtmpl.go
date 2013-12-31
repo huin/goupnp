@@ -15,13 +15,15 @@ import (
 // Hack to avoid Go complaining if time isn't used.
 var _ time.Time
 
+// Device URNs:
 const ({{range .DeviceTypes}}
-	{{.Const}} = "{{.URN}}"
-{{end}})
+	{{.Const}} = "{{.URN}}"{{end}}
+)
 
+// Service URNs:
 const ({{range .ServiceTypes}}
-	{{.Const}} = "{{.URN}}"
-{{end}})
+	{{.Const}} = "{{.URN}}"{{end}}
+)
 
 {{range .Services}}
 {{$srv := .}}
@@ -38,11 +40,12 @@ type {{$srvIdent}} struct {
 // {{.Name}} action.
 //
 // {{if $inargs}}Arguments:{{range $inargs}}{{$argWrap := $srv.WrapArgument .}}
-// * {{.Name}}: {{$argWrap.Document}}
-//{{end}}{{end}}
+//
+// * {{.Name}}: {{$argWrap.Document}}{{end}}{{end}}
+//
 // {{if $outargs}}Return values:{{range $outargs}}{{$argWrap := $srv.WrapArgument .}}
-// * {{.Name}}: {{$argWrap.Document}}
-//{{end}}{{end}}
+//
+// * {{.Name}}: {{$argWrap.Document}}{{end}}{{end}}
 func (client *{{$srvIdent}}) {{.Name}}({{range $inargs}}{{/*
 */}}{{$argWrap := $srv.WrapArgument .}}{{$argWrap.AsParameter}}, {{end}}{{/*
 */}}) ({{range $outargs}}{{/*
