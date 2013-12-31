@@ -1,4 +1,17 @@
-// goupnp is an implementation of a client for UPnP devices.
+// goupnp is an implementation of a client for various UPnP services.
+//
+// For most uses, it is recommended to use the code-generated packages under
+// github.com/huin/goupnp/dcps. Example use is shown at
+// http://godoc.org/github.com/huin/goupnp/example
+//
+// A commonly used client is internetgateway1.WANPPPConnection1:
+// http://godoc.org/github.com/huin/goupnp/dcps/internetgateway1#WANPPPConnection1
+//
+// Currently only a couple of schemas have code generated for them from the
+// UPnP example XML specifications. Not all methods will work on these clients,
+// because the generated stubs contain the full set of specified methods from
+// the XML specifications, and the discovered services will likely support a
+// subset of those methods.
 package goupnp
 
 import (
