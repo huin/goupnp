@@ -199,6 +199,72 @@ type SCPDWithURN struct {
 	SCPD *scpd.SCPD
 }
 
+func (s *SCPDWithURN) Argument(arg scpd.Argument) (*argumentWrapper, error) {
+	relVar := s.SCPD.GetStateVariable(arg.RelatedStateVariable)
+	if relVar == nil {
+		return nil, fmt.Errorf("no such state variable: %q, for argument %q", arg.RelatedStateVariable, arg.Name)
+	}
+	cnv, ok := typeConvs[relVar.DataType.Name]
+	if !ok {
+		return nil, fmt.Errorf("unknown data type: %q, for state variable %q, for argument %q", relVar.DataType.Type, arg.RelatedStateVariable, arg.Name)
+	}
+	return &argumentWrapper{
+		Argument: arg,
+		relVar:   relVar,
+		conv:     cnv,
+	}, nil
+}
+
+type argumentWrapper struct {
+	scpd.Argument
+	relVar *scpd.StateVariable
+	conv   conv
+}
+
+func (arg *argumentWrapper) AsParameter() string {
+	return fmt.Sprintf("%s %s", arg.Name, arg.conv.ExtType)
+}
+
+func (arg *argumentWrapper) Marshal() string {
+	return fmt.Sprintf("soap.Marshal%s(%s)", arg.conv.FuncSuffix, arg.Name)
+}
+
+func (arg *argumentWrapper) Unmarshal(objVar string) string {
+	return fmt.Sprintf("soap.Unmarshal%s(%s.%s)", arg.conv.FuncSuffix, objVar, arg.Name)
+}
+
+type conv struct {
+	FuncSuffix string
+	ExtType    string
+}
+
+// typeConvs maps from a SOAP type (e.g "fixed.14.4") to the function name
+// suffix inside the soap module (e.g "Fixed14_4") and the Go type.
+var typeConvs = map[string]conv{
+	"ui1":         conv{"Ui1", "uint8"},
+	"ui2":         conv{"Ui2", "uint16"},
+	"ui4":         conv{"Ui4", "uint32"},
+	"i1":          conv{"I1", "int8"},
+	"i2":          conv{"I2", "int16"},
+	"i4":          conv{"I4", "int32"},
+	"int":         conv{"Int", "int64"},
+	"r4":          conv{"R4", "float32"},
+	"r8":          conv{"R8", "float64"},
+	"number":      conv{"R8", "float64"}, // Alias for r8.
+	"fixed.14.4":  conv{"Fixed14_4", "float64"},
+	"float":       conv{"R8", "float64"},
+	"char":        conv{"Char", "rune"},
+	"string":      conv{"String", "string"},
+	"date":        conv{"Date", "time.Time"},
+	"dateTime":    conv{"DateTime", "time.Time"},
+	"dateTime.tz": conv{"DateTimeTz", "time.Time"},
+	"time":        conv{"TimeOfDay", "soap.TimeOfDay"},
+	"time.tz":     conv{"TimeOfDayTz", "soap.TimeOfDay"},
+	"boolean":     conv{"Boolean", "bool"},
+	"bin.base64":  conv{"BinBase64", "[]byte"},
+	"bin.hex":     conv{"BinHex", "[]byte"},
+}
+
 type closeableZipReader struct {
 	io.Closer
 	*zip.Reader

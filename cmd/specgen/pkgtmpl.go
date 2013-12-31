@@ -6,7 +6,14 @@ import (
 
 var packageTmpl = template.Must(template.New("package").Parse(`package {{.Name}}
 
-import "github.com/huin/goupnp/soap"
+import (
+	"time"
+
+	"github.com/huin/goupnp/soap"
+)
+
+// Hack to avoid Go complaining if time isn't used.
+var _ time.Time
 
 const ({{range .DeviceTypes}}
 	{{.Const}} = "{{.URN}}"
@@ -32,12 +39,12 @@ type {{$srvIdent}} struct {
 
 // {{$reqType}} is the XML structure for the input arguments for action {{.Name}}.
 type {{$reqType}} struct {{"{"}}{{range .Arguments}}{{if .IsInput}}
-	{{.Name}} {{$srv.SCPD.GoKindNameForVariable .RelatedStateVariable "string"}}
+	{{.Name}} string
 {{end}}{{end}}}
 
 // {{$respType}} is the XML structure for the output arguments for action {{.Name}}.
 type {{$respType}} struct {{"{"}}{{range .Arguments}}{{if .IsOutput}}
-	{{.Name}} {{$srv.SCPD.GoKindNameForVariable .RelatedStateVariable "string"}}
+	{{.Name}} string
 {{end}}{{end}}}
 
 // {{.Name}} action.
@@ -63,26 +70,35 @@ type {{$respType}} struct {{"{"}}{{range .Arguments}}{{if .IsOutput}}
 // (unknown){{end}}
 //{{end}}{{end}}
 func (client *{{$srvIdent}}) {{.Name}}({{range .Arguments}}{{if .IsInput}}
-	{{.Name}} {{$srv.SCPD.GoKindNameForVariable .RelatedStateVariable "string"}},
-{{end}}{{end}}) ({{range .Arguments}}{{if .IsOutput}}
-	{{.Name}} {{$srv.SCPD.GoKindNameForVariable .RelatedStateVariable "string"}},
-{{end}}{{end}} err error) {
-	request := {{$reqType}}{
-{{range .Arguments}}{{if .IsInput}}
-	{{.Name}}: {{.Name}},
-{{end}}{{end}}
-	}
-	var response {{$respType}}
-	err = client.SOAPClient.PerformAction({{$srv.URNParts.Const}}, "{{.Name}}", &request, &response)
-	if err != nil {
+	{{$argWrap := $srv.Argument .}}{{$argWrap.AsParameter}},{{end}}{{end}}
+) ({{range .Arguments}}{{if .IsOutput}}
+	{{$argWrap := $srv.Argument .}}{{$argWrap.AsParameter}},{{end}}{{end}}
+	err error,
+) {
+	var request {{$reqType}}
+	// BEGIN Marshal arguments into request.
+{{range .Arguments}}{{if .IsInput}}{{$argWrap := $srv.Argument .}}
+	if request.{{.Name}}, err = {{$argWrap.Marshal}}; err != nil {
 		return
 	}
-{{range .Arguments}}{{if .IsOutput}}
-	{{.Name}} = response.{{.Name}}
 {{end}}{{end}}
+	// END Marshal arguments into request.
+
+	// Perform the SOAP call.
+	var response {{$respType}}
+	if err = client.SOAPClient.PerformAction({{$srv.URNParts.Const}}, "{{.Name}}", &request, &response); err != nil {
+		return
+	}
+
+	// BEGIN Unmarshal arguments from response.
+{{range .Arguments}}{{if .IsOutput}}{{$argWrap := $srv.Argument .}}
+	if {{.Name}}, err = {{$argWrap.Unmarshal "response"}}; err != nil {
+		return
+	}
+{{end}}{{end}}
+	// END Unmarshal arguments from response.
 	return
 }
-
 {{end}}{{/* range .SCPD.Actions */}}
 {{end}}{{/* range .Services */}}
 `))

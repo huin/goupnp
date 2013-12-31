@@ -139,6 +139,14 @@ func UnmarshalChar(s string) (rune, error) {
 	return r, nil
 }
 
+func MarshalString(v string) (string, error) {
+	return v, nil
+}
+
+func UnmarshalString(v string) (string, error) {
+	return v, nil
+}
+
 func parseInt(s string, err *error) int {
 	v, parseErr := strconv.ParseInt(s, 10, 64)
 	if parseErr != nil {
