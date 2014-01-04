@@ -47,10 +47,24 @@ func (httpu *HTTPUClient) Do(req *http.Request, timeout time.Duration, numSends 
 	httpu.connLock.Lock()
 	defer httpu.connLock.Unlock()
 
+	// Create the request. This is a subset of what http.Request.Write does
+	// deliberately to avoid creating extra fields which may confuse some
+	// devices.
 	var requestBuf bytes.Buffer
-	if err := req.Write(&requestBuf); err != nil {
+	method := req.Method
+	if method == "" {
+		method = "GET"
+	}
+	if _, err := fmt.Fprintf(&requestBuf, "%s %s HTTP/1.1\r\n", method, req.URL.RequestURI()); err != nil {
 		return nil, err
 	}
+	if err := req.Header.Write(&requestBuf); err != nil {
+		return nil, err
+	}
+	if _, err := requestBuf.Write([]byte{'\r', '\n'}); err != nil {
+		return nil, err
+	}
+
 	destAddr, err := net.ResolveUDPAddr("udp", req.Host)
 	if err != nil {
 		return nil, err
