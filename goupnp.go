@@ -17,6 +17,7 @@ package goupnp
 import (
 	"encoding/xml"
 	"fmt"
+	"log"
 	"net/http"
 	"net/url"
 
@@ -59,9 +60,11 @@ func DiscoverDevices(searchTarget string) ([]MaybeRootDevice, error) {
 
 	results := make([]MaybeRootDevice, len(responses))
 	for i, response := range responses {
+		log.Print(response)
 		maybe := &results[i]
 		loc, err := response.Location()
 		if err != nil {
+
 			maybe.Err = ContextError{"unexpected bad location from search", err}
 			continue
 		}
@@ -71,9 +74,15 @@ func DiscoverDevices(searchTarget string) ([]MaybeRootDevice, error) {
 			maybe.Err = ContextError{fmt.Sprintf("error requesting root device details from %q", locStr), err}
 			continue
 		}
-		urlBase, err := url.Parse(root.URLBaseStr)
+		var urlBaseStr string
+		if root.URLBaseStr != "" {
+			urlBaseStr = root.URLBaseStr
+		} else {
+			urlBaseStr = locStr
+		}
+		urlBase, err := url.Parse(urlBaseStr)
 		if err != nil {
-			maybe.Err = ContextError{fmt.Sprintf("error parsing URLBase %q from %q: %v", root.URLBaseStr, locStr), err}
+			maybe.Err = ContextError{fmt.Sprintf("error parsing location URL %q", locStr), err}
 			continue
 		}
 		root.SetURLBase(urlBase)
