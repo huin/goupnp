@@ -31,6 +31,9 @@ func NewSOAPClient(endpointURL url.URL) *SOAPClient {
 // PerformSOAPAction makes a SOAP request, with the given action.
 func (client *SOAPClient) PerformAction(actionNamespace, actionName string, inAction interface{}, outAction interface{}) error {
 	requestBytes, err := encodeRequestAction(inAction)
+	if err != nil {
+		return err
+	}
 
 	response, err := client.HTTPClient.Do(&http.Request{
 		Method: "POST",
