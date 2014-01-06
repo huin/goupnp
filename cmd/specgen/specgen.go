@@ -28,6 +28,8 @@ import (
 var (
 	specFilename = flag.String("spec", "", "Path to the specification file.")
 	outDir       = flag.String("out-dir", "", "Path to the output directory.")
+	enableGofmt  = flag.Bool("gofmt", true, "Pass the output through gofmt. "+
+		"Disable if debugging code output problems.")
 )
 
 var (
@@ -173,24 +175,55 @@ func (dcp *DCP) writePackage(outDir string) error {
 	if err != nil {
 		return err
 	}
-	defer packageFile.Close()
-	gofmt := exec.Command("gofmt")
-	gofmt.Stdout = packageFile
-	gofmt.Stderr = os.Stderr
-	gofmtWriter, err := gofmt.StdinPipe()
-	if err != nil {
+	var output io.WriteCloser = packageFile
+	if *enableGofmt {
+		if output, err = NewGofmtWriteCloser(output); err != nil {
+			packageFile.Close()
+			return err
+		}
+	}
+	if err = packageTmpl.Execute(output, dcp); err != nil {
+		output.Close()
 		return err
+	}
+	return output.Close()
+}
+
+type GofmtWriteCloser struct {
+	output io.WriteCloser
+	stdin  io.WriteCloser
+	gofmt  *exec.Cmd
+}
+
+func NewGofmtWriteCloser(output io.WriteCloser) (*GofmtWriteCloser, error) {
+	gofmt := exec.Command("gofmt")
+	gofmt.Stdout = output
+	gofmt.Stderr = os.Stderr
+	stdin, err := gofmt.StdinPipe()
+	if err != nil {
+		return nil, err
 	}
 	if err = gofmt.Start(); err != nil {
+		return nil, err
+	}
+	return &GofmtWriteCloser{
+		output: output,
+		stdin:  stdin,
+		gofmt:  gofmt,
+	}, nil
+}
+
+func (gwc *GofmtWriteCloser) Write(p []byte) (int, error) {
+	return gwc.stdin.Write(p)
+}
+
+func (gwc *GofmtWriteCloser) Close() error {
+	gwc.stdin.Close()
+	if err := gwc.output.Close(); err != nil {
+		gwc.gofmt.Wait()
 		return err
 	}
-	if err = packageTmpl.Execute(gofmtWriter, dcp); err != nil {
-		gofmtWriter.Close()
-		gofmt.Wait()
-		return err
-	}
-	gofmtWriter.Close()
-	return gofmt.Wait()
+	return gwc.gofmt.Wait()
 }
 
 func (dcp *DCP) processSCPDFile(file *zip.File) {

@@ -70,8 +70,7 @@ func (client *{{$srvIdent}}) {{.Name}}({{range $inargs}}{{/*
 */}}) ({{range $outargs}}{{/*
 */}}{{$argWrap := $srv.WrapArgument .}}{{$argWrap.AsParameter}}, {{end}} err error) {
 	// Request structure.
-	var request struct {{"{"}}{{range .Arguments}}{{if .IsInput}}{{.Name}} string
-{{end}}{{end}}}
+	request := {{if $inargs}}&{{template "argstruct" $inargs}}{{"{}"}}{{else}}{{"interface{}(nil)"}}{{end}}
 	// BEGIN Marshal arguments into request.
 {{range $inargs}}{{$argWrap := $srv.WrapArgument .}}
 	if request.{{.Name}}, err = {{$argWrap.Marshal}}; err != nil {
@@ -80,11 +79,10 @@ func (client *{{$srvIdent}}) {{.Name}}({{range $inargs}}{{/*
 	// END Marshal arguments into request.
 
 	// Response structure.
-	var response struct {{"{"}}{{range $outargs}}{{.Name}} string
-{{end}}}
+	response := {{if $outargs}}&{{template "argstruct" $outargs}}{{"{}"}}{{else}}{{"interface{}(nil)"}}{{end}}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction({{$srv.URNParts.Const}}, "{{.Name}}", &request, &response); err != nil {
+	if err = client.SOAPClient.PerformAction({{$srv.URNParts.Const}}, "{{.Name}}", request, response); err != nil {
 		return
 	}
 
@@ -98,4 +96,8 @@ func (client *{{$srvIdent}}) {{.Name}}({{range $inargs}}{{/*
 }
 {{end}}{{/* range .SCPD.Actions */}}
 {{end}}{{/* range .Services */}}
+
+{{define "argstruct"}}struct {{"{"}}{{range .}}
+{{.Name}} string
+{{end}}{{"}"}}{{end}}
 `))

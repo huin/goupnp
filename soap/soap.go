@@ -64,8 +64,10 @@ func (client *SOAPClient) PerformAction(actionNamespace, actionName string, inAc
 		return responseEnv.Body.Fault
 	}
 
-	if err := xml.Unmarshal(responseEnv.Body.RawAction, outAction); err != nil {
-		return err
+	if outAction != nil {
+		if err := xml.Unmarshal(responseEnv.Body.RawAction, outAction); err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -86,9 +88,11 @@ func newSOAPEnvelope() *soapEnvelope {
 func encodeRequestAction(inAction interface{}) ([]byte, error) {
 	requestBuf := new(bytes.Buffer)
 	requestBuf.WriteString(soapPrefix)
-	requestEnc := xml.NewEncoder(requestBuf)
-	if err := requestEnc.Encode(inAction); err != nil {
-		return nil, err
+	if inAction != nil {
+		requestEnc := xml.NewEncoder(requestBuf)
+		if err := requestEnc.Encode(inAction); err != nil {
+			return nil, err
+		}
 	}
 	requestBuf.WriteString(soapSuffix)
 	return requestBuf.Bytes(), nil
