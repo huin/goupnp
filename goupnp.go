@@ -17,7 +17,6 @@ package goupnp
 import (
 	"encoding/xml"
 	"fmt"
-	"log"
 	"net/http"
 	"net/url"
 
@@ -60,7 +59,6 @@ func DiscoverDevices(searchTarget string) ([]MaybeRootDevice, error) {
 
 	results := make([]MaybeRootDevice, len(responses))
 	for i, response := range responses {
-		log.Print(response)
 		maybe := &results[i]
 		loc, err := response.Location()
 		if err != nil {
