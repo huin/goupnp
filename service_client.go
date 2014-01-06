@@ -47,3 +47,10 @@ func NewServiceClients(searchTarget string) (clients []ServiceClient, errors []e
 
 	return
 }
+
+// GetServiceClient returns the ServiceClient itself. This is provided so that the
+// service client attributes can be accessed via an interface method on a
+// wrapping type.
+func (client *ServiceClient) GetServiceClient() *ServiceClient {
+	return client
+}
