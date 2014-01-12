@@ -14,7 +14,6 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"os/exec"
 	"path"
 	"path/filepath"
 	"regexp"
@@ -22,6 +21,7 @@ import (
 
 	"github.com/huin/goupnp"
 	"github.com/huin/goupnp/scpd"
+	"github.com/huin/goutil/codegen"
 )
 
 // flags
@@ -177,7 +177,7 @@ func (dcp *DCP) writePackage(outDir string) error {
 	}
 	var output io.WriteCloser = packageFile
 	if *enableGofmt {
-		if output, err = NewGofmtWriteCloser(output); err != nil {
+		if output, err = codegen.NewGofmtWriteCloser(output); err != nil {
 			packageFile.Close()
 			return err
 		}
@@ -187,43 +187,6 @@ func (dcp *DCP) writePackage(outDir string) error {
 		return err
 	}
 	return output.Close()
-}
-
-type GofmtWriteCloser struct {
-	output io.WriteCloser
-	stdin  io.WriteCloser
-	gofmt  *exec.Cmd
-}
-
-func NewGofmtWriteCloser(output io.WriteCloser) (*GofmtWriteCloser, error) {
-	gofmt := exec.Command("gofmt")
-	gofmt.Stdout = output
-	gofmt.Stderr = os.Stderr
-	stdin, err := gofmt.StdinPipe()
-	if err != nil {
-		return nil, err
-	}
-	if err = gofmt.Start(); err != nil {
-		return nil, err
-	}
-	return &GofmtWriteCloser{
-		output: output,
-		stdin:  stdin,
-		gofmt:  gofmt,
-	}, nil
-}
-
-func (gwc *GofmtWriteCloser) Write(p []byte) (int, error) {
-	return gwc.stdin.Write(p)
-}
-
-func (gwc *GofmtWriteCloser) Close() error {
-	gwc.stdin.Close()
-	if err := gwc.output.Close(); err != nil {
-		gwc.gofmt.Wait()
-		return err
-	}
-	return gwc.gofmt.Wait()
 }
 
 func (dcp *DCP) processSCPDFile(file *zip.File) {
