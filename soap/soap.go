@@ -13,7 +13,7 @@ import (
 
 const (
 	soapEncodingStyle = "http://schemas.xmlsoap.org/soap/encoding/"
-	soapPrefix        = `<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"><s:Body>`
+	soapPrefix        = `<?xml version="1.0" encoding="utf-8"?><s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"><s:Body>`
 	soapSuffix        = `</s:Body></s:Envelope>`
 )
 
@@ -30,7 +30,7 @@ func NewSOAPClient(endpointURL url.URL) *SOAPClient {
 
 // PerformSOAPAction makes a SOAP request, with the given action.
 func (client *SOAPClient) PerformAction(actionNamespace, actionName string, inAction interface{}, outAction interface{}) error {
-	requestBytes, err := encodeRequestAction(inAction)
+	requestBytes, err := encodeRequestAction(actionNamespace, actionName, inAction)
 	if err != nil {
 		return err
 	}
@@ -85,15 +85,23 @@ func newSOAPEnvelope() *soapEnvelope {
 // 500s for requests where the outer default xmlns is set to the SOAP
 // namespace, and then reassigning the default namespace within that to the
 // service namespace. Hand-coding the outer XML to work-around this.
-func encodeRequestAction(inAction interface{}) ([]byte, error) {
+func encodeRequestAction(actionNamespace, actionName string, inAction interface{}) ([]byte, error) {
 	requestBuf := new(bytes.Buffer)
 	requestBuf.WriteString(soapPrefix)
+	requestBuf.WriteString(`<u:`)
+	xml.EscapeText(requestBuf, []byte(actionName))
+	requestBuf.WriteString(` xmlns:u="`)
+	xml.EscapeText(requestBuf, []byte(actionNamespace))
+	requestBuf.WriteString(`">`)
 	if inAction != nil {
 		requestEnc := xml.NewEncoder(requestBuf)
 		if err := requestEnc.Encode(inAction); err != nil {
 			return nil, err
 		}
 	}
+	requestBuf.WriteString(`</u:`)
+	xml.EscapeText(requestBuf, []byte(actionName))
+	requestBuf.WriteString(`>`)
 	requestBuf.WriteString(soapSuffix)
 	return requestBuf.Bytes(), nil
 }
