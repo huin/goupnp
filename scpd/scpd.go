@@ -47,6 +47,16 @@ func (scpd *SCPD) GetStateVariable(variable string) *StateVariable {
 	return nil
 }
 
+func (scpd *SCPD) GetAction(action string) *Action {
+	for i := range scpd.Actions {
+		a := &scpd.Actions[i]
+		if a.Name == action {
+			return a
+		}
+	}
+	return nil
+}
+
 // SpecVersion is part of a SCPD document, describes the version of the
 // specification that the data adheres to.
 type SpecVersion struct {
