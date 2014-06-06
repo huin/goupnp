@@ -9,11 +9,12 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"reflect"
 )
 
 const (
 	soapEncodingStyle = "http://schemas.xmlsoap.org/soap/encoding/"
-	soapPrefix        = `<?xml version="1.0" encoding="utf-8"?><s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"><s:Body>`
+	soapPrefix        = xml.Header + `<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"><s:Body>`
 	soapSuffix        = `</s:Body></s:Envelope>`
 )
 
@@ -29,6 +30,8 @@ func NewSOAPClient(endpointURL url.URL) *SOAPClient {
 }
 
 // PerformSOAPAction makes a SOAP request, with the given action.
+// inAction and outAction must both be pointers to structs with string fields
+// only.
 func (client *SOAPClient) PerformAction(actionNamespace, actionName string, inAction interface{}, outAction interface{}) error {
 	requestBytes, err := encodeRequestAction(actionNamespace, actionName, inAction)
 	if err != nil {
@@ -47,7 +50,7 @@ func (client *SOAPClient) PerformAction(actionNamespace, actionName string, inAc
 		ContentLength: int64(len(requestBytes)),
 	})
 	if err != nil {
-		return err
+		return fmt.Errorf("goupnp: error performing SOAP HTTP request: %v", err)
 	}
 	defer response.Body.Close()
 	if response.StatusCode != 200 {
@@ -57,7 +60,7 @@ func (client *SOAPClient) PerformAction(actionNamespace, actionName string, inAc
 	responseEnv := newSOAPEnvelope()
 	decoder := xml.NewDecoder(response.Body)
 	if err := decoder.Decode(responseEnv); err != nil {
-		return err
+		return fmt.Errorf("goupnp: error decoding response body: %v", err)
 	}
 
 	if responseEnv.Body.Fault != nil {
@@ -66,7 +69,7 @@ func (client *SOAPClient) PerformAction(actionNamespace, actionName string, inAc
 
 	if outAction != nil {
 		if err := xml.Unmarshal(responseEnv.Body.RawAction, outAction); err != nil {
-			return err
+			return fmt.Errorf("goupnp: error unmarshalling out action: %v, %v", err, responseEnv.Body.RawAction)
 		}
 	}
 
@@ -94,8 +97,7 @@ func encodeRequestAction(actionNamespace, actionName string, inAction interface{
 	xml.EscapeText(requestBuf, []byte(actionNamespace))
 	requestBuf.WriteString(`">`)
 	if inAction != nil {
-		requestEnc := xml.NewEncoder(requestBuf)
-		if err := requestEnc.Encode(inAction); err != nil {
+		if err := encodeRequestArgs(requestBuf, inAction); err != nil {
 			return nil, err
 		}
 	}
@@ -104,6 +106,32 @@ func encodeRequestAction(actionNamespace, actionName string, inAction interface{
 	requestBuf.WriteString(`>`)
 	requestBuf.WriteString(soapSuffix)
 	return requestBuf.Bytes(), nil
+}
+
+func encodeRequestArgs(w *bytes.Buffer, inAction interface{}) error {
+	in := reflect.Indirect(reflect.ValueOf(inAction))
+	if in.Kind() != reflect.Struct {
+		return fmt.Errorf("goupnp: SOAP inAction is not a struct but of type %v", in.Type())
+	}
+	enc := xml.NewEncoder(w)
+	nFields := in.NumField()
+	inType := in.Type()
+	for i := 0; i < nFields; i++ {
+		field := inType.Field(i)
+		argName := field.Name
+		if nameOverride := field.Tag.Get("soap"); nameOverride != "" {
+			argName = nameOverride
+		}
+		value := in.Field(i)
+		if value.Kind() != reflect.String {
+			return fmt.Errorf("goupnp: SOAP arg %q is not of type string, but of type %v", argName, value.Type())
+		}
+		if err := enc.EncodeElement(value.Interface(), xml.StartElement{xml.Name{"", argName}, nil}); err != nil {
+			return fmt.Errorf("goupnp: error encoding SOAP arg %q: %v", argName, err)
+		}
+	}
+	enc.Flush()
+	return nil
 }
 
 type soapEnvelope struct {
