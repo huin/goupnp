@@ -38,7 +38,7 @@ var (
 //   -s, --spec_filename=<upnpresources.zip>
 //     Path to the specification file, available from http://upnp.org/resources/upnpresources.zip
 //   -o, --out_dir=<output directory>
-//     Path to the output directory. This is is where the dcps source files will be placed. Should normally correspond to the directory for github.com/huin/goupnp/dcps
+//     Path to the output directory. This is is where the DCP source files will be placed. Should normally correspond to the directory for github.com/huin/goupnp/dcps
 //   --nogofmt
 //     Disable passing the output through gofmt. Do this if debugging code output problems and needing to see the generated code prior to being passed through gofmt.
 func TaskSpecgen(t *tasking.T) {
@@ -64,7 +64,7 @@ func TaskSpecgen(t *tasking.T) {
 	}
 	defer specArchive.Close()
 
-	dcpsCol := newDcpsCollection(map[string]DCPSMetadata{
+	dcpCol := newDcpsCollection(map[string]DCPMetadata{
 		"Internet Gateway_1": {"internetgateway1"},
 		"Internet Gateway_2": {"internetgateway2"},
 	})
@@ -78,7 +78,7 @@ func TaskSpecgen(t *tasking.T) {
 		}
 		dirName = dirName[:slashIndex]
 
-		dcp := dcpsCol.dcpsForDir(dirName)
+		dcp := dcpCol.dcpForDir(dirName)
 		if dcp == nil {
 			t.Logf("No alias defined for directory %q: skipping %s\n", dirName, f.Name)
 			continue
@@ -89,50 +89,50 @@ func TaskSpecgen(t *tasking.T) {
 		dcp.processZipFile(f)
 	}
 
-	for _, dcp := range dcpsCol.dcpsByAlias {
+	for _, dcp := range dcpCol.dcpByAlias {
 		if err := dcp.writePackage(outDir, useGofmt); err != nil {
 			log.Printf("Error writing package %q: %v", dcp.Metadata.Name, err)
 		}
 	}
 }
 
-type DCPSMetadata struct {
+type DCPMetadata struct {
 	Name string
 }
 
-type dcpsCollection struct {
-	dcpsMetadataByDir map[string]DCPSMetadata
-	dcpsByAlias       map[string]*DCP
+type dcpCollection struct {
+	dcpMetadataByDir map[string]DCPMetadata
+	dcpByAlias       map[string]*DCP
 }
 
-func newDcpsCollection(dcpsMetadataByDir map[string]DCPSMetadata) *dcpsCollection {
-	c := &dcpsCollection{
-		dcpsMetadataByDir: dcpsMetadataByDir,
-		dcpsByAlias:       make(map[string]*DCP),
+func newDcpsCollection(dcpMetadataByDir map[string]DCPMetadata) *dcpCollection {
+	c := &dcpCollection{
+		dcpMetadataByDir: dcpMetadataByDir,
+		dcpByAlias:       make(map[string]*DCP),
 	}
-	for _, metadata := range dcpsMetadataByDir {
-		c.dcpsByAlias[metadata.Name] = newDCP(metadata)
+	for _, metadata := range dcpMetadataByDir {
+		c.dcpByAlias[metadata.Name] = newDCP(metadata)
 	}
 	return c
 }
 
-func (c *dcpsCollection) dcpsForDir(dirName string) *DCP {
-	metadata, ok := c.dcpsMetadataByDir[dirName]
+func (c *dcpCollection) dcpForDir(dirName string) *DCP {
+	metadata, ok := c.dcpMetadataByDir[dirName]
 	if !ok {
 		return nil
 	}
-	return c.dcpsByAlias[metadata.Name]
+	return c.dcpByAlias[metadata.Name]
 }
 
 // DCP collects together information about a UPnP Device Control Protocol.
 type DCP struct {
-	Metadata     DCPSMetadata
+	Metadata     DCPMetadata
 	DeviceTypes  map[string]*URNParts
 	ServiceTypes map[string]*URNParts
 	Services     []SCPDWithURN
 }
 
-func newDCP(metadata DCPSMetadata) *DCP {
+func newDCP(metadata DCPMetadata) *DCP {
 	return &DCP{
 		Metadata:     metadata,
 		DeviceTypes:  make(map[string]*URNParts),
