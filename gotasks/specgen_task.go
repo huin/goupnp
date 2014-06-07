@@ -64,9 +64,9 @@ func TaskSpecgen(t *tasking.T) {
 	}
 	defer specArchive.Close()
 
-	dcpsCol := newDcpsCollection(map[string]string{
-		"Internet Gateway_1": "internetgateway1",
-		"Internet Gateway_2": "internetgateway2",
+	dcpsCol := newDcpsCollection(map[string]DCPSMetadata{
+		"Internet Gateway_1": {"internetgateway1"},
+		"Internet Gateway_2": {"internetgateway2"},
 	})
 	for _, f := range globFiles("standardizeddcps/*/*.zip", specArchive.Reader) {
 		dirName := strings.TrimPrefix(f.Name, "standardizeddcps/")
@@ -91,46 +91,50 @@ func TaskSpecgen(t *tasking.T) {
 
 	for _, dcp := range dcpsCol.dcpsByAlias {
 		if err := dcp.writePackage(outDir, useGofmt); err != nil {
-			log.Printf("Error writing package %q: %v", dcp.Name, err)
+			log.Printf("Error writing package %q: %v", dcp.Metadata.Name, err)
 		}
 	}
 }
 
-type dcpsCollection struct {
-	dcpsAliasByDir map[string]string
-	dcpsByAlias    map[string]*DCP
+type DCPSMetadata struct {
+	Name string
 }
 
-func newDcpsCollection(dcpsAliasByDir map[string]string) *dcpsCollection {
+type dcpsCollection struct {
+	dcpsMetadataByDir map[string]DCPSMetadata
+	dcpsByAlias       map[string]*DCP
+}
+
+func newDcpsCollection(dcpsMetadataByDir map[string]DCPSMetadata) *dcpsCollection {
 	c := &dcpsCollection{
-		dcpsAliasByDir: dcpsAliasByDir,
-		dcpsByAlias:    make(map[string]*DCP),
+		dcpsMetadataByDir: dcpsMetadataByDir,
+		dcpsByAlias:       make(map[string]*DCP),
 	}
-	for _, alias := range dcpsAliasByDir {
-		c.dcpsByAlias[alias] = newDCP(alias)
+	for _, metadata := range dcpsMetadataByDir {
+		c.dcpsByAlias[metadata.Name] = newDCP(metadata)
 	}
 	return c
 }
 
-func (c dcpsCollection) dcpsForDir(dirName string) *DCP {
-	alias, ok := c.dcpsAliasByDir[dirName]
+func (c *dcpsCollection) dcpsForDir(dirName string) *DCP {
+	metadata, ok := c.dcpsMetadataByDir[dirName]
 	if !ok {
 		return nil
 	}
-	return c.dcpsByAlias[alias]
+	return c.dcpsByAlias[metadata.Name]
 }
 
 // DCP collects together information about a UPnP Device Control Protocol.
 type DCP struct {
-	Name         string
+	Metadata     DCPSMetadata
 	DeviceTypes  map[string]*URNParts
 	ServiceTypes map[string]*URNParts
 	Services     []SCPDWithURN
 }
 
-func newDCP(name string) *DCP {
+func newDCP(metadata DCPSMetadata) *DCP {
 	return &DCP{
-		Name:         name,
+		Metadata:     metadata,
 		DeviceTypes:  make(map[string]*URNParts),
 		ServiceTypes: make(map[string]*URNParts),
 	}
@@ -178,12 +182,12 @@ func (dcp *DCP) processDeviceFile(file *zip.File) {
 }
 
 func (dcp *DCP) writePackage(outDir string, useGofmt bool) error {
-	packageDirname := filepath.Join(outDir, dcp.Name)
+	packageDirname := filepath.Join(outDir, dcp.Metadata.Name)
 	err := os.MkdirAll(packageDirname, os.ModePerm)
 	if err != nil && !os.IsExist(err) {
 		return err
 	}
-	packageFilename := filepath.Join(packageDirname, dcp.Name+".go")
+	packageFilename := filepath.Join(packageDirname, dcp.Metadata.Name+".go")
 	packageFile, err := os.Create(packageFilename)
 	if err != nil {
 		return err
@@ -415,9 +419,9 @@ func urnPartsFromSCPDFilename(filename string) (*URNParts, error) {
 	}, nil
 }
 
-var packageTmpl = template.Must(template.New("package").Parse(`package {{.Name}}
+var packageTmpl = template.Must(template.New("package").Parse(`{{$name := .Metadata.Name}}
 
-// Generated file - do not edit by hand. See README.md
+package {{$name}}
 
 import (
 	"time"
