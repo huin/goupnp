@@ -423,6 +423,9 @@ var packageTmpl = template.Must(template.New("package").Parse(`{{$name := .Metad
 
 package {{$name}}
 
+// Generated file - do not edit by hand. See README.md
+
+
 import (
 	"time"
 

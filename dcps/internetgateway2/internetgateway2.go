@@ -1,5 +1,7 @@
 package internetgateway2
 
+// Generated file - do not edit by hand. See README.md
+
 import (
 	"time"
 
