@@ -1,14 +1,11 @@
-// specgen generates Go code from the UPnP specification files.
-//
-// The specification is available for download from:
-// http://upnp.org/resources/upnpresources.zip
-package main
+// +build gotask
+
+package gotasks
 
 import (
 	"archive/zip"
 	"bytes"
 	"encoding/xml"
-	"flag"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -18,18 +15,12 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+	"text/template"
 
 	"github.com/huin/goupnp"
 	"github.com/huin/goupnp/scpd"
 	"github.com/huin/goutil/codegen"
-)
-
-// flags
-var (
-	specFilename = flag.String("spec", "", "Path to the specification file.")
-	outDir       = flag.String("out-dir", "", "Path to the output directory.")
-	enableGofmt  = flag.Bool("gofmt", true, "Pass the output through gofmt. "+
-		"Disable if debugging code output problems.")
+	"github.com/jingweno/gotask/tasking"
 )
 
 var (
@@ -37,19 +28,39 @@ var (
 	serviceURNPrefix = "urn:schemas-upnp-org:service:"
 )
 
-func main() {
-	flag.Parse()
-
-	if *specFilename == "" {
-		log.Fatal("--spec is required")
+// NAME
+//   specgen - generates Go code from the UPnP specification files.
+//
+// DESCRIPTION
+//   The specification is available for download from:
+//
+// OPTIONS
+//   -s, --spec_filename=<upnpresources.zip>
+//     Path to the specification file, available from http://upnp.org/resources/upnpresources.zip
+//   -o, --out_dir=<output directory>
+//     Path to the output directory. This is is where the dcps source files will be placed. Should normally correspond to the directory for github.com/huin/goupnp/dcps
+//   --nogofmt
+//     Disable passing the output through gofmt. Do this if debugging code output problems and needing to see the generated code prior to being passed through gofmt.
+func TaskSpecgen(t *tasking.T) {
+	specFilename := t.Flags.String("spec-filename")
+	if specFilename == "" {
+		specFilename = t.Flags.String("s")
 	}
-	if *outDir == "" {
-		log.Fatal("--out-dir is required")
+	if specFilename == "" {
+		t.Fatal("--spec_filename is required")
 	}
+	outDir := t.Flags.String("out-dir")
+	if outDir == "" {
+		outDir = t.Flags.String("o")
+	}
+	if outDir == "" {
+		log.Fatal("--out_dir is required")
+	}
+	useGofmt := !t.Flags.Bool("nogofmt")
 
-	specArchive, err := openZipfile(*specFilename)
+	specArchive, err := openZipfile(specFilename)
 	if err != nil {
-		log.Fatalf("Error opening %s: %v", *specFilename)
+		t.Fatalf("Error opening spec file: %v", err)
 	}
 	defer specArchive.Close()
 
@@ -62,22 +73,24 @@ func main() {
 		slashIndex := strings.Index(dirName, "/")
 		if slashIndex == -1 {
 			// Should not happen.
-			log.Printf("Could not find / in %q", dirName)
+			t.Logf("Could not find / in %q", dirName)
 			return
 		}
 		dirName = dirName[:slashIndex]
 
 		dcp := dcpsCol.dcpsForDir(dirName)
 		if dcp == nil {
-			log.Printf("No alias defined for directory %q: skipping", dirName)
+			t.Logf("No alias defined for directory %q: skipping %s\n", dirName, f.Name)
 			continue
+		} else {
+			t.Logf("Alias found for directory %q: processing %s\n", dirName, f.Name)
 		}
 
 		dcp.processZipFile(f)
 	}
 
 	for _, dcp := range dcpsCol.dcpsByAlias {
-		if err := dcp.writePackage(*outDir); err != nil {
+		if err := dcp.writePackage(outDir, useGofmt); err != nil {
 			log.Printf("Error writing package %q: %v", dcp.Name, err)
 		}
 	}
@@ -164,7 +177,7 @@ func (dcp *DCP) processDeviceFile(file *zip.File) {
 	})
 }
 
-func (dcp *DCP) writePackage(outDir string) error {
+func (dcp *DCP) writePackage(outDir string, useGofmt bool) error {
 	packageDirname := filepath.Join(outDir, dcp.Name)
 	err := os.MkdirAll(packageDirname, os.ModePerm)
 	if err != nil && !os.IsExist(err) {
@@ -176,7 +189,7 @@ func (dcp *DCP) writePackage(outDir string) error {
 		return err
 	}
 	var output io.WriteCloser = packageFile
-	if *enableGofmt {
+	if useGofmt {
 		if output, err = codegen.NewGofmtWriteCloser(output); err != nil {
 			packageFile.Close()
 			return err
@@ -401,3 +414,103 @@ func urnPartsFromSCPDFilename(filename string) (*URNParts, error) {
 		Version: version,
 	}, nil
 }
+
+var packageTmpl = template.Must(template.New("package").Parse(`package {{.Name}}
+
+// Generated file - do not edit by hand. See README.md
+
+import (
+	"time"
+
+	"github.com/huin/goupnp"
+	"github.com/huin/goupnp/soap"
+)
+
+// Hack to avoid Go complaining if time isn't used.
+var _ time.Time
+
+// Device URNs:
+const ({{range .DeviceTypes}}
+	{{.Const}} = "{{.URN}}"{{end}}
+)
+
+// Service URNs:
+const ({{range .ServiceTypes}}
+	{{.Const}} = "{{.URN}}"{{end}}
+)
+
+{{range .Services}}
+{{$srv := .}}
+{{$srvIdent := printf "%s%s" .Name .Version}}
+
+// {{$srvIdent}} is a client for UPnP SOAP service with URN "{{.URN}}". See
+// goupnp.ServiceClient, which contains RootDevice and Service attributes which
+// are provided for informational value.
+type {{$srvIdent}} struct {
+	goupnp.ServiceClient
+}
+
+// New{{$srvIdent}}Clients discovers instances of the service on the network,
+// and returns clients to any that are found. errors will contain an error for
+// any devices that replied but which could not be queried, and err will be set
+// if the discovery process failed outright.
+//
+// This is a typical entry calling point into this package.
+func New{{$srvIdent}}Clients() (clients []*{{$srvIdent}}, errors []error, err error) {
+	var genericClients []goupnp.ServiceClient
+	if genericClients, errors, err = goupnp.NewServiceClients({{$srv.Const}}); err != nil {
+		return
+	}
+	clients = make([]*{{$srvIdent}}, len(genericClients))
+	for i := range genericClients {
+		clients[i] = &{{$srvIdent}}{genericClients[i]}
+	}
+	return
+}
+
+{{range .SCPD.Actions}}{{/* loops over *SCPDWithURN values */}}
+
+{{$inargs := .InputArguments}}{{$outargs := .OutputArguments}}
+// {{if $inargs}}Arguments:{{range $inargs}}{{$argWrap := $srv.WrapArgument .}}
+//
+// * {{.Name}}: {{$argWrap.Document}}{{end}}{{end}}
+//
+// {{if $outargs}}Return values:{{range $outargs}}{{$argWrap := $srv.WrapArgument .}}
+//
+// * {{.Name}}: {{$argWrap.Document}}{{end}}{{end}}
+func (client *{{$srvIdent}}) {{.Name}}({{range $inargs}}{{/*
+*/}}{{$argWrap := $srv.WrapArgument .}}{{$argWrap.AsParameter}}, {{end}}{{/*
+*/}}) ({{range $outargs}}{{/*
+*/}}{{$argWrap := $srv.WrapArgument .}}{{$argWrap.AsParameter}}, {{end}} err error) {
+	// Request structure.
+	request := {{if $inargs}}&{{template "argstruct" $inargs}}{{"{}"}}{{else}}{{"interface{}(nil)"}}{{end}}
+	// BEGIN Marshal arguments into request.
+{{range $inargs}}{{$argWrap := $srv.WrapArgument .}}
+	if request.{{.Name}}, err = {{$argWrap.Marshal}}; err != nil {
+		return
+	}{{end}}
+	// END Marshal arguments into request.
+
+	// Response structure.
+	response := {{if $outargs}}&{{template "argstruct" $outargs}}{{"{}"}}{{else}}{{"interface{}(nil)"}}{{end}}
+
+	// Perform the SOAP call.
+	if err = client.SOAPClient.PerformAction({{$srv.URNParts.Const}}, "{{.Name}}", request, response); err != nil {
+		return
+	}
+
+	// BEGIN Unmarshal arguments from response.
+{{range $outargs}}{{$argWrap := $srv.WrapArgument .}}
+	if {{.Name}}, err = {{$argWrap.Unmarshal "response"}}; err != nil {
+		return
+	}{{end}}
+	// END Unmarshal arguments from response.
+	return
+}
+{{end}}{{/* range .SCPD.Actions */}}
+{{end}}{{/* range .Services */}}
+
+{{define "argstruct"}}struct {{"{"}}{{range .}}
+{{.Name}} string
+{{end}}{{"}"}}{{end}}
+`))
