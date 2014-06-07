@@ -93,13 +93,24 @@ func TaskSpecgen(t *tasking.T) {
 	}
 }
 
+// DCP contains extra metadata to use when generating DCP source files.
 type DCPMetadata struct {
-	Name string
+	Name         string // What to name the Go DCP package.
+	OfficialName string // Official name for the DCP.
+	DocURL       string // Optional - URL for futher documentation about the DCP.
 }
 
 var dcpMetadataByDir = map[string]DCPMetadata{
-	"Internet Gateway_1": {"internetgateway1"},
-	"Internet Gateway_2": {"internetgateway2"},
+	"Internet Gateway_1": {
+		Name:         "internetgateway1",
+		OfficialName: "Internet Gateway Device v1",
+		DocURL:       "http://upnp.org/specs/gw/UPnP-gw-InternetGatewayDevice-v1-Device.pdf",
+	},
+	"Internet Gateway_2": {
+		Name:         "internetgateway2",
+		OfficialName: "Internet Gateway Device v2",
+		DocURL:       "http://upnp.org/specs/gw/UPnP-gw-InternetGatewayDevice-v2-Device.pdf",
+	},
 }
 
 type dcpCollection struct {
@@ -420,7 +431,12 @@ func urnPartsFromSCPDFilename(filename string) (*URNParts, error) {
 }
 
 var packageTmpl = template.Must(template.New("package").Parse(`{{$name := .Metadata.Name}}
-
+// Client for UPnP Device Control Protocol {{.Metadata.OfficialName}}.
+// {{if .Metadata.DocURL}}
+// This DCP is documented in detail at: {{.Metadata.DocURL}}{{end}}
+//
+// Typically, use one of the New* functions to discover services on the local
+// network.
 package {{$name}}
 
 // Generated file - do not edit by hand. See README.md

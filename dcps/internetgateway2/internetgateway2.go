@@ -1,3 +1,9 @@
+// Client for UPnP Device Control Protocol Internet Gateway Device v2.
+//
+// This DCP is documented in detail at: http://upnp.org/specs/gw/UPnP-gw-InternetGatewayDevice-v2-Device.pdf
+//
+// Typically, use one of the New* functions to discover services on the local
+// network.
 package internetgateway2
 
 // Generated file - do not edit by hand. See README.md
