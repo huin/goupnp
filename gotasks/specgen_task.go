@@ -64,10 +64,7 @@ func TaskSpecgen(t *tasking.T) {
 	}
 	defer specArchive.Close()
 
-	dcpCol := newDcpsCollection(map[string]DCPMetadata{
-		"Internet Gateway_1": {"internetgateway1"},
-		"Internet Gateway_2": {"internetgateway2"},
-	})
+	dcpCol := newDcpsCollection()
 	for _, f := range globFiles("standardizeddcps/*/*.zip", specArchive.Reader) {
 		dirName := strings.TrimPrefix(f.Name, "standardizeddcps/")
 		slashIndex := strings.Index(dirName, "/")
@@ -100,15 +97,18 @@ type DCPMetadata struct {
 	Name string
 }
 
-type dcpCollection struct {
-	dcpMetadataByDir map[string]DCPMetadata
-	dcpByAlias       map[string]*DCP
+var dcpMetadataByDir = map[string]DCPMetadata{
+	"Internet Gateway_1": {"internetgateway1"},
+	"Internet Gateway_2": {"internetgateway2"},
 }
 
-func newDcpsCollection(dcpMetadataByDir map[string]DCPMetadata) *dcpCollection {
+type dcpCollection struct {
+	dcpByAlias map[string]*DCP
+}
+
+func newDcpsCollection() *dcpCollection {
 	c := &dcpCollection{
-		dcpMetadataByDir: dcpMetadataByDir,
-		dcpByAlias:       make(map[string]*DCP),
+		dcpByAlias: make(map[string]*DCP),
 	}
 	for _, metadata := range dcpMetadataByDir {
 		c.dcpByAlias[metadata.Name] = newDCP(metadata)
@@ -117,7 +117,7 @@ func newDcpsCollection(dcpMetadataByDir map[string]DCPMetadata) *dcpCollection {
 }
 
 func (c *dcpCollection) dcpForDir(dirName string) *DCP {
-	metadata, ok := c.dcpMetadataByDir[dirName]
+	metadata, ok := dcpMetadataByDir[dirName]
 	if !ok {
 		return nil
 	}
