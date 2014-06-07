@@ -1,5 +1,10 @@
 goupnp is a UPnP client library for Go
 
+Installation
+------------
+
+Run `go get -u github.com/huin/goupnp`.
+
 Regenerating dcps generated source code:
 ----------------------------------------
 
