@@ -12,9 +12,14 @@ import (
 )
 
 const (
-	ssdpDiscover = `"ssdp:discover"`
-	methodSearch = "M-SEARCH"
-	ssdpUDP4Addr = "239.255.255.250:1900"
+	ssdpDiscover   = `"ssdp:discover"`
+	ntsAlive       = `ssdp:alive`
+	ntsByebye      = `ssdp:byebye`
+	ntsUpdate      = `ssdp:update`
+	ssdpUDP4Addr   = "239.255.255.250:1900"
+	ssdpSearchPort = 1900
+	methodSearch   = "M-SEARCH"
+	methodNotify   = "NOTIFY"
 )
 
 // SSDPRawSearch performs a fairly raw SSDP search request, and returns the
