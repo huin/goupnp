@@ -36,13 +36,15 @@ func (f HandlerFunc) ServeMessage(r *http.Request) {
 // A Server defines parameters for running an HTTPU server.
 type Server struct {
 	Addr            string         // UDP address to listen on
-	Interface       *net.Interface // Network interface to listen on
+	Multicast       bool           // Should listen for multicast?
+	Interface       *net.Interface // Network interface to listen on for multicast, nil for default multicast interface
 	Handler         Handler        // handler to invoke
 	MaxMessageBytes int            // maximum number of bytes to read from a packet, DefaultMaxMessageBytes if 0
 }
 
-// ListenAndServe listens on the UDP network address srv.Addr. If srv.Interface
-// != nil, then a multicast UDP listener will be used on the given interface.
+// ListenAndServe listens on the UDP network address srv.Addr. If srv.Multicast
+// is true, then a multicast UDP listener will be used on srv.Interface (or
+// default interface if nil).
 func (srv *Server) ListenAndServe() error {
 	var err error
 
@@ -52,7 +54,7 @@ func (srv *Server) ListenAndServe() error {
 	}
 
 	var conn net.PacketConn
-	if srv.Interface != nil {
+	if srv.Multicast {
 		if conn, err = net.ListenMulticastUDP("udp", srv.Interface, addr); err != nil {
 			return err
 		}
