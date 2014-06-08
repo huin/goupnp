@@ -91,13 +91,17 @@ func (httpu *HTTPUClient) Do(req *http.Request, timeout time.Duration, numSends 
 		// 2048 bytes should be sufficient for most networks.
 		n, _, err := httpu.conn.ReadFrom(responseBytes)
 		if err != nil {
-			if err, ok := err.(net.Error); ok && err.Timeout() {
-				break
+			if err, ok := err.(net.Error); ok {
+				if err.Timeout() {
+					break
+				}
+				if err.Temporary() {
+					// Sleep in case this is a persistent error to avoid pegging CPU until deadline.
+					time.Sleep(10 * time.Millisecond)
+					continue
+				}
 			}
-			log.Print("httpu: error while receiving response: %v", err)
-			// Sleep in case this is a persistent error to avoid pegging CPU until deadline.
-			time.Sleep(10 * time.Millisecond)
-			continue
+			return nil, err
 		}
 
 		// Parse response.
