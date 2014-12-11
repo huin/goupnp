@@ -21,7 +21,7 @@ func main() {
 
 	for _, c := range clients {
 		dev := &c.ServiceClient.RootDevice.Device
-		srv := &c.ServiceClient.Service
+		srv := c.ServiceClient.Service
 		fmt.Println(dev.FriendlyName, " :: ", srv.String())
 		scpd, err := srv.RequestSCDP()
 		if err != nil {
