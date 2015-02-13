@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/huin/goupnp/httpu"
+	"github.com/fjl/goupnp/httpu"
 )
 
 func main() {
