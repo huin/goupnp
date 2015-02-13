@@ -3,7 +3,7 @@ goupnp is a UPnP client library for Go
 Installation
 ------------
 
-Run `go get -u github.com/huin/goupnp`.
+Run `go get -u github.com/fjl/goupnp`.
 
 Regenerating dcps generated source code:
 ----------------------------------------
