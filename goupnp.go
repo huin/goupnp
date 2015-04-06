@@ -106,7 +106,7 @@ func requestXml(url string, defaultSpace string, doc interface{}) error {
 
 	decoder := xml.NewDecoder(resp.Body)
 	decoder.DefaultSpace = defaultSpace
-	decoder.CharsetReader = charset.NewReaderByName
+	decoder.CharsetReader = charset.NewReaderLabel
 
 	return decoder.Decode(doc)
 }
