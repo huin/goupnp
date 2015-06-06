@@ -12,3 +12,15 @@ Regenerating dcps generated source code:
 2. Change to the gotasks directory: `cd gotasks`
 3. Download UPnP specification data (if not done already): `wget http://upnp.org/resources/upnpresources.zip`
 4. Regenerate source code: `gotask specgen -s upnpresources.zip -o ../dcps`
+
+Supporting additional UPnP devices and services:
+------------------------------------------------
+
+Supporting additional services is, in the trivial case, simply a matter of
+adding the service to the `dcpMetadataByDir` whitelist in
+`gotasks/specgen_task.go`. However, it would be helpful if anyone needing such
+a service could test the service against the service they have, and then
+reporting any trouble encountered as an [issue on this
+project](https://github.com/huin/goupnp/issues/new). If it just works, then
+please report at least minimal working functionality as an issue, and
+optionally contribute the metadata upstream.
