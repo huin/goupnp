@@ -2,6 +2,7 @@ package goupnp
 
 import (
 	"fmt"
+
 	"github.com/huin/goupnp/soap"
 )
 

@@ -2,6 +2,7 @@ package example_test
 
 import (
 	"fmt"
+	"net/url"
 	"os"
 
 	"github.com/huin/goupnp"
@@ -59,4 +60,34 @@ func DisplayExternalIPResults(clients []GetExternalIPAddresser, errors []error, 
 			fmt.Fprintf(os.Stderr, "    External IP address: %v\n", addr)
 		}
 	}
+}
+
+func Example_ReuseDiscoveredDevice() {
+	var allMaybeRootDevices []goupnp.MaybeRootDevice
+	for _, urn := range []string{internetgateway1.URN_WANPPPConnection_1, internetgateway1.URN_WANIPConnection_1} {
+		maybeRootDevices, err := goupnp.DiscoverDevices(internetgateway1.URN_WANPPPConnection_1)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Could not discover %s devices: %v\n", urn, err)
+		}
+		allMaybeRootDevices = append(allMaybeRootDevices, maybeRootDevices...)
+	}
+	locations := make([]*url.URL, 0, len(allMaybeRootDevices))
+	fmt.Fprintf(os.Stderr, "Found %d devices:\n", len(allMaybeRootDevices))
+	for _, maybeRootDevice := range allMaybeRootDevices {
+		if maybeRootDevice.Err != nil {
+			fmt.Fprintln(os.Stderr, "  Failed to probe device at ", maybeRootDevice.Location.String())
+		} else {
+			locations = append(locations, maybeRootDevice.Location)
+			fmt.Fprintln(os.Stderr, "  Successfully probed device at ", maybeRootDevice.Location.String())
+		}
+	}
+	fmt.Fprintf(os.Stderr, "Attempt to re-acquire %d devices:\n", len(locations))
+	for _, location := range locations {
+		if _, err := goupnp.DeviceByURL(location); err != nil {
+			fmt.Fprintf(os.Stderr, "  Failed to reacquire device at %s: %v\n", location.String(), err)
+		} else {
+			fmt.Fprintf(os.Stderr, "  Successfully reacquired device at %s\n", location.String())
+		}
+	}
+	// Output:
 }
