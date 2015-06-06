@@ -2,13 +2,13 @@
 //
 // This DCP is documented in detail at: http://upnp.org/specs/gw/UPnP-gw-InternetGatewayDevice-v2-Device.pdf
 //
-// Typically, use one of the New* functions to discover services on the local
-// network.
+// Typically, use one of the New* functions to create clients for services.
 package internetgateway2
 
 // Generated file - do not edit by hand. See README.md
 
 import (
+	"net/url"
 	"time"
 
 	"github.com/huin/goupnp"
@@ -60,11 +60,46 @@ func NewLANHostConfigManagement1Clients() (clients []*LANHostConfigManagement1, 
 	if genericClients, errors, err = goupnp.NewServiceClients(URN_LANHostConfigManagement_1); err != nil {
 		return
 	}
-	clients = make([]*LANHostConfigManagement1, len(genericClients))
+	clients = newLANHostConfigManagement1ClientsFromGenericClients(genericClients)
+	return
+}
+
+// NewLANHostConfigManagement1ClientsByURL discovers instances of the service at the given
+// URL, and returns clients to any that are found. An error is returned if
+// there was an error probing the service.
+//
+// This is a typical entry calling point into this package when reusing an
+// previously discovered service URL.
+func NewLANHostConfigManagement1ClientsByURL(loc *url.URL) ([]*LANHostConfigManagement1, error) {
+	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_LANHostConfigManagement_1)
+	if err != nil {
+		return nil, err
+	}
+	return newLANHostConfigManagement1ClientsFromGenericClients(genericClients), nil
+}
+
+// NewLANHostConfigManagement1ClientsFromRootDevice discovers instances of the service in
+// a given root device, and returns clients to any that are found. An error is
+// returned if there was not at least one instance of the service within the
+// device. The location parameter is simply assigned to the Location attribute
+// of the wrapped ServiceClient(s).
+//
+// This is a typical entry calling point into this package when reusing an
+// previously discovered root device.
+func NewLANHostConfigManagement1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*LANHostConfigManagement1, error) {
+	genericClients, err := goupnp.NewServiceClientsFromRootDevice(rootDevice, loc, URN_LANHostConfigManagement_1)
+	if err != nil {
+		return nil, err
+	}
+	return newLANHostConfigManagement1ClientsFromGenericClients(genericClients), nil
+}
+
+func newLANHostConfigManagement1ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*LANHostConfigManagement1 {
+	clients := make([]*LANHostConfigManagement1, len(genericClients))
 	for i := range genericClients {
 		clients[i] = &LANHostConfigManagement1{genericClients[i]}
 	}
-	return
+	return clients
 }
 
 // Arguments:
@@ -688,11 +723,46 @@ func NewLayer3Forwarding1Clients() (clients []*Layer3Forwarding1, errors []error
 	if genericClients, errors, err = goupnp.NewServiceClients(URN_Layer3Forwarding_1); err != nil {
 		return
 	}
-	clients = make([]*Layer3Forwarding1, len(genericClients))
+	clients = newLayer3Forwarding1ClientsFromGenericClients(genericClients)
+	return
+}
+
+// NewLayer3Forwarding1ClientsByURL discovers instances of the service at the given
+// URL, and returns clients to any that are found. An error is returned if
+// there was an error probing the service.
+//
+// This is a typical entry calling point into this package when reusing an
+// previously discovered service URL.
+func NewLayer3Forwarding1ClientsByURL(loc *url.URL) ([]*Layer3Forwarding1, error) {
+	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_Layer3Forwarding_1)
+	if err != nil {
+		return nil, err
+	}
+	return newLayer3Forwarding1ClientsFromGenericClients(genericClients), nil
+}
+
+// NewLayer3Forwarding1ClientsFromRootDevice discovers instances of the service in
+// a given root device, and returns clients to any that are found. An error is
+// returned if there was not at least one instance of the service within the
+// device. The location parameter is simply assigned to the Location attribute
+// of the wrapped ServiceClient(s).
+//
+// This is a typical entry calling point into this package when reusing an
+// previously discovered root device.
+func NewLayer3Forwarding1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*Layer3Forwarding1, error) {
+	genericClients, err := goupnp.NewServiceClientsFromRootDevice(rootDevice, loc, URN_Layer3Forwarding_1)
+	if err != nil {
+		return nil, err
+	}
+	return newLayer3Forwarding1ClientsFromGenericClients(genericClients), nil
+}
+
+func newLayer3Forwarding1ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*Layer3Forwarding1 {
+	clients := make([]*Layer3Forwarding1, len(genericClients))
 	for i := range genericClients {
 		clients[i] = &Layer3Forwarding1{genericClients[i]}
 	}
-	return
+	return clients
 }
 
 // Arguments:
@@ -775,11 +845,46 @@ func NewWANCableLinkConfig1Clients() (clients []*WANCableLinkConfig1, errors []e
 	if genericClients, errors, err = goupnp.NewServiceClients(URN_WANCableLinkConfig_1); err != nil {
 		return
 	}
-	clients = make([]*WANCableLinkConfig1, len(genericClients))
+	clients = newWANCableLinkConfig1ClientsFromGenericClients(genericClients)
+	return
+}
+
+// NewWANCableLinkConfig1ClientsByURL discovers instances of the service at the given
+// URL, and returns clients to any that are found. An error is returned if
+// there was an error probing the service.
+//
+// This is a typical entry calling point into this package when reusing an
+// previously discovered service URL.
+func NewWANCableLinkConfig1ClientsByURL(loc *url.URL) ([]*WANCableLinkConfig1, error) {
+	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_WANCableLinkConfig_1)
+	if err != nil {
+		return nil, err
+	}
+	return newWANCableLinkConfig1ClientsFromGenericClients(genericClients), nil
+}
+
+// NewWANCableLinkConfig1ClientsFromRootDevice discovers instances of the service in
+// a given root device, and returns clients to any that are found. An error is
+// returned if there was not at least one instance of the service within the
+// device. The location parameter is simply assigned to the Location attribute
+// of the wrapped ServiceClient(s).
+//
+// This is a typical entry calling point into this package when reusing an
+// previously discovered root device.
+func NewWANCableLinkConfig1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*WANCableLinkConfig1, error) {
+	genericClients, err := goupnp.NewServiceClientsFromRootDevice(rootDevice, loc, URN_WANCableLinkConfig_1)
+	if err != nil {
+		return nil, err
+	}
+	return newWANCableLinkConfig1ClientsFromGenericClients(genericClients), nil
+}
+
+func newWANCableLinkConfig1ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*WANCableLinkConfig1 {
+	clients := make([]*WANCableLinkConfig1, len(genericClients))
 	for i := range genericClients {
 		clients[i] = &WANCableLinkConfig1{genericClients[i]}
 	}
-	return
+	return clients
 }
 
 //
@@ -1117,11 +1222,46 @@ func NewWANCommonInterfaceConfig1Clients() (clients []*WANCommonInterfaceConfig1
 	if genericClients, errors, err = goupnp.NewServiceClients(URN_WANCommonInterfaceConfig_1); err != nil {
 		return
 	}
-	clients = make([]*WANCommonInterfaceConfig1, len(genericClients))
+	clients = newWANCommonInterfaceConfig1ClientsFromGenericClients(genericClients)
+	return
+}
+
+// NewWANCommonInterfaceConfig1ClientsByURL discovers instances of the service at the given
+// URL, and returns clients to any that are found. An error is returned if
+// there was an error probing the service.
+//
+// This is a typical entry calling point into this package when reusing an
+// previously discovered service URL.
+func NewWANCommonInterfaceConfig1ClientsByURL(loc *url.URL) ([]*WANCommonInterfaceConfig1, error) {
+	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_WANCommonInterfaceConfig_1)
+	if err != nil {
+		return nil, err
+	}
+	return newWANCommonInterfaceConfig1ClientsFromGenericClients(genericClients), nil
+}
+
+// NewWANCommonInterfaceConfig1ClientsFromRootDevice discovers instances of the service in
+// a given root device, and returns clients to any that are found. An error is
+// returned if there was not at least one instance of the service within the
+// device. The location parameter is simply assigned to the Location attribute
+// of the wrapped ServiceClient(s).
+//
+// This is a typical entry calling point into this package when reusing an
+// previously discovered root device.
+func NewWANCommonInterfaceConfig1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*WANCommonInterfaceConfig1, error) {
+	genericClients, err := goupnp.NewServiceClientsFromRootDevice(rootDevice, loc, URN_WANCommonInterfaceConfig_1)
+	if err != nil {
+		return nil, err
+	}
+	return newWANCommonInterfaceConfig1ClientsFromGenericClients(genericClients), nil
+}
+
+func newWANCommonInterfaceConfig1ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*WANCommonInterfaceConfig1 {
+	clients := make([]*WANCommonInterfaceConfig1, len(genericClients))
 	for i := range genericClients {
 		clients[i] = &WANCommonInterfaceConfig1{genericClients[i]}
 	}
-	return
+	return clients
 }
 
 // Arguments:
@@ -1487,11 +1627,46 @@ func NewWANDSLLinkConfig1Clients() (clients []*WANDSLLinkConfig1, errors []error
 	if genericClients, errors, err = goupnp.NewServiceClients(URN_WANDSLLinkConfig_1); err != nil {
 		return
 	}
-	clients = make([]*WANDSLLinkConfig1, len(genericClients))
+	clients = newWANDSLLinkConfig1ClientsFromGenericClients(genericClients)
+	return
+}
+
+// NewWANDSLLinkConfig1ClientsByURL discovers instances of the service at the given
+// URL, and returns clients to any that are found. An error is returned if
+// there was an error probing the service.
+//
+// This is a typical entry calling point into this package when reusing an
+// previously discovered service URL.
+func NewWANDSLLinkConfig1ClientsByURL(loc *url.URL) ([]*WANDSLLinkConfig1, error) {
+	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_WANDSLLinkConfig_1)
+	if err != nil {
+		return nil, err
+	}
+	return newWANDSLLinkConfig1ClientsFromGenericClients(genericClients), nil
+}
+
+// NewWANDSLLinkConfig1ClientsFromRootDevice discovers instances of the service in
+// a given root device, and returns clients to any that are found. An error is
+// returned if there was not at least one instance of the service within the
+// device. The location parameter is simply assigned to the Location attribute
+// of the wrapped ServiceClient(s).
+//
+// This is a typical entry calling point into this package when reusing an
+// previously discovered root device.
+func NewWANDSLLinkConfig1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*WANDSLLinkConfig1, error) {
+	genericClients, err := goupnp.NewServiceClientsFromRootDevice(rootDevice, loc, URN_WANDSLLinkConfig_1)
+	if err != nil {
+		return nil, err
+	}
+	return newWANDSLLinkConfig1ClientsFromGenericClients(genericClients), nil
+}
+
+func newWANDSLLinkConfig1ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*WANDSLLinkConfig1 {
+	clients := make([]*WANDSLLinkConfig1, len(genericClients))
 	for i := range genericClients {
 		clients[i] = &WANDSLLinkConfig1{genericClients[i]}
 	}
-	return
+	return clients
 }
 
 // Arguments:
@@ -1829,11 +2004,46 @@ func NewWANEthernetLinkConfig1Clients() (clients []*WANEthernetLinkConfig1, erro
 	if genericClients, errors, err = goupnp.NewServiceClients(URN_WANEthernetLinkConfig_1); err != nil {
 		return
 	}
-	clients = make([]*WANEthernetLinkConfig1, len(genericClients))
+	clients = newWANEthernetLinkConfig1ClientsFromGenericClients(genericClients)
+	return
+}
+
+// NewWANEthernetLinkConfig1ClientsByURL discovers instances of the service at the given
+// URL, and returns clients to any that are found. An error is returned if
+// there was an error probing the service.
+//
+// This is a typical entry calling point into this package when reusing an
+// previously discovered service URL.
+func NewWANEthernetLinkConfig1ClientsByURL(loc *url.URL) ([]*WANEthernetLinkConfig1, error) {
+	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_WANEthernetLinkConfig_1)
+	if err != nil {
+		return nil, err
+	}
+	return newWANEthernetLinkConfig1ClientsFromGenericClients(genericClients), nil
+}
+
+// NewWANEthernetLinkConfig1ClientsFromRootDevice discovers instances of the service in
+// a given root device, and returns clients to any that are found. An error is
+// returned if there was not at least one instance of the service within the
+// device. The location parameter is simply assigned to the Location attribute
+// of the wrapped ServiceClient(s).
+//
+// This is a typical entry calling point into this package when reusing an
+// previously discovered root device.
+func NewWANEthernetLinkConfig1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*WANEthernetLinkConfig1, error) {
+	genericClients, err := goupnp.NewServiceClientsFromRootDevice(rootDevice, loc, URN_WANEthernetLinkConfig_1)
+	if err != nil {
+		return nil, err
+	}
+	return newWANEthernetLinkConfig1ClientsFromGenericClients(genericClients), nil
+}
+
+func newWANEthernetLinkConfig1ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*WANEthernetLinkConfig1 {
+	clients := make([]*WANEthernetLinkConfig1, len(genericClients))
 	for i := range genericClients {
 		clients[i] = &WANEthernetLinkConfig1{genericClients[i]}
 	}
-	return
+	return clients
 }
 
 //
@@ -1885,11 +2095,46 @@ func NewWANIPConnection1Clients() (clients []*WANIPConnection1, errors []error, 
 	if genericClients, errors, err = goupnp.NewServiceClients(URN_WANIPConnection_1); err != nil {
 		return
 	}
-	clients = make([]*WANIPConnection1, len(genericClients))
+	clients = newWANIPConnection1ClientsFromGenericClients(genericClients)
+	return
+}
+
+// NewWANIPConnection1ClientsByURL discovers instances of the service at the given
+// URL, and returns clients to any that are found. An error is returned if
+// there was an error probing the service.
+//
+// This is a typical entry calling point into this package when reusing an
+// previously discovered service URL.
+func NewWANIPConnection1ClientsByURL(loc *url.URL) ([]*WANIPConnection1, error) {
+	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_WANIPConnection_1)
+	if err != nil {
+		return nil, err
+	}
+	return newWANIPConnection1ClientsFromGenericClients(genericClients), nil
+}
+
+// NewWANIPConnection1ClientsFromRootDevice discovers instances of the service in
+// a given root device, and returns clients to any that are found. An error is
+// returned if there was not at least one instance of the service within the
+// device. The location parameter is simply assigned to the Location attribute
+// of the wrapped ServiceClient(s).
+//
+// This is a typical entry calling point into this package when reusing an
+// previously discovered root device.
+func NewWANIPConnection1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*WANIPConnection1, error) {
+	genericClients, err := goupnp.NewServiceClientsFromRootDevice(rootDevice, loc, URN_WANIPConnection_1)
+	if err != nil {
+		return nil, err
+	}
+	return newWANIPConnection1ClientsFromGenericClients(genericClients), nil
+}
+
+func newWANIPConnection1ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*WANIPConnection1 {
+	clients := make([]*WANIPConnection1, len(genericClients))
 	for i := range genericClients {
 		clients[i] = &WANIPConnection1{genericClients[i]}
 	}
-	return
+	return clients
 }
 
 // Arguments:
@@ -2643,11 +2888,46 @@ func NewWANIPConnection2Clients() (clients []*WANIPConnection2, errors []error, 
 	if genericClients, errors, err = goupnp.NewServiceClients(URN_WANIPConnection_2); err != nil {
 		return
 	}
-	clients = make([]*WANIPConnection2, len(genericClients))
+	clients = newWANIPConnection2ClientsFromGenericClients(genericClients)
+	return
+}
+
+// NewWANIPConnection2ClientsByURL discovers instances of the service at the given
+// URL, and returns clients to any that are found. An error is returned if
+// there was an error probing the service.
+//
+// This is a typical entry calling point into this package when reusing an
+// previously discovered service URL.
+func NewWANIPConnection2ClientsByURL(loc *url.URL) ([]*WANIPConnection2, error) {
+	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_WANIPConnection_2)
+	if err != nil {
+		return nil, err
+	}
+	return newWANIPConnection2ClientsFromGenericClients(genericClients), nil
+}
+
+// NewWANIPConnection2ClientsFromRootDevice discovers instances of the service in
+// a given root device, and returns clients to any that are found. An error is
+// returned if there was not at least one instance of the service within the
+// device. The location parameter is simply assigned to the Location attribute
+// of the wrapped ServiceClient(s).
+//
+// This is a typical entry calling point into this package when reusing an
+// previously discovered root device.
+func NewWANIPConnection2ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*WANIPConnection2, error) {
+	genericClients, err := goupnp.NewServiceClientsFromRootDevice(rootDevice, loc, URN_WANIPConnection_2)
+	if err != nil {
+		return nil, err
+	}
+	return newWANIPConnection2ClientsFromGenericClients(genericClients), nil
+}
+
+func newWANIPConnection2ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*WANIPConnection2 {
+	clients := make([]*WANIPConnection2, len(genericClients))
 	for i := range genericClients {
 		clients[i] = &WANIPConnection2{genericClients[i]}
 	}
-	return
+	return clients
 }
 
 // Arguments:
@@ -3606,11 +3886,46 @@ func NewWANIPv6FirewallControl1Clients() (clients []*WANIPv6FirewallControl1, er
 	if genericClients, errors, err = goupnp.NewServiceClients(URN_WANIPv6FirewallControl_1); err != nil {
 		return
 	}
-	clients = make([]*WANIPv6FirewallControl1, len(genericClients))
+	clients = newWANIPv6FirewallControl1ClientsFromGenericClients(genericClients)
+	return
+}
+
+// NewWANIPv6FirewallControl1ClientsByURL discovers instances of the service at the given
+// URL, and returns clients to any that are found. An error is returned if
+// there was an error probing the service.
+//
+// This is a typical entry calling point into this package when reusing an
+// previously discovered service URL.
+func NewWANIPv6FirewallControl1ClientsByURL(loc *url.URL) ([]*WANIPv6FirewallControl1, error) {
+	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_WANIPv6FirewallControl_1)
+	if err != nil {
+		return nil, err
+	}
+	return newWANIPv6FirewallControl1ClientsFromGenericClients(genericClients), nil
+}
+
+// NewWANIPv6FirewallControl1ClientsFromRootDevice discovers instances of the service in
+// a given root device, and returns clients to any that are found. An error is
+// returned if there was not at least one instance of the service within the
+// device. The location parameter is simply assigned to the Location attribute
+// of the wrapped ServiceClient(s).
+//
+// This is a typical entry calling point into this package when reusing an
+// previously discovered root device.
+func NewWANIPv6FirewallControl1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*WANIPv6FirewallControl1, error) {
+	genericClients, err := goupnp.NewServiceClientsFromRootDevice(rootDevice, loc, URN_WANIPv6FirewallControl_1)
+	if err != nil {
+		return nil, err
+	}
+	return newWANIPv6FirewallControl1ClientsFromGenericClients(genericClients), nil
+}
+
+func newWANIPv6FirewallControl1ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*WANIPv6FirewallControl1 {
+	clients := make([]*WANIPv6FirewallControl1, len(genericClients))
 	for i := range genericClients {
 		clients[i] = &WANIPv6FirewallControl1{genericClients[i]}
 	}
-	return
+	return clients
 }
 
 //
@@ -3953,11 +4268,46 @@ func NewWANPOTSLinkConfig1Clients() (clients []*WANPOTSLinkConfig1, errors []err
 	if genericClients, errors, err = goupnp.NewServiceClients(URN_WANPOTSLinkConfig_1); err != nil {
 		return
 	}
-	clients = make([]*WANPOTSLinkConfig1, len(genericClients))
+	clients = newWANPOTSLinkConfig1ClientsFromGenericClients(genericClients)
+	return
+}
+
+// NewWANPOTSLinkConfig1ClientsByURL discovers instances of the service at the given
+// URL, and returns clients to any that are found. An error is returned if
+// there was an error probing the service.
+//
+// This is a typical entry calling point into this package when reusing an
+// previously discovered service URL.
+func NewWANPOTSLinkConfig1ClientsByURL(loc *url.URL) ([]*WANPOTSLinkConfig1, error) {
+	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_WANPOTSLinkConfig_1)
+	if err != nil {
+		return nil, err
+	}
+	return newWANPOTSLinkConfig1ClientsFromGenericClients(genericClients), nil
+}
+
+// NewWANPOTSLinkConfig1ClientsFromRootDevice discovers instances of the service in
+// a given root device, and returns clients to any that are found. An error is
+// returned if there was not at least one instance of the service within the
+// device. The location parameter is simply assigned to the Location attribute
+// of the wrapped ServiceClient(s).
+//
+// This is a typical entry calling point into this package when reusing an
+// previously discovered root device.
+func NewWANPOTSLinkConfig1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*WANPOTSLinkConfig1, error) {
+	genericClients, err := goupnp.NewServiceClientsFromRootDevice(rootDevice, loc, URN_WANPOTSLinkConfig_1)
+	if err != nil {
+		return nil, err
+	}
+	return newWANPOTSLinkConfig1ClientsFromGenericClients(genericClients), nil
+}
+
+func newWANPOTSLinkConfig1ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*WANPOTSLinkConfig1 {
+	clients := make([]*WANPOTSLinkConfig1, len(genericClients))
 	for i := range genericClients {
 		clients[i] = &WANPOTSLinkConfig1{genericClients[i]}
 	}
-	return
+	return clients
 }
 
 // Arguments:
@@ -4299,11 +4649,46 @@ func NewWANPPPConnection1Clients() (clients []*WANPPPConnection1, errors []error
 	if genericClients, errors, err = goupnp.NewServiceClients(URN_WANPPPConnection_1); err != nil {
 		return
 	}
-	clients = make([]*WANPPPConnection1, len(genericClients))
+	clients = newWANPPPConnection1ClientsFromGenericClients(genericClients)
+	return
+}
+
+// NewWANPPPConnection1ClientsByURL discovers instances of the service at the given
+// URL, and returns clients to any that are found. An error is returned if
+// there was an error probing the service.
+//
+// This is a typical entry calling point into this package when reusing an
+// previously discovered service URL.
+func NewWANPPPConnection1ClientsByURL(loc *url.URL) ([]*WANPPPConnection1, error) {
+	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_WANPPPConnection_1)
+	if err != nil {
+		return nil, err
+	}
+	return newWANPPPConnection1ClientsFromGenericClients(genericClients), nil
+}
+
+// NewWANPPPConnection1ClientsFromRootDevice discovers instances of the service in
+// a given root device, and returns clients to any that are found. An error is
+// returned if there was not at least one instance of the service within the
+// device. The location parameter is simply assigned to the Location attribute
+// of the wrapped ServiceClient(s).
+//
+// This is a typical entry calling point into this package when reusing an
+// previously discovered root device.
+func NewWANPPPConnection1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*WANPPPConnection1, error) {
+	genericClients, err := goupnp.NewServiceClientsFromRootDevice(rootDevice, loc, URN_WANPPPConnection_1)
+	if err != nil {
+		return nil, err
+	}
+	return newWANPPPConnection1ClientsFromGenericClients(genericClients), nil
+}
+
+func newWANPPPConnection1ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*WANPPPConnection1 {
+	clients := make([]*WANPPPConnection1, len(genericClients))
 	for i := range genericClients {
 		clients[i] = &WANPPPConnection1{genericClients[i]}
 	}
-	return
+	return clients
 }
 
 // Arguments:

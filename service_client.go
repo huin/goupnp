@@ -57,10 +57,10 @@ func NewServiceClientsByURL(loc *url.URL, searchTarget string) ([]ServiceClient,
 	return NewServiceClientsFromRootDevice(rootDevice, loc, searchTarget)
 }
 
-// NewServiceClientsFromDevice creates client(s) for the given service URN, for
-// a given root device. The location parameter is simply assigned to the
-// Location attribute of the returned ServiceClient.
-func NewServiceClientsFromRootDevice(rootDevice *RootDevice, location *url.URL, searchTarget string) ([]ServiceClient, error) {
+// NewServiceClientsFromDevice creates client(s) for the given service URN, in
+// a given root device. The loc parameter is simply assigned to the
+// Location attribute of the returned ServiceClient(s).
+func NewServiceClientsFromRootDevice(rootDevice *RootDevice, loc *url.URL, searchTarget string) ([]ServiceClient, error) {
 	device := &rootDevice.Device
 	srvs := device.FindService(searchTarget)
 	if len(srvs) == 0 {
@@ -73,7 +73,7 @@ func NewServiceClientsFromRootDevice(rootDevice *RootDevice, location *url.URL, 
 		clients = append(clients, ServiceClient{
 			SOAPClient: srv.NewSOAPClient(),
 			RootDevice: rootDevice,
-			Location:   location,
+			Location:   loc,
 			Service:    srv,
 		})
 	}

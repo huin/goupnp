@@ -435,14 +435,14 @@ var packageTmpl = template.Must(template.New("package").Parse(`{{$name := .Metad
 // {{if .Metadata.DocURL}}
 // This DCP is documented in detail at: {{.Metadata.DocURL}}{{end}}
 //
-// Typically, use one of the New* functions to discover services on the local
-// network.
+// Typically, use one of the New* functions to create clients for services.
 package {{$name}}
 
 // Generated file - do not edit by hand. See README.md
 
 
 import (
+	"net/url"
 	"time"
 
 	"github.com/huin/goupnp"
@@ -484,11 +484,46 @@ func New{{$srvIdent}}Clients() (clients []*{{$srvIdent}}, errors []error, err er
 	if genericClients, errors, err = goupnp.NewServiceClients({{$srv.Const}}); err != nil {
 		return
 	}
-	clients = make([]*{{$srvIdent}}, len(genericClients))
+	clients = new{{$srvIdent}}ClientsFromGenericClients(genericClients)
+	return
+}
+
+// New{{$srvIdent}}ClientsByURL discovers instances of the service at the given
+// URL, and returns clients to any that are found. An error is returned if
+// there was an error probing the service.
+//
+// This is a typical entry calling point into this package when reusing an
+// previously discovered service URL.
+func New{{$srvIdent}}ClientsByURL(loc *url.URL) ([]*{{$srvIdent}}, error) {
+	genericClients, err := goupnp.NewServiceClientsByURL(loc, {{$srv.Const}})
+	if err != nil {
+		return nil, err
+	}
+	return new{{$srvIdent}}ClientsFromGenericClients(genericClients), nil
+}
+
+// New{{$srvIdent}}ClientsFromRootDevice discovers instances of the service in
+// a given root device, and returns clients to any that are found. An error is
+// returned if there was not at least one instance of the service within the
+// device. The location parameter is simply assigned to the Location attribute
+// of the wrapped ServiceClient(s).
+//
+// This is a typical entry calling point into this package when reusing an
+// previously discovered root device.
+func New{{$srvIdent}}ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*{{$srvIdent}}, error) {
+	genericClients, err := goupnp.NewServiceClientsFromRootDevice(rootDevice, loc, {{$srv.Const}})
+	if err != nil {
+		return nil, err
+	}
+	return new{{$srvIdent}}ClientsFromGenericClients(genericClients), nil
+}
+
+func new{{$srvIdent}}ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*{{$srvIdent}} {
+	clients := make([]*{{$srvIdent}}, len(genericClients))
 	for i := range genericClients {
 		clients[i] = &{{$srvIdent}}{genericClients[i]}
 	}
-	return
+	return clients
 }
 
 {{range .SCPD.Actions}}{{/* loops over *SCPDWithURN values */}}
