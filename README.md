@@ -5,6 +5,11 @@ Installation
 
 Run `go get -u github.com/huin/goupnp`.
 
+Documentation
+-------------
+
+[![GoDoc](https://godoc.org/github.com/huin/goupnp?status.svg)](https://godoc.org/github.com/huin/goupnp)
+
 Regenerating dcps generated source code:
 ----------------------------------------
 
