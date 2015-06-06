@@ -37,7 +37,7 @@ func (err ContextError) Error() string {
 	return fmt.Sprintf("%s: %v", err.Context, err.Err)
 }
 
-// MaybeRootDevice contains either a RootDevice (and URL) or an error.
+// MaybeRootDevice contains either a RootDevice or an error.
 type MaybeRootDevice struct {
 	// Set iff Err == nil.
 	Root *RootDevice
