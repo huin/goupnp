@@ -29,6 +29,7 @@ const (
 
 // Service URNs:
 const (
+	URN_DeviceProtection_1         = "urn:schemas-upnp-org:service:DeviceProtection:1"
 	URN_LANHostConfigManagement_1  = "urn:schemas-upnp-org:service:LANHostConfigManagement:1"
 	URN_Layer3Forwarding_1         = "urn:schemas-upnp-org:service:Layer3Forwarding:1"
 	URN_WANCableLinkConfig_1       = "urn:schemas-upnp-org:service:WANCableLinkConfig:1"
@@ -37,10 +38,584 @@ const (
 	URN_WANEthernetLinkConfig_1    = "urn:schemas-upnp-org:service:WANEthernetLinkConfig:1"
 	URN_WANIPConnection_1          = "urn:schemas-upnp-org:service:WANIPConnection:1"
 	URN_WANIPConnection_2          = "urn:schemas-upnp-org:service:WANIPConnection:2"
-	URN_WANIPv6FirewallControl_1   = "urn:schemas-upnp-org:service:WANIPv6FirewallControl:1"
 	URN_WANPOTSLinkConfig_1        = "urn:schemas-upnp-org:service:WANPOTSLinkConfig:1"
 	URN_WANPPPConnection_1         = "urn:schemas-upnp-org:service:WANPPPConnection:1"
 )
+
+// DeviceProtection1 is a client for UPnP SOAP service with URN "urn:schemas-upnp-org:service:DeviceProtection:1". See
+// goupnp.ServiceClient, which contains RootDevice and Service attributes which
+// are provided for informational value.
+type DeviceProtection1 struct {
+	goupnp.ServiceClient
+}
+
+// NewDeviceProtection1Clients discovers instances of the service on the network,
+// and returns clients to any that are found. errors will contain an error for
+// any devices that replied but which could not be queried, and err will be set
+// if the discovery process failed outright.
+//
+// This is a typical entry calling point into this package.
+func NewDeviceProtection1Clients() (clients []*DeviceProtection1, errors []error, err error) {
+	var genericClients []goupnp.ServiceClient
+	if genericClients, errors, err = goupnp.NewServiceClients(URN_DeviceProtection_1); err != nil {
+		return
+	}
+	clients = newDeviceProtection1ClientsFromGenericClients(genericClients)
+	return
+}
+
+// NewDeviceProtection1ClientsByURL discovers instances of the service at the given
+// URL, and returns clients to any that are found. An error is returned if
+// there was an error probing the service.
+//
+// This is a typical entry calling point into this package when reusing an
+// previously discovered service URL.
+func NewDeviceProtection1ClientsByURL(loc *url.URL) ([]*DeviceProtection1, error) {
+	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_DeviceProtection_1)
+	if err != nil {
+		return nil, err
+	}
+	return newDeviceProtection1ClientsFromGenericClients(genericClients), nil
+}
+
+// NewDeviceProtection1ClientsFromRootDevice discovers instances of the service in
+// a given root device, and returns clients to any that are found. An error is
+// returned if there was not at least one instance of the service within the
+// device. The location parameter is simply assigned to the Location attribute
+// of the wrapped ServiceClient(s).
+//
+// This is a typical entry calling point into this package when reusing an
+// previously discovered root device.
+func NewDeviceProtection1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*DeviceProtection1, error) {
+	genericClients, err := goupnp.NewServiceClientsFromRootDevice(rootDevice, loc, URN_DeviceProtection_1)
+	if err != nil {
+		return nil, err
+	}
+	return newDeviceProtection1ClientsFromGenericClients(genericClients), nil
+}
+
+func newDeviceProtection1ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*DeviceProtection1 {
+	clients := make([]*DeviceProtection1, len(genericClients))
+	for i := range genericClients {
+		clients[i] = &DeviceProtection1{genericClients[i]}
+	}
+	return clients
+}
+
+// Arguments:
+//
+// * ProtocolType:
+//
+// * InMessage:
+//
+// Return values:
+//
+// * OutMessage:
+func (client *DeviceProtection1) SendSetupMessage(ProtocolType string, InMessage []byte) (OutMessage []byte, err error) {
+	// Request structure.
+	request := &struct {
+		ProtocolType string
+
+		InMessage string
+	}{}
+	// BEGIN Marshal arguments into request.
+
+	if request.ProtocolType, err = soap.MarshalString(ProtocolType); err != nil {
+		return
+	}
+	if request.InMessage, err = soap.MarshalBinBase64(InMessage); err != nil {
+		return
+	}
+	// END Marshal arguments into request.
+
+	// Response structure.
+	response := &struct {
+		OutMessage string
+	}{}
+
+	// Perform the SOAP call.
+	if err = client.SOAPClient.PerformAction(URN_DeviceProtection_1, "SendSetupMessage", request, response); err != nil {
+		return
+	}
+
+	// BEGIN Unmarshal arguments from response.
+
+	if OutMessage, err = soap.UnmarshalBinBase64(response.OutMessage); err != nil {
+		return
+	}
+	// END Unmarshal arguments from response.
+	return
+}
+
+//
+//
+// Return values:
+//
+// * ProtocolList:
+func (client *DeviceProtection1) GetSupportedProtocols() (ProtocolList string, err error) {
+	// Request structure.
+	request := interface{}(nil)
+	// BEGIN Marshal arguments into request.
+
+	// END Marshal arguments into request.
+
+	// Response structure.
+	response := &struct {
+		ProtocolList string
+	}{}
+
+	// Perform the SOAP call.
+	if err = client.SOAPClient.PerformAction(URN_DeviceProtection_1, "GetSupportedProtocols", request, response); err != nil {
+		return
+	}
+
+	// BEGIN Unmarshal arguments from response.
+
+	if ProtocolList, err = soap.UnmarshalString(response.ProtocolList); err != nil {
+		return
+	}
+	// END Unmarshal arguments from response.
+	return
+}
+
+//
+//
+// Return values:
+//
+// * RoleList:
+func (client *DeviceProtection1) GetAssignedRoles() (RoleList string, err error) {
+	// Request structure.
+	request := interface{}(nil)
+	// BEGIN Marshal arguments into request.
+
+	// END Marshal arguments into request.
+
+	// Response structure.
+	response := &struct {
+		RoleList string
+	}{}
+
+	// Perform the SOAP call.
+	if err = client.SOAPClient.PerformAction(URN_DeviceProtection_1, "GetAssignedRoles", request, response); err != nil {
+		return
+	}
+
+	// BEGIN Unmarshal arguments from response.
+
+	if RoleList, err = soap.UnmarshalString(response.RoleList); err != nil {
+		return
+	}
+	// END Unmarshal arguments from response.
+	return
+}
+
+// Arguments:
+//
+// * DeviceUDN:
+//
+// * ServiceId:
+//
+// * ActionName:
+//
+// Return values:
+//
+// * RoleList:
+//
+// * RestrictedRoleList:
+func (client *DeviceProtection1) GetRolesForAction(DeviceUDN string, ServiceId string, ActionName string) (RoleList string, RestrictedRoleList string, err error) {
+	// Request structure.
+	request := &struct {
+		DeviceUDN string
+
+		ServiceId string
+
+		ActionName string
+	}{}
+	// BEGIN Marshal arguments into request.
+
+	if request.DeviceUDN, err = soap.MarshalString(DeviceUDN); err != nil {
+		return
+	}
+	if request.ServiceId, err = soap.MarshalString(ServiceId); err != nil {
+		return
+	}
+	if request.ActionName, err = soap.MarshalString(ActionName); err != nil {
+		return
+	}
+	// END Marshal arguments into request.
+
+	// Response structure.
+	response := &struct {
+		RoleList string
+
+		RestrictedRoleList string
+	}{}
+
+	// Perform the SOAP call.
+	if err = client.SOAPClient.PerformAction(URN_DeviceProtection_1, "GetRolesForAction", request, response); err != nil {
+		return
+	}
+
+	// BEGIN Unmarshal arguments from response.
+
+	if RoleList, err = soap.UnmarshalString(response.RoleList); err != nil {
+		return
+	}
+	if RestrictedRoleList, err = soap.UnmarshalString(response.RestrictedRoleList); err != nil {
+		return
+	}
+	// END Unmarshal arguments from response.
+	return
+}
+
+// Arguments:
+//
+// * ProtocolType:
+//
+// * Name:
+//
+// Return values:
+//
+// * Salt:
+//
+// * Challenge:
+func (client *DeviceProtection1) GetUserLoginChallenge(ProtocolType string, Name string) (Salt []byte, Challenge []byte, err error) {
+	// Request structure.
+	request := &struct {
+		ProtocolType string
+
+		Name string
+	}{}
+	// BEGIN Marshal arguments into request.
+
+	if request.ProtocolType, err = soap.MarshalString(ProtocolType); err != nil {
+		return
+	}
+	if request.Name, err = soap.MarshalString(Name); err != nil {
+		return
+	}
+	// END Marshal arguments into request.
+
+	// Response structure.
+	response := &struct {
+		Salt string
+
+		Challenge string
+	}{}
+
+	// Perform the SOAP call.
+	if err = client.SOAPClient.PerformAction(URN_DeviceProtection_1, "GetUserLoginChallenge", request, response); err != nil {
+		return
+	}
+
+	// BEGIN Unmarshal arguments from response.
+
+	if Salt, err = soap.UnmarshalBinBase64(response.Salt); err != nil {
+		return
+	}
+	if Challenge, err = soap.UnmarshalBinBase64(response.Challenge); err != nil {
+		return
+	}
+	// END Unmarshal arguments from response.
+	return
+}
+
+// Arguments:
+//
+// * ProtocolType:
+//
+// * Challenge:
+//
+// * Authenticator:
+//
+//
+func (client *DeviceProtection1) UserLogin(ProtocolType string, Challenge []byte, Authenticator []byte) (err error) {
+	// Request structure.
+	request := &struct {
+		ProtocolType string
+
+		Challenge string
+
+		Authenticator string
+	}{}
+	// BEGIN Marshal arguments into request.
+
+	if request.ProtocolType, err = soap.MarshalString(ProtocolType); err != nil {
+		return
+	}
+	if request.Challenge, err = soap.MarshalBinBase64(Challenge); err != nil {
+		return
+	}
+	if request.Authenticator, err = soap.MarshalBinBase64(Authenticator); err != nil {
+		return
+	}
+	// END Marshal arguments into request.
+
+	// Response structure.
+	response := interface{}(nil)
+
+	// Perform the SOAP call.
+	if err = client.SOAPClient.PerformAction(URN_DeviceProtection_1, "UserLogin", request, response); err != nil {
+		return
+	}
+
+	// BEGIN Unmarshal arguments from response.
+
+	// END Unmarshal arguments from response.
+	return
+}
+
+//
+//
+//
+func (client *DeviceProtection1) UserLogout() (err error) {
+	// Request structure.
+	request := interface{}(nil)
+	// BEGIN Marshal arguments into request.
+
+	// END Marshal arguments into request.
+
+	// Response structure.
+	response := interface{}(nil)
+
+	// Perform the SOAP call.
+	if err = client.SOAPClient.PerformAction(URN_DeviceProtection_1, "UserLogout", request, response); err != nil {
+		return
+	}
+
+	// BEGIN Unmarshal arguments from response.
+
+	// END Unmarshal arguments from response.
+	return
+}
+
+//
+//
+// Return values:
+//
+// * ACL:
+func (client *DeviceProtection1) GetACLData() (ACL string, err error) {
+	// Request structure.
+	request := interface{}(nil)
+	// BEGIN Marshal arguments into request.
+
+	// END Marshal arguments into request.
+
+	// Response structure.
+	response := &struct {
+		ACL string
+	}{}
+
+	// Perform the SOAP call.
+	if err = client.SOAPClient.PerformAction(URN_DeviceProtection_1, "GetACLData", request, response); err != nil {
+		return
+	}
+
+	// BEGIN Unmarshal arguments from response.
+
+	if ACL, err = soap.UnmarshalString(response.ACL); err != nil {
+		return
+	}
+	// END Unmarshal arguments from response.
+	return
+}
+
+// Arguments:
+//
+// * IdentityList:
+//
+// Return values:
+//
+// * IdentityListResult:
+func (client *DeviceProtection1) AddIdentityList(IdentityList string) (IdentityListResult string, err error) {
+	// Request structure.
+	request := &struct {
+		IdentityList string
+	}{}
+	// BEGIN Marshal arguments into request.
+
+	if request.IdentityList, err = soap.MarshalString(IdentityList); err != nil {
+		return
+	}
+	// END Marshal arguments into request.
+
+	// Response structure.
+	response := &struct {
+		IdentityListResult string
+	}{}
+
+	// Perform the SOAP call.
+	if err = client.SOAPClient.PerformAction(URN_DeviceProtection_1, "AddIdentityList", request, response); err != nil {
+		return
+	}
+
+	// BEGIN Unmarshal arguments from response.
+
+	if IdentityListResult, err = soap.UnmarshalString(response.IdentityListResult); err != nil {
+		return
+	}
+	// END Unmarshal arguments from response.
+	return
+}
+
+// Arguments:
+//
+// * Identity:
+//
+//
+func (client *DeviceProtection1) RemoveIdentity(Identity string) (err error) {
+	// Request structure.
+	request := &struct {
+		Identity string
+	}{}
+	// BEGIN Marshal arguments into request.
+
+	if request.Identity, err = soap.MarshalString(Identity); err != nil {
+		return
+	}
+	// END Marshal arguments into request.
+
+	// Response structure.
+	response := interface{}(nil)
+
+	// Perform the SOAP call.
+	if err = client.SOAPClient.PerformAction(URN_DeviceProtection_1, "RemoveIdentity", request, response); err != nil {
+		return
+	}
+
+	// BEGIN Unmarshal arguments from response.
+
+	// END Unmarshal arguments from response.
+	return
+}
+
+// Arguments:
+//
+// * ProtocolType:
+//
+// * Name:
+//
+// * Stored:
+//
+// * Salt:
+//
+//
+func (client *DeviceProtection1) SetUserLoginPassword(ProtocolType string, Name string, Stored []byte, Salt []byte) (err error) {
+	// Request structure.
+	request := &struct {
+		ProtocolType string
+
+		Name string
+
+		Stored string
+
+		Salt string
+	}{}
+	// BEGIN Marshal arguments into request.
+
+	if request.ProtocolType, err = soap.MarshalString(ProtocolType); err != nil {
+		return
+	}
+	if request.Name, err = soap.MarshalString(Name); err != nil {
+		return
+	}
+	if request.Stored, err = soap.MarshalBinBase64(Stored); err != nil {
+		return
+	}
+	if request.Salt, err = soap.MarshalBinBase64(Salt); err != nil {
+		return
+	}
+	// END Marshal arguments into request.
+
+	// Response structure.
+	response := interface{}(nil)
+
+	// Perform the SOAP call.
+	if err = client.SOAPClient.PerformAction(URN_DeviceProtection_1, "SetUserLoginPassword", request, response); err != nil {
+		return
+	}
+
+	// BEGIN Unmarshal arguments from response.
+
+	// END Unmarshal arguments from response.
+	return
+}
+
+// Arguments:
+//
+// * Identity:
+//
+// * RoleList:
+//
+//
+func (client *DeviceProtection1) AddRolesForIdentity(Identity string, RoleList string) (err error) {
+	// Request structure.
+	request := &struct {
+		Identity string
+
+		RoleList string
+	}{}
+	// BEGIN Marshal arguments into request.
+
+	if request.Identity, err = soap.MarshalString(Identity); err != nil {
+		return
+	}
+	if request.RoleList, err = soap.MarshalString(RoleList); err != nil {
+		return
+	}
+	// END Marshal arguments into request.
+
+	// Response structure.
+	response := interface{}(nil)
+
+	// Perform the SOAP call.
+	if err = client.SOAPClient.PerformAction(URN_DeviceProtection_1, "AddRolesForIdentity", request, response); err != nil {
+		return
+	}
+
+	// BEGIN Unmarshal arguments from response.
+
+	// END Unmarshal arguments from response.
+	return
+}
+
+// Arguments:
+//
+// * Identity:
+//
+// * RoleList:
+//
+//
+func (client *DeviceProtection1) RemoveRolesForIdentity(Identity string, RoleList string) (err error) {
+	// Request structure.
+	request := &struct {
+		Identity string
+
+		RoleList string
+	}{}
+	// BEGIN Marshal arguments into request.
+
+	if request.Identity, err = soap.MarshalString(Identity); err != nil {
+		return
+	}
+	if request.RoleList, err = soap.MarshalString(RoleList); err != nil {
+		return
+	}
+	// END Marshal arguments into request.
+
+	// Response structure.
+	response := interface{}(nil)
+
+	// Perform the SOAP call.
+	if err = client.SOAPClient.PerformAction(URN_DeviceProtection_1, "RemoveRolesForIdentity", request, response); err != nil {
+		return
+	}
+
+	// BEGIN Unmarshal arguments from response.
+
+	// END Unmarshal arguments from response.
+	return
+}
 
 // LANHostConfigManagement1 is a client for UPnP SOAP service with URN "urn:schemas-upnp-org:service:LANHostConfigManagement:1". See
 // goupnp.ServiceClient, which contains RootDevice and Service attributes which
@@ -2932,7 +3507,7 @@ func newWANIPConnection2ClientsFromGenericClients(genericClients []goupnp.Servic
 
 // Arguments:
 //
-// * NewConnectionType: allowed values: Unconfigured, IP_Routed, IP_Bridged
+// * NewConnectionType:
 //
 //
 func (client *WANIPConnection2) SetConnectionType(NewConnectionType string) (err error) {
@@ -2965,7 +3540,7 @@ func (client *WANIPConnection2) SetConnectionType(NewConnectionType string) (err
 //
 // Return values:
 //
-// * NewConnectionType: allowed values: Unconfigured, IP_Routed, IP_Bridged
+// * NewConnectionType:
 //
 // * NewPossibleConnectionTypes:
 func (client *WANIPConnection2) GetConnectionTypeInfo() (NewConnectionType string, NewPossibleConnectionTypes string, err error) {
@@ -3168,9 +3743,9 @@ func (client *WANIPConnection2) SetWarnDisconnectDelay(NewWarnDisconnectDelay ui
 //
 // Return values:
 //
-// * NewConnectionStatus: allowed values: Unconfigured, Connected, Disconnected
+// * NewConnectionStatus: allowed values: Unconfigured, Connecting, Connected, PendingDisconnect, Disconnecting, Disconnected
 //
-// * NewLastConnectionError: allowed values: ERROR_NONE
+// * NewLastConnectionError: allowed values: ERROR_NONE, ERROR_COMMAND_ABORTED, ERROR_NOT_ENABLED_FOR_INTERNET, ERROR_USER_DISCONNECT, ERROR_ISP_DISCONNECT, ERROR_IDLE_DISCONNECT, ERROR_FORCED_DISCONNECT, ERROR_NO_CARRIER, ERROR_IP_CONFIGURATION, ERROR_UNKNOWN
 //
 // * NewUptime:
 func (client *WANIPConnection2) GetStatusInfo() (NewConnectionStatus string, NewLastConnectionError string, NewUptime uint32, err error) {
@@ -3352,7 +3927,7 @@ func (client *WANIPConnection2) GetNATRSIPStatus() (NewRSIPAvailable bool, NewNA
 //
 // * NewProtocol: allowed values: TCP, UDP
 //
-// * NewInternalPort: allowed value range: minimum=1, maximum=65535
+// * NewInternalPort:
 //
 // * NewInternalClient:
 //
@@ -3360,7 +3935,7 @@ func (client *WANIPConnection2) GetNATRSIPStatus() (NewRSIPAvailable bool, NewNA
 //
 // * NewPortMappingDescription:
 //
-// * NewLeaseDuration: allowed value range: minimum=0, maximum=604800
+// * NewLeaseDuration:
 func (client *WANIPConnection2) GetGenericPortMappingEntry(NewPortMappingIndex uint16) (NewRemoteHost string, NewExternalPort uint16, NewProtocol string, NewInternalPort uint16, NewInternalClient string, NewEnabled bool, NewPortMappingDescription string, NewLeaseDuration uint32, err error) {
 	// Request structure.
 	request := &struct {
@@ -3437,7 +4012,7 @@ func (client *WANIPConnection2) GetGenericPortMappingEntry(NewPortMappingIndex u
 //
 // Return values:
 //
-// * NewInternalPort: allowed value range: minimum=1, maximum=65535
+// * NewInternalPort:
 //
 // * NewInternalClient:
 //
@@ -3445,7 +4020,7 @@ func (client *WANIPConnection2) GetGenericPortMappingEntry(NewPortMappingIndex u
 //
 // * NewPortMappingDescription:
 //
-// * NewLeaseDuration: allowed value range: minimum=0, maximum=604800
+// * NewLeaseDuration:
 func (client *WANIPConnection2) GetSpecificPortMappingEntry(NewRemoteHost string, NewExternalPort uint16, NewProtocol string) (NewInternalPort uint16, NewInternalClient string, NewEnabled bool, NewPortMappingDescription string, NewLeaseDuration uint32, err error) {
 	// Request structure.
 	request := &struct {
@@ -3515,7 +4090,7 @@ func (client *WANIPConnection2) GetSpecificPortMappingEntry(NewRemoteHost string
 //
 // * NewProtocol: allowed values: TCP, UDP
 //
-// * NewInternalPort: allowed value range: minimum=1, maximum=65535
+// * NewInternalPort:
 //
 // * NewInternalClient:
 //
@@ -3523,7 +4098,7 @@ func (client *WANIPConnection2) GetSpecificPortMappingEntry(NewRemoteHost string
 //
 // * NewPortMappingDescription:
 //
-// * NewLeaseDuration: allowed value range: minimum=0, maximum=604800
+// * NewLeaseDuration:
 //
 //
 func (client *WANIPConnection2) AddPortMapping(NewRemoteHost string, NewExternalPort uint16, NewProtocol string, NewInternalPort uint16, NewInternalClient string, NewEnabled bool, NewPortMappingDescription string, NewLeaseDuration uint32) (err error) {
@@ -3789,7 +4364,7 @@ func (client *WANIPConnection2) GetListOfPortMappings(NewStartPort uint16, NewEn
 //
 // * NewProtocol: allowed values: TCP, UDP
 //
-// * NewInternalPort: allowed value range: minimum=1, maximum=65535
+// * NewInternalPort:
 //
 // * NewInternalClient:
 //
@@ -3797,7 +4372,7 @@ func (client *WANIPConnection2) GetListOfPortMappings(NewStartPort uint16, NewEn
 //
 // * NewPortMappingDescription:
 //
-// * NewLeaseDuration: allowed value range: minimum=0, maximum=604800
+// * NewLeaseDuration:
 //
 // Return values:
 //
