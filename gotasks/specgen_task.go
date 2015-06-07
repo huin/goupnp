@@ -4,12 +4,11 @@ package gotasks
 
 import (
 	"archive/zip"
-	"bytes"
 	"encoding/xml"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
+	"net/http"
 	"os"
 	"path"
 	"path/filepath"
@@ -28,6 +27,35 @@ var (
 	serviceURNPrefix = "urn:schemas-upnp-org:service:"
 )
 
+// DCP contains extra metadata to use when generating DCP source files.
+type DCPMetadata struct {
+	Name         string // What to name the Go DCP package.
+	OfficialName string // Official name for the DCP.
+	DocURL       string // Optional - URL for futher documentation about the DCP.
+	XMLSpecURL   string // Where to download the XML spec from.
+}
+
+var dcpMetadata = []DCPMetadata{
+	{
+		Name:         "internetgateway1",
+		OfficialName: "Internet Gateway Device v1",
+		DocURL:       "http://upnp.org/specs/gw/UPnP-gw-InternetGatewayDevice-v1-Device.pdf",
+		XMLSpecURL:   "http://upnp.org/specs/gw/UPnP-gw-IGD-TestFiles-20010921.zip",
+	},
+	{
+		Name:         "internetgateway2",
+		OfficialName: "Internet Gateway Device v2",
+		DocURL:       "http://upnp.org/specs/gw/UPnP-gw-InternetGatewayDevice-v2-Device.pdf",
+		XMLSpecURL:   "http://upnp.org/specs/gw/UPnP-gw-IGD-Testfiles-20110224.zip",
+	},
+	{
+		Name:         "av1",
+		OfficialName: "MediaServer v1 and MediaRenderer v1",
+		DocURL:       "http://upnp.org/specs/av/av1/",
+		XMLSpecURL:   "http://upnp.org/specs/av/UPnP-av-TestFiles-20070927.zip",
+	},
+}
+
 // NAME
 //   specgen - generates Go code from the UPnP specification files.
 //
@@ -35,109 +63,80 @@ var (
 //   The specification is available for download from:
 //
 // OPTIONS
-//   -s, --spec_filename=<upnpresources.zip>
-//     Path to the specification file, available from http://upnp.org/resources/upnpresources.zip
+//   -s, --specs_dir=<spec directory>
+//     Path to the specification storage directory. This is used to find (and download if not present) the specification ZIP files. Defaults to 'specs'
 //   -o, --out_dir=<output directory>
-//     Path to the output directory. This is is where the DCP source files will be placed. Should normally correspond to the directory for github.com/huin/goupnp/dcps
+//     Path to the output directory. This is is where the DCP source files will be placed. Should normally correspond to the directory for github.com/huin/goupnp/dcps. Defaults to '../dcps'
 //   --nogofmt
 //     Disable passing the output through gofmt. Do this if debugging code output problems and needing to see the generated code prior to being passed through gofmt.
 func TaskSpecgen(t *tasking.T) {
-	specFilename := t.Flags.String("spec-filename")
-	if specFilename == "" {
-		specFilename = t.Flags.String("s")
+	specsDir := fallbackStrValue("specs", t.Flags.String("specs_dir"), t.Flags.String("s"))
+	if err := os.MkdirAll(specsDir, os.ModePerm); err != nil {
+		t.Fatalf("Could not create specs-dir %q: %v\n", specsDir, err)
 	}
-	if specFilename == "" {
-		t.Fatal("--spec_filename is required")
-	}
-	outDir := t.Flags.String("out-dir")
-	if outDir == "" {
-		outDir = t.Flags.String("o")
-	}
-	if outDir == "" {
-		log.Fatal("--out_dir is required")
-	}
+	outDir := fallbackStrValue("../dcps", t.Flags.String("out_dir"), t.Flags.String("o"))
 	useGofmt := !t.Flags.Bool("nogofmt")
 
-	specArchive, err := openZipfile(specFilename)
-	if err != nil {
-		t.Fatalf("Error opening spec file: %v", err)
-	}
-	defer specArchive.Close()
-
-	dcpCol := newDcpsCollection()
-	for _, f := range globFiles("standardizeddcps/*/*.zip", specArchive.Reader) {
-		dirName := strings.TrimPrefix(f.Name, "standardizeddcps/")
-		slashIndex := strings.Index(dirName, "/")
-		if slashIndex == -1 {
-			// Should not happen.
-			t.Logf("Could not find / in %q", dirName)
-			return
+	for _, d := range dcpMetadata {
+		specFilename := filepath.Join(specsDir, d.Name+".zip")
+		err := acquireFile(specFilename, d.XMLSpecURL)
+		if err != nil {
+			t.Logf("Could not acquire spec for %s, skipping: %v\n", d.Name, err)
 		}
-		dirName = dirName[:slashIndex]
-
-		dcp := dcpCol.dcpForDir(dirName)
-		if dcp == nil {
-			t.Logf("No alias defined for directory %q: skipping %s\n", dirName, f.Name)
-			continue
-		} else {
-			t.Logf("Alias found for directory %q: processing %s\n", dirName, f.Name)
+		dcp := newDCP(d)
+		if err := dcp.processZipFile(specFilename); err != nil {
+			log.Printf("Error processing spec for %s in file %q: %v", d.Name, specFilename, err)
 		}
-
-		dcp.processZipFile(f)
-	}
-
-	for _, dcp := range dcpCol.dcpByAlias {
+		dcp.writePackage(outDir, useGofmt)
 		if err := dcp.writePackage(outDir, useGofmt); err != nil {
 			log.Printf("Error writing package %q: %v", dcp.Metadata.Name, err)
 		}
 	}
 }
 
-// DCP contains extra metadata to use when generating DCP source files.
-type DCPMetadata struct {
-	Name         string // What to name the Go DCP package.
-	OfficialName string // Official name for the DCP.
-	DocURL       string // Optional - URL for futher documentation about the DCP.
-}
-
-var dcpMetadataByDir = map[string]DCPMetadata{
-	"Internet Gateway_1": {
-		Name:         "internetgateway1",
-		OfficialName: "Internet Gateway Device v1",
-		DocURL:       "http://upnp.org/specs/gw/UPnP-gw-InternetGatewayDevice-v1-Device.pdf",
-	},
-	"Internet Gateway_2": {
-		Name:         "internetgateway2",
-		OfficialName: "Internet Gateway Device v2",
-		DocURL:       "http://upnp.org/specs/gw/UPnP-gw-InternetGatewayDevice-v2-Device.pdf",
-	},
-	"MediaServer_1 and MediaRenderer_1": {
-		Name:         "av1",
-		OfficialName: "MediaServer v1 and MediaRenderer v1",
-		DocURL:       "http://upnp.org/specs/av/av1/",
-	},
-}
-
-type dcpCollection struct {
-	dcpByAlias map[string]*DCP
-}
-
-func newDcpsCollection() *dcpCollection {
-	c := &dcpCollection{
-		dcpByAlias: make(map[string]*DCP),
+func fallbackStrValue(defaultValue string, values ...string) string {
+	for _, v := range values {
+		if v != "" {
+			return v
+		}
 	}
-	for _, metadata := range dcpMetadataByDir {
-		c.dcpByAlias[metadata.Name] = newDCP(metadata)
-	}
-	return c
+	return defaultValue
 }
 
-func (c *dcpCollection) dcpForDir(dirName string) *DCP {
-	metadata, ok := dcpMetadataByDir[dirName]
-	if !ok {
+func acquireFile(specFilename string, xmlSpecURL string) error {
+	if f, err := os.Open(specFilename); err != nil {
+		if !os.IsNotExist(err) {
+			return err
+		}
+	} else {
+		f.Close()
 		return nil
 	}
-	return c.dcpByAlias[metadata.Name]
+
+	resp, err := http.Get(xmlSpecURL)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("could not download spec %q from %q: ",
+			specFilename, xmlSpecURL, resp.Status)
+	}
+
+	tmpFilename := specFilename + ".download"
+	w, err := os.Create(tmpFilename)
+	if err != nil {
+		return err
+	}
+	defer w.Close()
+
+	_, err = io.Copy(w, resp.Body)
+	if err != nil {
+		return err
+	}
+
+	return os.Rename(tmpFilename, specFilename)
 }
 
 // DCP collects together information about a UPnP Device Control Protocol.
@@ -156,33 +155,37 @@ func newDCP(metadata DCPMetadata) *DCP {
 	}
 }
 
-func (dcp *DCP) processZipFile(file *zip.File) {
-	archive, err := openChildZip(file)
+func (dcp *DCP) processZipFile(filename string) error {
+	archive, err := zip.OpenReader(filename)
 	if err != nil {
-		log.Println("Error reading child zip file:", err)
-		return
+		return fmt.Errorf("error reading zip file %q: %v", filename, err)
 	}
+	defer archive.Close()
 	for _, deviceFile := range globFiles("*/device/*.xml", archive) {
-		dcp.processDeviceFile(deviceFile)
+		if err := dcp.processDeviceFile(deviceFile); err != nil {
+			return err
+		}
 	}
 	for _, scpdFile := range globFiles("*/service/*.xml", archive) {
-		dcp.processSCPDFile(scpdFile)
+		if err := dcp.processSCPDFile(scpdFile); err != nil {
+			return err
+		}
 	}
+	return nil
 }
 
-func (dcp *DCP) processDeviceFile(file *zip.File) {
+func (dcp *DCP) processDeviceFile(file *zip.File) error {
 	var device goupnp.Device
 	if err := unmarshalXmlFile(file, &device); err != nil {
-		log.Printf("Error decoding device XML from file %q: %v", file.Name, err)
-		return
+		return fmt.Errorf("error decoding device XML from file %q: %v", file.Name, err)
 	}
+	var mainErr error
 	device.VisitDevices(func(d *goupnp.Device) {
 		t := strings.TrimSpace(d.DeviceType)
 		if t != "" {
 			u, err := extractURNParts(t, deviceURNPrefix)
 			if err != nil {
-				log.Println(err)
-				return
+				mainErr = err
 			}
 			dcp.DeviceTypes[t] = u
 		}
@@ -190,11 +193,11 @@ func (dcp *DCP) processDeviceFile(file *zip.File) {
 	device.VisitServices(func(s *goupnp.Service) {
 		u, err := extractURNParts(s.ServiceType, serviceURNPrefix)
 		if err != nil {
-			log.Println(err)
-			return
+			mainErr = err
 		}
 		dcp.ServiceTypes[s.ServiceType] = u
 	})
+	return mainErr
 }
 
 func (dcp *DCP) writePackage(outDir string, useGofmt bool) error {
@@ -222,22 +225,21 @@ func (dcp *DCP) writePackage(outDir string, useGofmt bool) error {
 	return output.Close()
 }
 
-func (dcp *DCP) processSCPDFile(file *zip.File) {
+func (dcp *DCP) processSCPDFile(file *zip.File) error {
 	scpd := new(scpd.SCPD)
 	if err := unmarshalXmlFile(file, scpd); err != nil {
-		log.Printf("Error decoding SCPD XML from file %q: %v", file.Name, err)
-		return
+		return fmt.Errorf("error decoding SCPD XML from file %q: %v", file.Name, err)
 	}
 	scpd.Clean()
 	urnParts, err := urnPartsFromSCPDFilename(file.Name)
 	if err != nil {
-		log.Printf("Could not recognize SCPD filename %q: %v", file.Name, err)
-		return
+		return fmt.Errorf("could not recognize SCPD filename %q: %v", file.Name, err)
 	}
 	dcp.Services = append(dcp.Services, SCPDWithURN{
 		URNParts: urnParts,
 		SCPD:     scpd,
 	})
+	return nil
 }
 
 type SCPDWithURN struct {
@@ -333,47 +335,7 @@ var typeConvs = map[string]conv{
 	"uri":         conv{"URI", "*url.URL"},
 }
 
-type closeableZipReader struct {
-	io.Closer
-	*zip.Reader
-}
-
-func openZipfile(filename string) (*closeableZipReader, error) {
-	file, err := os.Open(filename)
-	if err != nil {
-		return nil, err
-	}
-	fi, err := file.Stat()
-	if err != nil {
-		return nil, err
-	}
-	archive, err := zip.NewReader(file, fi.Size())
-	if err != nil {
-		return nil, err
-	}
-	return &closeableZipReader{
-		Closer: file,
-		Reader: archive,
-	}, nil
-}
-
-// openChildZip opens a zip file within another zip file.
-func openChildZip(file *zip.File) (*zip.Reader, error) {
-	zipFile, err := file.Open()
-	if err != nil {
-		return nil, err
-	}
-	defer zipFile.Close()
-
-	zipBytes, err := ioutil.ReadAll(zipFile)
-	if err != nil {
-		return nil, err
-	}
-
-	return zip.NewReader(bytes.NewReader(zipBytes), int64(len(zipBytes)))
-}
-
-func globFiles(pattern string, archive *zip.Reader) []*zip.File {
+func globFiles(pattern string, archive *zip.ReadCloser) []*zip.File {
 	var files []*zip.File
 	for _, f := range archive.File {
 		if matched, err := path.Match(pattern, f.Name); err != nil {
