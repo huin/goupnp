@@ -111,6 +111,11 @@ var dcpMetadataByDir = map[string]DCPMetadata{
 		OfficialName: "Internet Gateway Device v2",
 		DocURL:       "http://upnp.org/specs/gw/UPnP-gw-InternetGatewayDevice-v2-Device.pdf",
 	},
+	"MediaServer_1 and MediaRenderer_1": {
+		Name:         "av1",
+		OfficialName: "MediaServer v1 and MediaRenderer v1",
+		DocURL:       "http://upnp.org/specs/av/av1/",
+	},
 }
 
 type dcpCollection struct {
@@ -325,6 +330,7 @@ var typeConvs = map[string]conv{
 	"boolean":     conv{"Boolean", "bool"},
 	"bin.base64":  conv{"BinBase64", "[]byte"},
 	"bin.hex":     conv{"BinHex", "[]byte"},
+	"uri":         conv{"URI", "*url.URL"},
 }
 
 type closeableZipReader struct {
