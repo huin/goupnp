@@ -3,6 +3,7 @@ package soap
 import (
 	"bytes"
 	"math"
+	"net/url"
 	"testing"
 	"time"
 )
@@ -273,6 +274,18 @@ func (v BinHexTest) Equal(result interface{}) bool {
 	return bytes.Equal([]byte(v), result.([]byte))
 }
 
+type URITest struct{ URL *url.URL }
+
+func (v URITest) Marshal() (string, error) {
+	return MarshalURI(v.URL)
+}
+func (v URITest) Unmarshal(s string) (interface{}, error) {
+	return UnmarshalURI(s)
+}
+func (v URITest) Equal(result interface{}) bool {
+	return v.URL.String() == result.(*url.URL).String()
+}
+
 func Test(t *testing.T) {
 	const time010203 time.Duration = (1*3600 + 2*60 + 3) * time.Second
 	const time0102 time.Duration = (1*3600 + 2*60) * time.Second
@@ -443,6 +456,9 @@ func Test(t *testing.T) {
 		{str: "61", value: BinHexTest("a")},
 		{str: "4c6f6e67657220537472696e672e", value: BinHexTest("Longer String.")},
 		{str: "4C6F6E67657220537472696E672E", value: BinHexTest("Longer String."), noMarshal: true},
+
+		// uri
+		{str: "http://example.com/path", value: URITest{&url.URL{Scheme: "http", Host: "example.com", Path: "/path"}}},
 	}
 
 	// Generate extra test cases from convTests that implement duper.
