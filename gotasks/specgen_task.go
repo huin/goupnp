@@ -33,6 +33,8 @@ type DCPMetadata struct {
 	OfficialName string // Official name for the DCP.
 	DocURL       string // Optional - URL for futher documentation about the DCP.
 	XMLSpecURL   string // Where to download the XML spec from.
+	// Any special-case functions to run against the DCP before writing it out.
+	Hacks []DCPHackFn
 }
 
 var dcpMetadata = []DCPMetadata{
@@ -47,6 +49,20 @@ var dcpMetadata = []DCPMetadata{
 		OfficialName: "Internet Gateway Device v2",
 		DocURL:       "http://upnp.org/specs/gw/UPnP-gw-InternetGatewayDevice-v2-Device.pdf",
 		XMLSpecURL:   "http://upnp.org/specs/gw/UPnP-gw-IGD-Testfiles-20110224.zip",
+		Hacks: []DCPHackFn{
+			func(dcp *DCP) error {
+				missingURN := "urn:schemas-upnp-org:service:WANIPv6FirewallControl:1"
+				if _, ok := dcp.ServiceTypes[missingURN]; ok {
+					return nil
+				}
+				urnParts, err := extractURNParts(missingURN, serviceURNPrefix)
+				if err != nil {
+					return err
+				}
+				dcp.ServiceTypes[missingURN] = urnParts
+				return nil
+			},
+		},
 	},
 	{
 		Name:         "av1",
@@ -55,6 +71,8 @@ var dcpMetadata = []DCPMetadata{
 		XMLSpecURL:   "http://upnp.org/specs/av/UPnP-av-TestFiles-20070927.zip",
 	},
 }
+
+type DCPHackFn func(*DCP) error
 
 // NAME
 //   specgen - generates Go code from the UPnP specification files.
@@ -77,19 +95,29 @@ func TaskSpecgen(t *tasking.T) {
 	outDir := fallbackStrValue("../dcps", t.Flags.String("out_dir"), t.Flags.String("o"))
 	useGofmt := !t.Flags.Bool("nogofmt")
 
+NEXT_DCP:
 	for _, d := range dcpMetadata {
 		specFilename := filepath.Join(specsDir, d.Name+".zip")
 		err := acquireFile(specFilename, d.XMLSpecURL)
 		if err != nil {
 			t.Logf("Could not acquire spec for %s, skipping: %v\n", d.Name, err)
+			continue NEXT_DCP
 		}
 		dcp := newDCP(d)
 		if err := dcp.processZipFile(specFilename); err != nil {
 			log.Printf("Error processing spec for %s in file %q: %v", d.Name, specFilename, err)
+			continue NEXT_DCP
+		}
+		for i, hack := range d.Hacks {
+			if err := hack(dcp); err != nil {
+				log.Printf("Error with Hack[%d] for %s: %v", i, d.Name, err)
+				continue NEXT_DCP
+			}
 		}
 		dcp.writePackage(outDir, useGofmt)
 		if err := dcp.writePackage(outDir, useGofmt); err != nil {
 			log.Printf("Error writing package %q: %v", dcp.Metadata.Name, err)
+			continue NEXT_DCP
 		}
 	}
 }

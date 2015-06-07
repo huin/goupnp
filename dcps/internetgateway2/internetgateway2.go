@@ -38,6 +38,7 @@ const (
 	URN_WANEthernetLinkConfig_1    = "urn:schemas-upnp-org:service:WANEthernetLinkConfig:1"
 	URN_WANIPConnection_1          = "urn:schemas-upnp-org:service:WANIPConnection:1"
 	URN_WANIPConnection_2          = "urn:schemas-upnp-org:service:WANIPConnection:2"
+	URN_WANIPv6FirewallControl_1   = "urn:schemas-upnp-org:service:WANIPv6FirewallControl:1"
 	URN_WANPOTSLinkConfig_1        = "urn:schemas-upnp-org:service:WANPOTSLinkConfig:1"
 	URN_WANPPPConnection_1         = "urn:schemas-upnp-org:service:WANPPPConnection:1"
 )
