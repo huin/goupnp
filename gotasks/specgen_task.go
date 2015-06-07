@@ -275,7 +275,19 @@ type SCPDWithURN struct {
 	SCPD *scpd.SCPD
 }
 
-func (s *SCPDWithURN) WrapArgument(arg scpd.Argument) (*argumentWrapper, error) {
+func (s *SCPDWithURN) WrapArguments(args []*scpd.Argument) (argumentWrapperList, error) {
+	wrappedArgs := make(argumentWrapperList, len(args))
+	for i, arg := range args {
+		wa, err := s.wrapArgument(arg)
+		if err != nil {
+			return nil, err
+		}
+		wrappedArgs[i] = wa
+	}
+	return wrappedArgs, nil
+}
+
+func (s *SCPDWithURN) wrapArgument(arg *scpd.Argument) (*argumentWrapper, error) {
 	relVar := s.SCPD.GetStateVariable(arg.RelatedStateVariable)
 	if relVar == nil {
 		return nil, fmt.Errorf("no such state variable: %q, for argument %q", arg.RelatedStateVariable, arg.Name)
@@ -285,7 +297,7 @@ func (s *SCPDWithURN) WrapArgument(arg scpd.Argument) (*argumentWrapper, error) 
 		return nil, fmt.Errorf("unknown data type: %q, for state variable %q, for argument %q", relVar.DataType.Type, arg.RelatedStateVariable, arg.Name)
 	}
 	return &argumentWrapper{
-		Argument: arg,
+		Argument: *arg,
 		relVar:   relVar,
 		conv:     cnv,
 	}, nil
@@ -299,6 +311,12 @@ type argumentWrapper struct {
 
 func (arg *argumentWrapper) AsParameter() string {
 	return fmt.Sprintf("%s %s", arg.Name, arg.conv.ExtType)
+}
+
+func (arg *argumentWrapper) HasDoc() bool {
+	rng := arg.relVar.AllowedValueRange
+	return ((rng != nil && (rng.Minimum != "" || rng.Maximum != "" || rng.Step != "")) ||
+		len(arg.relVar.AllowedValues) > 0)
 }
 
 func (arg *argumentWrapper) Document() string {
@@ -328,6 +346,17 @@ func (arg *argumentWrapper) Marshal() string {
 
 func (arg *argumentWrapper) Unmarshal(objVar string) string {
 	return fmt.Sprintf("soap.Unmarshal%s(%s.%s)", arg.conv.FuncSuffix, objVar, arg.Name)
+}
+
+type argumentWrapperList []*argumentWrapper
+
+func (args argumentWrapperList) HasDoc() bool {
+	for _, arg := range args {
+		if arg.HasDoc() {
+			return true
+		}
+	}
+	return false
 }
 
 type conv struct {
@@ -524,29 +553,33 @@ func new{{$srvIdent}}ClientsFromGenericClients(genericClients []goupnp.ServiceCl
 
 {{range .SCPD.Actions}}{{/* loops over *SCPDWithURN values */}}
 
-{{$inargs := .InputArguments}}{{$outargs := .OutputArguments}}
-// {{if $inargs}}Arguments:{{range $inargs}}{{$argWrap := $srv.WrapArgument .}}
+{{$winargs := $srv.WrapArguments .InputArguments}}
+{{$woutargs := $srv.WrapArguments .OutputArguments}}
+{{if $winargs.HasDoc}}
 //
-// * {{.Name}}: {{$argWrap.Document}}{{end}}{{end}}
+// Arguments:{{range $winargs}}{{if .HasDoc}}
 //
-// {{if $outargs}}Return values:{{range $outargs}}{{$argWrap := $srv.WrapArgument .}}
+// * {{.Name}}: {{.Document}}{{end}}{{end}}{{end}}
+{{if $woutargs.HasDoc}}
 //
-// * {{.Name}}: {{$argWrap.Document}}{{end}}{{end}}
-func (client *{{$srvIdent}}) {{.Name}}({{range $inargs}}{{/*
-*/}}{{$argWrap := $srv.WrapArgument .}}{{$argWrap.AsParameter}}, {{end}}{{/*
-*/}}) ({{range $outargs}}{{/*
-*/}}{{$argWrap := $srv.WrapArgument .}}{{$argWrap.AsParameter}}, {{end}} err error) {
+// Return values:{{range $woutargs}}{{if .HasDoc}}
+//
+// * {{.Name}}: {{.Document}}{{end}}{{end}}{{end}}
+func (client *{{$srvIdent}}) {{.Name}}({{range $winargs}}{{/*
+*/}}{{.AsParameter}}, {{end}}{{/*
+*/}}) ({{range $woutargs}}{{/*
+*/}}{{.AsParameter}}, {{end}} err error) {
 	// Request structure.
-	request := {{if $inargs}}&{{template "argstruct" $inargs}}{{"{}"}}{{else}}{{"interface{}(nil)"}}{{end}}
+	request := {{if $winargs}}&{{template "argstruct" $winargs}}{{"{}"}}{{else}}{{"interface{}(nil)"}}{{end}}
 	// BEGIN Marshal arguments into request.
-{{range $inargs}}{{$argWrap := $srv.WrapArgument .}}
-	if request.{{.Name}}, err = {{$argWrap.Marshal}}; err != nil {
+{{range $winargs}}
+	if request.{{.Name}}, err = {{.Marshal}}; err != nil {
 		return
 	}{{end}}
 	// END Marshal arguments into request.
 
 	// Response structure.
-	response := {{if $outargs}}&{{template "argstruct" $outargs}}{{"{}"}}{{else}}{{"interface{}(nil)"}}{{end}}
+	response := {{if $woutargs}}&{{template "argstruct" $woutargs}}{{"{}"}}{{else}}{{"interface{}(nil)"}}{{end}}
 
 	// Perform the SOAP call.
 	if err = client.SOAPClient.PerformAction({{$srv.URNParts.Const}}, "{{.Name}}", request, response); err != nil {
@@ -554,8 +587,8 @@ func (client *{{$srvIdent}}) {{.Name}}({{range $inargs}}{{/*
 	}
 
 	// BEGIN Unmarshal arguments from response.
-{{range $outargs}}{{$argWrap := $srv.WrapArgument .}}
-	if {{.Name}}, err = {{$argWrap.Unmarshal "response"}}; err != nil {
+{{range $woutargs}}
+	if {{.Name}}, err = {{.Unmarshal "response"}}; err != nil {
 		return
 	}{{end}}
 	// END Unmarshal arguments from response.

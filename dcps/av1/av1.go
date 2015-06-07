@@ -96,15 +96,6 @@ func newAVTransport1ClientsFromGenericClients(genericClients []goupnp.ServiceCli
 	return clients
 }
 
-// Arguments:
-//
-// * InstanceID:
-//
-// * CurrentURI:
-//
-// * CurrentURIMetaData:
-//
-//
 func (client *AVTransport1) SetAVTransportURI(InstanceID uint32, CurrentURI string, CurrentURIMetaData string) (err error) {
 	// Request structure.
 	request := &struct {
@@ -141,15 +132,6 @@ func (client *AVTransport1) SetAVTransportURI(InstanceID uint32, CurrentURI stri
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
-//
-// * NextURI:
-//
-// * NextURIMetaData:
-//
-//
 func (client *AVTransport1) SetNextAVTransportURI(InstanceID uint32, NextURI string, NextURIMetaData string) (err error) {
 	// Request structure.
 	request := &struct {
@@ -186,29 +168,10 @@ func (client *AVTransport1) SetNextAVTransportURI(InstanceID uint32, NextURI str
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
 //
 // Return values:
 //
 // * NrTracks: allowed value range: minimum=0
-//
-// * MediaDuration:
-//
-// * CurrentURI:
-//
-// * CurrentURIMetaData:
-//
-// * NextURI:
-//
-// * NextURIMetaData:
-//
-// * PlayMedium:
-//
-// * RecordMedium:
-//
-// * WriteStatus:
 func (client *AVTransport1) GetMediaInfo(InstanceID uint32) (NrTracks uint32, MediaDuration string, CurrentURI string, CurrentURIMetaData string, NextURI string, NextURIMetaData string, PlayMedium string, RecordMedium string, WriteStatus string, err error) {
 	// Request structure.
 	request := &struct {
@@ -280,9 +243,6 @@ func (client *AVTransport1) GetMediaInfo(InstanceID uint32) (NrTracks uint32, Me
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
 //
 // Return values:
 //
@@ -332,27 +292,10 @@ func (client *AVTransport1) GetTransportInfo(InstanceID uint32) (CurrentTranspor
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
 //
 // Return values:
 //
 // * Track: allowed value range: minimum=0, step=1
-//
-// * TrackDuration:
-//
-// * TrackMetaData:
-//
-// * TrackURI:
-//
-// * RelTime:
-//
-// * AbsTime:
-//
-// * RelCount:
-//
-// * AbsCount:
 func (client *AVTransport1) GetPositionInfo(InstanceID uint32) (Track uint32, TrackDuration string, TrackMetaData string, TrackURI string, RelTime string, AbsTime string, RelCount int32, AbsCount int32, err error) {
 	// Request structure.
 	request := &struct {
@@ -419,17 +362,6 @@ func (client *AVTransport1) GetPositionInfo(InstanceID uint32) (Track uint32, Tr
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
-//
-// Return values:
-//
-// * PlayMedia:
-//
-// * RecMedia:
-//
-// * RecQualityModes:
 func (client *AVTransport1) GetDeviceCapabilities(InstanceID uint32) (PlayMedia string, RecMedia string, RecQualityModes string, err error) {
 	// Request structure.
 	request := &struct {
@@ -471,15 +403,10 @@ func (client *AVTransport1) GetDeviceCapabilities(InstanceID uint32) (PlayMedia 
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
 //
 // Return values:
 //
 // * PlayMode: allowed values: NORMAL
-//
-// * RecQualityMode:
 func (client *AVTransport1) GetTransportSettings(InstanceID uint32) (PlayMode string, RecQualityMode string, err error) {
 	// Request structure.
 	request := &struct {
@@ -516,11 +443,6 @@ func (client *AVTransport1) GetTransportSettings(InstanceID uint32) (PlayMode st
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
-//
-//
 func (client *AVTransport1) Stop(InstanceID uint32) (err error) {
 	// Request structure.
 	request := &struct {
@@ -547,13 +469,11 @@ func (client *AVTransport1) Stop(InstanceID uint32) (err error) {
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * Speed: allowed values: 1
-//
-//
+
 func (client *AVTransport1) Play(InstanceID uint32, Speed string) (err error) {
 	// Request structure.
 	request := &struct {
@@ -585,11 +505,6 @@ func (client *AVTransport1) Play(InstanceID uint32, Speed string) (err error) {
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
-//
-//
 func (client *AVTransport1) Pause(InstanceID uint32) (err error) {
 	// Request structure.
 	request := &struct {
@@ -616,11 +531,6 @@ func (client *AVTransport1) Pause(InstanceID uint32) (err error) {
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
-//
-//
 func (client *AVTransport1) Record(InstanceID uint32) (err error) {
 	// Request structure.
 	request := &struct {
@@ -647,15 +557,11 @@ func (client *AVTransport1) Record(InstanceID uint32) (err error) {
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * Unit: allowed values: TRACK_NR
-//
-// * Target:
-//
-//
+
 func (client *AVTransport1) Seek(InstanceID uint32, Unit string, Target string) (err error) {
 	// Request structure.
 	request := &struct {
@@ -692,11 +598,6 @@ func (client *AVTransport1) Seek(InstanceID uint32, Unit string, Target string) 
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
-//
-//
 func (client *AVTransport1) Next(InstanceID uint32) (err error) {
 	// Request structure.
 	request := &struct {
@@ -723,11 +624,6 @@ func (client *AVTransport1) Next(InstanceID uint32) (err error) {
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
-//
-//
 func (client *AVTransport1) Previous(InstanceID uint32) (err error) {
 	// Request structure.
 	request := &struct {
@@ -754,13 +650,11 @@ func (client *AVTransport1) Previous(InstanceID uint32) (err error) {
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * NewPlayMode: allowed values: NORMAL
-//
-//
+
 func (client *AVTransport1) SetPlayMode(InstanceID uint32, NewPlayMode string) (err error) {
 	// Request structure.
 	request := &struct {
@@ -792,13 +686,6 @@ func (client *AVTransport1) SetPlayMode(InstanceID uint32, NewPlayMode string) (
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
-//
-// * NewRecordQualityMode:
-//
-//
 func (client *AVTransport1) SetRecordQualityMode(InstanceID uint32, NewRecordQualityMode string) (err error) {
 	// Request structure.
 	request := &struct {
@@ -830,13 +717,6 @@ func (client *AVTransport1) SetRecordQualityMode(InstanceID uint32, NewRecordQua
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
-//
-// Return values:
-//
-// * Actions:
 func (client *AVTransport1) GetCurrentTransportActions(InstanceID uint32) (Actions string, err error) {
 	// Request structure.
 	request := &struct {
@@ -928,15 +808,6 @@ func newAVTransport2ClientsFromGenericClients(genericClients []goupnp.ServiceCli
 	return clients
 }
 
-// Arguments:
-//
-// * InstanceID:
-//
-// * CurrentURI:
-//
-// * CurrentURIMetaData:
-//
-//
 func (client *AVTransport2) SetAVTransportURI(InstanceID uint32, CurrentURI string, CurrentURIMetaData string) (err error) {
 	// Request structure.
 	request := &struct {
@@ -973,15 +844,6 @@ func (client *AVTransport2) SetAVTransportURI(InstanceID uint32, CurrentURI stri
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
-//
-// * NextURI:
-//
-// * NextURIMetaData:
-//
-//
 func (client *AVTransport2) SetNextAVTransportURI(InstanceID uint32, NextURI string, NextURIMetaData string) (err error) {
 	// Request structure.
 	request := &struct {
@@ -1018,29 +880,10 @@ func (client *AVTransport2) SetNextAVTransportURI(InstanceID uint32, NextURI str
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
 //
 // Return values:
 //
 // * NrTracks: allowed value range: minimum=0
-//
-// * MediaDuration:
-//
-// * CurrentURI:
-//
-// * CurrentURIMetaData:
-//
-// * NextURI:
-//
-// * NextURIMetaData:
-//
-// * PlayMedium:
-//
-// * RecordMedium:
-//
-// * WriteStatus:
 func (client *AVTransport2) GetMediaInfo(InstanceID uint32) (NrTracks uint32, MediaDuration string, CurrentURI string, CurrentURIMetaData string, NextURI string, NextURIMetaData string, PlayMedium string, RecordMedium string, WriteStatus string, err error) {
 	// Request structure.
 	request := &struct {
@@ -1112,31 +955,12 @@ func (client *AVTransport2) GetMediaInfo(InstanceID uint32) (NrTracks uint32, Me
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
 //
 // Return values:
 //
 // * CurrentType: allowed values: NO_MEDIA, TRACK_AWARE, TRACK_UNAWARE
 //
 // * NrTracks: allowed value range: minimum=0
-//
-// * MediaDuration:
-//
-// * CurrentURI:
-//
-// * CurrentURIMetaData:
-//
-// * NextURI:
-//
-// * NextURIMetaData:
-//
-// * PlayMedium:
-//
-// * RecordMedium:
-//
-// * WriteStatus:
 func (client *AVTransport2) GetMediaInfo_Ext(InstanceID uint32) (CurrentType string, NrTracks uint32, MediaDuration string, CurrentURI string, CurrentURIMetaData string, NextURI string, NextURIMetaData string, PlayMedium string, RecordMedium string, WriteStatus string, err error) {
 	// Request structure.
 	request := &struct {
@@ -1213,9 +1037,6 @@ func (client *AVTransport2) GetMediaInfo_Ext(InstanceID uint32) (CurrentType str
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
 //
 // Return values:
 //
@@ -1265,27 +1086,10 @@ func (client *AVTransport2) GetTransportInfo(InstanceID uint32) (CurrentTranspor
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
 //
 // Return values:
 //
 // * Track: allowed value range: minimum=0, step=1
-//
-// * TrackDuration:
-//
-// * TrackMetaData:
-//
-// * TrackURI:
-//
-// * RelTime:
-//
-// * AbsTime:
-//
-// * RelCount:
-//
-// * AbsCount:
 func (client *AVTransport2) GetPositionInfo(InstanceID uint32) (Track uint32, TrackDuration string, TrackMetaData string, TrackURI string, RelTime string, AbsTime string, RelCount int32, AbsCount int32, err error) {
 	// Request structure.
 	request := &struct {
@@ -1352,17 +1156,6 @@ func (client *AVTransport2) GetPositionInfo(InstanceID uint32) (Track uint32, Tr
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
-//
-// Return values:
-//
-// * PlayMedia:
-//
-// * RecMedia:
-//
-// * RecQualityModes:
 func (client *AVTransport2) GetDeviceCapabilities(InstanceID uint32) (PlayMedia string, RecMedia string, RecQualityModes string, err error) {
 	// Request structure.
 	request := &struct {
@@ -1404,15 +1197,10 @@ func (client *AVTransport2) GetDeviceCapabilities(InstanceID uint32) (PlayMedia 
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
 //
 // Return values:
 //
 // * PlayMode: allowed values: NORMAL
-//
-// * RecQualityMode:
 func (client *AVTransport2) GetTransportSettings(InstanceID uint32) (PlayMode string, RecQualityMode string, err error) {
 	// Request structure.
 	request := &struct {
@@ -1449,11 +1237,6 @@ func (client *AVTransport2) GetTransportSettings(InstanceID uint32) (PlayMode st
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
-//
-//
 func (client *AVTransport2) Stop(InstanceID uint32) (err error) {
 	// Request structure.
 	request := &struct {
@@ -1480,13 +1263,11 @@ func (client *AVTransport2) Stop(InstanceID uint32) (err error) {
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * Speed: allowed values: 1
-//
-//
+
 func (client *AVTransport2) Play(InstanceID uint32, Speed string) (err error) {
 	// Request structure.
 	request := &struct {
@@ -1518,11 +1299,6 @@ func (client *AVTransport2) Play(InstanceID uint32, Speed string) (err error) {
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
-//
-//
 func (client *AVTransport2) Pause(InstanceID uint32) (err error) {
 	// Request structure.
 	request := &struct {
@@ -1549,11 +1325,6 @@ func (client *AVTransport2) Pause(InstanceID uint32) (err error) {
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
-//
-//
 func (client *AVTransport2) Record(InstanceID uint32) (err error) {
 	// Request structure.
 	request := &struct {
@@ -1580,15 +1351,11 @@ func (client *AVTransport2) Record(InstanceID uint32) (err error) {
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * Unit: allowed values: TRACK_NR
-//
-// * Target:
-//
-//
+
 func (client *AVTransport2) Seek(InstanceID uint32, Unit string, Target string) (err error) {
 	// Request structure.
 	request := &struct {
@@ -1625,11 +1392,6 @@ func (client *AVTransport2) Seek(InstanceID uint32, Unit string, Target string) 
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
-//
-//
 func (client *AVTransport2) Next(InstanceID uint32) (err error) {
 	// Request structure.
 	request := &struct {
@@ -1656,11 +1418,6 @@ func (client *AVTransport2) Next(InstanceID uint32) (err error) {
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
-//
-//
 func (client *AVTransport2) Previous(InstanceID uint32) (err error) {
 	// Request structure.
 	request := &struct {
@@ -1687,13 +1444,11 @@ func (client *AVTransport2) Previous(InstanceID uint32) (err error) {
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * NewPlayMode: allowed values: NORMAL
-//
-//
+
 func (client *AVTransport2) SetPlayMode(InstanceID uint32, NewPlayMode string) (err error) {
 	// Request structure.
 	request := &struct {
@@ -1725,13 +1480,6 @@ func (client *AVTransport2) SetPlayMode(InstanceID uint32, NewPlayMode string) (
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
-//
-// * NewRecordQualityMode:
-//
-//
 func (client *AVTransport2) SetRecordQualityMode(InstanceID uint32, NewRecordQualityMode string) (err error) {
 	// Request structure.
 	request := &struct {
@@ -1763,13 +1511,6 @@ func (client *AVTransport2) SetRecordQualityMode(InstanceID uint32, NewRecordQua
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
-//
-// Return values:
-//
-// * Actions:
 func (client *AVTransport2) GetCurrentTransportActions(InstanceID uint32) (Actions string, err error) {
 	// Request structure.
 	request := &struct {
@@ -1801,9 +1542,6 @@ func (client *AVTransport2) GetCurrentTransportActions(InstanceID uint32) (Actio
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
 //
 // Return values:
 //
@@ -1839,15 +1577,6 @@ func (client *AVTransport2) GetDRMState(InstanceID uint32) (CurrentDRMState stri
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
-//
-// * StateVariableList:
-//
-// Return values:
-//
-// * StateVariableValuePairs:
 func (client *AVTransport2) GetStateVariables(InstanceID uint32, StateVariableList string) (StateVariableValuePairs string, err error) {
 	// Request structure.
 	request := &struct {
@@ -1884,21 +1613,6 @@ func (client *AVTransport2) GetStateVariables(InstanceID uint32, StateVariableLi
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
-//
-// * AVTransportUDN:
-//
-// * ServiceType:
-//
-// * ServiceId:
-//
-// * StateVariableValuePairs:
-//
-// Return values:
-//
-// * StateVariableList:
 func (client *AVTransport2) SetStateVariables(InstanceID uint32, AVTransportUDN string, ServiceType string, ServiceId string, StateVariableValuePairs string) (StateVariableList string, err error) {
 	// Request structure.
 	request := &struct {
@@ -2010,13 +1724,6 @@ func newConnectionManager1ClientsFromGenericClients(genericClients []goupnp.Serv
 	return clients
 }
 
-//
-//
-// Return values:
-//
-// * Source:
-//
-// * Sink:
 func (client *ConnectionManager1) GetProtocolInfo() (Source string, Sink string, err error) {
 	// Request structure.
 	request := interface{}(nil)
@@ -2048,23 +1755,11 @@ func (client *ConnectionManager1) GetProtocolInfo() (Source string, Sink string,
 	return
 }
 
+//
 // Arguments:
 //
-// * RemoteProtocolInfo:
-//
-// * PeerConnectionManager:
-//
-// * PeerConnectionID:
-//
 // * Direction: allowed values: Input, Output
-//
-// Return values:
-//
-// * ConnectionID:
-//
-// * AVTransportID:
-//
-// * RcsID:
+
 func (client *ConnectionManager1) PrepareForConnection(RemoteProtocolInfo string, PeerConnectionManager string, PeerConnectionID int32, Direction string) (ConnectionID int32, AVTransportID int32, RcsID int32, err error) {
 	// Request structure.
 	request := &struct {
@@ -2121,11 +1816,6 @@ func (client *ConnectionManager1) PrepareForConnection(RemoteProtocolInfo string
 	return
 }
 
-// Arguments:
-//
-// * ConnectionID:
-//
-//
 func (client *ConnectionManager1) ConnectionComplete(ConnectionID int32) (err error) {
 	// Request structure.
 	request := &struct {
@@ -2152,11 +1842,6 @@ func (client *ConnectionManager1) ConnectionComplete(ConnectionID int32) (err er
 	return
 }
 
-//
-//
-// Return values:
-//
-// * ConnectionIDs:
 func (client *ConnectionManager1) GetCurrentConnectionIDs() (ConnectionIDs string, err error) {
 	// Request structure.
 	request := interface{}(nil)
@@ -2183,21 +1868,8 @@ func (client *ConnectionManager1) GetCurrentConnectionIDs() (ConnectionIDs strin
 	return
 }
 
-// Arguments:
-//
-// * ConnectionID:
 //
 // Return values:
-//
-// * RcsID:
-//
-// * AVTransportID:
-//
-// * ProtocolInfo:
-//
-// * PeerConnectionManager:
-//
-// * PeerConnectionID:
 //
 // * Direction: allowed values: Input, Output
 //
@@ -2323,13 +1995,6 @@ func newConnectionManager2ClientsFromGenericClients(genericClients []goupnp.Serv
 	return clients
 }
 
-//
-//
-// Return values:
-//
-// * Source:
-//
-// * Sink:
 func (client *ConnectionManager2) GetProtocolInfo() (Source string, Sink string, err error) {
 	// Request structure.
 	request := interface{}(nil)
@@ -2361,23 +2026,11 @@ func (client *ConnectionManager2) GetProtocolInfo() (Source string, Sink string,
 	return
 }
 
+//
 // Arguments:
 //
-// * RemoteProtocolInfo:
-//
-// * PeerConnectionManager:
-//
-// * PeerConnectionID:
-//
 // * Direction: allowed values: Input, Output
-//
-// Return values:
-//
-// * ConnectionID:
-//
-// * AVTransportID:
-//
-// * RcsID:
+
 func (client *ConnectionManager2) PrepareForConnection(RemoteProtocolInfo string, PeerConnectionManager string, PeerConnectionID int32, Direction string) (ConnectionID int32, AVTransportID int32, RcsID int32, err error) {
 	// Request structure.
 	request := &struct {
@@ -2434,11 +2087,6 @@ func (client *ConnectionManager2) PrepareForConnection(RemoteProtocolInfo string
 	return
 }
 
-// Arguments:
-//
-// * ConnectionID:
-//
-//
 func (client *ConnectionManager2) ConnectionComplete(ConnectionID int32) (err error) {
 	// Request structure.
 	request := &struct {
@@ -2465,11 +2113,6 @@ func (client *ConnectionManager2) ConnectionComplete(ConnectionID int32) (err er
 	return
 }
 
-//
-//
-// Return values:
-//
-// * ConnectionIDs:
 func (client *ConnectionManager2) GetCurrentConnectionIDs() (ConnectionIDs string, err error) {
 	// Request structure.
 	request := interface{}(nil)
@@ -2496,21 +2139,8 @@ func (client *ConnectionManager2) GetCurrentConnectionIDs() (ConnectionIDs strin
 	return
 }
 
-// Arguments:
-//
-// * ConnectionID:
 //
 // Return values:
-//
-// * RcsID:
-//
-// * AVTransportID:
-//
-// * ProtocolInfo:
-//
-// * PeerConnectionManager:
-//
-// * PeerConnectionID:
 //
 // * Direction: allowed values: Input, Output
 //
@@ -2636,11 +2266,6 @@ func newContentDirectory1ClientsFromGenericClients(genericClients []goupnp.Servi
 	return clients
 }
 
-//
-//
-// Return values:
-//
-// * SearchCaps:
 func (client *ContentDirectory1) GetSearchCapabilities() (SearchCaps string, err error) {
 	// Request structure.
 	request := interface{}(nil)
@@ -2667,11 +2292,6 @@ func (client *ContentDirectory1) GetSearchCapabilities() (SearchCaps string, err
 	return
 }
 
-//
-//
-// Return values:
-//
-// * SortCaps:
 func (client *ContentDirectory1) GetSortCapabilities() (SortCaps string, err error) {
 	// Request structure.
 	request := interface{}(nil)
@@ -2698,11 +2318,6 @@ func (client *ContentDirectory1) GetSortCapabilities() (SortCaps string, err err
 	return
 }
 
-//
-//
-// Return values:
-//
-// * Id:
 func (client *ContentDirectory1) GetSystemUpdateID() (Id uint32, err error) {
 	// Request structure.
 	request := interface{}(nil)
@@ -2729,29 +2344,11 @@ func (client *ContentDirectory1) GetSystemUpdateID() (Id uint32, err error) {
 	return
 }
 
+//
 // Arguments:
 //
-// * ObjectID:
-//
 // * BrowseFlag: allowed values: BrowseMetadata, BrowseDirectChildren
-//
-// * Filter:
-//
-// * StartingIndex:
-//
-// * RequestedCount:
-//
-// * SortCriteria:
-//
-// Return values:
-//
-// * Result:
-//
-// * NumberReturned:
-//
-// * TotalMatches:
-//
-// * UpdateID:
+
 func (client *ContentDirectory1) Browse(ObjectID string, BrowseFlag string, Filter string, StartingIndex uint32, RequestedCount uint32, SortCriteria string) (Result string, NumberReturned uint32, TotalMatches uint32, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
@@ -2823,29 +2420,6 @@ func (client *ContentDirectory1) Browse(ObjectID string, BrowseFlag string, Filt
 	return
 }
 
-// Arguments:
-//
-// * ContainerID:
-//
-// * SearchCriteria:
-//
-// * Filter:
-//
-// * StartingIndex:
-//
-// * RequestedCount:
-//
-// * SortCriteria:
-//
-// Return values:
-//
-// * Result:
-//
-// * NumberReturned:
-//
-// * TotalMatches:
-//
-// * UpdateID:
 func (client *ContentDirectory1) Search(ContainerID string, SearchCriteria string, Filter string, StartingIndex uint32, RequestedCount uint32, SortCriteria string) (Result string, NumberReturned uint32, TotalMatches uint32, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
@@ -2917,17 +2491,6 @@ func (client *ContentDirectory1) Search(ContainerID string, SearchCriteria strin
 	return
 }
 
-// Arguments:
-//
-// * ContainerID:
-//
-// * Elements:
-//
-// Return values:
-//
-// * ObjectID:
-//
-// * Result:
 func (client *ContentDirectory1) CreateObject(ContainerID string, Elements string) (ObjectID string, Result string, err error) {
 	// Request structure.
 	request := &struct {
@@ -2969,11 +2532,6 @@ func (client *ContentDirectory1) CreateObject(ContainerID string, Elements strin
 	return
 }
 
-// Arguments:
-//
-// * ObjectID:
-//
-//
 func (client *ContentDirectory1) DestroyObject(ObjectID string) (err error) {
 	// Request structure.
 	request := &struct {
@@ -3000,15 +2558,6 @@ func (client *ContentDirectory1) DestroyObject(ObjectID string) (err error) {
 	return
 }
 
-// Arguments:
-//
-// * ObjectID:
-//
-// * CurrentTagValue:
-//
-// * NewTagValue:
-//
-//
 func (client *ContentDirectory1) UpdateObject(ObjectID string, CurrentTagValue string, NewTagValue string) (err error) {
 	// Request structure.
 	request := &struct {
@@ -3045,15 +2594,6 @@ func (client *ContentDirectory1) UpdateObject(ObjectID string, CurrentTagValue s
 	return
 }
 
-// Arguments:
-//
-// * SourceURI:
-//
-// * DestinationURI:
-//
-// Return values:
-//
-// * TransferID:
 func (client *ContentDirectory1) ImportResource(SourceURI *url.URL, DestinationURI *url.URL) (TransferID uint32, err error) {
 	// Request structure.
 	request := &struct {
@@ -3090,15 +2630,6 @@ func (client *ContentDirectory1) ImportResource(SourceURI *url.URL, DestinationU
 	return
 }
 
-// Arguments:
-//
-// * SourceURI:
-//
-// * DestinationURI:
-//
-// Return values:
-//
-// * TransferID:
 func (client *ContentDirectory1) ExportResource(SourceURI *url.URL, DestinationURI *url.URL) (TransferID uint32, err error) {
 	// Request structure.
 	request := &struct {
@@ -3135,11 +2666,6 @@ func (client *ContentDirectory1) ExportResource(SourceURI *url.URL, DestinationU
 	return
 }
 
-// Arguments:
-//
-// * TransferID:
-//
-//
 func (client *ContentDirectory1) StopTransferResource(TransferID uint32) (err error) {
 	// Request structure.
 	request := &struct {
@@ -3166,17 +2692,10 @@ func (client *ContentDirectory1) StopTransferResource(TransferID uint32) (err er
 	return
 }
 
-// Arguments:
-//
-// * TransferID:
 //
 // Return values:
 //
 // * TransferStatus: allowed values: COMPLETED, ERROR, IN_PROGRESS, STOPPED
-//
-// * TransferLength:
-//
-// * TransferTotal:
 func (client *ContentDirectory1) GetTransferProgress(TransferID uint32) (TransferStatus string, TransferLength string, TransferTotal string, err error) {
 	// Request structure.
 	request := &struct {
@@ -3218,11 +2737,6 @@ func (client *ContentDirectory1) GetTransferProgress(TransferID uint32) (Transfe
 	return
 }
 
-// Arguments:
-//
-// * ResourceURI:
-//
-//
 func (client *ContentDirectory1) DeleteResource(ResourceURI *url.URL) (err error) {
 	// Request structure.
 	request := &struct {
@@ -3249,15 +2763,6 @@ func (client *ContentDirectory1) DeleteResource(ResourceURI *url.URL) (err error
 	return
 }
 
-// Arguments:
-//
-// * ContainerID:
-//
-// * ObjectID:
-//
-// Return values:
-//
-// * NewID:
 func (client *ContentDirectory1) CreateReference(ContainerID string, ObjectID string) (NewID string, err error) {
 	// Request structure.
 	request := &struct {
@@ -3354,11 +2859,6 @@ func newContentDirectory2ClientsFromGenericClients(genericClients []goupnp.Servi
 	return clients
 }
 
-//
-//
-// Return values:
-//
-// * SearchCaps:
 func (client *ContentDirectory2) GetSearchCapabilities() (SearchCaps string, err error) {
 	// Request structure.
 	request := interface{}(nil)
@@ -3385,11 +2885,6 @@ func (client *ContentDirectory2) GetSearchCapabilities() (SearchCaps string, err
 	return
 }
 
-//
-//
-// Return values:
-//
-// * SortCaps:
 func (client *ContentDirectory2) GetSortCapabilities() (SortCaps string, err error) {
 	// Request structure.
 	request := interface{}(nil)
@@ -3416,11 +2911,6 @@ func (client *ContentDirectory2) GetSortCapabilities() (SortCaps string, err err
 	return
 }
 
-//
-//
-// Return values:
-//
-// * SortExtensionCaps:
 func (client *ContentDirectory2) GetSortExtensionCapabilities() (SortExtensionCaps string, err error) {
 	// Request structure.
 	request := interface{}(nil)
@@ -3447,11 +2937,6 @@ func (client *ContentDirectory2) GetSortExtensionCapabilities() (SortExtensionCa
 	return
 }
 
-//
-//
-// Return values:
-//
-// * FeatureList:
 func (client *ContentDirectory2) GetFeatureList() (FeatureList string, err error) {
 	// Request structure.
 	request := interface{}(nil)
@@ -3478,11 +2963,6 @@ func (client *ContentDirectory2) GetFeatureList() (FeatureList string, err error
 	return
 }
 
-//
-//
-// Return values:
-//
-// * Id:
 func (client *ContentDirectory2) GetSystemUpdateID() (Id uint32, err error) {
 	// Request structure.
 	request := interface{}(nil)
@@ -3509,29 +2989,11 @@ func (client *ContentDirectory2) GetSystemUpdateID() (Id uint32, err error) {
 	return
 }
 
+//
 // Arguments:
 //
-// * ObjectID:
-//
 // * BrowseFlag: allowed values: BrowseMetadata, BrowseDirectChildren
-//
-// * Filter:
-//
-// * StartingIndex:
-//
-// * RequestedCount:
-//
-// * SortCriteria:
-//
-// Return values:
-//
-// * Result:
-//
-// * NumberReturned:
-//
-// * TotalMatches:
-//
-// * UpdateID:
+
 func (client *ContentDirectory2) Browse(ObjectID string, BrowseFlag string, Filter string, StartingIndex uint32, RequestedCount uint32, SortCriteria string) (Result string, NumberReturned uint32, TotalMatches uint32, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
@@ -3603,29 +3065,6 @@ func (client *ContentDirectory2) Browse(ObjectID string, BrowseFlag string, Filt
 	return
 }
 
-// Arguments:
-//
-// * ContainerID:
-//
-// * SearchCriteria:
-//
-// * Filter:
-//
-// * StartingIndex:
-//
-// * RequestedCount:
-//
-// * SortCriteria:
-//
-// Return values:
-//
-// * Result:
-//
-// * NumberReturned:
-//
-// * TotalMatches:
-//
-// * UpdateID:
 func (client *ContentDirectory2) Search(ContainerID string, SearchCriteria string, Filter string, StartingIndex uint32, RequestedCount uint32, SortCriteria string) (Result string, NumberReturned uint32, TotalMatches uint32, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
@@ -3697,17 +3136,6 @@ func (client *ContentDirectory2) Search(ContainerID string, SearchCriteria strin
 	return
 }
 
-// Arguments:
-//
-// * ContainerID:
-//
-// * Elements:
-//
-// Return values:
-//
-// * ObjectID:
-//
-// * Result:
 func (client *ContentDirectory2) CreateObject(ContainerID string, Elements string) (ObjectID string, Result string, err error) {
 	// Request structure.
 	request := &struct {
@@ -3749,11 +3177,6 @@ func (client *ContentDirectory2) CreateObject(ContainerID string, Elements strin
 	return
 }
 
-// Arguments:
-//
-// * ObjectID:
-//
-//
 func (client *ContentDirectory2) DestroyObject(ObjectID string) (err error) {
 	// Request structure.
 	request := &struct {
@@ -3780,15 +3203,6 @@ func (client *ContentDirectory2) DestroyObject(ObjectID string) (err error) {
 	return
 }
 
-// Arguments:
-//
-// * ObjectID:
-//
-// * CurrentTagValue:
-//
-// * NewTagValue:
-//
-//
 func (client *ContentDirectory2) UpdateObject(ObjectID string, CurrentTagValue string, NewTagValue string) (err error) {
 	// Request structure.
 	request := &struct {
@@ -3825,15 +3239,6 @@ func (client *ContentDirectory2) UpdateObject(ObjectID string, CurrentTagValue s
 	return
 }
 
-// Arguments:
-//
-// * ObjectID:
-//
-// * NewParentID:
-//
-// Return values:
-//
-// * NewObjectID:
 func (client *ContentDirectory2) MoveObject(ObjectID string, NewParentID string) (NewObjectID string, err error) {
 	// Request structure.
 	request := &struct {
@@ -3870,15 +3275,6 @@ func (client *ContentDirectory2) MoveObject(ObjectID string, NewParentID string)
 	return
 }
 
-// Arguments:
-//
-// * SourceURI:
-//
-// * DestinationURI:
-//
-// Return values:
-//
-// * TransferID:
 func (client *ContentDirectory2) ImportResource(SourceURI *url.URL, DestinationURI *url.URL) (TransferID uint32, err error) {
 	// Request structure.
 	request := &struct {
@@ -3915,15 +3311,6 @@ func (client *ContentDirectory2) ImportResource(SourceURI *url.URL, DestinationU
 	return
 }
 
-// Arguments:
-//
-// * SourceURI:
-//
-// * DestinationURI:
-//
-// Return values:
-//
-// * TransferID:
 func (client *ContentDirectory2) ExportResource(SourceURI *url.URL, DestinationURI *url.URL) (TransferID uint32, err error) {
 	// Request structure.
 	request := &struct {
@@ -3960,11 +3347,6 @@ func (client *ContentDirectory2) ExportResource(SourceURI *url.URL, DestinationU
 	return
 }
 
-// Arguments:
-//
-// * ResourceURI:
-//
-//
 func (client *ContentDirectory2) DeleteResource(ResourceURI *url.URL) (err error) {
 	// Request structure.
 	request := &struct {
@@ -3991,11 +3373,6 @@ func (client *ContentDirectory2) DeleteResource(ResourceURI *url.URL) (err error
 	return
 }
 
-// Arguments:
-//
-// * TransferID:
-//
-//
 func (client *ContentDirectory2) StopTransferResource(TransferID uint32) (err error) {
 	// Request structure.
 	request := &struct {
@@ -4022,17 +3399,10 @@ func (client *ContentDirectory2) StopTransferResource(TransferID uint32) (err er
 	return
 }
 
-// Arguments:
-//
-// * TransferID:
 //
 // Return values:
 //
 // * TransferStatus: allowed values: COMPLETED, ERROR, IN_PROGRESS, STOPPED
-//
-// * TransferLength:
-//
-// * TransferTotal:
 func (client *ContentDirectory2) GetTransferProgress(TransferID uint32) (TransferStatus string, TransferLength string, TransferTotal string, err error) {
 	// Request structure.
 	request := &struct {
@@ -4074,15 +3444,6 @@ func (client *ContentDirectory2) GetTransferProgress(TransferID uint32) (Transfe
 	return
 }
 
-// Arguments:
-//
-// * ContainerID:
-//
-// * ObjectID:
-//
-// Return values:
-//
-// * NewID:
 func (client *ContentDirectory2) CreateReference(ContainerID string, ObjectID string) (NewID string, err error) {
 	// Request structure.
 	request := &struct {
@@ -4179,11 +3540,6 @@ func newContentDirectory3ClientsFromGenericClients(genericClients []goupnp.Servi
 	return clients
 }
 
-//
-//
-// Return values:
-//
-// * SearchCaps:
 func (client *ContentDirectory3) GetSearchCapabilities() (SearchCaps string, err error) {
 	// Request structure.
 	request := interface{}(nil)
@@ -4210,11 +3566,6 @@ func (client *ContentDirectory3) GetSearchCapabilities() (SearchCaps string, err
 	return
 }
 
-//
-//
-// Return values:
-//
-// * SortCaps:
 func (client *ContentDirectory3) GetSortCapabilities() (SortCaps string, err error) {
 	// Request structure.
 	request := interface{}(nil)
@@ -4241,11 +3592,6 @@ func (client *ContentDirectory3) GetSortCapabilities() (SortCaps string, err err
 	return
 }
 
-//
-//
-// Return values:
-//
-// * SortExtensionCaps:
 func (client *ContentDirectory3) GetSortExtensionCapabilities() (SortExtensionCaps string, err error) {
 	// Request structure.
 	request := interface{}(nil)
@@ -4272,11 +3618,6 @@ func (client *ContentDirectory3) GetSortExtensionCapabilities() (SortExtensionCa
 	return
 }
 
-//
-//
-// Return values:
-//
-// * FeatureList:
 func (client *ContentDirectory3) GetFeatureList() (FeatureList string, err error) {
 	// Request structure.
 	request := interface{}(nil)
@@ -4303,11 +3644,6 @@ func (client *ContentDirectory3) GetFeatureList() (FeatureList string, err error
 	return
 }
 
-//
-//
-// Return values:
-//
-// * Id:
 func (client *ContentDirectory3) GetSystemUpdateID() (Id uint32, err error) {
 	// Request structure.
 	request := interface{}(nil)
@@ -4334,11 +3670,6 @@ func (client *ContentDirectory3) GetSystemUpdateID() (Id uint32, err error) {
 	return
 }
 
-//
-//
-// Return values:
-//
-// * ResetToken:
 func (client *ContentDirectory3) GetServiceResetToken() (ResetToken string, err error) {
 	// Request structure.
 	request := interface{}(nil)
@@ -4365,29 +3696,11 @@ func (client *ContentDirectory3) GetServiceResetToken() (ResetToken string, err 
 	return
 }
 
+//
 // Arguments:
 //
-// * ObjectID:
-//
 // * BrowseFlag: allowed values: BrowseMetadata, BrowseDirectChildren
-//
-// * Filter:
-//
-// * StartingIndex:
-//
-// * RequestedCount:
-//
-// * SortCriteria:
-//
-// Return values:
-//
-// * Result:
-//
-// * NumberReturned:
-//
-// * TotalMatches:
-//
-// * UpdateID:
+
 func (client *ContentDirectory3) Browse(ObjectID string, BrowseFlag string, Filter string, StartingIndex uint32, RequestedCount uint32, SortCriteria string) (Result string, NumberReturned uint32, TotalMatches uint32, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
@@ -4459,29 +3772,6 @@ func (client *ContentDirectory3) Browse(ObjectID string, BrowseFlag string, Filt
 	return
 }
 
-// Arguments:
-//
-// * ContainerID:
-//
-// * SearchCriteria:
-//
-// * Filter:
-//
-// * StartingIndex:
-//
-// * RequestedCount:
-//
-// * SortCriteria:
-//
-// Return values:
-//
-// * Result:
-//
-// * NumberReturned:
-//
-// * TotalMatches:
-//
-// * UpdateID:
 func (client *ContentDirectory3) Search(ContainerID string, SearchCriteria string, Filter string, StartingIndex uint32, RequestedCount uint32, SortCriteria string) (Result string, NumberReturned uint32, TotalMatches uint32, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
@@ -4553,17 +3843,6 @@ func (client *ContentDirectory3) Search(ContainerID string, SearchCriteria strin
 	return
 }
 
-// Arguments:
-//
-// * ContainerID:
-//
-// * Elements:
-//
-// Return values:
-//
-// * ObjectID:
-//
-// * Result:
 func (client *ContentDirectory3) CreateObject(ContainerID string, Elements string) (ObjectID string, Result string, err error) {
 	// Request structure.
 	request := &struct {
@@ -4605,11 +3884,6 @@ func (client *ContentDirectory3) CreateObject(ContainerID string, Elements strin
 	return
 }
 
-// Arguments:
-//
-// * ObjectID:
-//
-//
 func (client *ContentDirectory3) DestroyObject(ObjectID string) (err error) {
 	// Request structure.
 	request := &struct {
@@ -4636,15 +3910,6 @@ func (client *ContentDirectory3) DestroyObject(ObjectID string) (err error) {
 	return
 }
 
-// Arguments:
-//
-// * ObjectID:
-//
-// * CurrentTagValue:
-//
-// * NewTagValue:
-//
-//
 func (client *ContentDirectory3) UpdateObject(ObjectID string, CurrentTagValue string, NewTagValue string) (err error) {
 	// Request structure.
 	request := &struct {
@@ -4681,15 +3946,6 @@ func (client *ContentDirectory3) UpdateObject(ObjectID string, CurrentTagValue s
 	return
 }
 
-// Arguments:
-//
-// * ObjectID:
-//
-// * NewParentID:
-//
-// Return values:
-//
-// * NewObjectID:
 func (client *ContentDirectory3) MoveObject(ObjectID string, NewParentID string) (NewObjectID string, err error) {
 	// Request structure.
 	request := &struct {
@@ -4726,15 +3982,6 @@ func (client *ContentDirectory3) MoveObject(ObjectID string, NewParentID string)
 	return
 }
 
-// Arguments:
-//
-// * SourceURI:
-//
-// * DestinationURI:
-//
-// Return values:
-//
-// * TransferID:
 func (client *ContentDirectory3) ImportResource(SourceURI *url.URL, DestinationURI *url.URL) (TransferID uint32, err error) {
 	// Request structure.
 	request := &struct {
@@ -4771,15 +4018,6 @@ func (client *ContentDirectory3) ImportResource(SourceURI *url.URL, DestinationU
 	return
 }
 
-// Arguments:
-//
-// * SourceURI:
-//
-// * DestinationURI:
-//
-// Return values:
-//
-// * TransferID:
 func (client *ContentDirectory3) ExportResource(SourceURI *url.URL, DestinationURI *url.URL) (TransferID uint32, err error) {
 	// Request structure.
 	request := &struct {
@@ -4816,11 +4054,6 @@ func (client *ContentDirectory3) ExportResource(SourceURI *url.URL, DestinationU
 	return
 }
 
-// Arguments:
-//
-// * ResourceURI:
-//
-//
 func (client *ContentDirectory3) DeleteResource(ResourceURI *url.URL) (err error) {
 	// Request structure.
 	request := &struct {
@@ -4847,11 +4080,6 @@ func (client *ContentDirectory3) DeleteResource(ResourceURI *url.URL) (err error
 	return
 }
 
-// Arguments:
-//
-// * TransferID:
-//
-//
 func (client *ContentDirectory3) StopTransferResource(TransferID uint32) (err error) {
 	// Request structure.
 	request := &struct {
@@ -4878,17 +4106,10 @@ func (client *ContentDirectory3) StopTransferResource(TransferID uint32) (err er
 	return
 }
 
-// Arguments:
-//
-// * TransferID:
 //
 // Return values:
 //
 // * TransferStatus: allowed values: COMPLETED, ERROR, IN_PROGRESS, STOPPED
-//
-// * TransferLength:
-//
-// * TransferTotal:
 func (client *ContentDirectory3) GetTransferProgress(TransferID uint32) (TransferStatus string, TransferLength string, TransferTotal string, err error) {
 	// Request structure.
 	request := &struct {
@@ -4930,15 +4151,6 @@ func (client *ContentDirectory3) GetTransferProgress(TransferID uint32) (Transfe
 	return
 }
 
-// Arguments:
-//
-// * ContainerID:
-//
-// * ObjectID:
-//
-// Return values:
-//
-// * NewID:
 func (client *ContentDirectory3) CreateReference(ContainerID string, ObjectID string) (NewID string, err error) {
 	// Request structure.
 	request := &struct {
@@ -4975,19 +4187,6 @@ func (client *ContentDirectory3) CreateReference(ContainerID string, ObjectID st
 	return
 }
 
-// Arguments:
-//
-// * ContainerID:
-//
-// * CDSView:
-//
-// * QueryRequest:
-//
-// Return values:
-//
-// * QueryResult:
-//
-// * UpdateID:
 func (client *ContentDirectory3) FreeFormQuery(ContainerID string, CDSView uint32, QueryRequest string) (QueryResult string, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
@@ -5034,11 +4233,6 @@ func (client *ContentDirectory3) FreeFormQuery(ContainerID string, CDSView uint3
 	return
 }
 
-//
-//
-// Return values:
-//
-// * FFQCapabilities:
 func (client *ContentDirectory3) GetFreeFormQueryCapabilities() (FFQCapabilities string, err error) {
 	// Request structure.
 	request := interface{}(nil)
@@ -5125,13 +4319,6 @@ func newRenderingControl1ClientsFromGenericClients(genericClients []goupnp.Servi
 	return clients
 }
 
-// Arguments:
-//
-// * InstanceID:
-//
-// Return values:
-//
-// * CurrentPresetNameList:
 func (client *RenderingControl1) ListPresets(InstanceID uint32) (CurrentPresetNameList string, err error) {
 	// Request structure.
 	request := &struct {
@@ -5163,13 +4350,11 @@ func (client *RenderingControl1) ListPresets(InstanceID uint32) (CurrentPresetNa
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * PresetName: allowed values: FactoryDefaults
-//
-//
+
 func (client *RenderingControl1) SelectPreset(InstanceID uint32, PresetName string) (err error) {
 	// Request structure.
 	request := &struct {
@@ -5201,9 +4386,6 @@ func (client *RenderingControl1) SelectPreset(InstanceID uint32, PresetName stri
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
 //
 // Return values:
 //
@@ -5239,13 +4421,11 @@ func (client *RenderingControl1) GetBrightness(InstanceID uint32) (CurrentBright
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * DesiredBrightness: allowed value range: minimum=0, step=1
-//
-//
+
 func (client *RenderingControl1) SetBrightness(InstanceID uint32, DesiredBrightness uint16) (err error) {
 	// Request structure.
 	request := &struct {
@@ -5277,9 +4457,6 @@ func (client *RenderingControl1) SetBrightness(InstanceID uint32, DesiredBrightn
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
 //
 // Return values:
 //
@@ -5315,13 +4492,11 @@ func (client *RenderingControl1) GetContrast(InstanceID uint32) (CurrentContrast
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * DesiredContrast: allowed value range: minimum=0, step=1
-//
-//
+
 func (client *RenderingControl1) SetContrast(InstanceID uint32, DesiredContrast uint16) (err error) {
 	// Request structure.
 	request := &struct {
@@ -5353,9 +4528,6 @@ func (client *RenderingControl1) SetContrast(InstanceID uint32, DesiredContrast 
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
 //
 // Return values:
 //
@@ -5391,13 +4563,11 @@ func (client *RenderingControl1) GetSharpness(InstanceID uint32) (CurrentSharpne
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * DesiredSharpness: allowed value range: minimum=0, step=1
-//
-//
+
 func (client *RenderingControl1) SetSharpness(InstanceID uint32, DesiredSharpness uint16) (err error) {
 	// Request structure.
 	request := &struct {
@@ -5429,13 +4599,6 @@ func (client *RenderingControl1) SetSharpness(InstanceID uint32, DesiredSharpnes
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
-//
-// Return values:
-//
-// * CurrentRedVideoGain:
 func (client *RenderingControl1) GetRedVideoGain(InstanceID uint32) (CurrentRedVideoGain uint16, err error) {
 	// Request structure.
 	request := &struct {
@@ -5467,13 +4630,6 @@ func (client *RenderingControl1) GetRedVideoGain(InstanceID uint32) (CurrentRedV
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
-//
-// * DesiredRedVideoGain:
-//
-//
 func (client *RenderingControl1) SetRedVideoGain(InstanceID uint32, DesiredRedVideoGain uint16) (err error) {
 	// Request structure.
 	request := &struct {
@@ -5505,9 +4661,6 @@ func (client *RenderingControl1) SetRedVideoGain(InstanceID uint32, DesiredRedVi
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
 //
 // Return values:
 //
@@ -5543,13 +4696,11 @@ func (client *RenderingControl1) GetGreenVideoGain(InstanceID uint32) (CurrentGr
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * DesiredGreenVideoGain: allowed value range: minimum=0, step=1
-//
-//
+
 func (client *RenderingControl1) SetGreenVideoGain(InstanceID uint32, DesiredGreenVideoGain uint16) (err error) {
 	// Request structure.
 	request := &struct {
@@ -5581,9 +4732,6 @@ func (client *RenderingControl1) SetGreenVideoGain(InstanceID uint32, DesiredGre
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
 //
 // Return values:
 //
@@ -5619,13 +4767,11 @@ func (client *RenderingControl1) GetBlueVideoGain(InstanceID uint32) (CurrentBlu
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * DesiredBlueVideoGain: allowed value range: minimum=0, step=1
-//
-//
+
 func (client *RenderingControl1) SetBlueVideoGain(InstanceID uint32, DesiredBlueVideoGain uint16) (err error) {
 	// Request structure.
 	request := &struct {
@@ -5657,9 +4803,6 @@ func (client *RenderingControl1) SetBlueVideoGain(InstanceID uint32, DesiredBlue
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
 //
 // Return values:
 //
@@ -5695,13 +4838,11 @@ func (client *RenderingControl1) GetRedVideoBlackLevel(InstanceID uint32) (Curre
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * DesiredRedVideoBlackLevel: allowed value range: minimum=0, step=1
-//
-//
+
 func (client *RenderingControl1) SetRedVideoBlackLevel(InstanceID uint32, DesiredRedVideoBlackLevel uint16) (err error) {
 	// Request structure.
 	request := &struct {
@@ -5733,9 +4874,6 @@ func (client *RenderingControl1) SetRedVideoBlackLevel(InstanceID uint32, Desire
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
 //
 // Return values:
 //
@@ -5771,13 +4909,11 @@ func (client *RenderingControl1) GetGreenVideoBlackLevel(InstanceID uint32) (Cur
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * DesiredGreenVideoBlackLevel: allowed value range: minimum=0, step=1
-//
-//
+
 func (client *RenderingControl1) SetGreenVideoBlackLevel(InstanceID uint32, DesiredGreenVideoBlackLevel uint16) (err error) {
 	// Request structure.
 	request := &struct {
@@ -5809,9 +4945,6 @@ func (client *RenderingControl1) SetGreenVideoBlackLevel(InstanceID uint32, Desi
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
 //
 // Return values:
 //
@@ -5847,13 +4980,11 @@ func (client *RenderingControl1) GetBlueVideoBlackLevel(InstanceID uint32) (Curr
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * DesiredBlueVideoBlackLevel: allowed value range: minimum=0, step=1
-//
-//
+
 func (client *RenderingControl1) SetBlueVideoBlackLevel(InstanceID uint32, DesiredBlueVideoBlackLevel uint16) (err error) {
 	// Request structure.
 	request := &struct {
@@ -5885,9 +5016,6 @@ func (client *RenderingControl1) SetBlueVideoBlackLevel(InstanceID uint32, Desir
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
 //
 // Return values:
 //
@@ -5923,13 +5051,11 @@ func (client *RenderingControl1) GetColorTemperature(InstanceID uint32) (Current
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * DesiredColorTemperature: allowed value range: minimum=0, step=1
-//
-//
+
 func (client *RenderingControl1) SetColorTemperature(InstanceID uint32, DesiredColorTemperature uint16) (err error) {
 	// Request structure.
 	request := &struct {
@@ -5961,9 +5087,6 @@ func (client *RenderingControl1) SetColorTemperature(InstanceID uint32, DesiredC
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
 //
 // Return values:
 //
@@ -5999,13 +5122,11 @@ func (client *RenderingControl1) GetHorizontalKeystone(InstanceID uint32) (Curre
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * DesiredHorizontalKeystone: allowed value range: step=1
-//
-//
+
 func (client *RenderingControl1) SetHorizontalKeystone(InstanceID uint32, DesiredHorizontalKeystone int16) (err error) {
 	// Request structure.
 	request := &struct {
@@ -6037,9 +5158,6 @@ func (client *RenderingControl1) SetHorizontalKeystone(InstanceID uint32, Desire
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
 //
 // Return values:
 //
@@ -6075,13 +5193,11 @@ func (client *RenderingControl1) GetVerticalKeystone(InstanceID uint32) (Current
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * DesiredVerticalKeystone: allowed value range: step=1
-//
-//
+
 func (client *RenderingControl1) SetVerticalKeystone(InstanceID uint32, DesiredVerticalKeystone int16) (err error) {
 	// Request structure.
 	request := &struct {
@@ -6113,15 +5229,11 @@ func (client *RenderingControl1) SetVerticalKeystone(InstanceID uint32, DesiredV
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * Channel: allowed values: Master
-//
-// Return values:
-//
-// * CurrentMute:
+
 func (client *RenderingControl1) GetMute(InstanceID uint32, Channel string) (CurrentMute bool, err error) {
 	// Request structure.
 	request := &struct {
@@ -6158,15 +5270,11 @@ func (client *RenderingControl1) GetMute(InstanceID uint32, Channel string) (Cur
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * Channel: allowed values: Master
-//
-// * DesiredMute:
-//
-//
+
 func (client *RenderingControl1) SetMute(InstanceID uint32, Channel string, DesiredMute bool) (err error) {
 	// Request structure.
 	request := &struct {
@@ -6203,11 +5311,11 @@ func (client *RenderingControl1) SetMute(InstanceID uint32, Channel string, Desi
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * Channel: allowed values: Master
+
 //
 // Return values:
 //
@@ -6248,15 +5356,13 @@ func (client *RenderingControl1) GetVolume(InstanceID uint32, Channel string) (C
 	return
 }
 
-// Arguments:
 //
-// * InstanceID:
+// Arguments:
 //
 // * Channel: allowed values: Master
 //
 // * DesiredVolume: allowed value range: minimum=0, step=1
-//
-//
+
 func (client *RenderingControl1) SetVolume(InstanceID uint32, Channel string, DesiredVolume uint16) (err error) {
 	// Request structure.
 	request := &struct {
@@ -6293,15 +5399,11 @@ func (client *RenderingControl1) SetVolume(InstanceID uint32, Channel string, De
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * Channel: allowed values: Master
-//
-// Return values:
-//
-// * CurrentVolume:
+
 func (client *RenderingControl1) GetVolumeDB(InstanceID uint32, Channel string) (CurrentVolume int16, err error) {
 	// Request structure.
 	request := &struct {
@@ -6338,15 +5440,11 @@ func (client *RenderingControl1) GetVolumeDB(InstanceID uint32, Channel string) 
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * Channel: allowed values: Master
-//
-// * DesiredVolume:
-//
-//
+
 func (client *RenderingControl1) SetVolumeDB(InstanceID uint32, Channel string, DesiredVolume int16) (err error) {
 	// Request structure.
 	request := &struct {
@@ -6383,17 +5481,11 @@ func (client *RenderingControl1) SetVolumeDB(InstanceID uint32, Channel string, 
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * Channel: allowed values: Master
-//
-// Return values:
-//
-// * MinValue:
-//
-// * MaxValue:
+
 func (client *RenderingControl1) GetVolumeDBRange(InstanceID uint32, Channel string) (MinValue int16, MaxValue int16, err error) {
 	// Request structure.
 	request := &struct {
@@ -6435,15 +5527,11 @@ func (client *RenderingControl1) GetVolumeDBRange(InstanceID uint32, Channel str
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * Channel: allowed values: Master
-//
-// Return values:
-//
-// * CurrentLoudness:
+
 func (client *RenderingControl1) GetLoudness(InstanceID uint32, Channel string) (CurrentLoudness bool, err error) {
 	// Request structure.
 	request := &struct {
@@ -6480,15 +5568,11 @@ func (client *RenderingControl1) GetLoudness(InstanceID uint32, Channel string) 
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * Channel: allowed values: Master
-//
-// * DesiredLoudness:
-//
-//
+
 func (client *RenderingControl1) SetLoudness(InstanceID uint32, Channel string, DesiredLoudness bool) (err error) {
 	// Request structure.
 	request := &struct {
@@ -6585,13 +5669,6 @@ func newRenderingControl2ClientsFromGenericClients(genericClients []goupnp.Servi
 	return clients
 }
 
-// Arguments:
-//
-// * InstanceID:
-//
-// Return values:
-//
-// * CurrentPresetNameList:
 func (client *RenderingControl2) ListPresets(InstanceID uint32) (CurrentPresetNameList string, err error) {
 	// Request structure.
 	request := &struct {
@@ -6623,13 +5700,11 @@ func (client *RenderingControl2) ListPresets(InstanceID uint32) (CurrentPresetNa
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * PresetName: allowed values: FactoryDefaults
-//
-//
+
 func (client *RenderingControl2) SelectPreset(InstanceID uint32, PresetName string) (err error) {
 	// Request structure.
 	request := &struct {
@@ -6661,9 +5736,6 @@ func (client *RenderingControl2) SelectPreset(InstanceID uint32, PresetName stri
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
 //
 // Return values:
 //
@@ -6699,13 +5771,11 @@ func (client *RenderingControl2) GetBrightness(InstanceID uint32) (CurrentBright
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * DesiredBrightness: allowed value range: minimum=0, step=1
-//
-//
+
 func (client *RenderingControl2) SetBrightness(InstanceID uint32, DesiredBrightness uint16) (err error) {
 	// Request structure.
 	request := &struct {
@@ -6737,9 +5807,6 @@ func (client *RenderingControl2) SetBrightness(InstanceID uint32, DesiredBrightn
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
 //
 // Return values:
 //
@@ -6775,13 +5842,11 @@ func (client *RenderingControl2) GetContrast(InstanceID uint32) (CurrentContrast
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * DesiredContrast: allowed value range: minimum=0, step=1
-//
-//
+
 func (client *RenderingControl2) SetContrast(InstanceID uint32, DesiredContrast uint16) (err error) {
 	// Request structure.
 	request := &struct {
@@ -6813,9 +5878,6 @@ func (client *RenderingControl2) SetContrast(InstanceID uint32, DesiredContrast 
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
 //
 // Return values:
 //
@@ -6851,13 +5913,11 @@ func (client *RenderingControl2) GetSharpness(InstanceID uint32) (CurrentSharpne
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * DesiredSharpness: allowed value range: minimum=0, step=1
-//
-//
+
 func (client *RenderingControl2) SetSharpness(InstanceID uint32, DesiredSharpness uint16) (err error) {
 	// Request structure.
 	request := &struct {
@@ -6889,9 +5949,6 @@ func (client *RenderingControl2) SetSharpness(InstanceID uint32, DesiredSharpnes
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
 //
 // Return values:
 //
@@ -6927,13 +5984,11 @@ func (client *RenderingControl2) GetRedVideoGain(InstanceID uint32) (CurrentRedV
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * DesiredRedVideoGain: allowed value range: minimum=0, step=1
-//
-//
+
 func (client *RenderingControl2) SetRedVideoGain(InstanceID uint32, DesiredRedVideoGain uint16) (err error) {
 	// Request structure.
 	request := &struct {
@@ -6965,9 +6020,6 @@ func (client *RenderingControl2) SetRedVideoGain(InstanceID uint32, DesiredRedVi
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
 //
 // Return values:
 //
@@ -7003,13 +6055,11 @@ func (client *RenderingControl2) GetGreenVideoGain(InstanceID uint32) (CurrentGr
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * DesiredGreenVideoGain: allowed value range: minimum=0, step=1
-//
-//
+
 func (client *RenderingControl2) SetGreenVideoGain(InstanceID uint32, DesiredGreenVideoGain uint16) (err error) {
 	// Request structure.
 	request := &struct {
@@ -7041,9 +6091,6 @@ func (client *RenderingControl2) SetGreenVideoGain(InstanceID uint32, DesiredGre
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
 //
 // Return values:
 //
@@ -7079,13 +6126,11 @@ func (client *RenderingControl2) GetBlueVideoGain(InstanceID uint32) (CurrentBlu
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * DesiredBlueVideoGain: allowed value range: minimum=0, step=1
-//
-//
+
 func (client *RenderingControl2) SetBlueVideoGain(InstanceID uint32, DesiredBlueVideoGain uint16) (err error) {
 	// Request structure.
 	request := &struct {
@@ -7117,9 +6162,6 @@ func (client *RenderingControl2) SetBlueVideoGain(InstanceID uint32, DesiredBlue
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
 //
 // Return values:
 //
@@ -7155,13 +6197,11 @@ func (client *RenderingControl2) GetRedVideoBlackLevel(InstanceID uint32) (Curre
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * DesiredRedVideoBlackLevel: allowed value range: minimum=0, step=1
-//
-//
+
 func (client *RenderingControl2) SetRedVideoBlackLevel(InstanceID uint32, DesiredRedVideoBlackLevel uint16) (err error) {
 	// Request structure.
 	request := &struct {
@@ -7193,9 +6233,6 @@ func (client *RenderingControl2) SetRedVideoBlackLevel(InstanceID uint32, Desire
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
 //
 // Return values:
 //
@@ -7231,13 +6268,11 @@ func (client *RenderingControl2) GetGreenVideoBlackLevel(InstanceID uint32) (Cur
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * DesiredGreenVideoBlackLevel: allowed value range: minimum=0, step=1
-//
-//
+
 func (client *RenderingControl2) SetGreenVideoBlackLevel(InstanceID uint32, DesiredGreenVideoBlackLevel uint16) (err error) {
 	// Request structure.
 	request := &struct {
@@ -7269,9 +6304,6 @@ func (client *RenderingControl2) SetGreenVideoBlackLevel(InstanceID uint32, Desi
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
 //
 // Return values:
 //
@@ -7307,13 +6339,11 @@ func (client *RenderingControl2) GetBlueVideoBlackLevel(InstanceID uint32) (Curr
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * DesiredBlueVideoBlackLevel: allowed value range: minimum=0, step=1
-//
-//
+
 func (client *RenderingControl2) SetBlueVideoBlackLevel(InstanceID uint32, DesiredBlueVideoBlackLevel uint16) (err error) {
 	// Request structure.
 	request := &struct {
@@ -7345,9 +6375,6 @@ func (client *RenderingControl2) SetBlueVideoBlackLevel(InstanceID uint32, Desir
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
 //
 // Return values:
 //
@@ -7383,13 +6410,11 @@ func (client *RenderingControl2) GetColorTemperature(InstanceID uint32) (Current
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * DesiredColorTemperature: allowed value range: minimum=0, step=1
-//
-//
+
 func (client *RenderingControl2) SetColorTemperature(InstanceID uint32, DesiredColorTemperature uint16) (err error) {
 	// Request structure.
 	request := &struct {
@@ -7421,9 +6446,6 @@ func (client *RenderingControl2) SetColorTemperature(InstanceID uint32, DesiredC
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
 //
 // Return values:
 //
@@ -7459,13 +6481,11 @@ func (client *RenderingControl2) GetHorizontalKeystone(InstanceID uint32) (Curre
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * DesiredHorizontalKeystone: allowed value range: step=1
-//
-//
+
 func (client *RenderingControl2) SetHorizontalKeystone(InstanceID uint32, DesiredHorizontalKeystone int16) (err error) {
 	// Request structure.
 	request := &struct {
@@ -7497,9 +6517,6 @@ func (client *RenderingControl2) SetHorizontalKeystone(InstanceID uint32, Desire
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
 //
 // Return values:
 //
@@ -7535,13 +6552,11 @@ func (client *RenderingControl2) GetVerticalKeystone(InstanceID uint32) (Current
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * DesiredVerticalKeystone: allowed value range: step=1
-//
-//
+
 func (client *RenderingControl2) SetVerticalKeystone(InstanceID uint32, DesiredVerticalKeystone int16) (err error) {
 	// Request structure.
 	request := &struct {
@@ -7573,15 +6588,11 @@ func (client *RenderingControl2) SetVerticalKeystone(InstanceID uint32, DesiredV
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * Channel: allowed values: Master
-//
-// Return values:
-//
-// * CurrentMute:
+
 func (client *RenderingControl2) GetMute(InstanceID uint32, Channel string) (CurrentMute bool, err error) {
 	// Request structure.
 	request := &struct {
@@ -7618,15 +6629,11 @@ func (client *RenderingControl2) GetMute(InstanceID uint32, Channel string) (Cur
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * Channel: allowed values: Master
-//
-// * DesiredMute:
-//
-//
+
 func (client *RenderingControl2) SetMute(InstanceID uint32, Channel string, DesiredMute bool) (err error) {
 	// Request structure.
 	request := &struct {
@@ -7663,11 +6670,11 @@ func (client *RenderingControl2) SetMute(InstanceID uint32, Channel string, Desi
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * Channel: allowed values: Master
+
 //
 // Return values:
 //
@@ -7708,15 +6715,13 @@ func (client *RenderingControl2) GetVolume(InstanceID uint32, Channel string) (C
 	return
 }
 
-// Arguments:
 //
-// * InstanceID:
+// Arguments:
 //
 // * Channel: allowed values: Master
 //
 // * DesiredVolume: allowed value range: minimum=0, step=1
-//
-//
+
 func (client *RenderingControl2) SetVolume(InstanceID uint32, Channel string, DesiredVolume uint16) (err error) {
 	// Request structure.
 	request := &struct {
@@ -7753,15 +6758,11 @@ func (client *RenderingControl2) SetVolume(InstanceID uint32, Channel string, De
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * Channel: allowed values: Master
-//
-// Return values:
-//
-// * CurrentVolume:
+
 func (client *RenderingControl2) GetVolumeDB(InstanceID uint32, Channel string) (CurrentVolume int16, err error) {
 	// Request structure.
 	request := &struct {
@@ -7798,15 +6799,11 @@ func (client *RenderingControl2) GetVolumeDB(InstanceID uint32, Channel string) 
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * Channel: allowed values: Master
-//
-// * DesiredVolume:
-//
-//
+
 func (client *RenderingControl2) SetVolumeDB(InstanceID uint32, Channel string, DesiredVolume int16) (err error) {
 	// Request structure.
 	request := &struct {
@@ -7843,17 +6840,11 @@ func (client *RenderingControl2) SetVolumeDB(InstanceID uint32, Channel string, 
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * Channel: allowed values: Master
-//
-// Return values:
-//
-// * MinValue:
-//
-// * MaxValue:
+
 func (client *RenderingControl2) GetVolumeDBRange(InstanceID uint32, Channel string) (MinValue int16, MaxValue int16, err error) {
 	// Request structure.
 	request := &struct {
@@ -7895,15 +6886,11 @@ func (client *RenderingControl2) GetVolumeDBRange(InstanceID uint32, Channel str
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * Channel: allowed values: Master
-//
-// Return values:
-//
-// * CurrentLoudness:
+
 func (client *RenderingControl2) GetLoudness(InstanceID uint32, Channel string) (CurrentLoudness bool, err error) {
 	// Request structure.
 	request := &struct {
@@ -7940,15 +6927,11 @@ func (client *RenderingControl2) GetLoudness(InstanceID uint32, Channel string) 
 	return
 }
 
+//
 // Arguments:
 //
-// * InstanceID:
-//
 // * Channel: allowed values: Master
-//
-// * DesiredLoudness:
-//
-//
+
 func (client *RenderingControl2) SetLoudness(InstanceID uint32, Channel string, DesiredLoudness bool) (err error) {
 	// Request structure.
 	request := &struct {
@@ -7985,15 +6968,6 @@ func (client *RenderingControl2) SetLoudness(InstanceID uint32, Channel string, 
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
-//
-// * StateVariableList:
-//
-// Return values:
-//
-// * StateVariableValuePairs:
 func (client *RenderingControl2) GetStateVariables(InstanceID uint32, StateVariableList string) (StateVariableValuePairs string, err error) {
 	// Request structure.
 	request := &struct {
@@ -8030,21 +7004,6 @@ func (client *RenderingControl2) GetStateVariables(InstanceID uint32, StateVaria
 	return
 }
 
-// Arguments:
-//
-// * InstanceID:
-//
-// * RenderingControlUDN:
-//
-// * ServiceType:
-//
-// * ServiceId:
-//
-// * StateVariableValuePairs:
-//
-// Return values:
-//
-// * StateVariableList:
 func (client *RenderingControl2) SetStateVariables(InstanceID uint32, RenderingControlUDN string, ServiceType string, ServiceId string, StateVariableValuePairs string) (StateVariableList string, err error) {
 	// Request structure.
 	request := &struct {
@@ -8156,13 +7115,6 @@ func newScheduledRecording1ClientsFromGenericClients(genericClients []goupnp.Ser
 	return clients
 }
 
-//
-//
-// Return values:
-//
-// * SortCaps:
-//
-// * SortLevelCap:
 func (client *ScheduledRecording1) GetSortCapabilities() (SortCaps string, SortLevelCap uint32, err error) {
 	// Request structure.
 	request := interface{}(nil)
@@ -8194,13 +7146,11 @@ func (client *ScheduledRecording1) GetSortCapabilities() (SortCaps string, SortL
 	return
 }
 
+//
 // Arguments:
 //
 // * DataTypeID: allowed values: A_ARG_TYPE_RecordSchedule, A_ARG_TYPE_RecordTask, A_ARG_TYPE_RecordScheduleParts
-//
-// Return values:
-//
-// * PropertyList:
+
 func (client *ScheduledRecording1) GetPropertyList(DataTypeID string) (PropertyList string, err error) {
 	// Request structure.
 	request := &struct {
@@ -8232,15 +7182,11 @@ func (client *ScheduledRecording1) GetPropertyList(DataTypeID string) (PropertyL
 	return
 }
 
+//
 // Arguments:
 //
 // * DataTypeID: allowed values: A_ARG_TYPE_RecordSchedule, A_ARG_TYPE_RecordTask, A_ARG_TYPE_RecordScheduleParts
-//
-// * Filter:
-//
-// Return values:
-//
-// * PropertyInfo:
+
 func (client *ScheduledRecording1) GetAllowedValues(DataTypeID string, Filter string) (PropertyInfo string, err error) {
 	// Request structure.
 	request := &struct {
@@ -8277,11 +7223,6 @@ func (client *ScheduledRecording1) GetAllowedValues(DataTypeID string, Filter st
 	return
 }
 
-//
-//
-// Return values:
-//
-// * Id:
 func (client *ScheduledRecording1) GetStateUpdateID() (Id uint32, err error) {
 	// Request structure.
 	request := interface{}(nil)
@@ -8308,25 +7249,6 @@ func (client *ScheduledRecording1) GetStateUpdateID() (Id uint32, err error) {
 	return
 }
 
-// Arguments:
-//
-// * Filter:
-//
-// * StartingIndex:
-//
-// * RequestedCount:
-//
-// * SortCriteria:
-//
-// Return values:
-//
-// * Result:
-//
-// * NumberReturned:
-//
-// * TotalMatches:
-//
-// * UpdateID:
 func (client *ScheduledRecording1) BrowseRecordSchedules(Filter string, StartingIndex uint32, RequestedCount uint32, SortCriteria string) (Result string, NumberReturned uint32, TotalMatches uint32, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
@@ -8388,27 +7310,6 @@ func (client *ScheduledRecording1) BrowseRecordSchedules(Filter string, Starting
 	return
 }
 
-// Arguments:
-//
-// * RecordScheduleID:
-//
-// * Filter:
-//
-// * StartingIndex:
-//
-// * RequestedCount:
-//
-// * SortCriteria:
-//
-// Return values:
-//
-// * Result:
-//
-// * NumberReturned:
-//
-// * TotalMatches:
-//
-// * UpdateID:
 func (client *ScheduledRecording1) BrowseRecordTasks(RecordScheduleID string, Filter string, StartingIndex uint32, RequestedCount uint32, SortCriteria string) (Result string, NumberReturned uint32, TotalMatches uint32, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
@@ -8475,17 +7376,6 @@ func (client *ScheduledRecording1) BrowseRecordTasks(RecordScheduleID string, Fi
 	return
 }
 
-// Arguments:
-//
-// * Elements:
-//
-// Return values:
-//
-// * RecordScheduleID:
-//
-// * Result:
-//
-// * UpdateID:
 func (client *ScheduledRecording1) CreateRecordSchedule(Elements string) (RecordScheduleID string, Result string, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
@@ -8527,11 +7417,6 @@ func (client *ScheduledRecording1) CreateRecordSchedule(Elements string) (Record
 	return
 }
 
-// Arguments:
-//
-// * RecordScheduleID:
-//
-//
 func (client *ScheduledRecording1) DeleteRecordSchedule(RecordScheduleID string) (err error) {
 	// Request structure.
 	request := &struct {
@@ -8558,17 +7443,6 @@ func (client *ScheduledRecording1) DeleteRecordSchedule(RecordScheduleID string)
 	return
 }
 
-// Arguments:
-//
-// * RecordScheduleID:
-//
-// * Filter:
-//
-// Return values:
-//
-// * Result:
-//
-// * UpdateID:
 func (client *ScheduledRecording1) GetRecordSchedule(RecordScheduleID string, Filter string) (Result string, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
@@ -8610,11 +7484,6 @@ func (client *ScheduledRecording1) GetRecordSchedule(RecordScheduleID string, Fi
 	return
 }
 
-// Arguments:
-//
-// * RecordScheduleID:
-//
-//
 func (client *ScheduledRecording1) EnableRecordSchedule(RecordScheduleID string) (err error) {
 	// Request structure.
 	request := &struct {
@@ -8641,11 +7510,6 @@ func (client *ScheduledRecording1) EnableRecordSchedule(RecordScheduleID string)
 	return
 }
 
-// Arguments:
-//
-// * RecordScheduleID:
-//
-//
 func (client *ScheduledRecording1) DisableRecordSchedule(RecordScheduleID string) (err error) {
 	// Request structure.
 	request := &struct {
@@ -8672,11 +7536,6 @@ func (client *ScheduledRecording1) DisableRecordSchedule(RecordScheduleID string
 	return
 }
 
-// Arguments:
-//
-// * RecordTaskID:
-//
-//
 func (client *ScheduledRecording1) DeleteRecordTask(RecordTaskID string) (err error) {
 	// Request structure.
 	request := &struct {
@@ -8703,17 +7562,6 @@ func (client *ScheduledRecording1) DeleteRecordTask(RecordTaskID string) (err er
 	return
 }
 
-// Arguments:
-//
-// * RecordTaskID:
-//
-// * Filter:
-//
-// Return values:
-//
-// * Result:
-//
-// * UpdateID:
 func (client *ScheduledRecording1) GetRecordTask(RecordTaskID string, Filter string) (Result string, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
@@ -8755,11 +7603,6 @@ func (client *ScheduledRecording1) GetRecordTask(RecordTaskID string, Filter str
 	return
 }
 
-// Arguments:
-//
-// * RecordTaskID:
-//
-//
 func (client *ScheduledRecording1) EnableRecordTask(RecordTaskID string) (err error) {
 	// Request structure.
 	request := &struct {
@@ -8786,11 +7629,6 @@ func (client *ScheduledRecording1) EnableRecordTask(RecordTaskID string) (err er
 	return
 }
 
-// Arguments:
-//
-// * RecordTaskID:
-//
-//
 func (client *ScheduledRecording1) DisableRecordTask(RecordTaskID string) (err error) {
 	// Request structure.
 	request := &struct {
@@ -8817,11 +7655,6 @@ func (client *ScheduledRecording1) DisableRecordTask(RecordTaskID string) (err e
 	return
 }
 
-// Arguments:
-//
-// * RecordTaskID:
-//
-//
 func (client *ScheduledRecording1) ResetRecordTask(RecordTaskID string) (err error) {
 	// Request structure.
 	request := &struct {
@@ -8848,15 +7681,6 @@ func (client *ScheduledRecording1) ResetRecordTask(RecordTaskID string) (err err
 	return
 }
 
-// Arguments:
-//
-// * RecordScheduleID:
-//
-// Return values:
-//
-// * RecordScheduleConflictIDList:
-//
-// * UpdateID:
 func (client *ScheduledRecording1) GetRecordScheduleConflicts(RecordScheduleID string) (RecordScheduleConflictIDList string, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
@@ -8893,15 +7717,6 @@ func (client *ScheduledRecording1) GetRecordScheduleConflicts(RecordScheduleID s
 	return
 }
 
-// Arguments:
-//
-// * RecordTaskID:
-//
-// Return values:
-//
-// * RecordTaskConflictIDList:
-//
-// * UpdateID:
 func (client *ScheduledRecording1) GetRecordTaskConflicts(RecordTaskID string) (RecordTaskConflictIDList string, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
@@ -8998,13 +7813,6 @@ func newScheduledRecording2ClientsFromGenericClients(genericClients []goupnp.Ser
 	return clients
 }
 
-//
-//
-// Return values:
-//
-// * SortCaps:
-//
-// * SortLevelCap:
 func (client *ScheduledRecording2) GetSortCapabilities() (SortCaps string, SortLevelCap uint32, err error) {
 	// Request structure.
 	request := interface{}(nil)
@@ -9036,13 +7844,11 @@ func (client *ScheduledRecording2) GetSortCapabilities() (SortCaps string, SortL
 	return
 }
 
+//
 // Arguments:
 //
 // * DataTypeID: allowed values: A_ARG_TYPE_RecordSchedule, A_ARG_TYPE_RecordTask, A_ARG_TYPE_RecordScheduleParts
-//
-// Return values:
-//
-// * PropertyList:
+
 func (client *ScheduledRecording2) GetPropertyList(DataTypeID string) (PropertyList string, err error) {
 	// Request structure.
 	request := &struct {
@@ -9074,15 +7880,11 @@ func (client *ScheduledRecording2) GetPropertyList(DataTypeID string) (PropertyL
 	return
 }
 
+//
 // Arguments:
 //
 // * DataTypeID: allowed values: A_ARG_TYPE_RecordSchedule, A_ARG_TYPE_RecordTask, A_ARG_TYPE_RecordScheduleParts
-//
-// * Filter:
-//
-// Return values:
-//
-// * PropertyInfo:
+
 func (client *ScheduledRecording2) GetAllowedValues(DataTypeID string, Filter string) (PropertyInfo string, err error) {
 	// Request structure.
 	request := &struct {
@@ -9119,11 +7921,6 @@ func (client *ScheduledRecording2) GetAllowedValues(DataTypeID string, Filter st
 	return
 }
 
-//
-//
-// Return values:
-//
-// * Id:
 func (client *ScheduledRecording2) GetStateUpdateID() (Id uint32, err error) {
 	// Request structure.
 	request := interface{}(nil)
@@ -9150,25 +7947,6 @@ func (client *ScheduledRecording2) GetStateUpdateID() (Id uint32, err error) {
 	return
 }
 
-// Arguments:
-//
-// * Filter:
-//
-// * StartingIndex:
-//
-// * RequestedCount:
-//
-// * SortCriteria:
-//
-// Return values:
-//
-// * Result:
-//
-// * NumberReturned:
-//
-// * TotalMatches:
-//
-// * UpdateID:
 func (client *ScheduledRecording2) BrowseRecordSchedules(Filter string, StartingIndex uint32, RequestedCount uint32, SortCriteria string) (Result string, NumberReturned uint32, TotalMatches uint32, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
@@ -9230,27 +8008,6 @@ func (client *ScheduledRecording2) BrowseRecordSchedules(Filter string, Starting
 	return
 }
 
-// Arguments:
-//
-// * RecordScheduleID:
-//
-// * Filter:
-//
-// * StartingIndex:
-//
-// * RequestedCount:
-//
-// * SortCriteria:
-//
-// Return values:
-//
-// * Result:
-//
-// * NumberReturned:
-//
-// * TotalMatches:
-//
-// * UpdateID:
 func (client *ScheduledRecording2) BrowseRecordTasks(RecordScheduleID string, Filter string, StartingIndex uint32, RequestedCount uint32, SortCriteria string) (Result string, NumberReturned uint32, TotalMatches uint32, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
@@ -9317,17 +8074,6 @@ func (client *ScheduledRecording2) BrowseRecordTasks(RecordScheduleID string, Fi
 	return
 }
 
-// Arguments:
-//
-// * Elements:
-//
-// Return values:
-//
-// * RecordScheduleID:
-//
-// * Result:
-//
-// * UpdateID:
 func (client *ScheduledRecording2) CreateRecordSchedule(Elements string) (RecordScheduleID string, Result string, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
@@ -9369,11 +8115,6 @@ func (client *ScheduledRecording2) CreateRecordSchedule(Elements string) (Record
 	return
 }
 
-// Arguments:
-//
-// * RecordScheduleID:
-//
-//
 func (client *ScheduledRecording2) DeleteRecordSchedule(RecordScheduleID string) (err error) {
 	// Request structure.
 	request := &struct {
@@ -9400,17 +8141,6 @@ func (client *ScheduledRecording2) DeleteRecordSchedule(RecordScheduleID string)
 	return
 }
 
-// Arguments:
-//
-// * RecordScheduleID:
-//
-// * Filter:
-//
-// Return values:
-//
-// * Result:
-//
-// * UpdateID:
 func (client *ScheduledRecording2) GetRecordSchedule(RecordScheduleID string, Filter string) (Result string, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
@@ -9452,11 +8182,6 @@ func (client *ScheduledRecording2) GetRecordSchedule(RecordScheduleID string, Fi
 	return
 }
 
-// Arguments:
-//
-// * RecordScheduleID:
-//
-//
 func (client *ScheduledRecording2) EnableRecordSchedule(RecordScheduleID string) (err error) {
 	// Request structure.
 	request := &struct {
@@ -9483,11 +8208,6 @@ func (client *ScheduledRecording2) EnableRecordSchedule(RecordScheduleID string)
 	return
 }
 
-// Arguments:
-//
-// * RecordScheduleID:
-//
-//
 func (client *ScheduledRecording2) DisableRecordSchedule(RecordScheduleID string) (err error) {
 	// Request structure.
 	request := &struct {
@@ -9514,11 +8234,6 @@ func (client *ScheduledRecording2) DisableRecordSchedule(RecordScheduleID string
 	return
 }
 
-// Arguments:
-//
-// * RecordTaskID:
-//
-//
 func (client *ScheduledRecording2) DeleteRecordTask(RecordTaskID string) (err error) {
 	// Request structure.
 	request := &struct {
@@ -9545,17 +8260,6 @@ func (client *ScheduledRecording2) DeleteRecordTask(RecordTaskID string) (err er
 	return
 }
 
-// Arguments:
-//
-// * RecordTaskID:
-//
-// * Filter:
-//
-// Return values:
-//
-// * Result:
-//
-// * UpdateID:
 func (client *ScheduledRecording2) GetRecordTask(RecordTaskID string, Filter string) (Result string, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
@@ -9597,11 +8301,6 @@ func (client *ScheduledRecording2) GetRecordTask(RecordTaskID string, Filter str
 	return
 }
 
-// Arguments:
-//
-// * RecordTaskID:
-//
-//
 func (client *ScheduledRecording2) EnableRecordTask(RecordTaskID string) (err error) {
 	// Request structure.
 	request := &struct {
@@ -9628,11 +8327,6 @@ func (client *ScheduledRecording2) EnableRecordTask(RecordTaskID string) (err er
 	return
 }
 
-// Arguments:
-//
-// * RecordTaskID:
-//
-//
 func (client *ScheduledRecording2) DisableRecordTask(RecordTaskID string) (err error) {
 	// Request structure.
 	request := &struct {
@@ -9659,11 +8353,6 @@ func (client *ScheduledRecording2) DisableRecordTask(RecordTaskID string) (err e
 	return
 }
 
-// Arguments:
-//
-// * RecordTaskID:
-//
-//
 func (client *ScheduledRecording2) ResetRecordTask(RecordTaskID string) (err error) {
 	// Request structure.
 	request := &struct {
@@ -9690,15 +8379,6 @@ func (client *ScheduledRecording2) ResetRecordTask(RecordTaskID string) (err err
 	return
 }
 
-// Arguments:
-//
-// * RecordScheduleID:
-//
-// Return values:
-//
-// * RecordScheduleConflictIDList:
-//
-// * UpdateID:
 func (client *ScheduledRecording2) GetRecordScheduleConflicts(RecordScheduleID string) (RecordScheduleConflictIDList string, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
@@ -9735,15 +8415,6 @@ func (client *ScheduledRecording2) GetRecordScheduleConflicts(RecordScheduleID s
 	return
 }
 
-// Arguments:
-//
-// * RecordTaskID:
-//
-// Return values:
-//
-// * RecordTaskConflictIDList:
-//
-// * UpdateID:
 func (client *ScheduledRecording2) GetRecordTaskConflicts(RecordTaskID string) (RecordTaskConflictIDList string, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
