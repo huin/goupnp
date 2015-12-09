@@ -7,6 +7,7 @@ import (
 
 	"github.com/huin/goupnp"
 	"github.com/huin/goupnp/dcps/internetgateway1"
+	"github.com/huin/goupnp/dcps/internetgateway2"
 )
 
 // Use discovered WANPPPConnection1 services to find external IP addresses.
@@ -92,10 +93,37 @@ func Example_ReuseDiscoveredDevice() {
 	// Output:
 }
 
-// Use discovered WANCommonInterfaceConfig1 services to discover byte transfer
-// counts.
+// Use discovered igd1.WANCommonInterfaceConfig1 services to discover byte
+// transfer counts.
 func Example_WANCommonInterfaceConfig1_GetBytesTransferred() {
 	clients, errors, err := internetgateway1.NewWANCommonInterfaceConfig1Clients()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "Error discovering service with UPnP:", err)
+		return
+	}
+	fmt.Fprintf(os.Stderr, "Error discovering %d services:\n", len(errors))
+	for _, err := range errors {
+		fmt.Println("  ", err)
+	}
+	for _, client := range clients {
+		if recv, err := client.GetTotalBytesReceived(); err != nil {
+			fmt.Fprintln(os.Stderr, "Error requesting bytes received:", err)
+		} else {
+			fmt.Fprintln(os.Stderr, "Bytes received:", recv)
+		}
+		if sent, err := client.GetTotalBytesSent(); err != nil {
+			fmt.Fprintln(os.Stderr, "Error requesting bytes sent:", err)
+		} else {
+			fmt.Fprintln(os.Stderr, "Bytes sent:", sent)
+		}
+	}
+	// Output:
+}
+
+// Use discovered igd2.WANCommonInterfaceConfig1 services to discover byte
+// transfer counts.
+func Example_WANCommonInterfaceConfig2_GetBytesTransferred() {
+	clients, errors, err := internetgateway2.NewWANCommonInterfaceConfig1Clients()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Error discovering service with UPnP:", err)
 		return
