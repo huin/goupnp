@@ -31,7 +31,7 @@ var (
 type DCPMetadata struct {
 	Name         string // What to name the Go DCP package.
 	OfficialName string // Official name for the DCP.
-	DocURL       string // Optional - URL for futher documentation about the DCP.
+	DocURL       string // Optional - URL for further documentation about the DCP.
 	XMLSpecURL   string // Where to download the XML spec from.
 	// Any special-case functions to run against the DCP before writing it out.
 	Hacks []DCPHackFn
