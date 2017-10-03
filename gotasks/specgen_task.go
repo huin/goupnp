@@ -43,6 +43,27 @@ var dcpMetadata = []DCPMetadata{
 		OfficialName: "Internet Gateway Device v1",
 		DocURL:       "http://upnp.org/specs/gw/UPnP-gw-InternetGatewayDevice-v1-Device.pdf",
 		XMLSpecURL:   "http://upnp.org/specs/gw/UPnP-gw-IGD-TestFiles-20010921.zip",
+		Hacks: []DCPHackFn{
+			func(dcp *DCP) error {
+				for _, service := range dcp.Services {
+					if service.URN == "urn:schemas-upnp-org:service:WANCommonInterfaceConfig:1" {
+						variables := service.SCPD.StateVariables
+						for key, variable := range variables {
+							varName := variable.Name
+							if varName == "TotalBytesSent" || varName == "TotalBytesReceived" {
+								// Fix size of total bytes which is by default ui4 or maximum 4 GiB.
+								variable.DataType.Name = "ui8"
+								variables[key] = variable
+							}
+						}
+
+						break
+					}
+				}
+
+				return nil
+			},
+		},
 	},
 	{
 		Name:         "internetgateway2",
@@ -370,6 +391,7 @@ var typeConvs = map[string]conv{
 	"ui1":         conv{"Ui1", "uint8"},
 	"ui2":         conv{"Ui2", "uint16"},
 	"ui4":         conv{"Ui4", "uint32"},
+	"ui8":         conv{"Ui8", "uint64"},
 	"i1":          conv{"I1", "int8"},
 	"i2":          conv{"I2", "int16"},
 	"i4":          conv{"I4", "int32"},
