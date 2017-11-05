@@ -620,7 +620,7 @@ func (client *{{$srvIdent}}) {{.Name}}({{range $winargs -}}
 {{end}}
 {{end}}
 
-{{define "argstruct"}}struct {{"{"}}{{range .}}
-{{.Name}} string
+{{define "argstruct"}}struct {{"{"}}
+{{range .}}{{.Name}} string
 {{end}}{{"}"}}{{end}}
 `))

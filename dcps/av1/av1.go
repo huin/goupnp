@@ -101,10 +101,8 @@ func newAVTransport1ClientsFromGenericClients(genericClients []goupnp.ServiceCli
 func (client *AVTransport1) SetAVTransportURI(InstanceID uint32, CurrentURI string, CurrentURIMetaData string) (err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
-		CurrentURI string
-
+		InstanceID         string
+		CurrentURI         string
 		CurrentURIMetaData string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -137,10 +135,8 @@ func (client *AVTransport1) SetAVTransportURI(InstanceID uint32, CurrentURI stri
 func (client *AVTransport1) SetNextAVTransportURI(InstanceID uint32, NextURI string, NextURIMetaData string) (err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
-		NextURI string
-
+		InstanceID      string
+		NextURI         string
 		NextURIMetaData string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -188,23 +184,15 @@ func (client *AVTransport1) GetMediaInfo(InstanceID uint32) (NrTracks uint32, Me
 
 	// Response structure.
 	response := &struct {
-		NrTracks string
-
-		MediaDuration string
-
-		CurrentURI string
-
+		NrTracks           string
+		MediaDuration      string
+		CurrentURI         string
 		CurrentURIMetaData string
-
-		NextURI string
-
-		NextURIMetaData string
-
-		PlayMedium string
-
-		RecordMedium string
-
-		WriteStatus string
+		NextURI            string
+		NextURIMetaData    string
+		PlayMedium         string
+		RecordMedium       string
+		WriteStatus        string
 	}{}
 
 	// Perform the SOAP call.
@@ -267,11 +255,9 @@ func (client *AVTransport1) GetTransportInfo(InstanceID uint32) (CurrentTranspor
 
 	// Response structure.
 	response := &struct {
-		CurrentTransportState string
-
+		CurrentTransportState  string
 		CurrentTransportStatus string
-
-		CurrentSpeed string
+		CurrentSpeed           string
 	}{}
 
 	// Perform the SOAP call.
@@ -312,21 +298,14 @@ func (client *AVTransport1) GetPositionInfo(InstanceID uint32) (Track uint32, Tr
 
 	// Response structure.
 	response := &struct {
-		Track string
-
+		Track         string
 		TrackDuration string
-
 		TrackMetaData string
-
-		TrackURI string
-
-		RelTime string
-
-		AbsTime string
-
-		RelCount string
-
-		AbsCount string
+		TrackURI      string
+		RelTime       string
+		AbsTime       string
+		RelCount      string
+		AbsCount      string
 	}{}
 
 	// Perform the SOAP call.
@@ -378,10 +357,8 @@ func (client *AVTransport1) GetDeviceCapabilities(InstanceID uint32) (PlayMedia 
 
 	// Response structure.
 	response := &struct {
-		PlayMedia string
-
-		RecMedia string
-
+		PlayMedia       string
+		RecMedia        string
 		RecQualityModes string
 	}{}
 
@@ -423,8 +400,7 @@ func (client *AVTransport1) GetTransportSettings(InstanceID uint32) (PlayMode st
 
 	// Response structure.
 	response := &struct {
-		PlayMode string
-
+		PlayMode       string
 		RecQualityMode string
 	}{}
 
@@ -480,8 +456,7 @@ func (client *AVTransport1) Play(InstanceID uint32, Speed string) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
-
-		Speed string
+		Speed      string
 	}{}
 	// BEGIN Marshal arguments into request.
 
@@ -568,10 +543,8 @@ func (client *AVTransport1) Seek(InstanceID uint32, Unit string, Target string) 
 	// Request structure.
 	request := &struct {
 		InstanceID string
-
-		Unit string
-
-		Target string
+		Unit       string
+		Target     string
 	}{}
 	// BEGIN Marshal arguments into request.
 
@@ -660,8 +633,7 @@ func (client *AVTransport1) Previous(InstanceID uint32) (err error) {
 func (client *AVTransport1) SetPlayMode(InstanceID uint32, NewPlayMode string) (err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
+		InstanceID  string
 		NewPlayMode string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -691,8 +663,7 @@ func (client *AVTransport1) SetPlayMode(InstanceID uint32, NewPlayMode string) (
 func (client *AVTransport1) SetRecordQualityMode(InstanceID uint32, NewRecordQualityMode string) (err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
+		InstanceID           string
 		NewRecordQualityMode string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -813,10 +784,8 @@ func newAVTransport2ClientsFromGenericClients(genericClients []goupnp.ServiceCli
 func (client *AVTransport2) SetAVTransportURI(InstanceID uint32, CurrentURI string, CurrentURIMetaData string) (err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
-		CurrentURI string
-
+		InstanceID         string
+		CurrentURI         string
 		CurrentURIMetaData string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -849,10 +818,8 @@ func (client *AVTransport2) SetAVTransportURI(InstanceID uint32, CurrentURI stri
 func (client *AVTransport2) SetNextAVTransportURI(InstanceID uint32, NextURI string, NextURIMetaData string) (err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
-		NextURI string
-
+		InstanceID      string
+		NextURI         string
 		NextURIMetaData string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -900,23 +867,15 @@ func (client *AVTransport2) GetMediaInfo(InstanceID uint32) (NrTracks uint32, Me
 
 	// Response structure.
 	response := &struct {
-		NrTracks string
-
-		MediaDuration string
-
-		CurrentURI string
-
+		NrTracks           string
+		MediaDuration      string
+		CurrentURI         string
 		CurrentURIMetaData string
-
-		NextURI string
-
-		NextURIMetaData string
-
-		PlayMedium string
-
-		RecordMedium string
-
-		WriteStatus string
+		NextURI            string
+		NextURIMetaData    string
+		PlayMedium         string
+		RecordMedium       string
+		WriteStatus        string
 	}{}
 
 	// Perform the SOAP call.
@@ -977,25 +936,16 @@ func (client *AVTransport2) GetMediaInfo_Ext(InstanceID uint32) (CurrentType str
 
 	// Response structure.
 	response := &struct {
-		CurrentType string
-
-		NrTracks string
-
-		MediaDuration string
-
-		CurrentURI string
-
+		CurrentType        string
+		NrTracks           string
+		MediaDuration      string
+		CurrentURI         string
 		CurrentURIMetaData string
-
-		NextURI string
-
-		NextURIMetaData string
-
-		PlayMedium string
-
-		RecordMedium string
-
-		WriteStatus string
+		NextURI            string
+		NextURIMetaData    string
+		PlayMedium         string
+		RecordMedium       string
+		WriteStatus        string
 	}{}
 
 	// Perform the SOAP call.
@@ -1061,11 +1011,9 @@ func (client *AVTransport2) GetTransportInfo(InstanceID uint32) (CurrentTranspor
 
 	// Response structure.
 	response := &struct {
-		CurrentTransportState string
-
+		CurrentTransportState  string
 		CurrentTransportStatus string
-
-		CurrentSpeed string
+		CurrentSpeed           string
 	}{}
 
 	// Perform the SOAP call.
@@ -1106,21 +1054,14 @@ func (client *AVTransport2) GetPositionInfo(InstanceID uint32) (Track uint32, Tr
 
 	// Response structure.
 	response := &struct {
-		Track string
-
+		Track         string
 		TrackDuration string
-
 		TrackMetaData string
-
-		TrackURI string
-
-		RelTime string
-
-		AbsTime string
-
-		RelCount string
-
-		AbsCount string
+		TrackURI      string
+		RelTime       string
+		AbsTime       string
+		RelCount      string
+		AbsCount      string
 	}{}
 
 	// Perform the SOAP call.
@@ -1172,10 +1113,8 @@ func (client *AVTransport2) GetDeviceCapabilities(InstanceID uint32) (PlayMedia 
 
 	// Response structure.
 	response := &struct {
-		PlayMedia string
-
-		RecMedia string
-
+		PlayMedia       string
+		RecMedia        string
 		RecQualityModes string
 	}{}
 
@@ -1217,8 +1156,7 @@ func (client *AVTransport2) GetTransportSettings(InstanceID uint32) (PlayMode st
 
 	// Response structure.
 	response := &struct {
-		PlayMode string
-
+		PlayMode       string
 		RecQualityMode string
 	}{}
 
@@ -1274,8 +1212,7 @@ func (client *AVTransport2) Play(InstanceID uint32, Speed string) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
-
-		Speed string
+		Speed      string
 	}{}
 	// BEGIN Marshal arguments into request.
 
@@ -1362,10 +1299,8 @@ func (client *AVTransport2) Seek(InstanceID uint32, Unit string, Target string) 
 	// Request structure.
 	request := &struct {
 		InstanceID string
-
-		Unit string
-
-		Target string
+		Unit       string
+		Target     string
 	}{}
 	// BEGIN Marshal arguments into request.
 
@@ -1454,8 +1389,7 @@ func (client *AVTransport2) Previous(InstanceID uint32) (err error) {
 func (client *AVTransport2) SetPlayMode(InstanceID uint32, NewPlayMode string) (err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
+		InstanceID  string
 		NewPlayMode string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -1485,8 +1419,7 @@ func (client *AVTransport2) SetPlayMode(InstanceID uint32, NewPlayMode string) (
 func (client *AVTransport2) SetRecordQualityMode(InstanceID uint32, NewRecordQualityMode string) (err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
+		InstanceID           string
 		NewRecordQualityMode string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -1582,8 +1515,7 @@ func (client *AVTransport2) GetDRMState(InstanceID uint32) (CurrentDRMState stri
 func (client *AVTransport2) GetStateVariables(InstanceID uint32, StateVariableList string) (StateVariableValuePairs string, err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
+		InstanceID        string
 		StateVariableList string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -1618,14 +1550,10 @@ func (client *AVTransport2) GetStateVariables(InstanceID uint32, StateVariableLi
 func (client *AVTransport2) SetStateVariables(InstanceID uint32, AVTransportUDN string, ServiceType string, ServiceId string, StateVariableValuePairs string) (StateVariableList string, err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
-		AVTransportUDN string
-
-		ServiceType string
-
-		ServiceId string
-
+		InstanceID              string
+		AVTransportUDN          string
+		ServiceType             string
+		ServiceId               string
 		StateVariableValuePairs string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -1736,8 +1664,7 @@ func (client *ConnectionManager1) GetProtocolInfo() (Source string, Sink string,
 	// Response structure.
 	response := &struct {
 		Source string
-
-		Sink string
+		Sink   string
 	}{}
 
 	// Perform the SOAP call.
@@ -1765,13 +1692,10 @@ func (client *ConnectionManager1) GetProtocolInfo() (Source string, Sink string,
 func (client *ConnectionManager1) PrepareForConnection(RemoteProtocolInfo string, PeerConnectionManager string, PeerConnectionID int32, Direction string) (ConnectionID int32, AVTransportID int32, RcsID int32, err error) {
 	// Request structure.
 	request := &struct {
-		RemoteProtocolInfo string
-
+		RemoteProtocolInfo    string
 		PeerConnectionManager string
-
-		PeerConnectionID string
-
-		Direction string
+		PeerConnectionID      string
+		Direction             string
 	}{}
 	// BEGIN Marshal arguments into request.
 
@@ -1791,11 +1715,9 @@ func (client *ConnectionManager1) PrepareForConnection(RemoteProtocolInfo string
 
 	// Response structure.
 	response := &struct {
-		ConnectionID string
-
+		ConnectionID  string
 		AVTransportID string
-
-		RcsID string
+		RcsID         string
 	}{}
 
 	// Perform the SOAP call.
@@ -1890,19 +1812,13 @@ func (client *ConnectionManager1) GetCurrentConnectionInfo(ConnectionID int32) (
 
 	// Response structure.
 	response := &struct {
-		RcsID string
-
-		AVTransportID string
-
-		ProtocolInfo string
-
+		RcsID                 string
+		AVTransportID         string
+		ProtocolInfo          string
 		PeerConnectionManager string
-
-		PeerConnectionID string
-
-		Direction string
-
-		Status string
+		PeerConnectionID      string
+		Direction             string
+		Status                string
 	}{}
 
 	// Perform the SOAP call.
@@ -2007,8 +1923,7 @@ func (client *ConnectionManager2) GetProtocolInfo() (Source string, Sink string,
 	// Response structure.
 	response := &struct {
 		Source string
-
-		Sink string
+		Sink   string
 	}{}
 
 	// Perform the SOAP call.
@@ -2036,13 +1951,10 @@ func (client *ConnectionManager2) GetProtocolInfo() (Source string, Sink string,
 func (client *ConnectionManager2) PrepareForConnection(RemoteProtocolInfo string, PeerConnectionManager string, PeerConnectionID int32, Direction string) (ConnectionID int32, AVTransportID int32, RcsID int32, err error) {
 	// Request structure.
 	request := &struct {
-		RemoteProtocolInfo string
-
+		RemoteProtocolInfo    string
 		PeerConnectionManager string
-
-		PeerConnectionID string
-
-		Direction string
+		PeerConnectionID      string
+		Direction             string
 	}{}
 	// BEGIN Marshal arguments into request.
 
@@ -2062,11 +1974,9 @@ func (client *ConnectionManager2) PrepareForConnection(RemoteProtocolInfo string
 
 	// Response structure.
 	response := &struct {
-		ConnectionID string
-
+		ConnectionID  string
 		AVTransportID string
-
-		RcsID string
+		RcsID         string
 	}{}
 
 	// Perform the SOAP call.
@@ -2161,19 +2071,13 @@ func (client *ConnectionManager2) GetCurrentConnectionInfo(ConnectionID int32) (
 
 	// Response structure.
 	response := &struct {
-		RcsID string
-
-		AVTransportID string
-
-		ProtocolInfo string
-
+		RcsID                 string
+		AVTransportID         string
+		ProtocolInfo          string
 		PeerConnectionManager string
-
-		PeerConnectionID string
-
-		Direction string
-
-		Status string
+		PeerConnectionID      string
+		Direction             string
+		Status                string
 	}{}
 
 	// Perform the SOAP call.
@@ -2354,17 +2258,12 @@ func (client *ContentDirectory1) GetSystemUpdateID() (Id uint32, err error) {
 func (client *ContentDirectory1) Browse(ObjectID string, BrowseFlag string, Filter string, StartingIndex uint32, RequestedCount uint32, SortCriteria string) (Result string, NumberReturned uint32, TotalMatches uint32, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
-		ObjectID string
-
-		BrowseFlag string
-
-		Filter string
-
-		StartingIndex string
-
+		ObjectID       string
+		BrowseFlag     string
+		Filter         string
+		StartingIndex  string
 		RequestedCount string
-
-		SortCriteria string
+		SortCriteria   string
 	}{}
 	// BEGIN Marshal arguments into request.
 
@@ -2390,13 +2289,10 @@ func (client *ContentDirectory1) Browse(ObjectID string, BrowseFlag string, Filt
 
 	// Response structure.
 	response := &struct {
-		Result string
-
+		Result         string
 		NumberReturned string
-
-		TotalMatches string
-
-		UpdateID string
+		TotalMatches   string
+		UpdateID       string
 	}{}
 
 	// Perform the SOAP call.
@@ -2425,17 +2321,12 @@ func (client *ContentDirectory1) Browse(ObjectID string, BrowseFlag string, Filt
 func (client *ContentDirectory1) Search(ContainerID string, SearchCriteria string, Filter string, StartingIndex uint32, RequestedCount uint32, SortCriteria string) (Result string, NumberReturned uint32, TotalMatches uint32, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
-		ContainerID string
-
+		ContainerID    string
 		SearchCriteria string
-
-		Filter string
-
-		StartingIndex string
-
+		Filter         string
+		StartingIndex  string
 		RequestedCount string
-
-		SortCriteria string
+		SortCriteria   string
 	}{}
 	// BEGIN Marshal arguments into request.
 
@@ -2461,13 +2352,10 @@ func (client *ContentDirectory1) Search(ContainerID string, SearchCriteria strin
 
 	// Response structure.
 	response := &struct {
-		Result string
-
+		Result         string
 		NumberReturned string
-
-		TotalMatches string
-
-		UpdateID string
+		TotalMatches   string
+		UpdateID       string
 	}{}
 
 	// Perform the SOAP call.
@@ -2497,8 +2385,7 @@ func (client *ContentDirectory1) CreateObject(ContainerID string, Elements strin
 	// Request structure.
 	request := &struct {
 		ContainerID string
-
-		Elements string
+		Elements    string
 	}{}
 	// BEGIN Marshal arguments into request.
 
@@ -2513,8 +2400,7 @@ func (client *ContentDirectory1) CreateObject(ContainerID string, Elements strin
 	// Response structure.
 	response := &struct {
 		ObjectID string
-
-		Result string
+		Result   string
 	}{}
 
 	// Perform the SOAP call.
@@ -2563,11 +2449,9 @@ func (client *ContentDirectory1) DestroyObject(ObjectID string) (err error) {
 func (client *ContentDirectory1) UpdateObject(ObjectID string, CurrentTagValue string, NewTagValue string) (err error) {
 	// Request structure.
 	request := &struct {
-		ObjectID string
-
+		ObjectID        string
 		CurrentTagValue string
-
-		NewTagValue string
+		NewTagValue     string
 	}{}
 	// BEGIN Marshal arguments into request.
 
@@ -2599,8 +2483,7 @@ func (client *ContentDirectory1) UpdateObject(ObjectID string, CurrentTagValue s
 func (client *ContentDirectory1) ImportResource(SourceURI *url.URL, DestinationURI *url.URL) (TransferID uint32, err error) {
 	// Request structure.
 	request := &struct {
-		SourceURI string
-
+		SourceURI      string
 		DestinationURI string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -2635,8 +2518,7 @@ func (client *ContentDirectory1) ImportResource(SourceURI *url.URL, DestinationU
 func (client *ContentDirectory1) ExportResource(SourceURI *url.URL, DestinationURI *url.URL) (TransferID uint32, err error) {
 	// Request structure.
 	request := &struct {
-		SourceURI string
-
+		SourceURI      string
 		DestinationURI string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -2713,10 +2595,8 @@ func (client *ContentDirectory1) GetTransferProgress(TransferID uint32) (Transfe
 	// Response structure.
 	response := &struct {
 		TransferStatus string
-
 		TransferLength string
-
-		TransferTotal string
+		TransferTotal  string
 	}{}
 
 	// Perform the SOAP call.
@@ -2769,8 +2649,7 @@ func (client *ContentDirectory1) CreateReference(ContainerID string, ObjectID st
 	// Request structure.
 	request := &struct {
 		ContainerID string
-
-		ObjectID string
+		ObjectID    string
 	}{}
 	// BEGIN Marshal arguments into request.
 
@@ -2999,17 +2878,12 @@ func (client *ContentDirectory2) GetSystemUpdateID() (Id uint32, err error) {
 func (client *ContentDirectory2) Browse(ObjectID string, BrowseFlag string, Filter string, StartingIndex uint32, RequestedCount uint32, SortCriteria string) (Result string, NumberReturned uint32, TotalMatches uint32, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
-		ObjectID string
-
-		BrowseFlag string
-
-		Filter string
-
-		StartingIndex string
-
+		ObjectID       string
+		BrowseFlag     string
+		Filter         string
+		StartingIndex  string
 		RequestedCount string
-
-		SortCriteria string
+		SortCriteria   string
 	}{}
 	// BEGIN Marshal arguments into request.
 
@@ -3035,13 +2909,10 @@ func (client *ContentDirectory2) Browse(ObjectID string, BrowseFlag string, Filt
 
 	// Response structure.
 	response := &struct {
-		Result string
-
+		Result         string
 		NumberReturned string
-
-		TotalMatches string
-
-		UpdateID string
+		TotalMatches   string
+		UpdateID       string
 	}{}
 
 	// Perform the SOAP call.
@@ -3070,17 +2941,12 @@ func (client *ContentDirectory2) Browse(ObjectID string, BrowseFlag string, Filt
 func (client *ContentDirectory2) Search(ContainerID string, SearchCriteria string, Filter string, StartingIndex uint32, RequestedCount uint32, SortCriteria string) (Result string, NumberReturned uint32, TotalMatches uint32, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
-		ContainerID string
-
+		ContainerID    string
 		SearchCriteria string
-
-		Filter string
-
-		StartingIndex string
-
+		Filter         string
+		StartingIndex  string
 		RequestedCount string
-
-		SortCriteria string
+		SortCriteria   string
 	}{}
 	// BEGIN Marshal arguments into request.
 
@@ -3106,13 +2972,10 @@ func (client *ContentDirectory2) Search(ContainerID string, SearchCriteria strin
 
 	// Response structure.
 	response := &struct {
-		Result string
-
+		Result         string
 		NumberReturned string
-
-		TotalMatches string
-
-		UpdateID string
+		TotalMatches   string
+		UpdateID       string
 	}{}
 
 	// Perform the SOAP call.
@@ -3142,8 +3005,7 @@ func (client *ContentDirectory2) CreateObject(ContainerID string, Elements strin
 	// Request structure.
 	request := &struct {
 		ContainerID string
-
-		Elements string
+		Elements    string
 	}{}
 	// BEGIN Marshal arguments into request.
 
@@ -3158,8 +3020,7 @@ func (client *ContentDirectory2) CreateObject(ContainerID string, Elements strin
 	// Response structure.
 	response := &struct {
 		ObjectID string
-
-		Result string
+		Result   string
 	}{}
 
 	// Perform the SOAP call.
@@ -3208,11 +3069,9 @@ func (client *ContentDirectory2) DestroyObject(ObjectID string) (err error) {
 func (client *ContentDirectory2) UpdateObject(ObjectID string, CurrentTagValue string, NewTagValue string) (err error) {
 	// Request structure.
 	request := &struct {
-		ObjectID string
-
+		ObjectID        string
 		CurrentTagValue string
-
-		NewTagValue string
+		NewTagValue     string
 	}{}
 	// BEGIN Marshal arguments into request.
 
@@ -3244,8 +3103,7 @@ func (client *ContentDirectory2) UpdateObject(ObjectID string, CurrentTagValue s
 func (client *ContentDirectory2) MoveObject(ObjectID string, NewParentID string) (NewObjectID string, err error) {
 	// Request structure.
 	request := &struct {
-		ObjectID string
-
+		ObjectID    string
 		NewParentID string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -3280,8 +3138,7 @@ func (client *ContentDirectory2) MoveObject(ObjectID string, NewParentID string)
 func (client *ContentDirectory2) ImportResource(SourceURI *url.URL, DestinationURI *url.URL) (TransferID uint32, err error) {
 	// Request structure.
 	request := &struct {
-		SourceURI string
-
+		SourceURI      string
 		DestinationURI string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -3316,8 +3173,7 @@ func (client *ContentDirectory2) ImportResource(SourceURI *url.URL, DestinationU
 func (client *ContentDirectory2) ExportResource(SourceURI *url.URL, DestinationURI *url.URL) (TransferID uint32, err error) {
 	// Request structure.
 	request := &struct {
-		SourceURI string
-
+		SourceURI      string
 		DestinationURI string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -3420,10 +3276,8 @@ func (client *ContentDirectory2) GetTransferProgress(TransferID uint32) (Transfe
 	// Response structure.
 	response := &struct {
 		TransferStatus string
-
 		TransferLength string
-
-		TransferTotal string
+		TransferTotal  string
 	}{}
 
 	// Perform the SOAP call.
@@ -3450,8 +3304,7 @@ func (client *ContentDirectory2) CreateReference(ContainerID string, ObjectID st
 	// Request structure.
 	request := &struct {
 		ContainerID string
-
-		ObjectID string
+		ObjectID    string
 	}{}
 	// BEGIN Marshal arguments into request.
 
@@ -3706,17 +3559,12 @@ func (client *ContentDirectory3) GetServiceResetToken() (ResetToken string, err 
 func (client *ContentDirectory3) Browse(ObjectID string, BrowseFlag string, Filter string, StartingIndex uint32, RequestedCount uint32, SortCriteria string) (Result string, NumberReturned uint32, TotalMatches uint32, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
-		ObjectID string
-
-		BrowseFlag string
-
-		Filter string
-
-		StartingIndex string
-
+		ObjectID       string
+		BrowseFlag     string
+		Filter         string
+		StartingIndex  string
 		RequestedCount string
-
-		SortCriteria string
+		SortCriteria   string
 	}{}
 	// BEGIN Marshal arguments into request.
 
@@ -3742,13 +3590,10 @@ func (client *ContentDirectory3) Browse(ObjectID string, BrowseFlag string, Filt
 
 	// Response structure.
 	response := &struct {
-		Result string
-
+		Result         string
 		NumberReturned string
-
-		TotalMatches string
-
-		UpdateID string
+		TotalMatches   string
+		UpdateID       string
 	}{}
 
 	// Perform the SOAP call.
@@ -3777,17 +3622,12 @@ func (client *ContentDirectory3) Browse(ObjectID string, BrowseFlag string, Filt
 func (client *ContentDirectory3) Search(ContainerID string, SearchCriteria string, Filter string, StartingIndex uint32, RequestedCount uint32, SortCriteria string) (Result string, NumberReturned uint32, TotalMatches uint32, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
-		ContainerID string
-
+		ContainerID    string
 		SearchCriteria string
-
-		Filter string
-
-		StartingIndex string
-
+		Filter         string
+		StartingIndex  string
 		RequestedCount string
-
-		SortCriteria string
+		SortCriteria   string
 	}{}
 	// BEGIN Marshal arguments into request.
 
@@ -3813,13 +3653,10 @@ func (client *ContentDirectory3) Search(ContainerID string, SearchCriteria strin
 
 	// Response structure.
 	response := &struct {
-		Result string
-
+		Result         string
 		NumberReturned string
-
-		TotalMatches string
-
-		UpdateID string
+		TotalMatches   string
+		UpdateID       string
 	}{}
 
 	// Perform the SOAP call.
@@ -3849,8 +3686,7 @@ func (client *ContentDirectory3) CreateObject(ContainerID string, Elements strin
 	// Request structure.
 	request := &struct {
 		ContainerID string
-
-		Elements string
+		Elements    string
 	}{}
 	// BEGIN Marshal arguments into request.
 
@@ -3865,8 +3701,7 @@ func (client *ContentDirectory3) CreateObject(ContainerID string, Elements strin
 	// Response structure.
 	response := &struct {
 		ObjectID string
-
-		Result string
+		Result   string
 	}{}
 
 	// Perform the SOAP call.
@@ -3915,11 +3750,9 @@ func (client *ContentDirectory3) DestroyObject(ObjectID string) (err error) {
 func (client *ContentDirectory3) UpdateObject(ObjectID string, CurrentTagValue string, NewTagValue string) (err error) {
 	// Request structure.
 	request := &struct {
-		ObjectID string
-
+		ObjectID        string
 		CurrentTagValue string
-
-		NewTagValue string
+		NewTagValue     string
 	}{}
 	// BEGIN Marshal arguments into request.
 
@@ -3951,8 +3784,7 @@ func (client *ContentDirectory3) UpdateObject(ObjectID string, CurrentTagValue s
 func (client *ContentDirectory3) MoveObject(ObjectID string, NewParentID string) (NewObjectID string, err error) {
 	// Request structure.
 	request := &struct {
-		ObjectID string
-
+		ObjectID    string
 		NewParentID string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -3987,8 +3819,7 @@ func (client *ContentDirectory3) MoveObject(ObjectID string, NewParentID string)
 func (client *ContentDirectory3) ImportResource(SourceURI *url.URL, DestinationURI *url.URL) (TransferID uint32, err error) {
 	// Request structure.
 	request := &struct {
-		SourceURI string
-
+		SourceURI      string
 		DestinationURI string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -4023,8 +3854,7 @@ func (client *ContentDirectory3) ImportResource(SourceURI *url.URL, DestinationU
 func (client *ContentDirectory3) ExportResource(SourceURI *url.URL, DestinationURI *url.URL) (TransferID uint32, err error) {
 	// Request structure.
 	request := &struct {
-		SourceURI string
-
+		SourceURI      string
 		DestinationURI string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -4127,10 +3957,8 @@ func (client *ContentDirectory3) GetTransferProgress(TransferID uint32) (Transfe
 	// Response structure.
 	response := &struct {
 		TransferStatus string
-
 		TransferLength string
-
-		TransferTotal string
+		TransferTotal  string
 	}{}
 
 	// Perform the SOAP call.
@@ -4157,8 +3985,7 @@ func (client *ContentDirectory3) CreateReference(ContainerID string, ObjectID st
 	// Request structure.
 	request := &struct {
 		ContainerID string
-
-		ObjectID string
+		ObjectID    string
 	}{}
 	// BEGIN Marshal arguments into request.
 
@@ -4192,10 +4019,8 @@ func (client *ContentDirectory3) CreateReference(ContainerID string, ObjectID st
 func (client *ContentDirectory3) FreeFormQuery(ContainerID string, CDSView uint32, QueryRequest string) (QueryResult string, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
-		ContainerID string
-
-		CDSView string
-
+		ContainerID  string
+		CDSView      string
 		QueryRequest string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -4214,8 +4039,7 @@ func (client *ContentDirectory3) FreeFormQuery(ContainerID string, CDSView uint3
 	// Response structure.
 	response := &struct {
 		QueryResult string
-
-		UpdateID string
+		UpdateID    string
 	}{}
 
 	// Perform the SOAP call.
@@ -4361,7 +4185,6 @@ func (client *RenderingControl1) SelectPreset(InstanceID uint32, PresetName stri
 	// Request structure.
 	request := &struct {
 		InstanceID string
-
 		PresetName string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -4431,8 +4254,7 @@ func (client *RenderingControl1) GetBrightness(InstanceID uint32) (CurrentBright
 func (client *RenderingControl1) SetBrightness(InstanceID uint32, DesiredBrightness uint16) (err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
+		InstanceID        string
 		DesiredBrightness string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -4502,8 +4324,7 @@ func (client *RenderingControl1) GetContrast(InstanceID uint32) (CurrentContrast
 func (client *RenderingControl1) SetContrast(InstanceID uint32, DesiredContrast uint16) (err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
+		InstanceID      string
 		DesiredContrast string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -4573,8 +4394,7 @@ func (client *RenderingControl1) GetSharpness(InstanceID uint32) (CurrentSharpne
 func (client *RenderingControl1) SetSharpness(InstanceID uint32, DesiredSharpness uint16) (err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
+		InstanceID       string
 		DesiredSharpness string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -4635,8 +4455,7 @@ func (client *RenderingControl1) GetRedVideoGain(InstanceID uint32) (CurrentRedV
 func (client *RenderingControl1) SetRedVideoGain(InstanceID uint32, DesiredRedVideoGain uint16) (err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
+		InstanceID          string
 		DesiredRedVideoGain string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -4706,8 +4525,7 @@ func (client *RenderingControl1) GetGreenVideoGain(InstanceID uint32) (CurrentGr
 func (client *RenderingControl1) SetGreenVideoGain(InstanceID uint32, DesiredGreenVideoGain uint16) (err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
+		InstanceID            string
 		DesiredGreenVideoGain string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -4777,8 +4595,7 @@ func (client *RenderingControl1) GetBlueVideoGain(InstanceID uint32) (CurrentBlu
 func (client *RenderingControl1) SetBlueVideoGain(InstanceID uint32, DesiredBlueVideoGain uint16) (err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
+		InstanceID           string
 		DesiredBlueVideoGain string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -4848,8 +4665,7 @@ func (client *RenderingControl1) GetRedVideoBlackLevel(InstanceID uint32) (Curre
 func (client *RenderingControl1) SetRedVideoBlackLevel(InstanceID uint32, DesiredRedVideoBlackLevel uint16) (err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
+		InstanceID                string
 		DesiredRedVideoBlackLevel string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -4919,8 +4735,7 @@ func (client *RenderingControl1) GetGreenVideoBlackLevel(InstanceID uint32) (Cur
 func (client *RenderingControl1) SetGreenVideoBlackLevel(InstanceID uint32, DesiredGreenVideoBlackLevel uint16) (err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
+		InstanceID                  string
 		DesiredGreenVideoBlackLevel string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -4990,8 +4805,7 @@ func (client *RenderingControl1) GetBlueVideoBlackLevel(InstanceID uint32) (Curr
 func (client *RenderingControl1) SetBlueVideoBlackLevel(InstanceID uint32, DesiredBlueVideoBlackLevel uint16) (err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
+		InstanceID                 string
 		DesiredBlueVideoBlackLevel string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -5061,8 +4875,7 @@ func (client *RenderingControl1) GetColorTemperature(InstanceID uint32) (Current
 func (client *RenderingControl1) SetColorTemperature(InstanceID uint32, DesiredColorTemperature uint16) (err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
+		InstanceID              string
 		DesiredColorTemperature string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -5132,8 +4945,7 @@ func (client *RenderingControl1) GetHorizontalKeystone(InstanceID uint32) (Curre
 func (client *RenderingControl1) SetHorizontalKeystone(InstanceID uint32, DesiredHorizontalKeystone int16) (err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
+		InstanceID                string
 		DesiredHorizontalKeystone string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -5203,8 +5015,7 @@ func (client *RenderingControl1) GetVerticalKeystone(InstanceID uint32) (Current
 func (client *RenderingControl1) SetVerticalKeystone(InstanceID uint32, DesiredVerticalKeystone int16) (err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
+		InstanceID              string
 		DesiredVerticalKeystone string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -5240,8 +5051,7 @@ func (client *RenderingControl1) GetMute(InstanceID uint32, Channel string) (Cur
 	// Request structure.
 	request := &struct {
 		InstanceID string
-
-		Channel string
+		Channel    string
 	}{}
 	// BEGIN Marshal arguments into request.
 
@@ -5280,10 +5090,8 @@ func (client *RenderingControl1) GetMute(InstanceID uint32, Channel string) (Cur
 func (client *RenderingControl1) SetMute(InstanceID uint32, Channel string, DesiredMute bool) (err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
-		Channel string
-
+		InstanceID  string
+		Channel     string
 		DesiredMute string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -5326,8 +5134,7 @@ func (client *RenderingControl1) GetVolume(InstanceID uint32, Channel string) (C
 	// Request structure.
 	request := &struct {
 		InstanceID string
-
-		Channel string
+		Channel    string
 	}{}
 	// BEGIN Marshal arguments into request.
 
@@ -5368,10 +5175,8 @@ func (client *RenderingControl1) GetVolume(InstanceID uint32, Channel string) (C
 func (client *RenderingControl1) SetVolume(InstanceID uint32, Channel string, DesiredVolume uint16) (err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
-		Channel string
-
+		InstanceID    string
+		Channel       string
 		DesiredVolume string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -5410,8 +5215,7 @@ func (client *RenderingControl1) GetVolumeDB(InstanceID uint32, Channel string) 
 	// Request structure.
 	request := &struct {
 		InstanceID string
-
-		Channel string
+		Channel    string
 	}{}
 	// BEGIN Marshal arguments into request.
 
@@ -5450,10 +5254,8 @@ func (client *RenderingControl1) GetVolumeDB(InstanceID uint32, Channel string) 
 func (client *RenderingControl1) SetVolumeDB(InstanceID uint32, Channel string, DesiredVolume int16) (err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
-		Channel string
-
+		InstanceID    string
+		Channel       string
 		DesiredVolume string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -5492,8 +5294,7 @@ func (client *RenderingControl1) GetVolumeDBRange(InstanceID uint32, Channel str
 	// Request structure.
 	request := &struct {
 		InstanceID string
-
-		Channel string
+		Channel    string
 	}{}
 	// BEGIN Marshal arguments into request.
 
@@ -5508,7 +5309,6 @@ func (client *RenderingControl1) GetVolumeDBRange(InstanceID uint32, Channel str
 	// Response structure.
 	response := &struct {
 		MinValue string
-
 		MaxValue string
 	}{}
 
@@ -5538,8 +5338,7 @@ func (client *RenderingControl1) GetLoudness(InstanceID uint32, Channel string) 
 	// Request structure.
 	request := &struct {
 		InstanceID string
-
-		Channel string
+		Channel    string
 	}{}
 	// BEGIN Marshal arguments into request.
 
@@ -5578,10 +5377,8 @@ func (client *RenderingControl1) GetLoudness(InstanceID uint32, Channel string) 
 func (client *RenderingControl1) SetLoudness(InstanceID uint32, Channel string, DesiredLoudness bool) (err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
-		Channel string
-
+		InstanceID      string
+		Channel         string
 		DesiredLoudness string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -5711,7 +5508,6 @@ func (client *RenderingControl2) SelectPreset(InstanceID uint32, PresetName stri
 	// Request structure.
 	request := &struct {
 		InstanceID string
-
 		PresetName string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -5781,8 +5577,7 @@ func (client *RenderingControl2) GetBrightness(InstanceID uint32) (CurrentBright
 func (client *RenderingControl2) SetBrightness(InstanceID uint32, DesiredBrightness uint16) (err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
+		InstanceID        string
 		DesiredBrightness string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -5852,8 +5647,7 @@ func (client *RenderingControl2) GetContrast(InstanceID uint32) (CurrentContrast
 func (client *RenderingControl2) SetContrast(InstanceID uint32, DesiredContrast uint16) (err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
+		InstanceID      string
 		DesiredContrast string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -5923,8 +5717,7 @@ func (client *RenderingControl2) GetSharpness(InstanceID uint32) (CurrentSharpne
 func (client *RenderingControl2) SetSharpness(InstanceID uint32, DesiredSharpness uint16) (err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
+		InstanceID       string
 		DesiredSharpness string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -5994,8 +5787,7 @@ func (client *RenderingControl2) GetRedVideoGain(InstanceID uint32) (CurrentRedV
 func (client *RenderingControl2) SetRedVideoGain(InstanceID uint32, DesiredRedVideoGain uint16) (err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
+		InstanceID          string
 		DesiredRedVideoGain string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -6065,8 +5857,7 @@ func (client *RenderingControl2) GetGreenVideoGain(InstanceID uint32) (CurrentGr
 func (client *RenderingControl2) SetGreenVideoGain(InstanceID uint32, DesiredGreenVideoGain uint16) (err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
+		InstanceID            string
 		DesiredGreenVideoGain string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -6136,8 +5927,7 @@ func (client *RenderingControl2) GetBlueVideoGain(InstanceID uint32) (CurrentBlu
 func (client *RenderingControl2) SetBlueVideoGain(InstanceID uint32, DesiredBlueVideoGain uint16) (err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
+		InstanceID           string
 		DesiredBlueVideoGain string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -6207,8 +5997,7 @@ func (client *RenderingControl2) GetRedVideoBlackLevel(InstanceID uint32) (Curre
 func (client *RenderingControl2) SetRedVideoBlackLevel(InstanceID uint32, DesiredRedVideoBlackLevel uint16) (err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
+		InstanceID                string
 		DesiredRedVideoBlackLevel string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -6278,8 +6067,7 @@ func (client *RenderingControl2) GetGreenVideoBlackLevel(InstanceID uint32) (Cur
 func (client *RenderingControl2) SetGreenVideoBlackLevel(InstanceID uint32, DesiredGreenVideoBlackLevel uint16) (err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
+		InstanceID                  string
 		DesiredGreenVideoBlackLevel string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -6349,8 +6137,7 @@ func (client *RenderingControl2) GetBlueVideoBlackLevel(InstanceID uint32) (Curr
 func (client *RenderingControl2) SetBlueVideoBlackLevel(InstanceID uint32, DesiredBlueVideoBlackLevel uint16) (err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
+		InstanceID                 string
 		DesiredBlueVideoBlackLevel string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -6420,8 +6207,7 @@ func (client *RenderingControl2) GetColorTemperature(InstanceID uint32) (Current
 func (client *RenderingControl2) SetColorTemperature(InstanceID uint32, DesiredColorTemperature uint16) (err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
+		InstanceID              string
 		DesiredColorTemperature string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -6491,8 +6277,7 @@ func (client *RenderingControl2) GetHorizontalKeystone(InstanceID uint32) (Curre
 func (client *RenderingControl2) SetHorizontalKeystone(InstanceID uint32, DesiredHorizontalKeystone int16) (err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
+		InstanceID                string
 		DesiredHorizontalKeystone string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -6562,8 +6347,7 @@ func (client *RenderingControl2) GetVerticalKeystone(InstanceID uint32) (Current
 func (client *RenderingControl2) SetVerticalKeystone(InstanceID uint32, DesiredVerticalKeystone int16) (err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
+		InstanceID              string
 		DesiredVerticalKeystone string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -6599,8 +6383,7 @@ func (client *RenderingControl2) GetMute(InstanceID uint32, Channel string) (Cur
 	// Request structure.
 	request := &struct {
 		InstanceID string
-
-		Channel string
+		Channel    string
 	}{}
 	// BEGIN Marshal arguments into request.
 
@@ -6639,10 +6422,8 @@ func (client *RenderingControl2) GetMute(InstanceID uint32, Channel string) (Cur
 func (client *RenderingControl2) SetMute(InstanceID uint32, Channel string, DesiredMute bool) (err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
-		Channel string
-
+		InstanceID  string
+		Channel     string
 		DesiredMute string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -6685,8 +6466,7 @@ func (client *RenderingControl2) GetVolume(InstanceID uint32, Channel string) (C
 	// Request structure.
 	request := &struct {
 		InstanceID string
-
-		Channel string
+		Channel    string
 	}{}
 	// BEGIN Marshal arguments into request.
 
@@ -6727,10 +6507,8 @@ func (client *RenderingControl2) GetVolume(InstanceID uint32, Channel string) (C
 func (client *RenderingControl2) SetVolume(InstanceID uint32, Channel string, DesiredVolume uint16) (err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
-		Channel string
-
+		InstanceID    string
+		Channel       string
 		DesiredVolume string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -6769,8 +6547,7 @@ func (client *RenderingControl2) GetVolumeDB(InstanceID uint32, Channel string) 
 	// Request structure.
 	request := &struct {
 		InstanceID string
-
-		Channel string
+		Channel    string
 	}{}
 	// BEGIN Marshal arguments into request.
 
@@ -6809,10 +6586,8 @@ func (client *RenderingControl2) GetVolumeDB(InstanceID uint32, Channel string) 
 func (client *RenderingControl2) SetVolumeDB(InstanceID uint32, Channel string, DesiredVolume int16) (err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
-		Channel string
-
+		InstanceID    string
+		Channel       string
 		DesiredVolume string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -6851,8 +6626,7 @@ func (client *RenderingControl2) GetVolumeDBRange(InstanceID uint32, Channel str
 	// Request structure.
 	request := &struct {
 		InstanceID string
-
-		Channel string
+		Channel    string
 	}{}
 	// BEGIN Marshal arguments into request.
 
@@ -6867,7 +6641,6 @@ func (client *RenderingControl2) GetVolumeDBRange(InstanceID uint32, Channel str
 	// Response structure.
 	response := &struct {
 		MinValue string
-
 		MaxValue string
 	}{}
 
@@ -6897,8 +6670,7 @@ func (client *RenderingControl2) GetLoudness(InstanceID uint32, Channel string) 
 	// Request structure.
 	request := &struct {
 		InstanceID string
-
-		Channel string
+		Channel    string
 	}{}
 	// BEGIN Marshal arguments into request.
 
@@ -6937,10 +6709,8 @@ func (client *RenderingControl2) GetLoudness(InstanceID uint32, Channel string) 
 func (client *RenderingControl2) SetLoudness(InstanceID uint32, Channel string, DesiredLoudness bool) (err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
-		Channel string
-
+		InstanceID      string
+		Channel         string
 		DesiredLoudness string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -6973,8 +6743,7 @@ func (client *RenderingControl2) SetLoudness(InstanceID uint32, Channel string, 
 func (client *RenderingControl2) GetStateVariables(InstanceID uint32, StateVariableList string) (StateVariableValuePairs string, err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
+		InstanceID        string
 		StateVariableList string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -7009,14 +6778,10 @@ func (client *RenderingControl2) GetStateVariables(InstanceID uint32, StateVaria
 func (client *RenderingControl2) SetStateVariables(InstanceID uint32, RenderingControlUDN string, ServiceType string, ServiceId string, StateVariableValuePairs string) (StateVariableList string, err error) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-
-		RenderingControlUDN string
-
-		ServiceType string
-
-		ServiceId string
-
+		InstanceID              string
+		RenderingControlUDN     string
+		ServiceType             string
+		ServiceId               string
 		StateVariableValuePairs string
 	}{}
 	// BEGIN Marshal arguments into request.
@@ -7126,8 +6891,7 @@ func (client *ScheduledRecording1) GetSortCapabilities() (SortCaps string, SortL
 
 	// Response structure.
 	response := &struct {
-		SortCaps string
-
+		SortCaps     string
 		SortLevelCap string
 	}{}
 
@@ -7193,8 +6957,7 @@ func (client *ScheduledRecording1) GetAllowedValues(DataTypeID string, Filter st
 	// Request structure.
 	request := &struct {
 		DataTypeID string
-
-		Filter string
+		Filter     string
 	}{}
 	// BEGIN Marshal arguments into request.
 
@@ -7254,13 +7017,10 @@ func (client *ScheduledRecording1) GetStateUpdateID() (Id uint32, err error) {
 func (client *ScheduledRecording1) BrowseRecordSchedules(Filter string, StartingIndex uint32, RequestedCount uint32, SortCriteria string) (Result string, NumberReturned uint32, TotalMatches uint32, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
-		Filter string
-
-		StartingIndex string
-
+		Filter         string
+		StartingIndex  string
 		RequestedCount string
-
-		SortCriteria string
+		SortCriteria   string
 	}{}
 	// BEGIN Marshal arguments into request.
 
@@ -7280,13 +7040,10 @@ func (client *ScheduledRecording1) BrowseRecordSchedules(Filter string, Starting
 
 	// Response structure.
 	response := &struct {
-		Result string
-
+		Result         string
 		NumberReturned string
-
-		TotalMatches string
-
-		UpdateID string
+		TotalMatches   string
+		UpdateID       string
 	}{}
 
 	// Perform the SOAP call.
@@ -7316,14 +7073,10 @@ func (client *ScheduledRecording1) BrowseRecordTasks(RecordScheduleID string, Fi
 	// Request structure.
 	request := &struct {
 		RecordScheduleID string
-
-		Filter string
-
-		StartingIndex string
-
-		RequestedCount string
-
-		SortCriteria string
+		Filter           string
+		StartingIndex    string
+		RequestedCount   string
+		SortCriteria     string
 	}{}
 	// BEGIN Marshal arguments into request.
 
@@ -7346,13 +7099,10 @@ func (client *ScheduledRecording1) BrowseRecordTasks(RecordScheduleID string, Fi
 
 	// Response structure.
 	response := &struct {
-		Result string
-
+		Result         string
 		NumberReturned string
-
-		TotalMatches string
-
-		UpdateID string
+		TotalMatches   string
+		UpdateID       string
 	}{}
 
 	// Perform the SOAP call.
@@ -7393,10 +7143,8 @@ func (client *ScheduledRecording1) CreateRecordSchedule(Elements string) (Record
 	// Response structure.
 	response := &struct {
 		RecordScheduleID string
-
-		Result string
-
-		UpdateID string
+		Result           string
+		UpdateID         string
 	}{}
 
 	// Perform the SOAP call.
@@ -7449,8 +7197,7 @@ func (client *ScheduledRecording1) GetRecordSchedule(RecordScheduleID string, Fi
 	// Request structure.
 	request := &struct {
 		RecordScheduleID string
-
-		Filter string
+		Filter           string
 	}{}
 	// BEGIN Marshal arguments into request.
 
@@ -7464,8 +7211,7 @@ func (client *ScheduledRecording1) GetRecordSchedule(RecordScheduleID string, Fi
 
 	// Response structure.
 	response := &struct {
-		Result string
-
+		Result   string
 		UpdateID string
 	}{}
 
@@ -7568,8 +7314,7 @@ func (client *ScheduledRecording1) GetRecordTask(RecordTaskID string, Filter str
 	// Request structure.
 	request := &struct {
 		RecordTaskID string
-
-		Filter string
+		Filter       string
 	}{}
 	// BEGIN Marshal arguments into request.
 
@@ -7583,8 +7328,7 @@ func (client *ScheduledRecording1) GetRecordTask(RecordTaskID string, Filter str
 
 	// Response structure.
 	response := &struct {
-		Result string
-
+		Result   string
 		UpdateID string
 	}{}
 
@@ -7698,8 +7442,7 @@ func (client *ScheduledRecording1) GetRecordScheduleConflicts(RecordScheduleID s
 	// Response structure.
 	response := &struct {
 		RecordScheduleConflictIDList string
-
-		UpdateID string
+		UpdateID                     string
 	}{}
 
 	// Perform the SOAP call.
@@ -7734,8 +7477,7 @@ func (client *ScheduledRecording1) GetRecordTaskConflicts(RecordTaskID string) (
 	// Response structure.
 	response := &struct {
 		RecordTaskConflictIDList string
-
-		UpdateID string
+		UpdateID                 string
 	}{}
 
 	// Perform the SOAP call.
@@ -7824,8 +7566,7 @@ func (client *ScheduledRecording2) GetSortCapabilities() (SortCaps string, SortL
 
 	// Response structure.
 	response := &struct {
-		SortCaps string
-
+		SortCaps     string
 		SortLevelCap string
 	}{}
 
@@ -7891,8 +7632,7 @@ func (client *ScheduledRecording2) GetAllowedValues(DataTypeID string, Filter st
 	// Request structure.
 	request := &struct {
 		DataTypeID string
-
-		Filter string
+		Filter     string
 	}{}
 	// BEGIN Marshal arguments into request.
 
@@ -7952,13 +7692,10 @@ func (client *ScheduledRecording2) GetStateUpdateID() (Id uint32, err error) {
 func (client *ScheduledRecording2) BrowseRecordSchedules(Filter string, StartingIndex uint32, RequestedCount uint32, SortCriteria string) (Result string, NumberReturned uint32, TotalMatches uint32, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
-		Filter string
-
-		StartingIndex string
-
+		Filter         string
+		StartingIndex  string
 		RequestedCount string
-
-		SortCriteria string
+		SortCriteria   string
 	}{}
 	// BEGIN Marshal arguments into request.
 
@@ -7978,13 +7715,10 @@ func (client *ScheduledRecording2) BrowseRecordSchedules(Filter string, Starting
 
 	// Response structure.
 	response := &struct {
-		Result string
-
+		Result         string
 		NumberReturned string
-
-		TotalMatches string
-
-		UpdateID string
+		TotalMatches   string
+		UpdateID       string
 	}{}
 
 	// Perform the SOAP call.
@@ -8014,14 +7748,10 @@ func (client *ScheduledRecording2) BrowseRecordTasks(RecordScheduleID string, Fi
 	// Request structure.
 	request := &struct {
 		RecordScheduleID string
-
-		Filter string
-
-		StartingIndex string
-
-		RequestedCount string
-
-		SortCriteria string
+		Filter           string
+		StartingIndex    string
+		RequestedCount   string
+		SortCriteria     string
 	}{}
 	// BEGIN Marshal arguments into request.
 
@@ -8044,13 +7774,10 @@ func (client *ScheduledRecording2) BrowseRecordTasks(RecordScheduleID string, Fi
 
 	// Response structure.
 	response := &struct {
-		Result string
-
+		Result         string
 		NumberReturned string
-
-		TotalMatches string
-
-		UpdateID string
+		TotalMatches   string
+		UpdateID       string
 	}{}
 
 	// Perform the SOAP call.
@@ -8091,10 +7818,8 @@ func (client *ScheduledRecording2) CreateRecordSchedule(Elements string) (Record
 	// Response structure.
 	response := &struct {
 		RecordScheduleID string
-
-		Result string
-
-		UpdateID string
+		Result           string
+		UpdateID         string
 	}{}
 
 	// Perform the SOAP call.
@@ -8147,8 +7872,7 @@ func (client *ScheduledRecording2) GetRecordSchedule(RecordScheduleID string, Fi
 	// Request structure.
 	request := &struct {
 		RecordScheduleID string
-
-		Filter string
+		Filter           string
 	}{}
 	// BEGIN Marshal arguments into request.
 
@@ -8162,8 +7886,7 @@ func (client *ScheduledRecording2) GetRecordSchedule(RecordScheduleID string, Fi
 
 	// Response structure.
 	response := &struct {
-		Result string
-
+		Result   string
 		UpdateID string
 	}{}
 
@@ -8266,8 +7989,7 @@ func (client *ScheduledRecording2) GetRecordTask(RecordTaskID string, Filter str
 	// Request structure.
 	request := &struct {
 		RecordTaskID string
-
-		Filter string
+		Filter       string
 	}{}
 	// BEGIN Marshal arguments into request.
 
@@ -8281,8 +8003,7 @@ func (client *ScheduledRecording2) GetRecordTask(RecordTaskID string, Filter str
 
 	// Response structure.
 	response := &struct {
-		Result string
-
+		Result   string
 		UpdateID string
 	}{}
 
@@ -8396,8 +8117,7 @@ func (client *ScheduledRecording2) GetRecordScheduleConflicts(RecordScheduleID s
 	// Response structure.
 	response := &struct {
 		RecordScheduleConflictIDList string
-
-		UpdateID string
+		UpdateID                     string
 	}{}
 
 	// Perform the SOAP call.
@@ -8432,8 +8152,7 @@ func (client *ScheduledRecording2) GetRecordTaskConflicts(RecordTaskID string) (
 	// Response structure.
 	response := &struct {
 		RecordTaskConflictIDList string
-
-		UpdateID string
+		UpdateID                 string
 	}{}
 
 	// Perform the SOAP call.
