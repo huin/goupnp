@@ -588,10 +588,10 @@ func new{{$srvIdent}}ClientsFromGenericClients(genericClients []goupnp.ServiceCl
 // Return values:{{range $woutargs}}{{if .HasDoc}}
 //
 // * {{.Name}}: {{.Document}}{{end}}{{end}}{{end}}
-func (client *{{$srvIdent}}) {{.Name}}({{range $winargs}}{{/*
-*/}}{{.AsParameter}}, {{end}}{{/*
-*/}}) ({{range $woutargs}}{{/*
-*/}}{{.AsParameter}}, {{end}} err error) {
+func (client *{{$srvIdent}}) {{.Name}}({{range $winargs -}}
+{{.AsParameter}}, {{end -}}
+) ({{range $woutargs -}}
+{{.AsParameter}}, {{end}} err error) {
 	// Request structure.
 	request := {{if $winargs}}&{{template "argstruct" $winargs}}{{"{}"}}{{else}}{{"interface{}(nil)"}}{{end}}
 	// BEGIN Marshal arguments into request.
@@ -617,8 +617,8 @@ func (client *{{$srvIdent}}) {{.Name}}({{range $winargs}}{{/*
 	// END Unmarshal arguments from response.
 	return
 }
-{{end}}{{/* range .SCPD.Actions */}}
-{{end}}{{/* range .Services */}}
+{{end}}
+{{end}}
 
 {{define "argstruct"}}struct {{"{"}}{{range .}}
 {{.Name}} string
