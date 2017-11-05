@@ -5,7 +5,9 @@
 // Typically, use one of the New* functions to create clients for services.
 package av1
 
-// Generated file - do not edit by hand. See README.md
+// ***********************************************************
+// GENERATED FILE - DO NOT EDIT BY HAND. See README.md
+// ***********************************************************
 
 import (
 	"net/url"
