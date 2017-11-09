@@ -43,27 +43,7 @@ var dcpMetadata = []DCPMetadata{
 		OfficialName: "Internet Gateway Device v1",
 		DocURL:       "http://upnp.org/specs/gw/UPnP-gw-InternetGatewayDevice-v1-Device.pdf",
 		XMLSpecURL:   "http://upnp.org/specs/gw/UPnP-gw-IGD-TestFiles-20010921.zip",
-		Hacks: []DCPHackFn{
-			func(dcp *DCP) error {
-				for _, service := range dcp.Services {
-					if service.URN == "urn:schemas-upnp-org:service:WANCommonInterfaceConfig:1" {
-						variables := service.SCPD.StateVariables
-						for key, variable := range variables {
-							varName := variable.Name
-							if varName == "TotalBytesSent" || varName == "TotalBytesReceived" {
-								// Fix size of total bytes which is by default ui4 or maximum 4 GiB.
-								variable.DataType.Name = "ui8"
-								variables[key] = variable
-							}
-						}
-
-						break
-					}
-				}
-
-				return nil
-			},
-		},
+		Hacks:        []DCPHackFn{totalBytesHack},
 	},
 	{
 		Name:         "internetgateway2",
@@ -82,7 +62,7 @@ var dcpMetadata = []DCPMetadata{
 				}
 				dcp.ServiceTypes[missingURN] = urnParts
 				return nil
-			},
+			}, totalBytesHack,
 		},
 	},
 	{
@@ -91,6 +71,26 @@ var dcpMetadata = []DCPMetadata{
 		DocURL:       "http://upnp.org/specs/av/av1/",
 		XMLSpecURL:   "http://upnp.org/specs/av/UPnP-av-TestFiles-20070927.zip",
 	},
+}
+
+func totalBytesHack(dcp *DCP) error {
+	for _, service := range dcp.Services {
+		if service.URN == "urn:schemas-upnp-org:service:WANCommonInterfaceConfig:1" {
+			variables := service.SCPD.StateVariables
+			for key, variable := range variables {
+				varName := variable.Name
+				if varName == "TotalBytesSent" || varName == "TotalBytesReceived" {
+					// Fix size of total bytes which is by default ui4 or maximum 4 GiB.
+					variable.DataType.Name = "ui8"
+					variables[key] = variable
+				}
+			}
+
+			break
+		}
+	}
+
+	return nil
 }
 
 type DCPHackFn func(*DCP) error
