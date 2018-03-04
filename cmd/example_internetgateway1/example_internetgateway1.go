@@ -23,7 +23,7 @@ func main() {
 		dev := &c.ServiceClient.RootDevice.Device
 		srv := c.ServiceClient.Service
 		fmt.Println(dev.FriendlyName, " :: ", srv.String())
-		scpd, err := srv.RequestSCDP()
+		scpd, err := srv.RequestSCPD()
 		if err != nil {
 			fmt.Printf("  Error requesting service SCPD: %v\n", err)
 		} else {
