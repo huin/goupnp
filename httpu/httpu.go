@@ -108,7 +108,7 @@ func (httpu *HTTPUClient) Do(req *http.Request, timeout time.Duration, numSends 
 		if err != nil {
 			if err, ok := err.(net.Error); ok {
 				if err.Timeout() {
-					break
+					return responses, err
 				}
 				if err.Temporary() {
 					// Sleep in case this is a persistent error to avoid pegging CPU until deadline.
