@@ -28,7 +28,7 @@ func acquireFile(specFilename string, xmlSpecURL string) error {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("could not download spec %q from %q: ",
+		return fmt.Errorf("could not download spec %q from %q: %v",
 			specFilename, xmlSpecURL, resp.Status)
 	}
 

@@ -20,8 +20,8 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/huin/goupnp"
-	"github.com/huin/goupnp/soap"
+	"github.com/huin/goupnp/v2/discover"
+	"github.com/huin/goupnp/v2/soap"
 )
 
 // Hack to avoid Go complaining if time isn't used.
@@ -42,10 +42,10 @@ const ({{range .ServiceTypes}}
 {{$srvIdent := printf "%s%s" .Name .Version}}
 
 // {{$srvIdent}} is a client for UPnP SOAP service with URN "{{.URN}}". See
-// goupnp.ServiceClient, which contains RootDevice and Service attributes which
+// discover.ServiceClient, which contains RootDevice and Service attributes which
 // are provided for informational value.
 type {{$srvIdent}} struct {
-	goupnp.ServiceClient
+	discover.ServiceClient
 }
 
 // New{{$srvIdent}}Clients discovers instances of the service on the network,
@@ -55,8 +55,8 @@ type {{$srvIdent}} struct {
 //
 // This is a typical entry calling point into this package.
 func New{{$srvIdent}}Clients() (clients []*{{$srvIdent}}, errors []error, err error) {
-	var genericClients []goupnp.ServiceClient
-	if genericClients, errors, err = goupnp.NewServiceClients({{$srv.Const}}); err != nil {
+	var genericClients []discover.ServiceClient
+	if genericClients, errors, err = discover.NewServiceClients({{$srv.Const}}); err != nil {
 		return
 	}
 	clients = new{{$srvIdent}}ClientsFromGenericClients(genericClients)
@@ -70,7 +70,7 @@ func New{{$srvIdent}}Clients() (clients []*{{$srvIdent}}, errors []error, err er
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
 func New{{$srvIdent}}ClientsByURL(loc *url.URL) ([]*{{$srvIdent}}, error) {
-	genericClients, err := goupnp.NewServiceClientsByURL(loc, {{$srv.Const}})
+	genericClients, err := discover.NewServiceClientsByURL(loc, {{$srv.Const}})
 	if err != nil {
 		return nil, err
 	}
@@ -85,15 +85,15 @@ func New{{$srvIdent}}ClientsByURL(loc *url.URL) ([]*{{$srvIdent}}, error) {
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
-func New{{$srvIdent}}ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*{{$srvIdent}}, error) {
-	genericClients, err := goupnp.NewServiceClientsFromRootDevice(rootDevice, loc, {{$srv.Const}})
+func New{{$srvIdent}}ClientsFromRootDevice(rootDevice *discover.RootDevice, loc *url.URL) ([]*{{$srvIdent}}, error) {
+	genericClients, err := discover.NewServiceClientsFromRootDevice(rootDevice, loc, {{$srv.Const}})
 	if err != nil {
 		return nil, err
 	}
 	return new{{$srvIdent}}ClientsFromGenericClients(genericClients), nil
 }
 
-func new{{$srvIdent}}ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*{{$srvIdent}} {
+func new{{$srvIdent}}ClientsFromGenericClients(genericClients []discover.ServiceClient) []*{{$srvIdent}} {
 	clients := make([]*{{$srvIdent}}, len(genericClients))
 	for i := range genericClients {
 		clients[i] = &{{$srvIdent}}{genericClients[i]}

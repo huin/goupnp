@@ -1,10 +1,10 @@
-package goupnp
+package discover
 
 import (
 	"fmt"
 	"net/url"
 
-	"github.com/huin/goupnp/soap"
+	"github.com/huin/goupnp/v2/soap"
 )
 
 // ServiceClient is a SOAP client, root device and the service for the SOAP
@@ -24,7 +24,7 @@ type ServiceClient struct {
 // discovery), errors reports errors on a per-root-device basis.
 func NewServiceClients(searchTarget string) (clients []ServiceClient, errors []error, err error) {
 	var maybeRootDevices []MaybeRootDevice
-	if maybeRootDevices, err = DiscoverDevices(searchTarget); err != nil {
+	if maybeRootDevices, err = Devices(searchTarget); err != nil {
 		return
 	}
 

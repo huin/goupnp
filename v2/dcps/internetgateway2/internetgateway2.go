@@ -13,8 +13,8 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/huin/goupnp"
-	"github.com/huin/goupnp/soap"
+	"github.com/huin/goupnp/v2/discover"
+	"github.com/huin/goupnp/v2/soap"
 )
 
 // Hack to avoid Go complaining if time isn't used.
@@ -46,10 +46,10 @@ const (
 )
 
 // DeviceProtection1 is a client for UPnP SOAP service with URN "urn:schemas-upnp-org:service:DeviceProtection:1". See
-// goupnp.ServiceClient, which contains RootDevice and Service attributes which
+// discover.ServiceClient, which contains RootDevice and Service attributes which
 // are provided for informational value.
 type DeviceProtection1 struct {
-	goupnp.ServiceClient
+	discover.ServiceClient
 }
 
 // NewDeviceProtection1Clients discovers instances of the service on the network,
@@ -59,8 +59,8 @@ type DeviceProtection1 struct {
 //
 // This is a typical entry calling point into this package.
 func NewDeviceProtection1Clients() (clients []*DeviceProtection1, errors []error, err error) {
-	var genericClients []goupnp.ServiceClient
-	if genericClients, errors, err = goupnp.NewServiceClients(URN_DeviceProtection_1); err != nil {
+	var genericClients []discover.ServiceClient
+	if genericClients, errors, err = discover.NewServiceClients(URN_DeviceProtection_1); err != nil {
 		return
 	}
 	clients = newDeviceProtection1ClientsFromGenericClients(genericClients)
@@ -74,7 +74,7 @@ func NewDeviceProtection1Clients() (clients []*DeviceProtection1, errors []error
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
 func NewDeviceProtection1ClientsByURL(loc *url.URL) ([]*DeviceProtection1, error) {
-	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_DeviceProtection_1)
+	genericClients, err := discover.NewServiceClientsByURL(loc, URN_DeviceProtection_1)
 	if err != nil {
 		return nil, err
 	}
@@ -89,15 +89,15 @@ func NewDeviceProtection1ClientsByURL(loc *url.URL) ([]*DeviceProtection1, error
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
-func NewDeviceProtection1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*DeviceProtection1, error) {
-	genericClients, err := goupnp.NewServiceClientsFromRootDevice(rootDevice, loc, URN_DeviceProtection_1)
+func NewDeviceProtection1ClientsFromRootDevice(rootDevice *discover.RootDevice, loc *url.URL) ([]*DeviceProtection1, error) {
+	genericClients, err := discover.NewServiceClientsFromRootDevice(rootDevice, loc, URN_DeviceProtection_1)
 	if err != nil {
 		return nil, err
 	}
 	return newDeviceProtection1ClientsFromGenericClients(genericClients), nil
 }
 
-func newDeviceProtection1ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*DeviceProtection1 {
+func newDeviceProtection1ClientsFromGenericClients(genericClients []discover.ServiceClient) []*DeviceProtection1 {
 	clients := make([]*DeviceProtection1, len(genericClients))
 	for i := range genericClients {
 		clients[i] = &DeviceProtection1{genericClients[i]}
@@ -511,10 +511,10 @@ func (client *DeviceProtection1) RemoveRolesForIdentity(Identity string, RoleLis
 }
 
 // LANHostConfigManagement1 is a client for UPnP SOAP service with URN "urn:schemas-upnp-org:service:LANHostConfigManagement:1". See
-// goupnp.ServiceClient, which contains RootDevice and Service attributes which
+// discover.ServiceClient, which contains RootDevice and Service attributes which
 // are provided for informational value.
 type LANHostConfigManagement1 struct {
-	goupnp.ServiceClient
+	discover.ServiceClient
 }
 
 // NewLANHostConfigManagement1Clients discovers instances of the service on the network,
@@ -524,8 +524,8 @@ type LANHostConfigManagement1 struct {
 //
 // This is a typical entry calling point into this package.
 func NewLANHostConfigManagement1Clients() (clients []*LANHostConfigManagement1, errors []error, err error) {
-	var genericClients []goupnp.ServiceClient
-	if genericClients, errors, err = goupnp.NewServiceClients(URN_LANHostConfigManagement_1); err != nil {
+	var genericClients []discover.ServiceClient
+	if genericClients, errors, err = discover.NewServiceClients(URN_LANHostConfigManagement_1); err != nil {
 		return
 	}
 	clients = newLANHostConfigManagement1ClientsFromGenericClients(genericClients)
@@ -539,7 +539,7 @@ func NewLANHostConfigManagement1Clients() (clients []*LANHostConfigManagement1, 
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
 func NewLANHostConfigManagement1ClientsByURL(loc *url.URL) ([]*LANHostConfigManagement1, error) {
-	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_LANHostConfigManagement_1)
+	genericClients, err := discover.NewServiceClientsByURL(loc, URN_LANHostConfigManagement_1)
 	if err != nil {
 		return nil, err
 	}
@@ -554,15 +554,15 @@ func NewLANHostConfigManagement1ClientsByURL(loc *url.URL) ([]*LANHostConfigMana
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
-func NewLANHostConfigManagement1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*LANHostConfigManagement1, error) {
-	genericClients, err := goupnp.NewServiceClientsFromRootDevice(rootDevice, loc, URN_LANHostConfigManagement_1)
+func NewLANHostConfigManagement1ClientsFromRootDevice(rootDevice *discover.RootDevice, loc *url.URL) ([]*LANHostConfigManagement1, error) {
+	genericClients, err := discover.NewServiceClientsFromRootDevice(rootDevice, loc, URN_LANHostConfigManagement_1)
 	if err != nil {
 		return nil, err
 	}
 	return newLANHostConfigManagement1ClientsFromGenericClients(genericClients), nil
 }
 
-func newLANHostConfigManagement1ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*LANHostConfigManagement1 {
+func newLANHostConfigManagement1ClientsFromGenericClients(genericClients []discover.ServiceClient) []*LANHostConfigManagement1 {
 	clients := make([]*LANHostConfigManagement1, len(genericClients))
 	for i := range genericClients {
 		clients[i] = &LANHostConfigManagement1{genericClients[i]}
@@ -1073,10 +1073,10 @@ func (client *LANHostConfigManagement1) GetDNSServers() (NewDNSServers string, e
 }
 
 // Layer3Forwarding1 is a client for UPnP SOAP service with URN "urn:schemas-upnp-org:service:Layer3Forwarding:1". See
-// goupnp.ServiceClient, which contains RootDevice and Service attributes which
+// discover.ServiceClient, which contains RootDevice and Service attributes which
 // are provided for informational value.
 type Layer3Forwarding1 struct {
-	goupnp.ServiceClient
+	discover.ServiceClient
 }
 
 // NewLayer3Forwarding1Clients discovers instances of the service on the network,
@@ -1086,8 +1086,8 @@ type Layer3Forwarding1 struct {
 //
 // This is a typical entry calling point into this package.
 func NewLayer3Forwarding1Clients() (clients []*Layer3Forwarding1, errors []error, err error) {
-	var genericClients []goupnp.ServiceClient
-	if genericClients, errors, err = goupnp.NewServiceClients(URN_Layer3Forwarding_1); err != nil {
+	var genericClients []discover.ServiceClient
+	if genericClients, errors, err = discover.NewServiceClients(URN_Layer3Forwarding_1); err != nil {
 		return
 	}
 	clients = newLayer3Forwarding1ClientsFromGenericClients(genericClients)
@@ -1101,7 +1101,7 @@ func NewLayer3Forwarding1Clients() (clients []*Layer3Forwarding1, errors []error
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
 func NewLayer3Forwarding1ClientsByURL(loc *url.URL) ([]*Layer3Forwarding1, error) {
-	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_Layer3Forwarding_1)
+	genericClients, err := discover.NewServiceClientsByURL(loc, URN_Layer3Forwarding_1)
 	if err != nil {
 		return nil, err
 	}
@@ -1116,15 +1116,15 @@ func NewLayer3Forwarding1ClientsByURL(loc *url.URL) ([]*Layer3Forwarding1, error
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
-func NewLayer3Forwarding1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*Layer3Forwarding1, error) {
-	genericClients, err := goupnp.NewServiceClientsFromRootDevice(rootDevice, loc, URN_Layer3Forwarding_1)
+func NewLayer3Forwarding1ClientsFromRootDevice(rootDevice *discover.RootDevice, loc *url.URL) ([]*Layer3Forwarding1, error) {
+	genericClients, err := discover.NewServiceClientsFromRootDevice(rootDevice, loc, URN_Layer3Forwarding_1)
 	if err != nil {
 		return nil, err
 	}
 	return newLayer3Forwarding1ClientsFromGenericClients(genericClients), nil
 }
 
-func newLayer3Forwarding1ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*Layer3Forwarding1 {
+func newLayer3Forwarding1ClientsFromGenericClients(genericClients []discover.ServiceClient) []*Layer3Forwarding1 {
 	clients := make([]*Layer3Forwarding1, len(genericClients))
 	for i := range genericClients {
 		clients[i] = &Layer3Forwarding1{genericClients[i]}
@@ -1185,10 +1185,10 @@ func (client *Layer3Forwarding1) GetDefaultConnectionService() (NewDefaultConnec
 }
 
 // WANCableLinkConfig1 is a client for UPnP SOAP service with URN "urn:schemas-upnp-org:service:WANCableLinkConfig:1". See
-// goupnp.ServiceClient, which contains RootDevice and Service attributes which
+// discover.ServiceClient, which contains RootDevice and Service attributes which
 // are provided for informational value.
 type WANCableLinkConfig1 struct {
-	goupnp.ServiceClient
+	discover.ServiceClient
 }
 
 // NewWANCableLinkConfig1Clients discovers instances of the service on the network,
@@ -1198,8 +1198,8 @@ type WANCableLinkConfig1 struct {
 //
 // This is a typical entry calling point into this package.
 func NewWANCableLinkConfig1Clients() (clients []*WANCableLinkConfig1, errors []error, err error) {
-	var genericClients []goupnp.ServiceClient
-	if genericClients, errors, err = goupnp.NewServiceClients(URN_WANCableLinkConfig_1); err != nil {
+	var genericClients []discover.ServiceClient
+	if genericClients, errors, err = discover.NewServiceClients(URN_WANCableLinkConfig_1); err != nil {
 		return
 	}
 	clients = newWANCableLinkConfig1ClientsFromGenericClients(genericClients)
@@ -1213,7 +1213,7 @@ func NewWANCableLinkConfig1Clients() (clients []*WANCableLinkConfig1, errors []e
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
 func NewWANCableLinkConfig1ClientsByURL(loc *url.URL) ([]*WANCableLinkConfig1, error) {
-	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_WANCableLinkConfig_1)
+	genericClients, err := discover.NewServiceClientsByURL(loc, URN_WANCableLinkConfig_1)
 	if err != nil {
 		return nil, err
 	}
@@ -1228,15 +1228,15 @@ func NewWANCableLinkConfig1ClientsByURL(loc *url.URL) ([]*WANCableLinkConfig1, e
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
-func NewWANCableLinkConfig1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*WANCableLinkConfig1, error) {
-	genericClients, err := goupnp.NewServiceClientsFromRootDevice(rootDevice, loc, URN_WANCableLinkConfig_1)
+func NewWANCableLinkConfig1ClientsFromRootDevice(rootDevice *discover.RootDevice, loc *url.URL) ([]*WANCableLinkConfig1, error) {
+	genericClients, err := discover.NewServiceClientsFromRootDevice(rootDevice, loc, URN_WANCableLinkConfig_1)
 	if err != nil {
 		return nil, err
 	}
 	return newWANCableLinkConfig1ClientsFromGenericClients(genericClients), nil
 }
 
-func newWANCableLinkConfig1ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*WANCableLinkConfig1 {
+func newWANCableLinkConfig1ClientsFromGenericClients(genericClients []discover.ServiceClient) []*WANCableLinkConfig1 {
 	clients := make([]*WANCableLinkConfig1, len(genericClients))
 	for i := range genericClients {
 		clients[i] = &WANCableLinkConfig1{genericClients[i]}
@@ -1523,10 +1523,10 @@ func (client *WANCableLinkConfig1) GetTFTPServer() (NewTFTPServer string, err er
 }
 
 // WANCommonInterfaceConfig1 is a client for UPnP SOAP service with URN "urn:schemas-upnp-org:service:WANCommonInterfaceConfig:1". See
-// goupnp.ServiceClient, which contains RootDevice and Service attributes which
+// discover.ServiceClient, which contains RootDevice and Service attributes which
 // are provided for informational value.
 type WANCommonInterfaceConfig1 struct {
-	goupnp.ServiceClient
+	discover.ServiceClient
 }
 
 // NewWANCommonInterfaceConfig1Clients discovers instances of the service on the network,
@@ -1536,8 +1536,8 @@ type WANCommonInterfaceConfig1 struct {
 //
 // This is a typical entry calling point into this package.
 func NewWANCommonInterfaceConfig1Clients() (clients []*WANCommonInterfaceConfig1, errors []error, err error) {
-	var genericClients []goupnp.ServiceClient
-	if genericClients, errors, err = goupnp.NewServiceClients(URN_WANCommonInterfaceConfig_1); err != nil {
+	var genericClients []discover.ServiceClient
+	if genericClients, errors, err = discover.NewServiceClients(URN_WANCommonInterfaceConfig_1); err != nil {
 		return
 	}
 	clients = newWANCommonInterfaceConfig1ClientsFromGenericClients(genericClients)
@@ -1551,7 +1551,7 @@ func NewWANCommonInterfaceConfig1Clients() (clients []*WANCommonInterfaceConfig1
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
 func NewWANCommonInterfaceConfig1ClientsByURL(loc *url.URL) ([]*WANCommonInterfaceConfig1, error) {
-	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_WANCommonInterfaceConfig_1)
+	genericClients, err := discover.NewServiceClientsByURL(loc, URN_WANCommonInterfaceConfig_1)
 	if err != nil {
 		return nil, err
 	}
@@ -1566,15 +1566,15 @@ func NewWANCommonInterfaceConfig1ClientsByURL(loc *url.URL) ([]*WANCommonInterfa
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
-func NewWANCommonInterfaceConfig1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*WANCommonInterfaceConfig1, error) {
-	genericClients, err := goupnp.NewServiceClientsFromRootDevice(rootDevice, loc, URN_WANCommonInterfaceConfig_1)
+func NewWANCommonInterfaceConfig1ClientsFromRootDevice(rootDevice *discover.RootDevice, loc *url.URL) ([]*WANCommonInterfaceConfig1, error) {
+	genericClients, err := discover.NewServiceClientsFromRootDevice(rootDevice, loc, URN_WANCommonInterfaceConfig_1)
 	if err != nil {
 		return nil, err
 	}
 	return newWANCommonInterfaceConfig1ClientsFromGenericClients(genericClients), nil
 }
 
-func newWANCommonInterfaceConfig1ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*WANCommonInterfaceConfig1 {
+func newWANCommonInterfaceConfig1ClientsFromGenericClients(genericClients []discover.ServiceClient) []*WANCommonInterfaceConfig1 {
 	clients := make([]*WANCommonInterfaceConfig1, len(genericClients))
 	for i := range genericClients {
 		clients[i] = &WANCommonInterfaceConfig1{genericClients[i]}
@@ -1874,10 +1874,10 @@ func (client *WANCommonInterfaceConfig1) GetActiveConnection(NewActiveConnection
 }
 
 // WANDSLLinkConfig1 is a client for UPnP SOAP service with URN "urn:schemas-upnp-org:service:WANDSLLinkConfig:1". See
-// goupnp.ServiceClient, which contains RootDevice and Service attributes which
+// discover.ServiceClient, which contains RootDevice and Service attributes which
 // are provided for informational value.
 type WANDSLLinkConfig1 struct {
-	goupnp.ServiceClient
+	discover.ServiceClient
 }
 
 // NewWANDSLLinkConfig1Clients discovers instances of the service on the network,
@@ -1887,8 +1887,8 @@ type WANDSLLinkConfig1 struct {
 //
 // This is a typical entry calling point into this package.
 func NewWANDSLLinkConfig1Clients() (clients []*WANDSLLinkConfig1, errors []error, err error) {
-	var genericClients []goupnp.ServiceClient
-	if genericClients, errors, err = goupnp.NewServiceClients(URN_WANDSLLinkConfig_1); err != nil {
+	var genericClients []discover.ServiceClient
+	if genericClients, errors, err = discover.NewServiceClients(URN_WANDSLLinkConfig_1); err != nil {
 		return
 	}
 	clients = newWANDSLLinkConfig1ClientsFromGenericClients(genericClients)
@@ -1902,7 +1902,7 @@ func NewWANDSLLinkConfig1Clients() (clients []*WANDSLLinkConfig1, errors []error
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
 func NewWANDSLLinkConfig1ClientsByURL(loc *url.URL) ([]*WANDSLLinkConfig1, error) {
-	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_WANDSLLinkConfig_1)
+	genericClients, err := discover.NewServiceClientsByURL(loc, URN_WANDSLLinkConfig_1)
 	if err != nil {
 		return nil, err
 	}
@@ -1917,15 +1917,15 @@ func NewWANDSLLinkConfig1ClientsByURL(loc *url.URL) ([]*WANDSLLinkConfig1, error
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
-func NewWANDSLLinkConfig1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*WANDSLLinkConfig1, error) {
-	genericClients, err := goupnp.NewServiceClientsFromRootDevice(rootDevice, loc, URN_WANDSLLinkConfig_1)
+func NewWANDSLLinkConfig1ClientsFromRootDevice(rootDevice *discover.RootDevice, loc *url.URL) ([]*WANDSLLinkConfig1, error) {
+	genericClients, err := discover.NewServiceClientsFromRootDevice(rootDevice, loc, URN_WANDSLLinkConfig_1)
 	if err != nil {
 		return nil, err
 	}
 	return newWANDSLLinkConfig1ClientsFromGenericClients(genericClients), nil
 }
 
-func newWANDSLLinkConfig1ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*WANDSLLinkConfig1 {
+func newWANDSLLinkConfig1ClientsFromGenericClients(genericClients []discover.ServiceClient) []*WANDSLLinkConfig1 {
 	clients := make([]*WANDSLLinkConfig1, len(genericClients))
 	for i := range genericClients {
 		clients[i] = &WANDSLLinkConfig1{genericClients[i]}
@@ -2202,10 +2202,10 @@ func (client *WANDSLLinkConfig1) GetFCSPreserved() (NewFCSPreserved bool, err er
 }
 
 // WANEthernetLinkConfig1 is a client for UPnP SOAP service with URN "urn:schemas-upnp-org:service:WANEthernetLinkConfig:1". See
-// goupnp.ServiceClient, which contains RootDevice and Service attributes which
+// discover.ServiceClient, which contains RootDevice and Service attributes which
 // are provided for informational value.
 type WANEthernetLinkConfig1 struct {
-	goupnp.ServiceClient
+	discover.ServiceClient
 }
 
 // NewWANEthernetLinkConfig1Clients discovers instances of the service on the network,
@@ -2215,8 +2215,8 @@ type WANEthernetLinkConfig1 struct {
 //
 // This is a typical entry calling point into this package.
 func NewWANEthernetLinkConfig1Clients() (clients []*WANEthernetLinkConfig1, errors []error, err error) {
-	var genericClients []goupnp.ServiceClient
-	if genericClients, errors, err = goupnp.NewServiceClients(URN_WANEthernetLinkConfig_1); err != nil {
+	var genericClients []discover.ServiceClient
+	if genericClients, errors, err = discover.NewServiceClients(URN_WANEthernetLinkConfig_1); err != nil {
 		return
 	}
 	clients = newWANEthernetLinkConfig1ClientsFromGenericClients(genericClients)
@@ -2230,7 +2230,7 @@ func NewWANEthernetLinkConfig1Clients() (clients []*WANEthernetLinkConfig1, erro
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
 func NewWANEthernetLinkConfig1ClientsByURL(loc *url.URL) ([]*WANEthernetLinkConfig1, error) {
-	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_WANEthernetLinkConfig_1)
+	genericClients, err := discover.NewServiceClientsByURL(loc, URN_WANEthernetLinkConfig_1)
 	if err != nil {
 		return nil, err
 	}
@@ -2245,15 +2245,15 @@ func NewWANEthernetLinkConfig1ClientsByURL(loc *url.URL) ([]*WANEthernetLinkConf
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
-func NewWANEthernetLinkConfig1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*WANEthernetLinkConfig1, error) {
-	genericClients, err := goupnp.NewServiceClientsFromRootDevice(rootDevice, loc, URN_WANEthernetLinkConfig_1)
+func NewWANEthernetLinkConfig1ClientsFromRootDevice(rootDevice *discover.RootDevice, loc *url.URL) ([]*WANEthernetLinkConfig1, error) {
+	genericClients, err := discover.NewServiceClientsFromRootDevice(rootDevice, loc, URN_WANEthernetLinkConfig_1)
 	if err != nil {
 		return nil, err
 	}
 	return newWANEthernetLinkConfig1ClientsFromGenericClients(genericClients), nil
 }
 
-func newWANEthernetLinkConfig1ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*WANEthernetLinkConfig1 {
+func newWANEthernetLinkConfig1ClientsFromGenericClients(genericClients []discover.ServiceClient) []*WANEthernetLinkConfig1 {
 	clients := make([]*WANEthernetLinkConfig1, len(genericClients))
 	for i := range genericClients {
 		clients[i] = &WANEthernetLinkConfig1{genericClients[i]}
@@ -2292,10 +2292,10 @@ func (client *WANEthernetLinkConfig1) GetEthernetLinkStatus() (NewEthernetLinkSt
 }
 
 // WANIPConnection1 is a client for UPnP SOAP service with URN "urn:schemas-upnp-org:service:WANIPConnection:1". See
-// goupnp.ServiceClient, which contains RootDevice and Service attributes which
+// discover.ServiceClient, which contains RootDevice and Service attributes which
 // are provided for informational value.
 type WANIPConnection1 struct {
-	goupnp.ServiceClient
+	discover.ServiceClient
 }
 
 // NewWANIPConnection1Clients discovers instances of the service on the network,
@@ -2305,8 +2305,8 @@ type WANIPConnection1 struct {
 //
 // This is a typical entry calling point into this package.
 func NewWANIPConnection1Clients() (clients []*WANIPConnection1, errors []error, err error) {
-	var genericClients []goupnp.ServiceClient
-	if genericClients, errors, err = goupnp.NewServiceClients(URN_WANIPConnection_1); err != nil {
+	var genericClients []discover.ServiceClient
+	if genericClients, errors, err = discover.NewServiceClients(URN_WANIPConnection_1); err != nil {
 		return
 	}
 	clients = newWANIPConnection1ClientsFromGenericClients(genericClients)
@@ -2320,7 +2320,7 @@ func NewWANIPConnection1Clients() (clients []*WANIPConnection1, errors []error, 
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
 func NewWANIPConnection1ClientsByURL(loc *url.URL) ([]*WANIPConnection1, error) {
-	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_WANIPConnection_1)
+	genericClients, err := discover.NewServiceClientsByURL(loc, URN_WANIPConnection_1)
 	if err != nil {
 		return nil, err
 	}
@@ -2335,15 +2335,15 @@ func NewWANIPConnection1ClientsByURL(loc *url.URL) ([]*WANIPConnection1, error) 
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
-func NewWANIPConnection1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*WANIPConnection1, error) {
-	genericClients, err := goupnp.NewServiceClientsFromRootDevice(rootDevice, loc, URN_WANIPConnection_1)
+func NewWANIPConnection1ClientsFromRootDevice(rootDevice *discover.RootDevice, loc *url.URL) ([]*WANIPConnection1, error) {
+	genericClients, err := discover.NewServiceClientsFromRootDevice(rootDevice, loc, URN_WANIPConnection_1)
 	if err != nil {
 		return nil, err
 	}
 	return newWANIPConnection1ClientsFromGenericClients(genericClients), nil
 }
 
-func newWANIPConnection1ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*WANIPConnection1 {
+func newWANIPConnection1ClientsFromGenericClients(genericClients []discover.ServiceClient) []*WANIPConnection1 {
 	clients := make([]*WANIPConnection1, len(genericClients))
 	for i := range genericClients {
 		clients[i] = &WANIPConnection1{genericClients[i]}
@@ -2948,10 +2948,10 @@ func (client *WANIPConnection1) GetExternalIPAddress() (NewExternalIPAddress str
 }
 
 // WANIPConnection2 is a client for UPnP SOAP service with URN "urn:schemas-upnp-org:service:WANIPConnection:2". See
-// goupnp.ServiceClient, which contains RootDevice and Service attributes which
+// discover.ServiceClient, which contains RootDevice and Service attributes which
 // are provided for informational value.
 type WANIPConnection2 struct {
-	goupnp.ServiceClient
+	discover.ServiceClient
 }
 
 // NewWANIPConnection2Clients discovers instances of the service on the network,
@@ -2961,8 +2961,8 @@ type WANIPConnection2 struct {
 //
 // This is a typical entry calling point into this package.
 func NewWANIPConnection2Clients() (clients []*WANIPConnection2, errors []error, err error) {
-	var genericClients []goupnp.ServiceClient
-	if genericClients, errors, err = goupnp.NewServiceClients(URN_WANIPConnection_2); err != nil {
+	var genericClients []discover.ServiceClient
+	if genericClients, errors, err = discover.NewServiceClients(URN_WANIPConnection_2); err != nil {
 		return
 	}
 	clients = newWANIPConnection2ClientsFromGenericClients(genericClients)
@@ -2976,7 +2976,7 @@ func NewWANIPConnection2Clients() (clients []*WANIPConnection2, errors []error, 
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
 func NewWANIPConnection2ClientsByURL(loc *url.URL) ([]*WANIPConnection2, error) {
-	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_WANIPConnection_2)
+	genericClients, err := discover.NewServiceClientsByURL(loc, URN_WANIPConnection_2)
 	if err != nil {
 		return nil, err
 	}
@@ -2991,15 +2991,15 @@ func NewWANIPConnection2ClientsByURL(loc *url.URL) ([]*WANIPConnection2, error) 
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
-func NewWANIPConnection2ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*WANIPConnection2, error) {
-	genericClients, err := goupnp.NewServiceClientsFromRootDevice(rootDevice, loc, URN_WANIPConnection_2)
+func NewWANIPConnection2ClientsFromRootDevice(rootDevice *discover.RootDevice, loc *url.URL) ([]*WANIPConnection2, error) {
+	genericClients, err := discover.NewServiceClientsFromRootDevice(rootDevice, loc, URN_WANIPConnection_2)
 	if err != nil {
 		return nil, err
 	}
 	return newWANIPConnection2ClientsFromGenericClients(genericClients), nil
 }
 
-func newWANIPConnection2ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*WANIPConnection2 {
+func newWANIPConnection2ClientsFromGenericClients(genericClients []discover.ServiceClient) []*WANIPConnection2 {
 	clients := make([]*WANIPConnection2, len(genericClients))
 	for i := range genericClients {
 		clients[i] = &WANIPConnection2{genericClients[i]}
@@ -3759,10 +3759,10 @@ func (client *WANIPConnection2) AddAnyPortMapping(NewRemoteHost string, NewExter
 }
 
 // WANIPv6FirewallControl1 is a client for UPnP SOAP service with URN "urn:schemas-upnp-org:service:WANIPv6FirewallControl:1". See
-// goupnp.ServiceClient, which contains RootDevice and Service attributes which
+// discover.ServiceClient, which contains RootDevice and Service attributes which
 // are provided for informational value.
 type WANIPv6FirewallControl1 struct {
-	goupnp.ServiceClient
+	discover.ServiceClient
 }
 
 // NewWANIPv6FirewallControl1Clients discovers instances of the service on the network,
@@ -3772,8 +3772,8 @@ type WANIPv6FirewallControl1 struct {
 //
 // This is a typical entry calling point into this package.
 func NewWANIPv6FirewallControl1Clients() (clients []*WANIPv6FirewallControl1, errors []error, err error) {
-	var genericClients []goupnp.ServiceClient
-	if genericClients, errors, err = goupnp.NewServiceClients(URN_WANIPv6FirewallControl_1); err != nil {
+	var genericClients []discover.ServiceClient
+	if genericClients, errors, err = discover.NewServiceClients(URN_WANIPv6FirewallControl_1); err != nil {
 		return
 	}
 	clients = newWANIPv6FirewallControl1ClientsFromGenericClients(genericClients)
@@ -3787,7 +3787,7 @@ func NewWANIPv6FirewallControl1Clients() (clients []*WANIPv6FirewallControl1, er
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
 func NewWANIPv6FirewallControl1ClientsByURL(loc *url.URL) ([]*WANIPv6FirewallControl1, error) {
-	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_WANIPv6FirewallControl_1)
+	genericClients, err := discover.NewServiceClientsByURL(loc, URN_WANIPv6FirewallControl_1)
 	if err != nil {
 		return nil, err
 	}
@@ -3802,15 +3802,15 @@ func NewWANIPv6FirewallControl1ClientsByURL(loc *url.URL) ([]*WANIPv6FirewallCon
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
-func NewWANIPv6FirewallControl1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*WANIPv6FirewallControl1, error) {
-	genericClients, err := goupnp.NewServiceClientsFromRootDevice(rootDevice, loc, URN_WANIPv6FirewallControl_1)
+func NewWANIPv6FirewallControl1ClientsFromRootDevice(rootDevice *discover.RootDevice, loc *url.URL) ([]*WANIPv6FirewallControl1, error) {
+	genericClients, err := discover.NewServiceClientsFromRootDevice(rootDevice, loc, URN_WANIPv6FirewallControl_1)
 	if err != nil {
 		return nil, err
 	}
 	return newWANIPv6FirewallControl1ClientsFromGenericClients(genericClients), nil
 }
 
-func newWANIPv6FirewallControl1ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*WANIPv6FirewallControl1 {
+func newWANIPv6FirewallControl1ClientsFromGenericClients(genericClients []discover.ServiceClient) []*WANIPv6FirewallControl1 {
 	clients := make([]*WANIPv6FirewallControl1, len(genericClients))
 	for i := range genericClients {
 		clients[i] = &WANIPv6FirewallControl1{genericClients[i]}
@@ -4075,10 +4075,10 @@ func (client *WANIPv6FirewallControl1) CheckPinholeWorking(UniqueID uint16) (IsW
 }
 
 // WANPOTSLinkConfig1 is a client for UPnP SOAP service with URN "urn:schemas-upnp-org:service:WANPOTSLinkConfig:1". See
-// goupnp.ServiceClient, which contains RootDevice and Service attributes which
+// discover.ServiceClient, which contains RootDevice and Service attributes which
 // are provided for informational value.
 type WANPOTSLinkConfig1 struct {
-	goupnp.ServiceClient
+	discover.ServiceClient
 }
 
 // NewWANPOTSLinkConfig1Clients discovers instances of the service on the network,
@@ -4088,8 +4088,8 @@ type WANPOTSLinkConfig1 struct {
 //
 // This is a typical entry calling point into this package.
 func NewWANPOTSLinkConfig1Clients() (clients []*WANPOTSLinkConfig1, errors []error, err error) {
-	var genericClients []goupnp.ServiceClient
-	if genericClients, errors, err = goupnp.NewServiceClients(URN_WANPOTSLinkConfig_1); err != nil {
+	var genericClients []discover.ServiceClient
+	if genericClients, errors, err = discover.NewServiceClients(URN_WANPOTSLinkConfig_1); err != nil {
 		return
 	}
 	clients = newWANPOTSLinkConfig1ClientsFromGenericClients(genericClients)
@@ -4103,7 +4103,7 @@ func NewWANPOTSLinkConfig1Clients() (clients []*WANPOTSLinkConfig1, errors []err
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
 func NewWANPOTSLinkConfig1ClientsByURL(loc *url.URL) ([]*WANPOTSLinkConfig1, error) {
-	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_WANPOTSLinkConfig_1)
+	genericClients, err := discover.NewServiceClientsByURL(loc, URN_WANPOTSLinkConfig_1)
 	if err != nil {
 		return nil, err
 	}
@@ -4118,15 +4118,15 @@ func NewWANPOTSLinkConfig1ClientsByURL(loc *url.URL) ([]*WANPOTSLinkConfig1, err
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
-func NewWANPOTSLinkConfig1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*WANPOTSLinkConfig1, error) {
-	genericClients, err := goupnp.NewServiceClientsFromRootDevice(rootDevice, loc, URN_WANPOTSLinkConfig_1)
+func NewWANPOTSLinkConfig1ClientsFromRootDevice(rootDevice *discover.RootDevice, loc *url.URL) ([]*WANPOTSLinkConfig1, error) {
+	genericClients, err := discover.NewServiceClientsFromRootDevice(rootDevice, loc, URN_WANPOTSLinkConfig_1)
 	if err != nil {
 		return nil, err
 	}
 	return newWANPOTSLinkConfig1ClientsFromGenericClients(genericClients), nil
 }
 
-func newWANPOTSLinkConfig1ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*WANPOTSLinkConfig1 {
+func newWANPOTSLinkConfig1ClientsFromGenericClients(genericClients []discover.ServiceClient) []*WANPOTSLinkConfig1 {
 	clients := make([]*WANPOTSLinkConfig1, len(genericClients))
 	for i := range genericClients {
 		clients[i] = &WANPOTSLinkConfig1{genericClients[i]}
@@ -4402,10 +4402,10 @@ func (client *WANPOTSLinkConfig1) GetPlusVTRCommandSupported() (NewPlusVTRComman
 }
 
 // WANPPPConnection1 is a client for UPnP SOAP service with URN "urn:schemas-upnp-org:service:WANPPPConnection:1". See
-// goupnp.ServiceClient, which contains RootDevice and Service attributes which
+// discover.ServiceClient, which contains RootDevice and Service attributes which
 // are provided for informational value.
 type WANPPPConnection1 struct {
-	goupnp.ServiceClient
+	discover.ServiceClient
 }
 
 // NewWANPPPConnection1Clients discovers instances of the service on the network,
@@ -4415,8 +4415,8 @@ type WANPPPConnection1 struct {
 //
 // This is a typical entry calling point into this package.
 func NewWANPPPConnection1Clients() (clients []*WANPPPConnection1, errors []error, err error) {
-	var genericClients []goupnp.ServiceClient
-	if genericClients, errors, err = goupnp.NewServiceClients(URN_WANPPPConnection_1); err != nil {
+	var genericClients []discover.ServiceClient
+	if genericClients, errors, err = discover.NewServiceClients(URN_WANPPPConnection_1); err != nil {
 		return
 	}
 	clients = newWANPPPConnection1ClientsFromGenericClients(genericClients)
@@ -4430,7 +4430,7 @@ func NewWANPPPConnection1Clients() (clients []*WANPPPConnection1, errors []error
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
 func NewWANPPPConnection1ClientsByURL(loc *url.URL) ([]*WANPPPConnection1, error) {
-	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_WANPPPConnection_1)
+	genericClients, err := discover.NewServiceClientsByURL(loc, URN_WANPPPConnection_1)
 	if err != nil {
 		return nil, err
 	}
@@ -4445,15 +4445,15 @@ func NewWANPPPConnection1ClientsByURL(loc *url.URL) ([]*WANPPPConnection1, error
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
-func NewWANPPPConnection1ClientsFromRootDevice(rootDevice *goupnp.RootDevice, loc *url.URL) ([]*WANPPPConnection1, error) {
-	genericClients, err := goupnp.NewServiceClientsFromRootDevice(rootDevice, loc, URN_WANPPPConnection_1)
+func NewWANPPPConnection1ClientsFromRootDevice(rootDevice *discover.RootDevice, loc *url.URL) ([]*WANPPPConnection1, error) {
+	genericClients, err := discover.NewServiceClientsFromRootDevice(rootDevice, loc, URN_WANPPPConnection_1)
 	if err != nil {
 		return nil, err
 	}
 	return newWANPPPConnection1ClientsFromGenericClients(genericClients), nil
 }
 
-func newWANPPPConnection1ClientsFromGenericClients(genericClients []goupnp.ServiceClient) []*WANPPPConnection1 {
+func newWANPPPConnection1ClientsFromGenericClients(genericClients []discover.ServiceClient) []*WANPPPConnection1 {
 	clients := make([]*WANPPPConnection1, len(genericClients))
 	for i := range genericClients {
 		clients[i] = &WANPPPConnection1{genericClients[i]}

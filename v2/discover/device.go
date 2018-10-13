@@ -1,6 +1,6 @@
 // This file contains XML structures for communicating with UPnP devices.
 
-package goupnp
+package discover
 
 import (
 	"encoding/xml"
@@ -8,8 +8,8 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/huin/goupnp/scpd"
-	"github.com/huin/goupnp/soap"
+	"github.com/huin/goupnp/v2/scpd"
+	"github.com/huin/goupnp/v2/soap"
 )
 
 const (

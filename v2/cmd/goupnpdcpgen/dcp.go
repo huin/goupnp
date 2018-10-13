@@ -7,8 +7,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/huin/goupnp"
-	"github.com/huin/goupnp/scpd"
+	"github.com/huin/goupnp/v2/discover"
+	"github.com/huin/goupnp/v2/scpd"
 	"github.com/huin/goutil/codegen"
 )
 
@@ -48,12 +48,12 @@ func (dcp *DCP) processZipFile(filename string) error {
 }
 
 func (dcp *DCP) processDeviceFile(file *zip.File) error {
-	var device goupnp.Device
+	var device discover.Device
 	if err := unmarshalXmlFile(file, &device); err != nil {
 		return fmt.Errorf("error decoding device XML from file %q: %v", file.Name, err)
 	}
 	var mainErr error
-	device.VisitDevices(func(d *goupnp.Device) {
+	device.VisitDevices(func(d *discover.Device) {
 		t := strings.TrimSpace(d.DeviceType)
 		if t != "" {
 			u, err := extractURNParts(t, deviceURNPrefix)
@@ -63,7 +63,7 @@ func (dcp *DCP) processDeviceFile(file *zip.File) error {
 			dcp.DeviceTypes[t] = u
 		}
 	})
-	device.VisitServices(func(s *goupnp.Service) {
+	device.VisitServices(func(s *discover.Service) {
 		u, err := extractURNParts(s.ServiceType, serviceURNPrefix)
 		if err != nil {
 			mainErr = err

@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/huin/goupnp/ssdp"
+	"github.com/huin/goupnp/v2/ssdp"
 )
 
 func main() {

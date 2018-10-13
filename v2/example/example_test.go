@@ -5,9 +5,9 @@ import (
 	"net/url"
 	"os"
 
-	"github.com/huin/goupnp"
-	"github.com/huin/goupnp/dcps/internetgateway1"
-	"github.com/huin/goupnp/dcps/internetgateway2"
+	"github.com/huin/goupnp/v2/dcps/internetgateway1"
+	"github.com/huin/goupnp/v2/dcps/internetgateway2"
+	"github.com/huin/goupnp/v2/discover"
 )
 
 // Use discovered WANPPPConnection1 services to find external IP addresses.
@@ -34,7 +34,7 @@ func Example_WANIPConnection_GetExternalIPAddress() {
 
 type GetExternalIPAddresser interface {
 	GetExternalIPAddress() (NewExternalIPAddress string, err error)
-	GetServiceClient() *goupnp.ServiceClient
+	GetServiceClient() *discover.ServiceClient
 }
 
 func DisplayExternalIPResults(clients []GetExternalIPAddresser, errors []error, err error) {
@@ -64,9 +64,9 @@ func DisplayExternalIPResults(clients []GetExternalIPAddresser, errors []error, 
 }
 
 func Example_ReuseDiscoveredDevice() {
-	var allMaybeRootDevices []goupnp.MaybeRootDevice
+	var allMaybeRootDevices []discover.MaybeRootDevice
 	for _, urn := range []string{internetgateway1.URN_WANPPPConnection_1, internetgateway1.URN_WANIPConnection_1} {
-		maybeRootDevices, err := goupnp.DiscoverDevices(internetgateway1.URN_WANPPPConnection_1)
+		maybeRootDevices, err := discover.Devices(internetgateway1.URN_WANPPPConnection_1)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Could not discover %s devices: %v\n", urn, err)
 		}
@@ -84,7 +84,7 @@ func Example_ReuseDiscoveredDevice() {
 	}
 	fmt.Fprintf(os.Stderr, "Attempt to re-acquire %d devices:\n", len(locations))
 	for _, location := range locations {
-		if _, err := goupnp.DeviceByURL(location); err != nil {
+		if _, err := discover.DeviceByURL(location); err != nil {
 			fmt.Fprintf(os.Stderr, "  Failed to reacquire device at %s: %v\n", location.String(), err)
 		} else {
 			fmt.Fprintf(os.Stderr, "  Successfully reacquired device at %s\n", location.String())

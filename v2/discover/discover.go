@@ -1,18 +1,18 @@
 // goupnp is an implementation of a client for various UPnP services.
 //
 // For most uses, it is recommended to use the code-generated packages under
-// github.com/huin/goupnp/dcps. Example use is shown at
-// http://godoc.org/github.com/huin/goupnp/example
+// github.com/huin/goupnp/v2/dcps. Example use is shown at
+// http://godoc.org/github.com/huin/goupnp/v2/example
 //
 // A commonly used client is internetgateway1.WANPPPConnection1:
-// http://godoc.org/github.com/huin/goupnp/dcps/internetgateway1#WANPPPConnection1
+// http://godoc.org/github.com/huin/goupnp/v2/dcps/internetgateway1#WANPPPConnection1
 //
 // Currently only a couple of schemas have code generated for them from the
 // UPnP example XML specifications. Not all methods will work on these clients,
 // because the generated stubs contain the full set of specified methods from
 // the XML specifications, and the discovered services will likely support a
 // subset of those methods.
-package goupnp
+package discover
 
 import (
 	"encoding/xml"
@@ -21,10 +21,9 @@ import (
 	"net/url"
 	"time"
 
+	"github.com/huin/goupnp/v2/httpu"
+	"github.com/huin/goupnp/v2/ssdp"
 	"golang.org/x/net/html/charset"
-
-	"github.com/huin/goupnp/httpu"
-	"github.com/huin/goupnp/ssdp"
 )
 
 // ContextError is an error that wraps an error with some context information.
@@ -51,13 +50,11 @@ type MaybeRootDevice struct {
 	Err error
 }
 
-// DiscoverDevices attempts to find targets of the given type. This is
-// typically the entry-point for this package. searchTarget is typically a URN
-// in the form "urn:schemas-upnp-org:device:..." or
-// "urn:schemas-upnp-org:service:...". A single error is returned for errors
-// while attempting to send the query. An error or RootDevice is returned for
-// each discovered RootDevice.
-func DiscoverDevices(searchTarget string) ([]MaybeRootDevice, error) {
+// Devices attempts to find targets of the given type. This is typically the entry-point for this
+// package. searchTarget is typically a URN in the form "urn:schemas-upnp-org:device:..." or
+// "urn:schemas-upnp-org:service:...". A single error is returned for errors while attempting to
+// send the query. An error or RootDevice is returned for each discovered RootDevice.
+func Devices(searchTarget string) ([]MaybeRootDevice, error) {
 	httpu, err := httpu.NewHTTPUClient()
 	if err != nil {
 		return nil, err
