@@ -55,13 +55,13 @@ type MaybeRootDevice struct {
 // package. searchTarget is typically a URN in the form "urn:schemas-upnp-org:device:..." or
 // "urn:schemas-upnp-org:service:...". A single error is returned for errors while attempting to
 // send the query. An error or RootDevice is returned for each discovered RootDevice.
-func Devices(ctx context.Context, searchTarget string) ([]MaybeRootDevice, error) {
-	httpu, err := httpu.NewHTTPUClient()
+func Devices(ctx context.Context, searchTarget string, searchOpts ...ssdp.SearchOption) ([]MaybeRootDevice, error) {
+	httpu, err := httpu.NewHTTPUClient(ctx)
 	if err != nil {
 		return nil, err
 	}
 	defer httpu.Close()
-	responses, err := ssdp.SSDPRawSearch(ctx, httpu, string(searchTarget), 2, 3)
+	responses, err := ssdp.SSDPRawSearch(ctx, httpu, string(searchTarget), searchOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -88,7 +88,7 @@ func Devices(ctx context.Context, searchTarget string) ([]MaybeRootDevice, error
 func DeviceByURL(ctx context.Context, loc *url.URL) (*RootDevice, error) {
 	locStr := loc.String()
 	root := new(RootDevice)
-	if err := requestXml(locStr, DeviceXMLNamespace, root); err != nil {
+	if err := requestXml(ctx, locStr, DeviceXMLNamespace, root); err != nil {
 		return nil, ContextError{fmt.Sprintf("error requesting root device details from %q", locStr), err}
 	}
 	var urlBaseStr string
@@ -108,7 +108,7 @@ func DeviceByURL(ctx context.Context, loc *url.URL) (*RootDevice, error) {
 func requestXml(ctx context.Context, url string, defaultSpace string, doc interface{}) error {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	ctx, _ = context.WithTimeout(ctx, 3*time.Second)
 	req = req.WithContext(ctx)

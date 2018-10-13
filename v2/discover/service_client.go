@@ -1,6 +1,7 @@
 package discover
 
 import (
+	"context"
 	"fmt"
 	"net/url"
 
@@ -22,9 +23,9 @@ type ServiceClient struct {
 // NewServiceClients discovers services, and returns clients for them. err will
 // report any error with the discovery process (blocking any device/service
 // discovery), errors reports errors on a per-root-device basis.
-func NewServiceClients(searchTarget string) (clients []ServiceClient, errors []error, err error) {
+func NewServiceClients(ctx context.Context, searchTarget string) (clients []ServiceClient, errors []error, err error) {
 	var maybeRootDevices []MaybeRootDevice
-	if maybeRootDevices, err = Devices(searchTarget); err != nil {
+	if maybeRootDevices, err = Devices(ctx, searchTarget); err != nil {
 		return
 	}
 
@@ -49,8 +50,8 @@ func NewServiceClients(searchTarget string) (clients []ServiceClient, errors []e
 
 // NewServiceClientsByURL creates client(s) for the given service URN, for a
 // root device at the given URL.
-func NewServiceClientsByURL(loc *url.URL, searchTarget string) ([]ServiceClient, error) {
-	rootDevice, err := DeviceByURL(loc)
+func NewServiceClientsByURL(ctx context.Context, loc *url.URL, searchTarget string) ([]ServiceClient, error) {
+	rootDevice, err := DeviceByURL(ctx, loc)
 	if err != nil {
 		return nil, err
 	}
