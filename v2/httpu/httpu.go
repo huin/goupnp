@@ -3,6 +3,7 @@ package httpu
 import (
 	"bufio"
 	"bytes"
+	"context"
 	"errors"
 	"fmt"
 	"log"
@@ -21,8 +22,10 @@ type HTTPUClient struct {
 
 // NewHTTPUClient creates a new HTTPUClient, opening up a new UDP socket for the
 // purpose.
-func NewHTTPUClient() (*HTTPUClient, error) {
-	conn, err := net.ListenPacket("udp", ":0")
+func NewHTTPUClient(ctx context.Context) (*HTTPUClient, error) {
+	lc := &net.ListenConfig{}
+
+	conn, err := lc.ListenPacket(ctx, "udp", ":0")
 	if err != nil {
 		return nil, err
 	}
@@ -31,12 +34,15 @@ func NewHTTPUClient() (*HTTPUClient, error) {
 
 // NewHTTPUClientAddr creates a new HTTPUClient which will broadcast packets
 // from the specified address, opening up a new UDP socket for the purpose
-func NewHTTPUClientAddr(addr string) (*HTTPUClient, error) {
+func NewHTTPUClientAddr(ctx context.Context, addr string) (*HTTPUClient, error) {
 	ip := net.ParseIP(addr)
 	if ip == nil {
-		return nil, errors.New("Invalid listening address")
+		return nil, errors.New("invalid listening address")
 	}
-	conn, err := net.ListenPacket("udp", ip.String()+":0")
+
+	lc := &net.ListenConfig{}
+
+	conn, err := lc.ListenPacket(ctx, "udp", ip.String()+":0")
 	if err != nil {
 		return nil, err
 	}
@@ -51,16 +57,28 @@ func (httpu *HTTPUClient) Close() error {
 	return httpu.conn.Close()
 }
 
-// Do performs a request. The timeout is how long to wait for before returning
-// the responses that were received. An error is only returned for failing to
-// send the request. Failures in receipt simply do not add to the resulting
-// responses.
+// Do performs a request. An error is only returned for failing to send the request. Failures in
+// receipt simply do not add to the resulting responses.
 //
-// Note that at present only one concurrent connection will happen per
-// HTTPUClient.
-func (httpu *HTTPUClient) Do(req *http.Request, timeout time.Duration, numSends int) ([]*http.Response, error) {
-	httpu.connLock.Lock()
-	defer httpu.connLock.Unlock()
+// By default it sends 2 requests, and waits 3 seconds for responses to them.
+//
+// Note that at present only one concurrent request will happen per HTTPUClient.
+func (httpu *HTTPUClient) Do(req *http.Request, options ...RequestOption) ([]*http.Response, error) {
+	ctx := req.Context()
+
+	now := time.Now()
+	rs := &requestSettings{
+		numSends:  2,
+		now:       now,
+		waitUntil: now.Add(time.Second * 3),
+	}
+	rs.applyOptions(options)
+
+	if ctxDeadline, ok := ctx.Deadline(); ok {
+		if ctxDeadline.Before(rs.waitUntil) {
+			rs.waitUntil = ctxDeadline
+		}
+	}
 
 	// Create the request. This is a subset of what http.Request.Write does
 	// deliberately to avoid creating extra fields which may confuse some
@@ -84,17 +102,25 @@ func (httpu *HTTPUClient) Do(req *http.Request, timeout time.Duration, numSends 
 	if err != nil {
 		return nil, err
 	}
-	if err = httpu.conn.SetDeadline(time.Now().Add(timeout)); err != nil {
+
+	return httpu.doInternal(destAddr, req, requestBuf.Bytes(), rs)
+}
+
+func (httpu *HTTPUClient) doInternal(destAddr net.Addr, req *http.Request, reqBytes []byte, rs *requestSettings) ([]*http.Response, error) {
+	httpu.connLock.Lock()
+	defer httpu.connLock.Unlock()
+
+	if err := httpu.conn.SetDeadline(rs.waitUntil); err != nil {
 		return nil, err
 	}
 
 	// Send request.
-	for i := 0; i < numSends; i++ {
-		if n, err := httpu.conn.WriteTo(requestBuf.Bytes(), destAddr); err != nil {
+	for i := 0; i < rs.numSends; i++ {
+		if n, err := httpu.conn.WriteTo(reqBytes, destAddr); err != nil {
 			return nil, err
-		} else if n < len(requestBuf.Bytes()) {
+		} else if n < len(reqBytes) {
 			return nil, fmt.Errorf("httpu: wrote %d bytes rather than full %d in request",
-				n, len(requestBuf.Bytes()))
+				n, len(reqBytes))
 		}
 		time.Sleep(5 * time.Millisecond)
 	}
@@ -108,7 +134,8 @@ func (httpu *HTTPUClient) Do(req *http.Request, timeout time.Duration, numSends 
 		if err != nil {
 			if err, ok := err.(net.Error); ok {
 				if err.Timeout() {
-					break
+					// Timeout reached - return discovered responses.
+					return responses, nil
 				}
 				if err.Temporary() {
 					// Sleep in case this is a persistent error to avoid pegging CPU until deadline.
@@ -128,7 +155,32 @@ func (httpu *HTTPUClient) Do(req *http.Request, timeout time.Duration, numSends 
 
 		responses = append(responses, response)
 	}
+}
 
-	// Timeout reached - return discovered responses.
-	return responses, nil
+type requestSettings struct {
+	numSends  int
+	now       time.Time
+	waitUntil time.Time
+}
+
+func (rs *requestSettings) applyOptions(options []RequestOption) {
+	for _, o := range options {
+		o(rs)
+	}
+}
+
+type RequestOption func(*requestSettings)
+
+// NumSends controls how many redundant requests to send.
+func NumSends(numSends int) RequestOption {
+	return func(rs *requestSettings) {
+		rs.numSends = numSends
+	}
+}
+
+// WaitFor controls how long to wait for HTTPU responses.
+func WaitFor(d time.Duration) RequestOption {
+	return func(rs *requestSettings) {
+		rs.waitUntil = rs.now.Add(d)
+	}
 }

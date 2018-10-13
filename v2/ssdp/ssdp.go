@@ -1,7 +1,7 @@
 package ssdp
 
 import (
-	"errors"
+	"context"
 	"log"
 	"net/http"
 	"net/url"
@@ -27,21 +27,22 @@ const (
 	UPNPRootDevice = "upnp:rootdevice"
 )
 
-// SSDPRawSearch performs a fairly raw SSDP search request, and returns the
-// unique response(s) that it receives. Each response has the requested
-// searchTarget, a USN, and a valid location. maxWaitSeconds states how long to
-// wait for responses in seconds, and must be a minimum of 1 (the
-// implementation waits an additional 100ms for responses to arrive), 2 is a
-// reasonable value for this. numSends is the number of requests to send - 3 is
-// a reasonable value for this.
-func SSDPRawSearch(httpu *httpu.HTTPUClient, searchTarget string, maxWaitSeconds int, numSends int) ([]*http.Response, error) {
-	if maxWaitSeconds < 1 {
-		return nil, errors.New("ssdp: maxWaitSeconds must be >= 1")
+// SSDPRawSearch performs a fairly raw SSDP search request, and returns the unique response(s) that
+// it receives. Each response has the requested searchTarget, a USN, and a valid location.
+func SSDPRawSearch(
+	ctx context.Context,
+	hc *httpu.HTTPUClient,
+	searchTarget string,
+	options ...SearchOption,
+) ([]*http.Response, error) {
+	ss := &searchSettings{
+		waitFor: 3 * time.Second,
 	}
+	ss.applyOptions(options)
 
 	seenUsns := make(map[string]bool)
 	var responses []*http.Response
-	req := http.Request{
+	req := &http.Request{
 		Method: methodSearch,
 		// TODO: Support both IPv4 and IPv6.
 		Host: ssdpUDP4Addr,
@@ -50,12 +51,14 @@ func SSDPRawSearch(httpu *httpu.HTTPUClient, searchTarget string, maxWaitSeconds
 			// Putting headers in here avoids them being title-cased.
 			// (The UPnP discovery protocol uses case-sensitive headers)
 			"HOST": []string{ssdpUDP4Addr},
-			"MX":   []string{strconv.FormatInt(int64(maxWaitSeconds), 10)},
+			"MX":   []string{strconv.FormatInt(int64(ss.waitFor/time.Second), 10)},
 			"MAN":  []string{ssdpDiscover},
 			"ST":   []string{searchTarget},
 		},
 	}
-	allResponses, err := httpu.Do(&req, time.Duration(maxWaitSeconds)*time.Second+100*time.Millisecond, numSends)
+	req = req.WithContext(ctx)
+	ss.hrs = append(ss.hrs, httpu.WaitFor(ss.waitFor))
+	allResponses, err := hc.Do(req, ss.hrs...)
 	if err != nil {
 		return nil, err
 	}
@@ -87,4 +90,31 @@ func SSDPRawSearch(httpu *httpu.HTTPUClient, searchTarget string, maxWaitSeconds
 	}
 
 	return responses, nil
+}
+
+type searchSettings struct {
+	hrs     []httpu.RequestOption
+	waitFor time.Duration
+}
+
+func (ss *searchSettings) applyOptions(options []SearchOption) {
+	for _, o := range options {
+		o(ss)
+	}
+}
+
+type SearchOption func(*searchSettings)
+
+// NumSends controls how many redundant requests to send.
+func NumSends(numSends int) SearchOption {
+	return func(ss *searchSettings) {
+		ss.hrs = append(ss.hrs, httpu.NumSends(numSends))
+	}
+}
+
+// WaitFor controls how long to wait for HTTPU responses.
+func WaitFor(d time.Duration) SearchOption {
+	return func(ss *searchSettings) {
+		ss.waitFor = d
+	}
 }

@@ -15,6 +15,7 @@
 package discover
 
 import (
+	"context"
 	"encoding/xml"
 	"fmt"
 	"net/http"
@@ -54,13 +55,13 @@ type MaybeRootDevice struct {
 // package. searchTarget is typically a URN in the form "urn:schemas-upnp-org:device:..." or
 // "urn:schemas-upnp-org:service:...". A single error is returned for errors while attempting to
 // send the query. An error or RootDevice is returned for each discovered RootDevice.
-func Devices(searchTarget string) ([]MaybeRootDevice, error) {
+func Devices(ctx context.Context, searchTarget string) ([]MaybeRootDevice, error) {
 	httpu, err := httpu.NewHTTPUClient()
 	if err != nil {
 		return nil, err
 	}
 	defer httpu.Close()
-	responses, err := ssdp.SSDPRawSearch(httpu, string(searchTarget), 2, 3)
+	responses, err := ssdp.SSDPRawSearch(ctx, httpu, string(searchTarget), 2, 3)
 	if err != nil {
 		return nil, err
 	}
@@ -74,7 +75,7 @@ func Devices(searchTarget string) ([]MaybeRootDevice, error) {
 			continue
 		}
 		maybe.Location = loc
-		if root, err := DeviceByURL(loc); err != nil {
+		if root, err := DeviceByURL(ctx, loc); err != nil {
 			maybe.Err = err
 		} else {
 			maybe.Root = root
@@ -84,7 +85,7 @@ func Devices(searchTarget string) ([]MaybeRootDevice, error) {
 	return results, nil
 }
 
-func DeviceByURL(loc *url.URL) (*RootDevice, error) {
+func DeviceByURL(ctx context.Context, loc *url.URL) (*RootDevice, error) {
 	locStr := loc.String()
 	root := new(RootDevice)
 	if err := requestXml(locStr, DeviceXMLNamespace, root); err != nil {
@@ -104,12 +105,14 @@ func DeviceByURL(loc *url.URL) (*RootDevice, error) {
 	return root, nil
 }
 
-func requestXml(url string, defaultSpace string, doc interface{}) error {
-	timeout := time.Duration(3 * time.Second)
-	client := http.Client{
-		Timeout: timeout,
+func requestXml(ctx context.Context, url string, defaultSpace string, doc interface{}) error {
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return nil, err
 	}
-	resp, err := client.Get(url)
+	ctx, _ = context.WithTimeout(ctx, 3*time.Second)
+	req = req.WithContext(ctx)
+	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return err
 	}
