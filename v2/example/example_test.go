@@ -1,6 +1,7 @@
 package example_test
 
 import (
+	"context"
 	"fmt"
 	"net/url"
 	"os"
@@ -12,32 +13,34 @@ import (
 
 // Use discovered WANPPPConnection1 services to find external IP addresses.
 func Example_WANPPPConnection1_GetExternalIPAddress() {
-	clients, errors, err := internetgateway1.NewWANPPPConnection1Clients()
+	ctx := context.Background()
+	clients, errors, err := internetgateway1.NewWANPPPConnection1Clients(ctx)
 	extIPClients := make([]GetExternalIPAddresser, len(clients))
 	for i, client := range clients {
 		extIPClients[i] = client
 	}
-	DisplayExternalIPResults(extIPClients, errors, err)
+	DisplayExternalIPResults(ctx, extIPClients, errors, err)
 	// Output:
 }
 
 // Use discovered WANIPConnection services to find external IP addresses.
 func Example_WANIPConnection_GetExternalIPAddress() {
-	clients, errors, err := internetgateway1.NewWANIPConnection1Clients()
+	ctx := context.Background()
+	clients, errors, err := internetgateway1.NewWANIPConnection1Clients(ctx)
 	extIPClients := make([]GetExternalIPAddresser, len(clients))
 	for i, client := range clients {
 		extIPClients[i] = client
 	}
-	DisplayExternalIPResults(extIPClients, errors, err)
+	DisplayExternalIPResults(ctx, extIPClients, errors, err)
 	// Output:
 }
 
 type GetExternalIPAddresser interface {
-	GetExternalIPAddress() (NewExternalIPAddress string, err error)
+	GetExternalIPAddress(ctx context.Context) (NewExternalIPAddress string, err error)
 	GetServiceClient() *discover.ServiceClient
 }
 
-func DisplayExternalIPResults(clients []GetExternalIPAddresser, errors []error, err error) {
+func DisplayExternalIPResults(ctx context.Context, clients []GetExternalIPAddresser, errors []error, err error) {
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Error discovering service with UPnP: ", err)
 		return
@@ -55,7 +58,7 @@ func DisplayExternalIPResults(clients []GetExternalIPAddresser, errors []error, 
 		device := &client.GetServiceClient().RootDevice.Device
 
 		fmt.Fprintln(os.Stderr, "  Device:", device.FriendlyName)
-		if addr, err := client.GetExternalIPAddress(); err != nil {
+		if addr, err := client.GetExternalIPAddress(ctx); err != nil {
 			fmt.Fprintf(os.Stderr, "    Failed to get external IP address: %v\n", err)
 		} else {
 			fmt.Fprintf(os.Stderr, "    External IP address: %v\n", addr)
@@ -64,9 +67,10 @@ func DisplayExternalIPResults(clients []GetExternalIPAddresser, errors []error, 
 }
 
 func Example_ReuseDiscoveredDevice() {
+	ctx := context.Background()
 	var allMaybeRootDevices []discover.MaybeRootDevice
 	for _, urn := range []string{internetgateway1.URN_WANPPPConnection_1, internetgateway1.URN_WANIPConnection_1} {
-		maybeRootDevices, err := discover.Devices(internetgateway1.URN_WANPPPConnection_1)
+		maybeRootDevices, err := discover.Devices(ctx, internetgateway1.URN_WANPPPConnection_1)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Could not discover %s devices: %v\n", urn, err)
 		}
@@ -84,7 +88,7 @@ func Example_ReuseDiscoveredDevice() {
 	}
 	fmt.Fprintf(os.Stderr, "Attempt to re-acquire %d devices:\n", len(locations))
 	for _, location := range locations {
-		if _, err := discover.DeviceByURL(location); err != nil {
+		if _, err := discover.DeviceByURL(ctx, location); err != nil {
 			fmt.Fprintf(os.Stderr, "  Failed to reacquire device at %s: %v\n", location.String(), err)
 		} else {
 			fmt.Fprintf(os.Stderr, "  Successfully reacquired device at %s\n", location.String())
@@ -96,7 +100,8 @@ func Example_ReuseDiscoveredDevice() {
 // Use discovered igd1.WANCommonInterfaceConfig1 services to discover byte
 // transfer counts.
 func Example_WANCommonInterfaceConfig1_GetBytesTransferred() {
-	clients, errors, err := internetgateway1.NewWANCommonInterfaceConfig1Clients()
+	ctx := context.Background()
+	clients, errors, err := internetgateway1.NewWANCommonInterfaceConfig1Clients(ctx)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Error discovering service with UPnP:", err)
 		return
@@ -106,12 +111,12 @@ func Example_WANCommonInterfaceConfig1_GetBytesTransferred() {
 		fmt.Println("  ", err)
 	}
 	for _, client := range clients {
-		if recv, err := client.GetTotalBytesReceived(); err != nil {
+		if recv, err := client.GetTotalBytesReceived(ctx); err != nil {
 			fmt.Fprintln(os.Stderr, "Error requesting bytes received:", err)
 		} else {
 			fmt.Fprintln(os.Stderr, "Bytes received:", recv)
 		}
-		if sent, err := client.GetTotalBytesSent(); err != nil {
+		if sent, err := client.GetTotalBytesSent(ctx); err != nil {
 			fmt.Fprintln(os.Stderr, "Error requesting bytes sent:", err)
 		} else {
 			fmt.Fprintln(os.Stderr, "Bytes sent:", sent)
@@ -123,7 +128,8 @@ func Example_WANCommonInterfaceConfig1_GetBytesTransferred() {
 // Use discovered igd2.WANCommonInterfaceConfig1 services to discover byte
 // transfer counts.
 func Example_WANCommonInterfaceConfig2_GetBytesTransferred() {
-	clients, errors, err := internetgateway2.NewWANCommonInterfaceConfig1Clients()
+	ctx := context.Background()
+	clients, errors, err := internetgateway2.NewWANCommonInterfaceConfig1Clients(ctx)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Error discovering service with UPnP:", err)
 		return
@@ -133,12 +139,12 @@ func Example_WANCommonInterfaceConfig2_GetBytesTransferred() {
 		fmt.Println("  ", err)
 	}
 	for _, client := range clients {
-		if recv, err := client.GetTotalBytesReceived(); err != nil {
+		if recv, err := client.GetTotalBytesReceived(ctx); err != nil {
 			fmt.Fprintln(os.Stderr, "Error requesting bytes received:", err)
 		} else {
 			fmt.Fprintln(os.Stderr, "Bytes received:", recv)
 		}
-		if sent, err := client.GetTotalBytesSent(); err != nil {
+		if sent, err := client.GetTotalBytesSent(ctx); err != nil {
 			fmt.Fprintln(os.Stderr, "Error requesting bytes sent:", err)
 		} else {
 			fmt.Fprintln(os.Stderr, "Bytes sent:", sent)

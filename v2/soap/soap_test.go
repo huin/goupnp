@@ -2,6 +2,7 @@ package soap
 
 import (
 	"bytes"
+	"context"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -22,6 +23,9 @@ func (rt *capturingRoundTripper) RoundTrip(req *http.Request) (*http.Response, e
 
 func TestActionInputs(t *testing.T) {
 	t.Parallel()
+
+	ctx := context.Background()
+
 	url, err := url.Parse("http://example.com/soap")
 	if err != nil {
 		t.Fatal(err)
@@ -60,7 +64,7 @@ func TestActionInputs(t *testing.T) {
 	}
 	in := In{"foo", "bar", "quoted=\"baz\""}
 	gotOut := Out{}
-	err = client.PerformAction("mynamespace", "myaction", &in, &gotOut)
+	err = client.PerformAction(ctx, "mynamespace", "myaction", &in, &gotOut)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -86,7 +90,6 @@ func TestActionInputs(t *testing.T) {
 		t.Errorf("Bad output\nwant: %+v\n got: %+v", wantOut, gotOut)
 	}
 }
-
 
 func TestEscapeXMLText(t *testing.T) {
 	t.Parallel()
