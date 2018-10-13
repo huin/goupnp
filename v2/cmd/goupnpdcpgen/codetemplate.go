@@ -17,6 +17,7 @@ package {{$name}}
 // ***********************************************************
 
 import (
+	"context"
 	"net/url"
 	"time"
 
@@ -54,9 +55,9 @@ type {{$srvIdent}} struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func New{{$srvIdent}}Clients() (clients []*{{$srvIdent}}, errors []error, err error) {
+func New{{$srvIdent}}Clients(ctx context.Context) (clients []*{{$srvIdent}}, errors []error, err error) {
 	var genericClients []discover.ServiceClient
-	if genericClients, errors, err = discover.NewServiceClients({{$srv.Const}}); err != nil {
+	if genericClients, errors, err = discover.NewServiceClients(ctx, {{$srv.Const}}); err != nil {
 		return
 	}
 	clients = new{{$srvIdent}}ClientsFromGenericClients(genericClients)
@@ -69,8 +70,8 @@ func New{{$srvIdent}}Clients() (clients []*{{$srvIdent}}, errors []error, err er
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
-func New{{$srvIdent}}ClientsByURL(loc *url.URL) ([]*{{$srvIdent}}, error) {
-	genericClients, err := discover.NewServiceClientsByURL(loc, {{$srv.Const}})
+func New{{$srvIdent}}ClientsByURL(ctx context.Context, loc *url.URL) ([]*{{$srvIdent}}, error) {
+	genericClients, err := discover.NewServiceClientsByURL(ctx, loc, {{$srv.Const}})
 	if err != nil {
 		return nil, err
 	}
@@ -115,8 +116,11 @@ func new{{$srvIdent}}ClientsFromGenericClients(genericClients []discover.Service
 // Return values:{{range $woutargs}}{{if .HasDoc}}
 //
 // * {{.Name}}: {{.Document}}{{end}}{{end}}{{end}}
-func (client *{{$srvIdent}}) {{.Name}}({{range $winargs -}}
-{{.AsParameter}}, {{end -}}
+func (client *{{$srvIdent}}) {{.Name}}(
+	ctx context.Context,
+	{{range $winargs -}}
+		{{.AsParameter}},
+	{{end -}}
 ) ({{range $woutargs -}}
 {{.AsParameter}}, {{end}} err error) {
 	// Request structure.
@@ -132,7 +136,7 @@ func (client *{{$srvIdent}}) {{.Name}}({{range $winargs -}}
 	response := {{if $woutargs}}&{{template "argstruct" $woutargs}}{{"{}"}}{{else}}{{"interface{}(nil)"}}{{end}}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction({{$srv.URNParts.Const}}, "{{.Name}}", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, {{$srv.URNParts.Const}}, "{{.Name}}", request, response); err != nil {
 		return
 	}
 

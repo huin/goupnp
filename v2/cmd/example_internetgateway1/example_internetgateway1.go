@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 
@@ -8,7 +9,9 @@ import (
 )
 
 func main() {
-	clients, errors, err := internetgateway1.NewWANPPPConnection1Clients()
+	ctx := context.Background()
+
+	clients, errors, err := internetgateway1.NewWANPPPConnection1Clients(ctx)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -23,7 +26,7 @@ func main() {
 		dev := &c.ServiceClient.RootDevice.Device
 		srv := c.ServiceClient.Service
 		fmt.Println(dev.FriendlyName, " :: ", srv.String())
-		scpd, err := srv.RequestSCPD()
+		scpd, err := srv.RequestSCPD(ctx)
 		if err != nil {
 			fmt.Printf("  Error requesting service SCPD: %v\n", err)
 		} else {
@@ -41,26 +44,26 @@ func main() {
 		}
 
 		if scpd == nil || scpd.GetAction("GetExternalIPAddress") != nil {
-			ip, err := c.GetExternalIPAddress()
+			ip, err := c.GetExternalIPAddress(ctx)
 			fmt.Println("GetExternalIPAddress: ", ip, err)
 		}
 
 		if scpd == nil || scpd.GetAction("GetStatusInfo") != nil {
-			status, lastErr, uptime, err := c.GetStatusInfo()
+			status, lastErr, uptime, err := c.GetStatusInfo(ctx)
 			fmt.Println("GetStatusInfo: ", status, lastErr, uptime, err)
 		}
 
 		if scpd == nil || scpd.GetAction("GetIdleDisconnectTime") != nil {
-			idleTime, err := c.GetIdleDisconnectTime()
+			idleTime, err := c.GetIdleDisconnectTime(ctx)
 			fmt.Println("GetIdleDisconnectTime: ", idleTime, err)
 		}
 
 		if scpd == nil || scpd.GetAction("AddPortMapping") != nil {
-			err := c.AddPortMapping("", 5000, "TCP", 5001, "192.168.1.2", true, "Test port mapping", 0)
+			err := c.AddPortMapping(ctx, "", 5000, "TCP", 5001, "192.168.1.2", true, "Test port mapping", 0)
 			fmt.Println("AddPortMapping: ", err)
 		}
 		if scpd == nil || scpd.GetAction("DeletePortMapping") != nil {
-			err := c.DeletePortMapping("", 5000, "TCP")
+			err := c.DeletePortMapping(ctx, "", 5000, "TCP")
 			fmt.Println("DeletePortMapping: ", err)
 		}
 	}

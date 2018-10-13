@@ -10,6 +10,7 @@ package av1
 // ***********************************************************
 
 import (
+	"context"
 	"net/url"
 	"time"
 
@@ -51,9 +52,9 @@ type AVTransport1 struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewAVTransport1Clients() (clients []*AVTransport1, errors []error, err error) {
+func NewAVTransport1Clients(ctx context.Context) (clients []*AVTransport1, errors []error, err error) {
 	var genericClients []discover.ServiceClient
-	if genericClients, errors, err = discover.NewServiceClients(URN_AVTransport_1); err != nil {
+	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_AVTransport_1); err != nil {
 		return
 	}
 	clients = newAVTransport1ClientsFromGenericClients(genericClients)
@@ -66,8 +67,8 @@ func NewAVTransport1Clients() (clients []*AVTransport1, errors []error, err erro
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
-func NewAVTransport1ClientsByURL(loc *url.URL) ([]*AVTransport1, error) {
-	genericClients, err := discover.NewServiceClientsByURL(loc, URN_AVTransport_1)
+func NewAVTransport1ClientsByURL(ctx context.Context, loc *url.URL) ([]*AVTransport1, error) {
+	genericClients, err := discover.NewServiceClientsByURL(ctx, loc, URN_AVTransport_1)
 	if err != nil {
 		return nil, err
 	}
@@ -98,7 +99,12 @@ func newAVTransport1ClientsFromGenericClients(genericClients []discover.ServiceC
 	return clients
 }
 
-func (client *AVTransport1) SetAVTransportURI(InstanceID uint32, CurrentURI string, CurrentURIMetaData string) (err error) {
+func (client *AVTransport1) SetAVTransportURI(
+	ctx context.Context,
+	InstanceID uint32,
+	CurrentURI string,
+	CurrentURIMetaData string,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID         string
@@ -122,7 +128,7 @@ func (client *AVTransport1) SetAVTransportURI(InstanceID uint32, CurrentURI stri
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_AVTransport_1, "SetAVTransportURI", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_AVTransport_1, "SetAVTransportURI", request, response); err != nil {
 		return
 	}
 
@@ -132,7 +138,12 @@ func (client *AVTransport1) SetAVTransportURI(InstanceID uint32, CurrentURI stri
 	return
 }
 
-func (client *AVTransport1) SetNextAVTransportURI(InstanceID uint32, NextURI string, NextURIMetaData string) (err error) {
+func (client *AVTransport1) SetNextAVTransportURI(
+	ctx context.Context,
+	InstanceID uint32,
+	NextURI string,
+	NextURIMetaData string,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID      string
@@ -156,7 +167,7 @@ func (client *AVTransport1) SetNextAVTransportURI(InstanceID uint32, NextURI str
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_AVTransport_1, "SetNextAVTransportURI", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_AVTransport_1, "SetNextAVTransportURI", request, response); err != nil {
 		return
 	}
 
@@ -170,7 +181,10 @@ func (client *AVTransport1) SetNextAVTransportURI(InstanceID uint32, NextURI str
 // Return values:
 //
 // * NrTracks: allowed value range: minimum=0
-func (client *AVTransport1) GetMediaInfo(InstanceID uint32) (NrTracks uint32, MediaDuration string, CurrentURI string, CurrentURIMetaData string, NextURI string, NextURIMetaData string, PlayMedium string, RecordMedium string, WriteStatus string, err error) {
+func (client *AVTransport1) GetMediaInfo(
+	ctx context.Context,
+	InstanceID uint32,
+) (NrTracks uint32, MediaDuration string, CurrentURI string, CurrentURIMetaData string, NextURI string, NextURIMetaData string, PlayMedium string, RecordMedium string, WriteStatus string, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -196,7 +210,7 @@ func (client *AVTransport1) GetMediaInfo(InstanceID uint32) (NrTracks uint32, Me
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_AVTransport_1, "GetMediaInfo", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_AVTransport_1, "GetMediaInfo", request, response); err != nil {
 		return
 	}
 
@@ -241,7 +255,10 @@ func (client *AVTransport1) GetMediaInfo(InstanceID uint32) (NrTracks uint32, Me
 // * CurrentTransportStatus: allowed values: OK, ERROR_OCCURRED
 //
 // * CurrentSpeed: allowed values: 1
-func (client *AVTransport1) GetTransportInfo(InstanceID uint32) (CurrentTransportState string, CurrentTransportStatus string, CurrentSpeed string, err error) {
+func (client *AVTransport1) GetTransportInfo(
+	ctx context.Context,
+	InstanceID uint32,
+) (CurrentTransportState string, CurrentTransportStatus string, CurrentSpeed string, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -261,7 +278,7 @@ func (client *AVTransport1) GetTransportInfo(InstanceID uint32) (CurrentTranspor
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_AVTransport_1, "GetTransportInfo", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_AVTransport_1, "GetTransportInfo", request, response); err != nil {
 		return
 	}
 
@@ -284,7 +301,10 @@ func (client *AVTransport1) GetTransportInfo(InstanceID uint32) (CurrentTranspor
 // Return values:
 //
 // * Track: allowed value range: minimum=0, step=1
-func (client *AVTransport1) GetPositionInfo(InstanceID uint32) (Track uint32, TrackDuration string, TrackMetaData string, TrackURI string, RelTime string, AbsTime string, RelCount int32, AbsCount int32, err error) {
+func (client *AVTransport1) GetPositionInfo(
+	ctx context.Context,
+	InstanceID uint32,
+) (Track uint32, TrackDuration string, TrackMetaData string, TrackURI string, RelTime string, AbsTime string, RelCount int32, AbsCount int32, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -309,7 +329,7 @@ func (client *AVTransport1) GetPositionInfo(InstanceID uint32) (Track uint32, Tr
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_AVTransport_1, "GetPositionInfo", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_AVTransport_1, "GetPositionInfo", request, response); err != nil {
 		return
 	}
 
@@ -343,7 +363,10 @@ func (client *AVTransport1) GetPositionInfo(InstanceID uint32) (Track uint32, Tr
 	return
 }
 
-func (client *AVTransport1) GetDeviceCapabilities(InstanceID uint32) (PlayMedia string, RecMedia string, RecQualityModes string, err error) {
+func (client *AVTransport1) GetDeviceCapabilities(
+	ctx context.Context,
+	InstanceID uint32,
+) (PlayMedia string, RecMedia string, RecQualityModes string, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -363,7 +386,7 @@ func (client *AVTransport1) GetDeviceCapabilities(InstanceID uint32) (PlayMedia 
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_AVTransport_1, "GetDeviceCapabilities", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_AVTransport_1, "GetDeviceCapabilities", request, response); err != nil {
 		return
 	}
 
@@ -386,7 +409,10 @@ func (client *AVTransport1) GetDeviceCapabilities(InstanceID uint32) (PlayMedia 
 // Return values:
 //
 // * PlayMode: allowed values: NORMAL
-func (client *AVTransport1) GetTransportSettings(InstanceID uint32) (PlayMode string, RecQualityMode string, err error) {
+func (client *AVTransport1) GetTransportSettings(
+	ctx context.Context,
+	InstanceID uint32,
+) (PlayMode string, RecQualityMode string, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -405,7 +431,7 @@ func (client *AVTransport1) GetTransportSettings(InstanceID uint32) (PlayMode st
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_AVTransport_1, "GetTransportSettings", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_AVTransport_1, "GetTransportSettings", request, response); err != nil {
 		return
 	}
 
@@ -421,7 +447,10 @@ func (client *AVTransport1) GetTransportSettings(InstanceID uint32) (PlayMode st
 	return
 }
 
-func (client *AVTransport1) Stop(InstanceID uint32) (err error) {
+func (client *AVTransport1) Stop(
+	ctx context.Context,
+	InstanceID uint32,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -437,7 +466,7 @@ func (client *AVTransport1) Stop(InstanceID uint32) (err error) {
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_AVTransport_1, "Stop", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_AVTransport_1, "Stop", request, response); err != nil {
 		return
 	}
 
@@ -452,7 +481,11 @@ func (client *AVTransport1) Stop(InstanceID uint32) (err error) {
 //
 // * Speed: allowed values: 1
 
-func (client *AVTransport1) Play(InstanceID uint32, Speed string) (err error) {
+func (client *AVTransport1) Play(
+	ctx context.Context,
+	InstanceID uint32,
+	Speed string,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -472,7 +505,7 @@ func (client *AVTransport1) Play(InstanceID uint32, Speed string) (err error) {
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_AVTransport_1, "Play", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_AVTransport_1, "Play", request, response); err != nil {
 		return
 	}
 
@@ -482,7 +515,10 @@ func (client *AVTransport1) Play(InstanceID uint32, Speed string) (err error) {
 	return
 }
 
-func (client *AVTransport1) Pause(InstanceID uint32) (err error) {
+func (client *AVTransport1) Pause(
+	ctx context.Context,
+	InstanceID uint32,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -498,7 +534,7 @@ func (client *AVTransport1) Pause(InstanceID uint32) (err error) {
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_AVTransport_1, "Pause", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_AVTransport_1, "Pause", request, response); err != nil {
 		return
 	}
 
@@ -508,7 +544,10 @@ func (client *AVTransport1) Pause(InstanceID uint32) (err error) {
 	return
 }
 
-func (client *AVTransport1) Record(InstanceID uint32) (err error) {
+func (client *AVTransport1) Record(
+	ctx context.Context,
+	InstanceID uint32,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -524,7 +563,7 @@ func (client *AVTransport1) Record(InstanceID uint32) (err error) {
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_AVTransport_1, "Record", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_AVTransport_1, "Record", request, response); err != nil {
 		return
 	}
 
@@ -539,7 +578,12 @@ func (client *AVTransport1) Record(InstanceID uint32) (err error) {
 //
 // * Unit: allowed values: TRACK_NR
 
-func (client *AVTransport1) Seek(InstanceID uint32, Unit string, Target string) (err error) {
+func (client *AVTransport1) Seek(
+	ctx context.Context,
+	InstanceID uint32,
+	Unit string,
+	Target string,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -563,7 +607,7 @@ func (client *AVTransport1) Seek(InstanceID uint32, Unit string, Target string) 
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_AVTransport_1, "Seek", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_AVTransport_1, "Seek", request, response); err != nil {
 		return
 	}
 
@@ -573,7 +617,10 @@ func (client *AVTransport1) Seek(InstanceID uint32, Unit string, Target string) 
 	return
 }
 
-func (client *AVTransport1) Next(InstanceID uint32) (err error) {
+func (client *AVTransport1) Next(
+	ctx context.Context,
+	InstanceID uint32,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -589,7 +636,7 @@ func (client *AVTransport1) Next(InstanceID uint32) (err error) {
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_AVTransport_1, "Next", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_AVTransport_1, "Next", request, response); err != nil {
 		return
 	}
 
@@ -599,7 +646,10 @@ func (client *AVTransport1) Next(InstanceID uint32) (err error) {
 	return
 }
 
-func (client *AVTransport1) Previous(InstanceID uint32) (err error) {
+func (client *AVTransport1) Previous(
+	ctx context.Context,
+	InstanceID uint32,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -615,7 +665,7 @@ func (client *AVTransport1) Previous(InstanceID uint32) (err error) {
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_AVTransport_1, "Previous", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_AVTransport_1, "Previous", request, response); err != nil {
 		return
 	}
 
@@ -630,7 +680,11 @@ func (client *AVTransport1) Previous(InstanceID uint32) (err error) {
 //
 // * NewPlayMode: allowed values: NORMAL
 
-func (client *AVTransport1) SetPlayMode(InstanceID uint32, NewPlayMode string) (err error) {
+func (client *AVTransport1) SetPlayMode(
+	ctx context.Context,
+	InstanceID uint32,
+	NewPlayMode string,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID  string
@@ -650,7 +704,7 @@ func (client *AVTransport1) SetPlayMode(InstanceID uint32, NewPlayMode string) (
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_AVTransport_1, "SetPlayMode", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_AVTransport_1, "SetPlayMode", request, response); err != nil {
 		return
 	}
 
@@ -660,7 +714,11 @@ func (client *AVTransport1) SetPlayMode(InstanceID uint32, NewPlayMode string) (
 	return
 }
 
-func (client *AVTransport1) SetRecordQualityMode(InstanceID uint32, NewRecordQualityMode string) (err error) {
+func (client *AVTransport1) SetRecordQualityMode(
+	ctx context.Context,
+	InstanceID uint32,
+	NewRecordQualityMode string,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID           string
@@ -680,7 +738,7 @@ func (client *AVTransport1) SetRecordQualityMode(InstanceID uint32, NewRecordQua
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_AVTransport_1, "SetRecordQualityMode", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_AVTransport_1, "SetRecordQualityMode", request, response); err != nil {
 		return
 	}
 
@@ -690,7 +748,10 @@ func (client *AVTransport1) SetRecordQualityMode(InstanceID uint32, NewRecordQua
 	return
 }
 
-func (client *AVTransport1) GetCurrentTransportActions(InstanceID uint32) (Actions string, err error) {
+func (client *AVTransport1) GetCurrentTransportActions(
+	ctx context.Context,
+	InstanceID uint32,
+) (Actions string, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -708,7 +769,7 @@ func (client *AVTransport1) GetCurrentTransportActions(InstanceID uint32) (Actio
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_AVTransport_1, "GetCurrentTransportActions", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_AVTransport_1, "GetCurrentTransportActions", request, response); err != nil {
 		return
 	}
 
@@ -734,9 +795,9 @@ type AVTransport2 struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewAVTransport2Clients() (clients []*AVTransport2, errors []error, err error) {
+func NewAVTransport2Clients(ctx context.Context) (clients []*AVTransport2, errors []error, err error) {
 	var genericClients []discover.ServiceClient
-	if genericClients, errors, err = discover.NewServiceClients(URN_AVTransport_2); err != nil {
+	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_AVTransport_2); err != nil {
 		return
 	}
 	clients = newAVTransport2ClientsFromGenericClients(genericClients)
@@ -749,8 +810,8 @@ func NewAVTransport2Clients() (clients []*AVTransport2, errors []error, err erro
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
-func NewAVTransport2ClientsByURL(loc *url.URL) ([]*AVTransport2, error) {
-	genericClients, err := discover.NewServiceClientsByURL(loc, URN_AVTransport_2)
+func NewAVTransport2ClientsByURL(ctx context.Context, loc *url.URL) ([]*AVTransport2, error) {
+	genericClients, err := discover.NewServiceClientsByURL(ctx, loc, URN_AVTransport_2)
 	if err != nil {
 		return nil, err
 	}
@@ -781,7 +842,12 @@ func newAVTransport2ClientsFromGenericClients(genericClients []discover.ServiceC
 	return clients
 }
 
-func (client *AVTransport2) SetAVTransportURI(InstanceID uint32, CurrentURI string, CurrentURIMetaData string) (err error) {
+func (client *AVTransport2) SetAVTransportURI(
+	ctx context.Context,
+	InstanceID uint32,
+	CurrentURI string,
+	CurrentURIMetaData string,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID         string
@@ -805,7 +871,7 @@ func (client *AVTransport2) SetAVTransportURI(InstanceID uint32, CurrentURI stri
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_AVTransport_2, "SetAVTransportURI", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_AVTransport_2, "SetAVTransportURI", request, response); err != nil {
 		return
 	}
 
@@ -815,7 +881,12 @@ func (client *AVTransport2) SetAVTransportURI(InstanceID uint32, CurrentURI stri
 	return
 }
 
-func (client *AVTransport2) SetNextAVTransportURI(InstanceID uint32, NextURI string, NextURIMetaData string) (err error) {
+func (client *AVTransport2) SetNextAVTransportURI(
+	ctx context.Context,
+	InstanceID uint32,
+	NextURI string,
+	NextURIMetaData string,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID      string
@@ -839,7 +910,7 @@ func (client *AVTransport2) SetNextAVTransportURI(InstanceID uint32, NextURI str
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_AVTransport_2, "SetNextAVTransportURI", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_AVTransport_2, "SetNextAVTransportURI", request, response); err != nil {
 		return
 	}
 
@@ -853,7 +924,10 @@ func (client *AVTransport2) SetNextAVTransportURI(InstanceID uint32, NextURI str
 // Return values:
 //
 // * NrTracks: allowed value range: minimum=0
-func (client *AVTransport2) GetMediaInfo(InstanceID uint32) (NrTracks uint32, MediaDuration string, CurrentURI string, CurrentURIMetaData string, NextURI string, NextURIMetaData string, PlayMedium string, RecordMedium string, WriteStatus string, err error) {
+func (client *AVTransport2) GetMediaInfo(
+	ctx context.Context,
+	InstanceID uint32,
+) (NrTracks uint32, MediaDuration string, CurrentURI string, CurrentURIMetaData string, NextURI string, NextURIMetaData string, PlayMedium string, RecordMedium string, WriteStatus string, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -879,7 +953,7 @@ func (client *AVTransport2) GetMediaInfo(InstanceID uint32) (NrTracks uint32, Me
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_AVTransport_2, "GetMediaInfo", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_AVTransport_2, "GetMediaInfo", request, response); err != nil {
 		return
 	}
 
@@ -922,7 +996,10 @@ func (client *AVTransport2) GetMediaInfo(InstanceID uint32) (NrTracks uint32, Me
 // * CurrentType: allowed values: NO_MEDIA, TRACK_AWARE, TRACK_UNAWARE
 //
 // * NrTracks: allowed value range: minimum=0
-func (client *AVTransport2) GetMediaInfo_Ext(InstanceID uint32) (CurrentType string, NrTracks uint32, MediaDuration string, CurrentURI string, CurrentURIMetaData string, NextURI string, NextURIMetaData string, PlayMedium string, RecordMedium string, WriteStatus string, err error) {
+func (client *AVTransport2) GetMediaInfo_Ext(
+	ctx context.Context,
+	InstanceID uint32,
+) (CurrentType string, NrTracks uint32, MediaDuration string, CurrentURI string, CurrentURIMetaData string, NextURI string, NextURIMetaData string, PlayMedium string, RecordMedium string, WriteStatus string, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -949,7 +1026,7 @@ func (client *AVTransport2) GetMediaInfo_Ext(InstanceID uint32) (CurrentType str
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_AVTransport_2, "GetMediaInfo_Ext", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_AVTransport_2, "GetMediaInfo_Ext", request, response); err != nil {
 		return
 	}
 
@@ -997,7 +1074,10 @@ func (client *AVTransport2) GetMediaInfo_Ext(InstanceID uint32) (CurrentType str
 // * CurrentTransportStatus: allowed values: OK, ERROR_OCCURRED
 //
 // * CurrentSpeed: allowed values: 1
-func (client *AVTransport2) GetTransportInfo(InstanceID uint32) (CurrentTransportState string, CurrentTransportStatus string, CurrentSpeed string, err error) {
+func (client *AVTransport2) GetTransportInfo(
+	ctx context.Context,
+	InstanceID uint32,
+) (CurrentTransportState string, CurrentTransportStatus string, CurrentSpeed string, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -1017,7 +1097,7 @@ func (client *AVTransport2) GetTransportInfo(InstanceID uint32) (CurrentTranspor
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_AVTransport_2, "GetTransportInfo", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_AVTransport_2, "GetTransportInfo", request, response); err != nil {
 		return
 	}
 
@@ -1040,7 +1120,10 @@ func (client *AVTransport2) GetTransportInfo(InstanceID uint32) (CurrentTranspor
 // Return values:
 //
 // * Track: allowed value range: minimum=0, step=1
-func (client *AVTransport2) GetPositionInfo(InstanceID uint32) (Track uint32, TrackDuration string, TrackMetaData string, TrackURI string, RelTime string, AbsTime string, RelCount int32, AbsCount int32, err error) {
+func (client *AVTransport2) GetPositionInfo(
+	ctx context.Context,
+	InstanceID uint32,
+) (Track uint32, TrackDuration string, TrackMetaData string, TrackURI string, RelTime string, AbsTime string, RelCount int32, AbsCount int32, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -1065,7 +1148,7 @@ func (client *AVTransport2) GetPositionInfo(InstanceID uint32) (Track uint32, Tr
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_AVTransport_2, "GetPositionInfo", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_AVTransport_2, "GetPositionInfo", request, response); err != nil {
 		return
 	}
 
@@ -1099,7 +1182,10 @@ func (client *AVTransport2) GetPositionInfo(InstanceID uint32) (Track uint32, Tr
 	return
 }
 
-func (client *AVTransport2) GetDeviceCapabilities(InstanceID uint32) (PlayMedia string, RecMedia string, RecQualityModes string, err error) {
+func (client *AVTransport2) GetDeviceCapabilities(
+	ctx context.Context,
+	InstanceID uint32,
+) (PlayMedia string, RecMedia string, RecQualityModes string, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -1119,7 +1205,7 @@ func (client *AVTransport2) GetDeviceCapabilities(InstanceID uint32) (PlayMedia 
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_AVTransport_2, "GetDeviceCapabilities", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_AVTransport_2, "GetDeviceCapabilities", request, response); err != nil {
 		return
 	}
 
@@ -1142,7 +1228,10 @@ func (client *AVTransport2) GetDeviceCapabilities(InstanceID uint32) (PlayMedia 
 // Return values:
 //
 // * PlayMode: allowed values: NORMAL
-func (client *AVTransport2) GetTransportSettings(InstanceID uint32) (PlayMode string, RecQualityMode string, err error) {
+func (client *AVTransport2) GetTransportSettings(
+	ctx context.Context,
+	InstanceID uint32,
+) (PlayMode string, RecQualityMode string, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -1161,7 +1250,7 @@ func (client *AVTransport2) GetTransportSettings(InstanceID uint32) (PlayMode st
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_AVTransport_2, "GetTransportSettings", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_AVTransport_2, "GetTransportSettings", request, response); err != nil {
 		return
 	}
 
@@ -1177,7 +1266,10 @@ func (client *AVTransport2) GetTransportSettings(InstanceID uint32) (PlayMode st
 	return
 }
 
-func (client *AVTransport2) Stop(InstanceID uint32) (err error) {
+func (client *AVTransport2) Stop(
+	ctx context.Context,
+	InstanceID uint32,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -1193,7 +1285,7 @@ func (client *AVTransport2) Stop(InstanceID uint32) (err error) {
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_AVTransport_2, "Stop", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_AVTransport_2, "Stop", request, response); err != nil {
 		return
 	}
 
@@ -1208,7 +1300,11 @@ func (client *AVTransport2) Stop(InstanceID uint32) (err error) {
 //
 // * Speed: allowed values: 1
 
-func (client *AVTransport2) Play(InstanceID uint32, Speed string) (err error) {
+func (client *AVTransport2) Play(
+	ctx context.Context,
+	InstanceID uint32,
+	Speed string,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -1228,7 +1324,7 @@ func (client *AVTransport2) Play(InstanceID uint32, Speed string) (err error) {
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_AVTransport_2, "Play", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_AVTransport_2, "Play", request, response); err != nil {
 		return
 	}
 
@@ -1238,7 +1334,10 @@ func (client *AVTransport2) Play(InstanceID uint32, Speed string) (err error) {
 	return
 }
 
-func (client *AVTransport2) Pause(InstanceID uint32) (err error) {
+func (client *AVTransport2) Pause(
+	ctx context.Context,
+	InstanceID uint32,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -1254,7 +1353,7 @@ func (client *AVTransport2) Pause(InstanceID uint32) (err error) {
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_AVTransport_2, "Pause", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_AVTransport_2, "Pause", request, response); err != nil {
 		return
 	}
 
@@ -1264,7 +1363,10 @@ func (client *AVTransport2) Pause(InstanceID uint32) (err error) {
 	return
 }
 
-func (client *AVTransport2) Record(InstanceID uint32) (err error) {
+func (client *AVTransport2) Record(
+	ctx context.Context,
+	InstanceID uint32,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -1280,7 +1382,7 @@ func (client *AVTransport2) Record(InstanceID uint32) (err error) {
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_AVTransport_2, "Record", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_AVTransport_2, "Record", request, response); err != nil {
 		return
 	}
 
@@ -1295,7 +1397,12 @@ func (client *AVTransport2) Record(InstanceID uint32) (err error) {
 //
 // * Unit: allowed values: TRACK_NR
 
-func (client *AVTransport2) Seek(InstanceID uint32, Unit string, Target string) (err error) {
+func (client *AVTransport2) Seek(
+	ctx context.Context,
+	InstanceID uint32,
+	Unit string,
+	Target string,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -1319,7 +1426,7 @@ func (client *AVTransport2) Seek(InstanceID uint32, Unit string, Target string) 
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_AVTransport_2, "Seek", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_AVTransport_2, "Seek", request, response); err != nil {
 		return
 	}
 
@@ -1329,7 +1436,10 @@ func (client *AVTransport2) Seek(InstanceID uint32, Unit string, Target string) 
 	return
 }
 
-func (client *AVTransport2) Next(InstanceID uint32) (err error) {
+func (client *AVTransport2) Next(
+	ctx context.Context,
+	InstanceID uint32,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -1345,7 +1455,7 @@ func (client *AVTransport2) Next(InstanceID uint32) (err error) {
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_AVTransport_2, "Next", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_AVTransport_2, "Next", request, response); err != nil {
 		return
 	}
 
@@ -1355,7 +1465,10 @@ func (client *AVTransport2) Next(InstanceID uint32) (err error) {
 	return
 }
 
-func (client *AVTransport2) Previous(InstanceID uint32) (err error) {
+func (client *AVTransport2) Previous(
+	ctx context.Context,
+	InstanceID uint32,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -1371,7 +1484,7 @@ func (client *AVTransport2) Previous(InstanceID uint32) (err error) {
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_AVTransport_2, "Previous", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_AVTransport_2, "Previous", request, response); err != nil {
 		return
 	}
 
@@ -1386,7 +1499,11 @@ func (client *AVTransport2) Previous(InstanceID uint32) (err error) {
 //
 // * NewPlayMode: allowed values: NORMAL
 
-func (client *AVTransport2) SetPlayMode(InstanceID uint32, NewPlayMode string) (err error) {
+func (client *AVTransport2) SetPlayMode(
+	ctx context.Context,
+	InstanceID uint32,
+	NewPlayMode string,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID  string
@@ -1406,7 +1523,7 @@ func (client *AVTransport2) SetPlayMode(InstanceID uint32, NewPlayMode string) (
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_AVTransport_2, "SetPlayMode", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_AVTransport_2, "SetPlayMode", request, response); err != nil {
 		return
 	}
 
@@ -1416,7 +1533,11 @@ func (client *AVTransport2) SetPlayMode(InstanceID uint32, NewPlayMode string) (
 	return
 }
 
-func (client *AVTransport2) SetRecordQualityMode(InstanceID uint32, NewRecordQualityMode string) (err error) {
+func (client *AVTransport2) SetRecordQualityMode(
+	ctx context.Context,
+	InstanceID uint32,
+	NewRecordQualityMode string,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID           string
@@ -1436,7 +1557,7 @@ func (client *AVTransport2) SetRecordQualityMode(InstanceID uint32, NewRecordQua
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_AVTransport_2, "SetRecordQualityMode", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_AVTransport_2, "SetRecordQualityMode", request, response); err != nil {
 		return
 	}
 
@@ -1446,7 +1567,10 @@ func (client *AVTransport2) SetRecordQualityMode(InstanceID uint32, NewRecordQua
 	return
 }
 
-func (client *AVTransport2) GetCurrentTransportActions(InstanceID uint32) (Actions string, err error) {
+func (client *AVTransport2) GetCurrentTransportActions(
+	ctx context.Context,
+	InstanceID uint32,
+) (Actions string, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -1464,7 +1588,7 @@ func (client *AVTransport2) GetCurrentTransportActions(InstanceID uint32) (Actio
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_AVTransport_2, "GetCurrentTransportActions", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_AVTransport_2, "GetCurrentTransportActions", request, response); err != nil {
 		return
 	}
 
@@ -1481,7 +1605,10 @@ func (client *AVTransport2) GetCurrentTransportActions(InstanceID uint32) (Actio
 // Return values:
 //
 // * CurrentDRMState: allowed values: OK
-func (client *AVTransport2) GetDRMState(InstanceID uint32) (CurrentDRMState string, err error) {
+func (client *AVTransport2) GetDRMState(
+	ctx context.Context,
+	InstanceID uint32,
+) (CurrentDRMState string, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -1499,7 +1626,7 @@ func (client *AVTransport2) GetDRMState(InstanceID uint32) (CurrentDRMState stri
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_AVTransport_2, "GetDRMState", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_AVTransport_2, "GetDRMState", request, response); err != nil {
 		return
 	}
 
@@ -1512,7 +1639,11 @@ func (client *AVTransport2) GetDRMState(InstanceID uint32) (CurrentDRMState stri
 	return
 }
 
-func (client *AVTransport2) GetStateVariables(InstanceID uint32, StateVariableList string) (StateVariableValuePairs string, err error) {
+func (client *AVTransport2) GetStateVariables(
+	ctx context.Context,
+	InstanceID uint32,
+	StateVariableList string,
+) (StateVariableValuePairs string, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID        string
@@ -1534,7 +1665,7 @@ func (client *AVTransport2) GetStateVariables(InstanceID uint32, StateVariableLi
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_AVTransport_2, "GetStateVariables", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_AVTransport_2, "GetStateVariables", request, response); err != nil {
 		return
 	}
 
@@ -1547,7 +1678,14 @@ func (client *AVTransport2) GetStateVariables(InstanceID uint32, StateVariableLi
 	return
 }
 
-func (client *AVTransport2) SetStateVariables(InstanceID uint32, AVTransportUDN string, ServiceType string, ServiceId string, StateVariableValuePairs string) (StateVariableList string, err error) {
+func (client *AVTransport2) SetStateVariables(
+	ctx context.Context,
+	InstanceID uint32,
+	AVTransportUDN string,
+	ServiceType string,
+	ServiceId string,
+	StateVariableValuePairs string,
+) (StateVariableList string, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID              string
@@ -1581,7 +1719,7 @@ func (client *AVTransport2) SetStateVariables(InstanceID uint32, AVTransportUDN 
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_AVTransport_2, "SetStateVariables", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_AVTransport_2, "SetStateVariables", request, response); err != nil {
 		return
 	}
 
@@ -1607,9 +1745,9 @@ type ConnectionManager1 struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewConnectionManager1Clients() (clients []*ConnectionManager1, errors []error, err error) {
+func NewConnectionManager1Clients(ctx context.Context) (clients []*ConnectionManager1, errors []error, err error) {
 	var genericClients []discover.ServiceClient
-	if genericClients, errors, err = discover.NewServiceClients(URN_ConnectionManager_1); err != nil {
+	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_ConnectionManager_1); err != nil {
 		return
 	}
 	clients = newConnectionManager1ClientsFromGenericClients(genericClients)
@@ -1622,8 +1760,8 @@ func NewConnectionManager1Clients() (clients []*ConnectionManager1, errors []err
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
-func NewConnectionManager1ClientsByURL(loc *url.URL) ([]*ConnectionManager1, error) {
-	genericClients, err := discover.NewServiceClientsByURL(loc, URN_ConnectionManager_1)
+func NewConnectionManager1ClientsByURL(ctx context.Context, loc *url.URL) ([]*ConnectionManager1, error) {
+	genericClients, err := discover.NewServiceClientsByURL(ctx, loc, URN_ConnectionManager_1)
 	if err != nil {
 		return nil, err
 	}
@@ -1654,7 +1792,9 @@ func newConnectionManager1ClientsFromGenericClients(genericClients []discover.Se
 	return clients
 }
 
-func (client *ConnectionManager1) GetProtocolInfo() (Source string, Sink string, err error) {
+func (client *ConnectionManager1) GetProtocolInfo(
+	ctx context.Context,
+) (Source string, Sink string, err error) {
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -1668,7 +1808,7 @@ func (client *ConnectionManager1) GetProtocolInfo() (Source string, Sink string,
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ConnectionManager_1, "GetProtocolInfo", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ConnectionManager_1, "GetProtocolInfo", request, response); err != nil {
 		return
 	}
 
@@ -1689,7 +1829,13 @@ func (client *ConnectionManager1) GetProtocolInfo() (Source string, Sink string,
 //
 // * Direction: allowed values: Input, Output
 
-func (client *ConnectionManager1) PrepareForConnection(RemoteProtocolInfo string, PeerConnectionManager string, PeerConnectionID int32, Direction string) (ConnectionID int32, AVTransportID int32, RcsID int32, err error) {
+func (client *ConnectionManager1) PrepareForConnection(
+	ctx context.Context,
+	RemoteProtocolInfo string,
+	PeerConnectionManager string,
+	PeerConnectionID int32,
+	Direction string,
+) (ConnectionID int32, AVTransportID int32, RcsID int32, err error) {
 	// Request structure.
 	request := &struct {
 		RemoteProtocolInfo    string
@@ -1721,7 +1867,7 @@ func (client *ConnectionManager1) PrepareForConnection(RemoteProtocolInfo string
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ConnectionManager_1, "PrepareForConnection", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ConnectionManager_1, "PrepareForConnection", request, response); err != nil {
 		return
 	}
 
@@ -1740,7 +1886,10 @@ func (client *ConnectionManager1) PrepareForConnection(RemoteProtocolInfo string
 	return
 }
 
-func (client *ConnectionManager1) ConnectionComplete(ConnectionID int32) (err error) {
+func (client *ConnectionManager1) ConnectionComplete(
+	ctx context.Context,
+	ConnectionID int32,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		ConnectionID string
@@ -1756,7 +1905,7 @@ func (client *ConnectionManager1) ConnectionComplete(ConnectionID int32) (err er
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ConnectionManager_1, "ConnectionComplete", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ConnectionManager_1, "ConnectionComplete", request, response); err != nil {
 		return
 	}
 
@@ -1766,7 +1915,9 @@ func (client *ConnectionManager1) ConnectionComplete(ConnectionID int32) (err er
 	return
 }
 
-func (client *ConnectionManager1) GetCurrentConnectionIDs() (ConnectionIDs string, err error) {
+func (client *ConnectionManager1) GetCurrentConnectionIDs(
+	ctx context.Context,
+) (ConnectionIDs string, err error) {
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -1779,7 +1930,7 @@ func (client *ConnectionManager1) GetCurrentConnectionIDs() (ConnectionIDs strin
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ConnectionManager_1, "GetCurrentConnectionIDs", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ConnectionManager_1, "GetCurrentConnectionIDs", request, response); err != nil {
 		return
 	}
 
@@ -1798,7 +1949,10 @@ func (client *ConnectionManager1) GetCurrentConnectionIDs() (ConnectionIDs strin
 // * Direction: allowed values: Input, Output
 //
 // * Status: allowed values: OK, ContentFormatMismatch, InsufficientBandwidth, UnreliableChannel, Unknown
-func (client *ConnectionManager1) GetCurrentConnectionInfo(ConnectionID int32) (RcsID int32, AVTransportID int32, ProtocolInfo string, PeerConnectionManager string, PeerConnectionID int32, Direction string, Status string, err error) {
+func (client *ConnectionManager1) GetCurrentConnectionInfo(
+	ctx context.Context,
+	ConnectionID int32,
+) (RcsID int32, AVTransportID int32, ProtocolInfo string, PeerConnectionManager string, PeerConnectionID int32, Direction string, Status string, err error) {
 	// Request structure.
 	request := &struct {
 		ConnectionID string
@@ -1822,7 +1976,7 @@ func (client *ConnectionManager1) GetCurrentConnectionInfo(ConnectionID int32) (
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ConnectionManager_1, "GetCurrentConnectionInfo", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ConnectionManager_1, "GetCurrentConnectionInfo", request, response); err != nil {
 		return
 	}
 
@@ -1866,9 +2020,9 @@ type ConnectionManager2 struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewConnectionManager2Clients() (clients []*ConnectionManager2, errors []error, err error) {
+func NewConnectionManager2Clients(ctx context.Context) (clients []*ConnectionManager2, errors []error, err error) {
 	var genericClients []discover.ServiceClient
-	if genericClients, errors, err = discover.NewServiceClients(URN_ConnectionManager_2); err != nil {
+	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_ConnectionManager_2); err != nil {
 		return
 	}
 	clients = newConnectionManager2ClientsFromGenericClients(genericClients)
@@ -1881,8 +2035,8 @@ func NewConnectionManager2Clients() (clients []*ConnectionManager2, errors []err
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
-func NewConnectionManager2ClientsByURL(loc *url.URL) ([]*ConnectionManager2, error) {
-	genericClients, err := discover.NewServiceClientsByURL(loc, URN_ConnectionManager_2)
+func NewConnectionManager2ClientsByURL(ctx context.Context, loc *url.URL) ([]*ConnectionManager2, error) {
+	genericClients, err := discover.NewServiceClientsByURL(ctx, loc, URN_ConnectionManager_2)
 	if err != nil {
 		return nil, err
 	}
@@ -1913,7 +2067,9 @@ func newConnectionManager2ClientsFromGenericClients(genericClients []discover.Se
 	return clients
 }
 
-func (client *ConnectionManager2) GetProtocolInfo() (Source string, Sink string, err error) {
+func (client *ConnectionManager2) GetProtocolInfo(
+	ctx context.Context,
+) (Source string, Sink string, err error) {
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -1927,7 +2083,7 @@ func (client *ConnectionManager2) GetProtocolInfo() (Source string, Sink string,
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ConnectionManager_2, "GetProtocolInfo", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ConnectionManager_2, "GetProtocolInfo", request, response); err != nil {
 		return
 	}
 
@@ -1948,7 +2104,13 @@ func (client *ConnectionManager2) GetProtocolInfo() (Source string, Sink string,
 //
 // * Direction: allowed values: Input, Output
 
-func (client *ConnectionManager2) PrepareForConnection(RemoteProtocolInfo string, PeerConnectionManager string, PeerConnectionID int32, Direction string) (ConnectionID int32, AVTransportID int32, RcsID int32, err error) {
+func (client *ConnectionManager2) PrepareForConnection(
+	ctx context.Context,
+	RemoteProtocolInfo string,
+	PeerConnectionManager string,
+	PeerConnectionID int32,
+	Direction string,
+) (ConnectionID int32, AVTransportID int32, RcsID int32, err error) {
 	// Request structure.
 	request := &struct {
 		RemoteProtocolInfo    string
@@ -1980,7 +2142,7 @@ func (client *ConnectionManager2) PrepareForConnection(RemoteProtocolInfo string
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ConnectionManager_2, "PrepareForConnection", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ConnectionManager_2, "PrepareForConnection", request, response); err != nil {
 		return
 	}
 
@@ -1999,7 +2161,10 @@ func (client *ConnectionManager2) PrepareForConnection(RemoteProtocolInfo string
 	return
 }
 
-func (client *ConnectionManager2) ConnectionComplete(ConnectionID int32) (err error) {
+func (client *ConnectionManager2) ConnectionComplete(
+	ctx context.Context,
+	ConnectionID int32,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		ConnectionID string
@@ -2015,7 +2180,7 @@ func (client *ConnectionManager2) ConnectionComplete(ConnectionID int32) (err er
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ConnectionManager_2, "ConnectionComplete", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ConnectionManager_2, "ConnectionComplete", request, response); err != nil {
 		return
 	}
 
@@ -2025,7 +2190,9 @@ func (client *ConnectionManager2) ConnectionComplete(ConnectionID int32) (err er
 	return
 }
 
-func (client *ConnectionManager2) GetCurrentConnectionIDs() (ConnectionIDs string, err error) {
+func (client *ConnectionManager2) GetCurrentConnectionIDs(
+	ctx context.Context,
+) (ConnectionIDs string, err error) {
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -2038,7 +2205,7 @@ func (client *ConnectionManager2) GetCurrentConnectionIDs() (ConnectionIDs strin
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ConnectionManager_2, "GetCurrentConnectionIDs", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ConnectionManager_2, "GetCurrentConnectionIDs", request, response); err != nil {
 		return
 	}
 
@@ -2057,7 +2224,10 @@ func (client *ConnectionManager2) GetCurrentConnectionIDs() (ConnectionIDs strin
 // * Direction: allowed values: Input, Output
 //
 // * Status: allowed values: OK, ContentFormatMismatch, InsufficientBandwidth, UnreliableChannel, Unknown
-func (client *ConnectionManager2) GetCurrentConnectionInfo(ConnectionID int32) (RcsID int32, AVTransportID int32, ProtocolInfo string, PeerConnectionManager string, PeerConnectionID int32, Direction string, Status string, err error) {
+func (client *ConnectionManager2) GetCurrentConnectionInfo(
+	ctx context.Context,
+	ConnectionID int32,
+) (RcsID int32, AVTransportID int32, ProtocolInfo string, PeerConnectionManager string, PeerConnectionID int32, Direction string, Status string, err error) {
 	// Request structure.
 	request := &struct {
 		ConnectionID string
@@ -2081,7 +2251,7 @@ func (client *ConnectionManager2) GetCurrentConnectionInfo(ConnectionID int32) (
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ConnectionManager_2, "GetCurrentConnectionInfo", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ConnectionManager_2, "GetCurrentConnectionInfo", request, response); err != nil {
 		return
 	}
 
@@ -2125,9 +2295,9 @@ type ContentDirectory1 struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewContentDirectory1Clients() (clients []*ContentDirectory1, errors []error, err error) {
+func NewContentDirectory1Clients(ctx context.Context) (clients []*ContentDirectory1, errors []error, err error) {
 	var genericClients []discover.ServiceClient
-	if genericClients, errors, err = discover.NewServiceClients(URN_ContentDirectory_1); err != nil {
+	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_ContentDirectory_1); err != nil {
 		return
 	}
 	clients = newContentDirectory1ClientsFromGenericClients(genericClients)
@@ -2140,8 +2310,8 @@ func NewContentDirectory1Clients() (clients []*ContentDirectory1, errors []error
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
-func NewContentDirectory1ClientsByURL(loc *url.URL) ([]*ContentDirectory1, error) {
-	genericClients, err := discover.NewServiceClientsByURL(loc, URN_ContentDirectory_1)
+func NewContentDirectory1ClientsByURL(ctx context.Context, loc *url.URL) ([]*ContentDirectory1, error) {
+	genericClients, err := discover.NewServiceClientsByURL(ctx, loc, URN_ContentDirectory_1)
 	if err != nil {
 		return nil, err
 	}
@@ -2172,7 +2342,9 @@ func newContentDirectory1ClientsFromGenericClients(genericClients []discover.Ser
 	return clients
 }
 
-func (client *ContentDirectory1) GetSearchCapabilities() (SearchCaps string, err error) {
+func (client *ContentDirectory1) GetSearchCapabilities(
+	ctx context.Context,
+) (SearchCaps string, err error) {
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -2185,7 +2357,7 @@ func (client *ContentDirectory1) GetSearchCapabilities() (SearchCaps string, err
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_1, "GetSearchCapabilities", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_1, "GetSearchCapabilities", request, response); err != nil {
 		return
 	}
 
@@ -2198,7 +2370,9 @@ func (client *ContentDirectory1) GetSearchCapabilities() (SearchCaps string, err
 	return
 }
 
-func (client *ContentDirectory1) GetSortCapabilities() (SortCaps string, err error) {
+func (client *ContentDirectory1) GetSortCapabilities(
+	ctx context.Context,
+) (SortCaps string, err error) {
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -2211,7 +2385,7 @@ func (client *ContentDirectory1) GetSortCapabilities() (SortCaps string, err err
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_1, "GetSortCapabilities", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_1, "GetSortCapabilities", request, response); err != nil {
 		return
 	}
 
@@ -2224,7 +2398,9 @@ func (client *ContentDirectory1) GetSortCapabilities() (SortCaps string, err err
 	return
 }
 
-func (client *ContentDirectory1) GetSystemUpdateID() (Id uint32, err error) {
+func (client *ContentDirectory1) GetSystemUpdateID(
+	ctx context.Context,
+) (Id uint32, err error) {
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -2237,7 +2413,7 @@ func (client *ContentDirectory1) GetSystemUpdateID() (Id uint32, err error) {
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_1, "GetSystemUpdateID", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_1, "GetSystemUpdateID", request, response); err != nil {
 		return
 	}
 
@@ -2255,7 +2431,15 @@ func (client *ContentDirectory1) GetSystemUpdateID() (Id uint32, err error) {
 //
 // * BrowseFlag: allowed values: BrowseMetadata, BrowseDirectChildren
 
-func (client *ContentDirectory1) Browse(ObjectID string, BrowseFlag string, Filter string, StartingIndex uint32, RequestedCount uint32, SortCriteria string) (Result string, NumberReturned uint32, TotalMatches uint32, UpdateID uint32, err error) {
+func (client *ContentDirectory1) Browse(
+	ctx context.Context,
+	ObjectID string,
+	BrowseFlag string,
+	Filter string,
+	StartingIndex uint32,
+	RequestedCount uint32,
+	SortCriteria string,
+) (Result string, NumberReturned uint32, TotalMatches uint32, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
 		ObjectID       string
@@ -2296,7 +2480,7 @@ func (client *ContentDirectory1) Browse(ObjectID string, BrowseFlag string, Filt
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_1, "Browse", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_1, "Browse", request, response); err != nil {
 		return
 	}
 
@@ -2318,7 +2502,15 @@ func (client *ContentDirectory1) Browse(ObjectID string, BrowseFlag string, Filt
 	return
 }
 
-func (client *ContentDirectory1) Search(ContainerID string, SearchCriteria string, Filter string, StartingIndex uint32, RequestedCount uint32, SortCriteria string) (Result string, NumberReturned uint32, TotalMatches uint32, UpdateID uint32, err error) {
+func (client *ContentDirectory1) Search(
+	ctx context.Context,
+	ContainerID string,
+	SearchCriteria string,
+	Filter string,
+	StartingIndex uint32,
+	RequestedCount uint32,
+	SortCriteria string,
+) (Result string, NumberReturned uint32, TotalMatches uint32, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
 		ContainerID    string
@@ -2359,7 +2551,7 @@ func (client *ContentDirectory1) Search(ContainerID string, SearchCriteria strin
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_1, "Search", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_1, "Search", request, response); err != nil {
 		return
 	}
 
@@ -2381,7 +2573,11 @@ func (client *ContentDirectory1) Search(ContainerID string, SearchCriteria strin
 	return
 }
 
-func (client *ContentDirectory1) CreateObject(ContainerID string, Elements string) (ObjectID string, Result string, err error) {
+func (client *ContentDirectory1) CreateObject(
+	ctx context.Context,
+	ContainerID string,
+	Elements string,
+) (ObjectID string, Result string, err error) {
 	// Request structure.
 	request := &struct {
 		ContainerID string
@@ -2404,7 +2600,7 @@ func (client *ContentDirectory1) CreateObject(ContainerID string, Elements strin
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_1, "CreateObject", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_1, "CreateObject", request, response); err != nil {
 		return
 	}
 
@@ -2420,7 +2616,10 @@ func (client *ContentDirectory1) CreateObject(ContainerID string, Elements strin
 	return
 }
 
-func (client *ContentDirectory1) DestroyObject(ObjectID string) (err error) {
+func (client *ContentDirectory1) DestroyObject(
+	ctx context.Context,
+	ObjectID string,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		ObjectID string
@@ -2436,7 +2635,7 @@ func (client *ContentDirectory1) DestroyObject(ObjectID string) (err error) {
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_1, "DestroyObject", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_1, "DestroyObject", request, response); err != nil {
 		return
 	}
 
@@ -2446,7 +2645,12 @@ func (client *ContentDirectory1) DestroyObject(ObjectID string) (err error) {
 	return
 }
 
-func (client *ContentDirectory1) UpdateObject(ObjectID string, CurrentTagValue string, NewTagValue string) (err error) {
+func (client *ContentDirectory1) UpdateObject(
+	ctx context.Context,
+	ObjectID string,
+	CurrentTagValue string,
+	NewTagValue string,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		ObjectID        string
@@ -2470,7 +2674,7 @@ func (client *ContentDirectory1) UpdateObject(ObjectID string, CurrentTagValue s
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_1, "UpdateObject", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_1, "UpdateObject", request, response); err != nil {
 		return
 	}
 
@@ -2480,7 +2684,11 @@ func (client *ContentDirectory1) UpdateObject(ObjectID string, CurrentTagValue s
 	return
 }
 
-func (client *ContentDirectory1) ImportResource(SourceURI *url.URL, DestinationURI *url.URL) (TransferID uint32, err error) {
+func (client *ContentDirectory1) ImportResource(
+	ctx context.Context,
+	SourceURI *url.URL,
+	DestinationURI *url.URL,
+) (TransferID uint32, err error) {
 	// Request structure.
 	request := &struct {
 		SourceURI      string
@@ -2502,7 +2710,7 @@ func (client *ContentDirectory1) ImportResource(SourceURI *url.URL, DestinationU
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_1, "ImportResource", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_1, "ImportResource", request, response); err != nil {
 		return
 	}
 
@@ -2515,7 +2723,11 @@ func (client *ContentDirectory1) ImportResource(SourceURI *url.URL, DestinationU
 	return
 }
 
-func (client *ContentDirectory1) ExportResource(SourceURI *url.URL, DestinationURI *url.URL) (TransferID uint32, err error) {
+func (client *ContentDirectory1) ExportResource(
+	ctx context.Context,
+	SourceURI *url.URL,
+	DestinationURI *url.URL,
+) (TransferID uint32, err error) {
 	// Request structure.
 	request := &struct {
 		SourceURI      string
@@ -2537,7 +2749,7 @@ func (client *ContentDirectory1) ExportResource(SourceURI *url.URL, DestinationU
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_1, "ExportResource", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_1, "ExportResource", request, response); err != nil {
 		return
 	}
 
@@ -2550,7 +2762,10 @@ func (client *ContentDirectory1) ExportResource(SourceURI *url.URL, DestinationU
 	return
 }
 
-func (client *ContentDirectory1) StopTransferResource(TransferID uint32) (err error) {
+func (client *ContentDirectory1) StopTransferResource(
+	ctx context.Context,
+	TransferID uint32,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		TransferID string
@@ -2566,7 +2781,7 @@ func (client *ContentDirectory1) StopTransferResource(TransferID uint32) (err er
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_1, "StopTransferResource", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_1, "StopTransferResource", request, response); err != nil {
 		return
 	}
 
@@ -2580,7 +2795,10 @@ func (client *ContentDirectory1) StopTransferResource(TransferID uint32) (err er
 // Return values:
 //
 // * TransferStatus: allowed values: COMPLETED, ERROR, IN_PROGRESS, STOPPED
-func (client *ContentDirectory1) GetTransferProgress(TransferID uint32) (TransferStatus string, TransferLength string, TransferTotal string, err error) {
+func (client *ContentDirectory1) GetTransferProgress(
+	ctx context.Context,
+	TransferID uint32,
+) (TransferStatus string, TransferLength string, TransferTotal string, err error) {
 	// Request structure.
 	request := &struct {
 		TransferID string
@@ -2600,7 +2818,7 @@ func (client *ContentDirectory1) GetTransferProgress(TransferID uint32) (Transfe
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_1, "GetTransferProgress", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_1, "GetTransferProgress", request, response); err != nil {
 		return
 	}
 
@@ -2619,7 +2837,10 @@ func (client *ContentDirectory1) GetTransferProgress(TransferID uint32) (Transfe
 	return
 }
 
-func (client *ContentDirectory1) DeleteResource(ResourceURI *url.URL) (err error) {
+func (client *ContentDirectory1) DeleteResource(
+	ctx context.Context,
+	ResourceURI *url.URL,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		ResourceURI string
@@ -2635,7 +2856,7 @@ func (client *ContentDirectory1) DeleteResource(ResourceURI *url.URL) (err error
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_1, "DeleteResource", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_1, "DeleteResource", request, response); err != nil {
 		return
 	}
 
@@ -2645,7 +2866,11 @@ func (client *ContentDirectory1) DeleteResource(ResourceURI *url.URL) (err error
 	return
 }
 
-func (client *ContentDirectory1) CreateReference(ContainerID string, ObjectID string) (NewID string, err error) {
+func (client *ContentDirectory1) CreateReference(
+	ctx context.Context,
+	ContainerID string,
+	ObjectID string,
+) (NewID string, err error) {
 	// Request structure.
 	request := &struct {
 		ContainerID string
@@ -2667,7 +2892,7 @@ func (client *ContentDirectory1) CreateReference(ContainerID string, ObjectID st
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_1, "CreateReference", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_1, "CreateReference", request, response); err != nil {
 		return
 	}
 
@@ -2693,9 +2918,9 @@ type ContentDirectory2 struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewContentDirectory2Clients() (clients []*ContentDirectory2, errors []error, err error) {
+func NewContentDirectory2Clients(ctx context.Context) (clients []*ContentDirectory2, errors []error, err error) {
 	var genericClients []discover.ServiceClient
-	if genericClients, errors, err = discover.NewServiceClients(URN_ContentDirectory_2); err != nil {
+	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_ContentDirectory_2); err != nil {
 		return
 	}
 	clients = newContentDirectory2ClientsFromGenericClients(genericClients)
@@ -2708,8 +2933,8 @@ func NewContentDirectory2Clients() (clients []*ContentDirectory2, errors []error
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
-func NewContentDirectory2ClientsByURL(loc *url.URL) ([]*ContentDirectory2, error) {
-	genericClients, err := discover.NewServiceClientsByURL(loc, URN_ContentDirectory_2)
+func NewContentDirectory2ClientsByURL(ctx context.Context, loc *url.URL) ([]*ContentDirectory2, error) {
+	genericClients, err := discover.NewServiceClientsByURL(ctx, loc, URN_ContentDirectory_2)
 	if err != nil {
 		return nil, err
 	}
@@ -2740,7 +2965,9 @@ func newContentDirectory2ClientsFromGenericClients(genericClients []discover.Ser
 	return clients
 }
 
-func (client *ContentDirectory2) GetSearchCapabilities() (SearchCaps string, err error) {
+func (client *ContentDirectory2) GetSearchCapabilities(
+	ctx context.Context,
+) (SearchCaps string, err error) {
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -2753,7 +2980,7 @@ func (client *ContentDirectory2) GetSearchCapabilities() (SearchCaps string, err
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_2, "GetSearchCapabilities", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_2, "GetSearchCapabilities", request, response); err != nil {
 		return
 	}
 
@@ -2766,7 +2993,9 @@ func (client *ContentDirectory2) GetSearchCapabilities() (SearchCaps string, err
 	return
 }
 
-func (client *ContentDirectory2) GetSortCapabilities() (SortCaps string, err error) {
+func (client *ContentDirectory2) GetSortCapabilities(
+	ctx context.Context,
+) (SortCaps string, err error) {
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -2779,7 +3008,7 @@ func (client *ContentDirectory2) GetSortCapabilities() (SortCaps string, err err
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_2, "GetSortCapabilities", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_2, "GetSortCapabilities", request, response); err != nil {
 		return
 	}
 
@@ -2792,7 +3021,9 @@ func (client *ContentDirectory2) GetSortCapabilities() (SortCaps string, err err
 	return
 }
 
-func (client *ContentDirectory2) GetSortExtensionCapabilities() (SortExtensionCaps string, err error) {
+func (client *ContentDirectory2) GetSortExtensionCapabilities(
+	ctx context.Context,
+) (SortExtensionCaps string, err error) {
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -2805,7 +3036,7 @@ func (client *ContentDirectory2) GetSortExtensionCapabilities() (SortExtensionCa
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_2, "GetSortExtensionCapabilities", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_2, "GetSortExtensionCapabilities", request, response); err != nil {
 		return
 	}
 
@@ -2818,7 +3049,9 @@ func (client *ContentDirectory2) GetSortExtensionCapabilities() (SortExtensionCa
 	return
 }
 
-func (client *ContentDirectory2) GetFeatureList() (FeatureList string, err error) {
+func (client *ContentDirectory2) GetFeatureList(
+	ctx context.Context,
+) (FeatureList string, err error) {
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -2831,7 +3064,7 @@ func (client *ContentDirectory2) GetFeatureList() (FeatureList string, err error
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_2, "GetFeatureList", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_2, "GetFeatureList", request, response); err != nil {
 		return
 	}
 
@@ -2844,7 +3077,9 @@ func (client *ContentDirectory2) GetFeatureList() (FeatureList string, err error
 	return
 }
 
-func (client *ContentDirectory2) GetSystemUpdateID() (Id uint32, err error) {
+func (client *ContentDirectory2) GetSystemUpdateID(
+	ctx context.Context,
+) (Id uint32, err error) {
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -2857,7 +3092,7 @@ func (client *ContentDirectory2) GetSystemUpdateID() (Id uint32, err error) {
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_2, "GetSystemUpdateID", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_2, "GetSystemUpdateID", request, response); err != nil {
 		return
 	}
 
@@ -2875,7 +3110,15 @@ func (client *ContentDirectory2) GetSystemUpdateID() (Id uint32, err error) {
 //
 // * BrowseFlag: allowed values: BrowseMetadata, BrowseDirectChildren
 
-func (client *ContentDirectory2) Browse(ObjectID string, BrowseFlag string, Filter string, StartingIndex uint32, RequestedCount uint32, SortCriteria string) (Result string, NumberReturned uint32, TotalMatches uint32, UpdateID uint32, err error) {
+func (client *ContentDirectory2) Browse(
+	ctx context.Context,
+	ObjectID string,
+	BrowseFlag string,
+	Filter string,
+	StartingIndex uint32,
+	RequestedCount uint32,
+	SortCriteria string,
+) (Result string, NumberReturned uint32, TotalMatches uint32, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
 		ObjectID       string
@@ -2916,7 +3159,7 @@ func (client *ContentDirectory2) Browse(ObjectID string, BrowseFlag string, Filt
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_2, "Browse", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_2, "Browse", request, response); err != nil {
 		return
 	}
 
@@ -2938,7 +3181,15 @@ func (client *ContentDirectory2) Browse(ObjectID string, BrowseFlag string, Filt
 	return
 }
 
-func (client *ContentDirectory2) Search(ContainerID string, SearchCriteria string, Filter string, StartingIndex uint32, RequestedCount uint32, SortCriteria string) (Result string, NumberReturned uint32, TotalMatches uint32, UpdateID uint32, err error) {
+func (client *ContentDirectory2) Search(
+	ctx context.Context,
+	ContainerID string,
+	SearchCriteria string,
+	Filter string,
+	StartingIndex uint32,
+	RequestedCount uint32,
+	SortCriteria string,
+) (Result string, NumberReturned uint32, TotalMatches uint32, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
 		ContainerID    string
@@ -2979,7 +3230,7 @@ func (client *ContentDirectory2) Search(ContainerID string, SearchCriteria strin
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_2, "Search", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_2, "Search", request, response); err != nil {
 		return
 	}
 
@@ -3001,7 +3252,11 @@ func (client *ContentDirectory2) Search(ContainerID string, SearchCriteria strin
 	return
 }
 
-func (client *ContentDirectory2) CreateObject(ContainerID string, Elements string) (ObjectID string, Result string, err error) {
+func (client *ContentDirectory2) CreateObject(
+	ctx context.Context,
+	ContainerID string,
+	Elements string,
+) (ObjectID string, Result string, err error) {
 	// Request structure.
 	request := &struct {
 		ContainerID string
@@ -3024,7 +3279,7 @@ func (client *ContentDirectory2) CreateObject(ContainerID string, Elements strin
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_2, "CreateObject", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_2, "CreateObject", request, response); err != nil {
 		return
 	}
 
@@ -3040,7 +3295,10 @@ func (client *ContentDirectory2) CreateObject(ContainerID string, Elements strin
 	return
 }
 
-func (client *ContentDirectory2) DestroyObject(ObjectID string) (err error) {
+func (client *ContentDirectory2) DestroyObject(
+	ctx context.Context,
+	ObjectID string,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		ObjectID string
@@ -3056,7 +3314,7 @@ func (client *ContentDirectory2) DestroyObject(ObjectID string) (err error) {
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_2, "DestroyObject", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_2, "DestroyObject", request, response); err != nil {
 		return
 	}
 
@@ -3066,7 +3324,12 @@ func (client *ContentDirectory2) DestroyObject(ObjectID string) (err error) {
 	return
 }
 
-func (client *ContentDirectory2) UpdateObject(ObjectID string, CurrentTagValue string, NewTagValue string) (err error) {
+func (client *ContentDirectory2) UpdateObject(
+	ctx context.Context,
+	ObjectID string,
+	CurrentTagValue string,
+	NewTagValue string,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		ObjectID        string
@@ -3090,7 +3353,7 @@ func (client *ContentDirectory2) UpdateObject(ObjectID string, CurrentTagValue s
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_2, "UpdateObject", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_2, "UpdateObject", request, response); err != nil {
 		return
 	}
 
@@ -3100,7 +3363,11 @@ func (client *ContentDirectory2) UpdateObject(ObjectID string, CurrentTagValue s
 	return
 }
 
-func (client *ContentDirectory2) MoveObject(ObjectID string, NewParentID string) (NewObjectID string, err error) {
+func (client *ContentDirectory2) MoveObject(
+	ctx context.Context,
+	ObjectID string,
+	NewParentID string,
+) (NewObjectID string, err error) {
 	// Request structure.
 	request := &struct {
 		ObjectID    string
@@ -3122,7 +3389,7 @@ func (client *ContentDirectory2) MoveObject(ObjectID string, NewParentID string)
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_2, "MoveObject", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_2, "MoveObject", request, response); err != nil {
 		return
 	}
 
@@ -3135,7 +3402,11 @@ func (client *ContentDirectory2) MoveObject(ObjectID string, NewParentID string)
 	return
 }
 
-func (client *ContentDirectory2) ImportResource(SourceURI *url.URL, DestinationURI *url.URL) (TransferID uint32, err error) {
+func (client *ContentDirectory2) ImportResource(
+	ctx context.Context,
+	SourceURI *url.URL,
+	DestinationURI *url.URL,
+) (TransferID uint32, err error) {
 	// Request structure.
 	request := &struct {
 		SourceURI      string
@@ -3157,7 +3428,7 @@ func (client *ContentDirectory2) ImportResource(SourceURI *url.URL, DestinationU
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_2, "ImportResource", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_2, "ImportResource", request, response); err != nil {
 		return
 	}
 
@@ -3170,7 +3441,11 @@ func (client *ContentDirectory2) ImportResource(SourceURI *url.URL, DestinationU
 	return
 }
 
-func (client *ContentDirectory2) ExportResource(SourceURI *url.URL, DestinationURI *url.URL) (TransferID uint32, err error) {
+func (client *ContentDirectory2) ExportResource(
+	ctx context.Context,
+	SourceURI *url.URL,
+	DestinationURI *url.URL,
+) (TransferID uint32, err error) {
 	// Request structure.
 	request := &struct {
 		SourceURI      string
@@ -3192,7 +3467,7 @@ func (client *ContentDirectory2) ExportResource(SourceURI *url.URL, DestinationU
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_2, "ExportResource", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_2, "ExportResource", request, response); err != nil {
 		return
 	}
 
@@ -3205,7 +3480,10 @@ func (client *ContentDirectory2) ExportResource(SourceURI *url.URL, DestinationU
 	return
 }
 
-func (client *ContentDirectory2) DeleteResource(ResourceURI *url.URL) (err error) {
+func (client *ContentDirectory2) DeleteResource(
+	ctx context.Context,
+	ResourceURI *url.URL,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		ResourceURI string
@@ -3221,7 +3499,7 @@ func (client *ContentDirectory2) DeleteResource(ResourceURI *url.URL) (err error
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_2, "DeleteResource", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_2, "DeleteResource", request, response); err != nil {
 		return
 	}
 
@@ -3231,7 +3509,10 @@ func (client *ContentDirectory2) DeleteResource(ResourceURI *url.URL) (err error
 	return
 }
 
-func (client *ContentDirectory2) StopTransferResource(TransferID uint32) (err error) {
+func (client *ContentDirectory2) StopTransferResource(
+	ctx context.Context,
+	TransferID uint32,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		TransferID string
@@ -3247,7 +3528,7 @@ func (client *ContentDirectory2) StopTransferResource(TransferID uint32) (err er
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_2, "StopTransferResource", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_2, "StopTransferResource", request, response); err != nil {
 		return
 	}
 
@@ -3261,7 +3542,10 @@ func (client *ContentDirectory2) StopTransferResource(TransferID uint32) (err er
 // Return values:
 //
 // * TransferStatus: allowed values: COMPLETED, ERROR, IN_PROGRESS, STOPPED
-func (client *ContentDirectory2) GetTransferProgress(TransferID uint32) (TransferStatus string, TransferLength string, TransferTotal string, err error) {
+func (client *ContentDirectory2) GetTransferProgress(
+	ctx context.Context,
+	TransferID uint32,
+) (TransferStatus string, TransferLength string, TransferTotal string, err error) {
 	// Request structure.
 	request := &struct {
 		TransferID string
@@ -3281,7 +3565,7 @@ func (client *ContentDirectory2) GetTransferProgress(TransferID uint32) (Transfe
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_2, "GetTransferProgress", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_2, "GetTransferProgress", request, response); err != nil {
 		return
 	}
 
@@ -3300,7 +3584,11 @@ func (client *ContentDirectory2) GetTransferProgress(TransferID uint32) (Transfe
 	return
 }
 
-func (client *ContentDirectory2) CreateReference(ContainerID string, ObjectID string) (NewID string, err error) {
+func (client *ContentDirectory2) CreateReference(
+	ctx context.Context,
+	ContainerID string,
+	ObjectID string,
+) (NewID string, err error) {
 	// Request structure.
 	request := &struct {
 		ContainerID string
@@ -3322,7 +3610,7 @@ func (client *ContentDirectory2) CreateReference(ContainerID string, ObjectID st
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_2, "CreateReference", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_2, "CreateReference", request, response); err != nil {
 		return
 	}
 
@@ -3348,9 +3636,9 @@ type ContentDirectory3 struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewContentDirectory3Clients() (clients []*ContentDirectory3, errors []error, err error) {
+func NewContentDirectory3Clients(ctx context.Context) (clients []*ContentDirectory3, errors []error, err error) {
 	var genericClients []discover.ServiceClient
-	if genericClients, errors, err = discover.NewServiceClients(URN_ContentDirectory_3); err != nil {
+	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_ContentDirectory_3); err != nil {
 		return
 	}
 	clients = newContentDirectory3ClientsFromGenericClients(genericClients)
@@ -3363,8 +3651,8 @@ func NewContentDirectory3Clients() (clients []*ContentDirectory3, errors []error
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
-func NewContentDirectory3ClientsByURL(loc *url.URL) ([]*ContentDirectory3, error) {
-	genericClients, err := discover.NewServiceClientsByURL(loc, URN_ContentDirectory_3)
+func NewContentDirectory3ClientsByURL(ctx context.Context, loc *url.URL) ([]*ContentDirectory3, error) {
+	genericClients, err := discover.NewServiceClientsByURL(ctx, loc, URN_ContentDirectory_3)
 	if err != nil {
 		return nil, err
 	}
@@ -3395,7 +3683,9 @@ func newContentDirectory3ClientsFromGenericClients(genericClients []discover.Ser
 	return clients
 }
 
-func (client *ContentDirectory3) GetSearchCapabilities() (SearchCaps string, err error) {
+func (client *ContentDirectory3) GetSearchCapabilities(
+	ctx context.Context,
+) (SearchCaps string, err error) {
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -3408,7 +3698,7 @@ func (client *ContentDirectory3) GetSearchCapabilities() (SearchCaps string, err
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_3, "GetSearchCapabilities", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_3, "GetSearchCapabilities", request, response); err != nil {
 		return
 	}
 
@@ -3421,7 +3711,9 @@ func (client *ContentDirectory3) GetSearchCapabilities() (SearchCaps string, err
 	return
 }
 
-func (client *ContentDirectory3) GetSortCapabilities() (SortCaps string, err error) {
+func (client *ContentDirectory3) GetSortCapabilities(
+	ctx context.Context,
+) (SortCaps string, err error) {
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -3434,7 +3726,7 @@ func (client *ContentDirectory3) GetSortCapabilities() (SortCaps string, err err
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_3, "GetSortCapabilities", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_3, "GetSortCapabilities", request, response); err != nil {
 		return
 	}
 
@@ -3447,7 +3739,9 @@ func (client *ContentDirectory3) GetSortCapabilities() (SortCaps string, err err
 	return
 }
 
-func (client *ContentDirectory3) GetSortExtensionCapabilities() (SortExtensionCaps string, err error) {
+func (client *ContentDirectory3) GetSortExtensionCapabilities(
+	ctx context.Context,
+) (SortExtensionCaps string, err error) {
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -3460,7 +3754,7 @@ func (client *ContentDirectory3) GetSortExtensionCapabilities() (SortExtensionCa
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_3, "GetSortExtensionCapabilities", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_3, "GetSortExtensionCapabilities", request, response); err != nil {
 		return
 	}
 
@@ -3473,7 +3767,9 @@ func (client *ContentDirectory3) GetSortExtensionCapabilities() (SortExtensionCa
 	return
 }
 
-func (client *ContentDirectory3) GetFeatureList() (FeatureList string, err error) {
+func (client *ContentDirectory3) GetFeatureList(
+	ctx context.Context,
+) (FeatureList string, err error) {
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -3486,7 +3782,7 @@ func (client *ContentDirectory3) GetFeatureList() (FeatureList string, err error
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_3, "GetFeatureList", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_3, "GetFeatureList", request, response); err != nil {
 		return
 	}
 
@@ -3499,7 +3795,9 @@ func (client *ContentDirectory3) GetFeatureList() (FeatureList string, err error
 	return
 }
 
-func (client *ContentDirectory3) GetSystemUpdateID() (Id uint32, err error) {
+func (client *ContentDirectory3) GetSystemUpdateID(
+	ctx context.Context,
+) (Id uint32, err error) {
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -3512,7 +3810,7 @@ func (client *ContentDirectory3) GetSystemUpdateID() (Id uint32, err error) {
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_3, "GetSystemUpdateID", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_3, "GetSystemUpdateID", request, response); err != nil {
 		return
 	}
 
@@ -3525,7 +3823,9 @@ func (client *ContentDirectory3) GetSystemUpdateID() (Id uint32, err error) {
 	return
 }
 
-func (client *ContentDirectory3) GetServiceResetToken() (ResetToken string, err error) {
+func (client *ContentDirectory3) GetServiceResetToken(
+	ctx context.Context,
+) (ResetToken string, err error) {
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -3538,7 +3838,7 @@ func (client *ContentDirectory3) GetServiceResetToken() (ResetToken string, err 
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_3, "GetServiceResetToken", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_3, "GetServiceResetToken", request, response); err != nil {
 		return
 	}
 
@@ -3556,7 +3856,15 @@ func (client *ContentDirectory3) GetServiceResetToken() (ResetToken string, err 
 //
 // * BrowseFlag: allowed values: BrowseMetadata, BrowseDirectChildren
 
-func (client *ContentDirectory3) Browse(ObjectID string, BrowseFlag string, Filter string, StartingIndex uint32, RequestedCount uint32, SortCriteria string) (Result string, NumberReturned uint32, TotalMatches uint32, UpdateID uint32, err error) {
+func (client *ContentDirectory3) Browse(
+	ctx context.Context,
+	ObjectID string,
+	BrowseFlag string,
+	Filter string,
+	StartingIndex uint32,
+	RequestedCount uint32,
+	SortCriteria string,
+) (Result string, NumberReturned uint32, TotalMatches uint32, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
 		ObjectID       string
@@ -3597,7 +3905,7 @@ func (client *ContentDirectory3) Browse(ObjectID string, BrowseFlag string, Filt
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_3, "Browse", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_3, "Browse", request, response); err != nil {
 		return
 	}
 
@@ -3619,7 +3927,15 @@ func (client *ContentDirectory3) Browse(ObjectID string, BrowseFlag string, Filt
 	return
 }
 
-func (client *ContentDirectory3) Search(ContainerID string, SearchCriteria string, Filter string, StartingIndex uint32, RequestedCount uint32, SortCriteria string) (Result string, NumberReturned uint32, TotalMatches uint32, UpdateID uint32, err error) {
+func (client *ContentDirectory3) Search(
+	ctx context.Context,
+	ContainerID string,
+	SearchCriteria string,
+	Filter string,
+	StartingIndex uint32,
+	RequestedCount uint32,
+	SortCriteria string,
+) (Result string, NumberReturned uint32, TotalMatches uint32, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
 		ContainerID    string
@@ -3660,7 +3976,7 @@ func (client *ContentDirectory3) Search(ContainerID string, SearchCriteria strin
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_3, "Search", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_3, "Search", request, response); err != nil {
 		return
 	}
 
@@ -3682,7 +3998,11 @@ func (client *ContentDirectory3) Search(ContainerID string, SearchCriteria strin
 	return
 }
 
-func (client *ContentDirectory3) CreateObject(ContainerID string, Elements string) (ObjectID string, Result string, err error) {
+func (client *ContentDirectory3) CreateObject(
+	ctx context.Context,
+	ContainerID string,
+	Elements string,
+) (ObjectID string, Result string, err error) {
 	// Request structure.
 	request := &struct {
 		ContainerID string
@@ -3705,7 +4025,7 @@ func (client *ContentDirectory3) CreateObject(ContainerID string, Elements strin
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_3, "CreateObject", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_3, "CreateObject", request, response); err != nil {
 		return
 	}
 
@@ -3721,7 +4041,10 @@ func (client *ContentDirectory3) CreateObject(ContainerID string, Elements strin
 	return
 }
 
-func (client *ContentDirectory3) DestroyObject(ObjectID string) (err error) {
+func (client *ContentDirectory3) DestroyObject(
+	ctx context.Context,
+	ObjectID string,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		ObjectID string
@@ -3737,7 +4060,7 @@ func (client *ContentDirectory3) DestroyObject(ObjectID string) (err error) {
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_3, "DestroyObject", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_3, "DestroyObject", request, response); err != nil {
 		return
 	}
 
@@ -3747,7 +4070,12 @@ func (client *ContentDirectory3) DestroyObject(ObjectID string) (err error) {
 	return
 }
 
-func (client *ContentDirectory3) UpdateObject(ObjectID string, CurrentTagValue string, NewTagValue string) (err error) {
+func (client *ContentDirectory3) UpdateObject(
+	ctx context.Context,
+	ObjectID string,
+	CurrentTagValue string,
+	NewTagValue string,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		ObjectID        string
@@ -3771,7 +4099,7 @@ func (client *ContentDirectory3) UpdateObject(ObjectID string, CurrentTagValue s
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_3, "UpdateObject", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_3, "UpdateObject", request, response); err != nil {
 		return
 	}
 
@@ -3781,7 +4109,11 @@ func (client *ContentDirectory3) UpdateObject(ObjectID string, CurrentTagValue s
 	return
 }
 
-func (client *ContentDirectory3) MoveObject(ObjectID string, NewParentID string) (NewObjectID string, err error) {
+func (client *ContentDirectory3) MoveObject(
+	ctx context.Context,
+	ObjectID string,
+	NewParentID string,
+) (NewObjectID string, err error) {
 	// Request structure.
 	request := &struct {
 		ObjectID    string
@@ -3803,7 +4135,7 @@ func (client *ContentDirectory3) MoveObject(ObjectID string, NewParentID string)
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_3, "MoveObject", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_3, "MoveObject", request, response); err != nil {
 		return
 	}
 
@@ -3816,7 +4148,11 @@ func (client *ContentDirectory3) MoveObject(ObjectID string, NewParentID string)
 	return
 }
 
-func (client *ContentDirectory3) ImportResource(SourceURI *url.URL, DestinationURI *url.URL) (TransferID uint32, err error) {
+func (client *ContentDirectory3) ImportResource(
+	ctx context.Context,
+	SourceURI *url.URL,
+	DestinationURI *url.URL,
+) (TransferID uint32, err error) {
 	// Request structure.
 	request := &struct {
 		SourceURI      string
@@ -3838,7 +4174,7 @@ func (client *ContentDirectory3) ImportResource(SourceURI *url.URL, DestinationU
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_3, "ImportResource", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_3, "ImportResource", request, response); err != nil {
 		return
 	}
 
@@ -3851,7 +4187,11 @@ func (client *ContentDirectory3) ImportResource(SourceURI *url.URL, DestinationU
 	return
 }
 
-func (client *ContentDirectory3) ExportResource(SourceURI *url.URL, DestinationURI *url.URL) (TransferID uint32, err error) {
+func (client *ContentDirectory3) ExportResource(
+	ctx context.Context,
+	SourceURI *url.URL,
+	DestinationURI *url.URL,
+) (TransferID uint32, err error) {
 	// Request structure.
 	request := &struct {
 		SourceURI      string
@@ -3873,7 +4213,7 @@ func (client *ContentDirectory3) ExportResource(SourceURI *url.URL, DestinationU
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_3, "ExportResource", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_3, "ExportResource", request, response); err != nil {
 		return
 	}
 
@@ -3886,7 +4226,10 @@ func (client *ContentDirectory3) ExportResource(SourceURI *url.URL, DestinationU
 	return
 }
 
-func (client *ContentDirectory3) DeleteResource(ResourceURI *url.URL) (err error) {
+func (client *ContentDirectory3) DeleteResource(
+	ctx context.Context,
+	ResourceURI *url.URL,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		ResourceURI string
@@ -3902,7 +4245,7 @@ func (client *ContentDirectory3) DeleteResource(ResourceURI *url.URL) (err error
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_3, "DeleteResource", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_3, "DeleteResource", request, response); err != nil {
 		return
 	}
 
@@ -3912,7 +4255,10 @@ func (client *ContentDirectory3) DeleteResource(ResourceURI *url.URL) (err error
 	return
 }
 
-func (client *ContentDirectory3) StopTransferResource(TransferID uint32) (err error) {
+func (client *ContentDirectory3) StopTransferResource(
+	ctx context.Context,
+	TransferID uint32,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		TransferID string
@@ -3928,7 +4274,7 @@ func (client *ContentDirectory3) StopTransferResource(TransferID uint32) (err er
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_3, "StopTransferResource", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_3, "StopTransferResource", request, response); err != nil {
 		return
 	}
 
@@ -3942,7 +4288,10 @@ func (client *ContentDirectory3) StopTransferResource(TransferID uint32) (err er
 // Return values:
 //
 // * TransferStatus: allowed values: COMPLETED, ERROR, IN_PROGRESS, STOPPED
-func (client *ContentDirectory3) GetTransferProgress(TransferID uint32) (TransferStatus string, TransferLength string, TransferTotal string, err error) {
+func (client *ContentDirectory3) GetTransferProgress(
+	ctx context.Context,
+	TransferID uint32,
+) (TransferStatus string, TransferLength string, TransferTotal string, err error) {
 	// Request structure.
 	request := &struct {
 		TransferID string
@@ -3962,7 +4311,7 @@ func (client *ContentDirectory3) GetTransferProgress(TransferID uint32) (Transfe
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_3, "GetTransferProgress", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_3, "GetTransferProgress", request, response); err != nil {
 		return
 	}
 
@@ -3981,7 +4330,11 @@ func (client *ContentDirectory3) GetTransferProgress(TransferID uint32) (Transfe
 	return
 }
 
-func (client *ContentDirectory3) CreateReference(ContainerID string, ObjectID string) (NewID string, err error) {
+func (client *ContentDirectory3) CreateReference(
+	ctx context.Context,
+	ContainerID string,
+	ObjectID string,
+) (NewID string, err error) {
 	// Request structure.
 	request := &struct {
 		ContainerID string
@@ -4003,7 +4356,7 @@ func (client *ContentDirectory3) CreateReference(ContainerID string, ObjectID st
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_3, "CreateReference", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_3, "CreateReference", request, response); err != nil {
 		return
 	}
 
@@ -4016,7 +4369,12 @@ func (client *ContentDirectory3) CreateReference(ContainerID string, ObjectID st
 	return
 }
 
-func (client *ContentDirectory3) FreeFormQuery(ContainerID string, CDSView uint32, QueryRequest string) (QueryResult string, UpdateID uint32, err error) {
+func (client *ContentDirectory3) FreeFormQuery(
+	ctx context.Context,
+	ContainerID string,
+	CDSView uint32,
+	QueryRequest string,
+) (QueryResult string, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
 		ContainerID  string
@@ -4043,7 +4401,7 @@ func (client *ContentDirectory3) FreeFormQuery(ContainerID string, CDSView uint3
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_3, "FreeFormQuery", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_3, "FreeFormQuery", request, response); err != nil {
 		return
 	}
 
@@ -4059,7 +4417,9 @@ func (client *ContentDirectory3) FreeFormQuery(ContainerID string, CDSView uint3
 	return
 }
 
-func (client *ContentDirectory3) GetFreeFormQueryCapabilities() (FFQCapabilities string, err error) {
+func (client *ContentDirectory3) GetFreeFormQueryCapabilities(
+	ctx context.Context,
+) (FFQCapabilities string, err error) {
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -4072,7 +4432,7 @@ func (client *ContentDirectory3) GetFreeFormQueryCapabilities() (FFQCapabilities
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ContentDirectory_3, "GetFreeFormQueryCapabilities", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ContentDirectory_3, "GetFreeFormQueryCapabilities", request, response); err != nil {
 		return
 	}
 
@@ -4098,9 +4458,9 @@ type RenderingControl1 struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewRenderingControl1Clients() (clients []*RenderingControl1, errors []error, err error) {
+func NewRenderingControl1Clients(ctx context.Context) (clients []*RenderingControl1, errors []error, err error) {
 	var genericClients []discover.ServiceClient
-	if genericClients, errors, err = discover.NewServiceClients(URN_RenderingControl_1); err != nil {
+	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_RenderingControl_1); err != nil {
 		return
 	}
 	clients = newRenderingControl1ClientsFromGenericClients(genericClients)
@@ -4113,8 +4473,8 @@ func NewRenderingControl1Clients() (clients []*RenderingControl1, errors []error
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
-func NewRenderingControl1ClientsByURL(loc *url.URL) ([]*RenderingControl1, error) {
-	genericClients, err := discover.NewServiceClientsByURL(loc, URN_RenderingControl_1)
+func NewRenderingControl1ClientsByURL(ctx context.Context, loc *url.URL) ([]*RenderingControl1, error) {
+	genericClients, err := discover.NewServiceClientsByURL(ctx, loc, URN_RenderingControl_1)
 	if err != nil {
 		return nil, err
 	}
@@ -4145,7 +4505,10 @@ func newRenderingControl1ClientsFromGenericClients(genericClients []discover.Ser
 	return clients
 }
 
-func (client *RenderingControl1) ListPresets(InstanceID uint32) (CurrentPresetNameList string, err error) {
+func (client *RenderingControl1) ListPresets(
+	ctx context.Context,
+	InstanceID uint32,
+) (CurrentPresetNameList string, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -4163,7 +4526,7 @@ func (client *RenderingControl1) ListPresets(InstanceID uint32) (CurrentPresetNa
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_1, "ListPresets", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_1, "ListPresets", request, response); err != nil {
 		return
 	}
 
@@ -4181,7 +4544,11 @@ func (client *RenderingControl1) ListPresets(InstanceID uint32) (CurrentPresetNa
 //
 // * PresetName: allowed values: FactoryDefaults
 
-func (client *RenderingControl1) SelectPreset(InstanceID uint32, PresetName string) (err error) {
+func (client *RenderingControl1) SelectPreset(
+	ctx context.Context,
+	InstanceID uint32,
+	PresetName string,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -4201,7 +4568,7 @@ func (client *RenderingControl1) SelectPreset(InstanceID uint32, PresetName stri
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_1, "SelectPreset", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_1, "SelectPreset", request, response); err != nil {
 		return
 	}
 
@@ -4215,7 +4582,10 @@ func (client *RenderingControl1) SelectPreset(InstanceID uint32, PresetName stri
 // Return values:
 //
 // * CurrentBrightness: allowed value range: minimum=0, step=1
-func (client *RenderingControl1) GetBrightness(InstanceID uint32) (CurrentBrightness uint16, err error) {
+func (client *RenderingControl1) GetBrightness(
+	ctx context.Context,
+	InstanceID uint32,
+) (CurrentBrightness uint16, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -4233,7 +4603,7 @@ func (client *RenderingControl1) GetBrightness(InstanceID uint32) (CurrentBright
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_1, "GetBrightness", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_1, "GetBrightness", request, response); err != nil {
 		return
 	}
 
@@ -4251,7 +4621,11 @@ func (client *RenderingControl1) GetBrightness(InstanceID uint32) (CurrentBright
 //
 // * DesiredBrightness: allowed value range: minimum=0, step=1
 
-func (client *RenderingControl1) SetBrightness(InstanceID uint32, DesiredBrightness uint16) (err error) {
+func (client *RenderingControl1) SetBrightness(
+	ctx context.Context,
+	InstanceID uint32,
+	DesiredBrightness uint16,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID        string
@@ -4271,7 +4645,7 @@ func (client *RenderingControl1) SetBrightness(InstanceID uint32, DesiredBrightn
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_1, "SetBrightness", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_1, "SetBrightness", request, response); err != nil {
 		return
 	}
 
@@ -4285,7 +4659,10 @@ func (client *RenderingControl1) SetBrightness(InstanceID uint32, DesiredBrightn
 // Return values:
 //
 // * CurrentContrast: allowed value range: minimum=0, step=1
-func (client *RenderingControl1) GetContrast(InstanceID uint32) (CurrentContrast uint16, err error) {
+func (client *RenderingControl1) GetContrast(
+	ctx context.Context,
+	InstanceID uint32,
+) (CurrentContrast uint16, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -4303,7 +4680,7 @@ func (client *RenderingControl1) GetContrast(InstanceID uint32) (CurrentContrast
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_1, "GetContrast", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_1, "GetContrast", request, response); err != nil {
 		return
 	}
 
@@ -4321,7 +4698,11 @@ func (client *RenderingControl1) GetContrast(InstanceID uint32) (CurrentContrast
 //
 // * DesiredContrast: allowed value range: minimum=0, step=1
 
-func (client *RenderingControl1) SetContrast(InstanceID uint32, DesiredContrast uint16) (err error) {
+func (client *RenderingControl1) SetContrast(
+	ctx context.Context,
+	InstanceID uint32,
+	DesiredContrast uint16,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID      string
@@ -4341,7 +4722,7 @@ func (client *RenderingControl1) SetContrast(InstanceID uint32, DesiredContrast 
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_1, "SetContrast", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_1, "SetContrast", request, response); err != nil {
 		return
 	}
 
@@ -4355,7 +4736,10 @@ func (client *RenderingControl1) SetContrast(InstanceID uint32, DesiredContrast 
 // Return values:
 //
 // * CurrentSharpness: allowed value range: minimum=0, step=1
-func (client *RenderingControl1) GetSharpness(InstanceID uint32) (CurrentSharpness uint16, err error) {
+func (client *RenderingControl1) GetSharpness(
+	ctx context.Context,
+	InstanceID uint32,
+) (CurrentSharpness uint16, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -4373,7 +4757,7 @@ func (client *RenderingControl1) GetSharpness(InstanceID uint32) (CurrentSharpne
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_1, "GetSharpness", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_1, "GetSharpness", request, response); err != nil {
 		return
 	}
 
@@ -4391,7 +4775,11 @@ func (client *RenderingControl1) GetSharpness(InstanceID uint32) (CurrentSharpne
 //
 // * DesiredSharpness: allowed value range: minimum=0, step=1
 
-func (client *RenderingControl1) SetSharpness(InstanceID uint32, DesiredSharpness uint16) (err error) {
+func (client *RenderingControl1) SetSharpness(
+	ctx context.Context,
+	InstanceID uint32,
+	DesiredSharpness uint16,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID       string
@@ -4411,7 +4799,7 @@ func (client *RenderingControl1) SetSharpness(InstanceID uint32, DesiredSharpnes
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_1, "SetSharpness", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_1, "SetSharpness", request, response); err != nil {
 		return
 	}
 
@@ -4421,7 +4809,10 @@ func (client *RenderingControl1) SetSharpness(InstanceID uint32, DesiredSharpnes
 	return
 }
 
-func (client *RenderingControl1) GetRedVideoGain(InstanceID uint32) (CurrentRedVideoGain uint16, err error) {
+func (client *RenderingControl1) GetRedVideoGain(
+	ctx context.Context,
+	InstanceID uint32,
+) (CurrentRedVideoGain uint16, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -4439,7 +4830,7 @@ func (client *RenderingControl1) GetRedVideoGain(InstanceID uint32) (CurrentRedV
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_1, "GetRedVideoGain", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_1, "GetRedVideoGain", request, response); err != nil {
 		return
 	}
 
@@ -4452,7 +4843,11 @@ func (client *RenderingControl1) GetRedVideoGain(InstanceID uint32) (CurrentRedV
 	return
 }
 
-func (client *RenderingControl1) SetRedVideoGain(InstanceID uint32, DesiredRedVideoGain uint16) (err error) {
+func (client *RenderingControl1) SetRedVideoGain(
+	ctx context.Context,
+	InstanceID uint32,
+	DesiredRedVideoGain uint16,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID          string
@@ -4472,7 +4867,7 @@ func (client *RenderingControl1) SetRedVideoGain(InstanceID uint32, DesiredRedVi
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_1, "SetRedVideoGain", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_1, "SetRedVideoGain", request, response); err != nil {
 		return
 	}
 
@@ -4486,7 +4881,10 @@ func (client *RenderingControl1) SetRedVideoGain(InstanceID uint32, DesiredRedVi
 // Return values:
 //
 // * CurrentGreenVideoGain: allowed value range: minimum=0, step=1
-func (client *RenderingControl1) GetGreenVideoGain(InstanceID uint32) (CurrentGreenVideoGain uint16, err error) {
+func (client *RenderingControl1) GetGreenVideoGain(
+	ctx context.Context,
+	InstanceID uint32,
+) (CurrentGreenVideoGain uint16, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -4504,7 +4902,7 @@ func (client *RenderingControl1) GetGreenVideoGain(InstanceID uint32) (CurrentGr
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_1, "GetGreenVideoGain", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_1, "GetGreenVideoGain", request, response); err != nil {
 		return
 	}
 
@@ -4522,7 +4920,11 @@ func (client *RenderingControl1) GetGreenVideoGain(InstanceID uint32) (CurrentGr
 //
 // * DesiredGreenVideoGain: allowed value range: minimum=0, step=1
 
-func (client *RenderingControl1) SetGreenVideoGain(InstanceID uint32, DesiredGreenVideoGain uint16) (err error) {
+func (client *RenderingControl1) SetGreenVideoGain(
+	ctx context.Context,
+	InstanceID uint32,
+	DesiredGreenVideoGain uint16,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID            string
@@ -4542,7 +4944,7 @@ func (client *RenderingControl1) SetGreenVideoGain(InstanceID uint32, DesiredGre
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_1, "SetGreenVideoGain", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_1, "SetGreenVideoGain", request, response); err != nil {
 		return
 	}
 
@@ -4556,7 +4958,10 @@ func (client *RenderingControl1) SetGreenVideoGain(InstanceID uint32, DesiredGre
 // Return values:
 //
 // * CurrentBlueVideoGain: allowed value range: minimum=0, step=1
-func (client *RenderingControl1) GetBlueVideoGain(InstanceID uint32) (CurrentBlueVideoGain uint16, err error) {
+func (client *RenderingControl1) GetBlueVideoGain(
+	ctx context.Context,
+	InstanceID uint32,
+) (CurrentBlueVideoGain uint16, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -4574,7 +4979,7 @@ func (client *RenderingControl1) GetBlueVideoGain(InstanceID uint32) (CurrentBlu
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_1, "GetBlueVideoGain", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_1, "GetBlueVideoGain", request, response); err != nil {
 		return
 	}
 
@@ -4592,7 +4997,11 @@ func (client *RenderingControl1) GetBlueVideoGain(InstanceID uint32) (CurrentBlu
 //
 // * DesiredBlueVideoGain: allowed value range: minimum=0, step=1
 
-func (client *RenderingControl1) SetBlueVideoGain(InstanceID uint32, DesiredBlueVideoGain uint16) (err error) {
+func (client *RenderingControl1) SetBlueVideoGain(
+	ctx context.Context,
+	InstanceID uint32,
+	DesiredBlueVideoGain uint16,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID           string
@@ -4612,7 +5021,7 @@ func (client *RenderingControl1) SetBlueVideoGain(InstanceID uint32, DesiredBlue
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_1, "SetBlueVideoGain", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_1, "SetBlueVideoGain", request, response); err != nil {
 		return
 	}
 
@@ -4626,7 +5035,10 @@ func (client *RenderingControl1) SetBlueVideoGain(InstanceID uint32, DesiredBlue
 // Return values:
 //
 // * CurrentRedVideoBlackLevel: allowed value range: minimum=0, step=1
-func (client *RenderingControl1) GetRedVideoBlackLevel(InstanceID uint32) (CurrentRedVideoBlackLevel uint16, err error) {
+func (client *RenderingControl1) GetRedVideoBlackLevel(
+	ctx context.Context,
+	InstanceID uint32,
+) (CurrentRedVideoBlackLevel uint16, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -4644,7 +5056,7 @@ func (client *RenderingControl1) GetRedVideoBlackLevel(InstanceID uint32) (Curre
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_1, "GetRedVideoBlackLevel", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_1, "GetRedVideoBlackLevel", request, response); err != nil {
 		return
 	}
 
@@ -4662,7 +5074,11 @@ func (client *RenderingControl1) GetRedVideoBlackLevel(InstanceID uint32) (Curre
 //
 // * DesiredRedVideoBlackLevel: allowed value range: minimum=0, step=1
 
-func (client *RenderingControl1) SetRedVideoBlackLevel(InstanceID uint32, DesiredRedVideoBlackLevel uint16) (err error) {
+func (client *RenderingControl1) SetRedVideoBlackLevel(
+	ctx context.Context,
+	InstanceID uint32,
+	DesiredRedVideoBlackLevel uint16,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID                string
@@ -4682,7 +5098,7 @@ func (client *RenderingControl1) SetRedVideoBlackLevel(InstanceID uint32, Desire
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_1, "SetRedVideoBlackLevel", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_1, "SetRedVideoBlackLevel", request, response); err != nil {
 		return
 	}
 
@@ -4696,7 +5112,10 @@ func (client *RenderingControl1) SetRedVideoBlackLevel(InstanceID uint32, Desire
 // Return values:
 //
 // * CurrentGreenVideoBlackLevel: allowed value range: minimum=0, step=1
-func (client *RenderingControl1) GetGreenVideoBlackLevel(InstanceID uint32) (CurrentGreenVideoBlackLevel uint16, err error) {
+func (client *RenderingControl1) GetGreenVideoBlackLevel(
+	ctx context.Context,
+	InstanceID uint32,
+) (CurrentGreenVideoBlackLevel uint16, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -4714,7 +5133,7 @@ func (client *RenderingControl1) GetGreenVideoBlackLevel(InstanceID uint32) (Cur
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_1, "GetGreenVideoBlackLevel", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_1, "GetGreenVideoBlackLevel", request, response); err != nil {
 		return
 	}
 
@@ -4732,7 +5151,11 @@ func (client *RenderingControl1) GetGreenVideoBlackLevel(InstanceID uint32) (Cur
 //
 // * DesiredGreenVideoBlackLevel: allowed value range: minimum=0, step=1
 
-func (client *RenderingControl1) SetGreenVideoBlackLevel(InstanceID uint32, DesiredGreenVideoBlackLevel uint16) (err error) {
+func (client *RenderingControl1) SetGreenVideoBlackLevel(
+	ctx context.Context,
+	InstanceID uint32,
+	DesiredGreenVideoBlackLevel uint16,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID                  string
@@ -4752,7 +5175,7 @@ func (client *RenderingControl1) SetGreenVideoBlackLevel(InstanceID uint32, Desi
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_1, "SetGreenVideoBlackLevel", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_1, "SetGreenVideoBlackLevel", request, response); err != nil {
 		return
 	}
 
@@ -4766,7 +5189,10 @@ func (client *RenderingControl1) SetGreenVideoBlackLevel(InstanceID uint32, Desi
 // Return values:
 //
 // * CurrentBlueVideoBlackLevel: allowed value range: minimum=0, step=1
-func (client *RenderingControl1) GetBlueVideoBlackLevel(InstanceID uint32) (CurrentBlueVideoBlackLevel uint16, err error) {
+func (client *RenderingControl1) GetBlueVideoBlackLevel(
+	ctx context.Context,
+	InstanceID uint32,
+) (CurrentBlueVideoBlackLevel uint16, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -4784,7 +5210,7 @@ func (client *RenderingControl1) GetBlueVideoBlackLevel(InstanceID uint32) (Curr
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_1, "GetBlueVideoBlackLevel", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_1, "GetBlueVideoBlackLevel", request, response); err != nil {
 		return
 	}
 
@@ -4802,7 +5228,11 @@ func (client *RenderingControl1) GetBlueVideoBlackLevel(InstanceID uint32) (Curr
 //
 // * DesiredBlueVideoBlackLevel: allowed value range: minimum=0, step=1
 
-func (client *RenderingControl1) SetBlueVideoBlackLevel(InstanceID uint32, DesiredBlueVideoBlackLevel uint16) (err error) {
+func (client *RenderingControl1) SetBlueVideoBlackLevel(
+	ctx context.Context,
+	InstanceID uint32,
+	DesiredBlueVideoBlackLevel uint16,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID                 string
@@ -4822,7 +5252,7 @@ func (client *RenderingControl1) SetBlueVideoBlackLevel(InstanceID uint32, Desir
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_1, "SetBlueVideoBlackLevel", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_1, "SetBlueVideoBlackLevel", request, response); err != nil {
 		return
 	}
 
@@ -4836,7 +5266,10 @@ func (client *RenderingControl1) SetBlueVideoBlackLevel(InstanceID uint32, Desir
 // Return values:
 //
 // * CurrentColorTemperature: allowed value range: minimum=0, step=1
-func (client *RenderingControl1) GetColorTemperature(InstanceID uint32) (CurrentColorTemperature uint16, err error) {
+func (client *RenderingControl1) GetColorTemperature(
+	ctx context.Context,
+	InstanceID uint32,
+) (CurrentColorTemperature uint16, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -4854,7 +5287,7 @@ func (client *RenderingControl1) GetColorTemperature(InstanceID uint32) (Current
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_1, "GetColorTemperature", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_1, "GetColorTemperature", request, response); err != nil {
 		return
 	}
 
@@ -4872,7 +5305,11 @@ func (client *RenderingControl1) GetColorTemperature(InstanceID uint32) (Current
 //
 // * DesiredColorTemperature: allowed value range: minimum=0, step=1
 
-func (client *RenderingControl1) SetColorTemperature(InstanceID uint32, DesiredColorTemperature uint16) (err error) {
+func (client *RenderingControl1) SetColorTemperature(
+	ctx context.Context,
+	InstanceID uint32,
+	DesiredColorTemperature uint16,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID              string
@@ -4892,7 +5329,7 @@ func (client *RenderingControl1) SetColorTemperature(InstanceID uint32, DesiredC
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_1, "SetColorTemperature", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_1, "SetColorTemperature", request, response); err != nil {
 		return
 	}
 
@@ -4906,7 +5343,10 @@ func (client *RenderingControl1) SetColorTemperature(InstanceID uint32, DesiredC
 // Return values:
 //
 // * CurrentHorizontalKeystone: allowed value range: step=1
-func (client *RenderingControl1) GetHorizontalKeystone(InstanceID uint32) (CurrentHorizontalKeystone int16, err error) {
+func (client *RenderingControl1) GetHorizontalKeystone(
+	ctx context.Context,
+	InstanceID uint32,
+) (CurrentHorizontalKeystone int16, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -4924,7 +5364,7 @@ func (client *RenderingControl1) GetHorizontalKeystone(InstanceID uint32) (Curre
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_1, "GetHorizontalKeystone", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_1, "GetHorizontalKeystone", request, response); err != nil {
 		return
 	}
 
@@ -4942,7 +5382,11 @@ func (client *RenderingControl1) GetHorizontalKeystone(InstanceID uint32) (Curre
 //
 // * DesiredHorizontalKeystone: allowed value range: step=1
 
-func (client *RenderingControl1) SetHorizontalKeystone(InstanceID uint32, DesiredHorizontalKeystone int16) (err error) {
+func (client *RenderingControl1) SetHorizontalKeystone(
+	ctx context.Context,
+	InstanceID uint32,
+	DesiredHorizontalKeystone int16,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID                string
@@ -4962,7 +5406,7 @@ func (client *RenderingControl1) SetHorizontalKeystone(InstanceID uint32, Desire
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_1, "SetHorizontalKeystone", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_1, "SetHorizontalKeystone", request, response); err != nil {
 		return
 	}
 
@@ -4976,7 +5420,10 @@ func (client *RenderingControl1) SetHorizontalKeystone(InstanceID uint32, Desire
 // Return values:
 //
 // * CurrentVerticalKeystone: allowed value range: step=1
-func (client *RenderingControl1) GetVerticalKeystone(InstanceID uint32) (CurrentVerticalKeystone int16, err error) {
+func (client *RenderingControl1) GetVerticalKeystone(
+	ctx context.Context,
+	InstanceID uint32,
+) (CurrentVerticalKeystone int16, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -4994,7 +5441,7 @@ func (client *RenderingControl1) GetVerticalKeystone(InstanceID uint32) (Current
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_1, "GetVerticalKeystone", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_1, "GetVerticalKeystone", request, response); err != nil {
 		return
 	}
 
@@ -5012,7 +5459,11 @@ func (client *RenderingControl1) GetVerticalKeystone(InstanceID uint32) (Current
 //
 // * DesiredVerticalKeystone: allowed value range: step=1
 
-func (client *RenderingControl1) SetVerticalKeystone(InstanceID uint32, DesiredVerticalKeystone int16) (err error) {
+func (client *RenderingControl1) SetVerticalKeystone(
+	ctx context.Context,
+	InstanceID uint32,
+	DesiredVerticalKeystone int16,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID              string
@@ -5032,7 +5483,7 @@ func (client *RenderingControl1) SetVerticalKeystone(InstanceID uint32, DesiredV
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_1, "SetVerticalKeystone", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_1, "SetVerticalKeystone", request, response); err != nil {
 		return
 	}
 
@@ -5047,7 +5498,11 @@ func (client *RenderingControl1) SetVerticalKeystone(InstanceID uint32, DesiredV
 //
 // * Channel: allowed values: Master
 
-func (client *RenderingControl1) GetMute(InstanceID uint32, Channel string) (CurrentMute bool, err error) {
+func (client *RenderingControl1) GetMute(
+	ctx context.Context,
+	InstanceID uint32,
+	Channel string,
+) (CurrentMute bool, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -5069,7 +5524,7 @@ func (client *RenderingControl1) GetMute(InstanceID uint32, Channel string) (Cur
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_1, "GetMute", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_1, "GetMute", request, response); err != nil {
 		return
 	}
 
@@ -5087,7 +5542,12 @@ func (client *RenderingControl1) GetMute(InstanceID uint32, Channel string) (Cur
 //
 // * Channel: allowed values: Master
 
-func (client *RenderingControl1) SetMute(InstanceID uint32, Channel string, DesiredMute bool) (err error) {
+func (client *RenderingControl1) SetMute(
+	ctx context.Context,
+	InstanceID uint32,
+	Channel string,
+	DesiredMute bool,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID  string
@@ -5111,7 +5571,7 @@ func (client *RenderingControl1) SetMute(InstanceID uint32, Channel string, Desi
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_1, "SetMute", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_1, "SetMute", request, response); err != nil {
 		return
 	}
 
@@ -5130,7 +5590,11 @@ func (client *RenderingControl1) SetMute(InstanceID uint32, Channel string, Desi
 // Return values:
 //
 // * CurrentVolume: allowed value range: minimum=0, step=1
-func (client *RenderingControl1) GetVolume(InstanceID uint32, Channel string) (CurrentVolume uint16, err error) {
+func (client *RenderingControl1) GetVolume(
+	ctx context.Context,
+	InstanceID uint32,
+	Channel string,
+) (CurrentVolume uint16, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -5152,7 +5616,7 @@ func (client *RenderingControl1) GetVolume(InstanceID uint32, Channel string) (C
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_1, "GetVolume", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_1, "GetVolume", request, response); err != nil {
 		return
 	}
 
@@ -5172,7 +5636,12 @@ func (client *RenderingControl1) GetVolume(InstanceID uint32, Channel string) (C
 //
 // * DesiredVolume: allowed value range: minimum=0, step=1
 
-func (client *RenderingControl1) SetVolume(InstanceID uint32, Channel string, DesiredVolume uint16) (err error) {
+func (client *RenderingControl1) SetVolume(
+	ctx context.Context,
+	InstanceID uint32,
+	Channel string,
+	DesiredVolume uint16,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID    string
@@ -5196,7 +5665,7 @@ func (client *RenderingControl1) SetVolume(InstanceID uint32, Channel string, De
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_1, "SetVolume", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_1, "SetVolume", request, response); err != nil {
 		return
 	}
 
@@ -5211,7 +5680,11 @@ func (client *RenderingControl1) SetVolume(InstanceID uint32, Channel string, De
 //
 // * Channel: allowed values: Master
 
-func (client *RenderingControl1) GetVolumeDB(InstanceID uint32, Channel string) (CurrentVolume int16, err error) {
+func (client *RenderingControl1) GetVolumeDB(
+	ctx context.Context,
+	InstanceID uint32,
+	Channel string,
+) (CurrentVolume int16, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -5233,7 +5706,7 @@ func (client *RenderingControl1) GetVolumeDB(InstanceID uint32, Channel string) 
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_1, "GetVolumeDB", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_1, "GetVolumeDB", request, response); err != nil {
 		return
 	}
 
@@ -5251,7 +5724,12 @@ func (client *RenderingControl1) GetVolumeDB(InstanceID uint32, Channel string) 
 //
 // * Channel: allowed values: Master
 
-func (client *RenderingControl1) SetVolumeDB(InstanceID uint32, Channel string, DesiredVolume int16) (err error) {
+func (client *RenderingControl1) SetVolumeDB(
+	ctx context.Context,
+	InstanceID uint32,
+	Channel string,
+	DesiredVolume int16,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID    string
@@ -5275,7 +5753,7 @@ func (client *RenderingControl1) SetVolumeDB(InstanceID uint32, Channel string, 
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_1, "SetVolumeDB", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_1, "SetVolumeDB", request, response); err != nil {
 		return
 	}
 
@@ -5290,7 +5768,11 @@ func (client *RenderingControl1) SetVolumeDB(InstanceID uint32, Channel string, 
 //
 // * Channel: allowed values: Master
 
-func (client *RenderingControl1) GetVolumeDBRange(InstanceID uint32, Channel string) (MinValue int16, MaxValue int16, err error) {
+func (client *RenderingControl1) GetVolumeDBRange(
+	ctx context.Context,
+	InstanceID uint32,
+	Channel string,
+) (MinValue int16, MaxValue int16, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -5313,7 +5795,7 @@ func (client *RenderingControl1) GetVolumeDBRange(InstanceID uint32, Channel str
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_1, "GetVolumeDBRange", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_1, "GetVolumeDBRange", request, response); err != nil {
 		return
 	}
 
@@ -5334,7 +5816,11 @@ func (client *RenderingControl1) GetVolumeDBRange(InstanceID uint32, Channel str
 //
 // * Channel: allowed values: Master
 
-func (client *RenderingControl1) GetLoudness(InstanceID uint32, Channel string) (CurrentLoudness bool, err error) {
+func (client *RenderingControl1) GetLoudness(
+	ctx context.Context,
+	InstanceID uint32,
+	Channel string,
+) (CurrentLoudness bool, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -5356,7 +5842,7 @@ func (client *RenderingControl1) GetLoudness(InstanceID uint32, Channel string) 
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_1, "GetLoudness", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_1, "GetLoudness", request, response); err != nil {
 		return
 	}
 
@@ -5374,7 +5860,12 @@ func (client *RenderingControl1) GetLoudness(InstanceID uint32, Channel string) 
 //
 // * Channel: allowed values: Master
 
-func (client *RenderingControl1) SetLoudness(InstanceID uint32, Channel string, DesiredLoudness bool) (err error) {
+func (client *RenderingControl1) SetLoudness(
+	ctx context.Context,
+	InstanceID uint32,
+	Channel string,
+	DesiredLoudness bool,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID      string
@@ -5398,7 +5889,7 @@ func (client *RenderingControl1) SetLoudness(InstanceID uint32, Channel string, 
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_1, "SetLoudness", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_1, "SetLoudness", request, response); err != nil {
 		return
 	}
 
@@ -5421,9 +5912,9 @@ type RenderingControl2 struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewRenderingControl2Clients() (clients []*RenderingControl2, errors []error, err error) {
+func NewRenderingControl2Clients(ctx context.Context) (clients []*RenderingControl2, errors []error, err error) {
 	var genericClients []discover.ServiceClient
-	if genericClients, errors, err = discover.NewServiceClients(URN_RenderingControl_2); err != nil {
+	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_RenderingControl_2); err != nil {
 		return
 	}
 	clients = newRenderingControl2ClientsFromGenericClients(genericClients)
@@ -5436,8 +5927,8 @@ func NewRenderingControl2Clients() (clients []*RenderingControl2, errors []error
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
-func NewRenderingControl2ClientsByURL(loc *url.URL) ([]*RenderingControl2, error) {
-	genericClients, err := discover.NewServiceClientsByURL(loc, URN_RenderingControl_2)
+func NewRenderingControl2ClientsByURL(ctx context.Context, loc *url.URL) ([]*RenderingControl2, error) {
+	genericClients, err := discover.NewServiceClientsByURL(ctx, loc, URN_RenderingControl_2)
 	if err != nil {
 		return nil, err
 	}
@@ -5468,7 +5959,10 @@ func newRenderingControl2ClientsFromGenericClients(genericClients []discover.Ser
 	return clients
 }
 
-func (client *RenderingControl2) ListPresets(InstanceID uint32) (CurrentPresetNameList string, err error) {
+func (client *RenderingControl2) ListPresets(
+	ctx context.Context,
+	InstanceID uint32,
+) (CurrentPresetNameList string, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -5486,7 +5980,7 @@ func (client *RenderingControl2) ListPresets(InstanceID uint32) (CurrentPresetNa
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_2, "ListPresets", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_2, "ListPresets", request, response); err != nil {
 		return
 	}
 
@@ -5504,7 +5998,11 @@ func (client *RenderingControl2) ListPresets(InstanceID uint32) (CurrentPresetNa
 //
 // * PresetName: allowed values: FactoryDefaults
 
-func (client *RenderingControl2) SelectPreset(InstanceID uint32, PresetName string) (err error) {
+func (client *RenderingControl2) SelectPreset(
+	ctx context.Context,
+	InstanceID uint32,
+	PresetName string,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -5524,7 +6022,7 @@ func (client *RenderingControl2) SelectPreset(InstanceID uint32, PresetName stri
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_2, "SelectPreset", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_2, "SelectPreset", request, response); err != nil {
 		return
 	}
 
@@ -5538,7 +6036,10 @@ func (client *RenderingControl2) SelectPreset(InstanceID uint32, PresetName stri
 // Return values:
 //
 // * CurrentBrightness: allowed value range: minimum=0, step=1
-func (client *RenderingControl2) GetBrightness(InstanceID uint32) (CurrentBrightness uint16, err error) {
+func (client *RenderingControl2) GetBrightness(
+	ctx context.Context,
+	InstanceID uint32,
+) (CurrentBrightness uint16, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -5556,7 +6057,7 @@ func (client *RenderingControl2) GetBrightness(InstanceID uint32) (CurrentBright
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_2, "GetBrightness", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_2, "GetBrightness", request, response); err != nil {
 		return
 	}
 
@@ -5574,7 +6075,11 @@ func (client *RenderingControl2) GetBrightness(InstanceID uint32) (CurrentBright
 //
 // * DesiredBrightness: allowed value range: minimum=0, step=1
 
-func (client *RenderingControl2) SetBrightness(InstanceID uint32, DesiredBrightness uint16) (err error) {
+func (client *RenderingControl2) SetBrightness(
+	ctx context.Context,
+	InstanceID uint32,
+	DesiredBrightness uint16,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID        string
@@ -5594,7 +6099,7 @@ func (client *RenderingControl2) SetBrightness(InstanceID uint32, DesiredBrightn
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_2, "SetBrightness", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_2, "SetBrightness", request, response); err != nil {
 		return
 	}
 
@@ -5608,7 +6113,10 @@ func (client *RenderingControl2) SetBrightness(InstanceID uint32, DesiredBrightn
 // Return values:
 //
 // * CurrentContrast: allowed value range: minimum=0, step=1
-func (client *RenderingControl2) GetContrast(InstanceID uint32) (CurrentContrast uint16, err error) {
+func (client *RenderingControl2) GetContrast(
+	ctx context.Context,
+	InstanceID uint32,
+) (CurrentContrast uint16, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -5626,7 +6134,7 @@ func (client *RenderingControl2) GetContrast(InstanceID uint32) (CurrentContrast
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_2, "GetContrast", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_2, "GetContrast", request, response); err != nil {
 		return
 	}
 
@@ -5644,7 +6152,11 @@ func (client *RenderingControl2) GetContrast(InstanceID uint32) (CurrentContrast
 //
 // * DesiredContrast: allowed value range: minimum=0, step=1
 
-func (client *RenderingControl2) SetContrast(InstanceID uint32, DesiredContrast uint16) (err error) {
+func (client *RenderingControl2) SetContrast(
+	ctx context.Context,
+	InstanceID uint32,
+	DesiredContrast uint16,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID      string
@@ -5664,7 +6176,7 @@ func (client *RenderingControl2) SetContrast(InstanceID uint32, DesiredContrast 
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_2, "SetContrast", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_2, "SetContrast", request, response); err != nil {
 		return
 	}
 
@@ -5678,7 +6190,10 @@ func (client *RenderingControl2) SetContrast(InstanceID uint32, DesiredContrast 
 // Return values:
 //
 // * CurrentSharpness: allowed value range: minimum=0, step=1
-func (client *RenderingControl2) GetSharpness(InstanceID uint32) (CurrentSharpness uint16, err error) {
+func (client *RenderingControl2) GetSharpness(
+	ctx context.Context,
+	InstanceID uint32,
+) (CurrentSharpness uint16, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -5696,7 +6211,7 @@ func (client *RenderingControl2) GetSharpness(InstanceID uint32) (CurrentSharpne
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_2, "GetSharpness", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_2, "GetSharpness", request, response); err != nil {
 		return
 	}
 
@@ -5714,7 +6229,11 @@ func (client *RenderingControl2) GetSharpness(InstanceID uint32) (CurrentSharpne
 //
 // * DesiredSharpness: allowed value range: minimum=0, step=1
 
-func (client *RenderingControl2) SetSharpness(InstanceID uint32, DesiredSharpness uint16) (err error) {
+func (client *RenderingControl2) SetSharpness(
+	ctx context.Context,
+	InstanceID uint32,
+	DesiredSharpness uint16,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID       string
@@ -5734,7 +6253,7 @@ func (client *RenderingControl2) SetSharpness(InstanceID uint32, DesiredSharpnes
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_2, "SetSharpness", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_2, "SetSharpness", request, response); err != nil {
 		return
 	}
 
@@ -5748,7 +6267,10 @@ func (client *RenderingControl2) SetSharpness(InstanceID uint32, DesiredSharpnes
 // Return values:
 //
 // * CurrentRedVideoGain: allowed value range: minimum=0, step=1
-func (client *RenderingControl2) GetRedVideoGain(InstanceID uint32) (CurrentRedVideoGain uint16, err error) {
+func (client *RenderingControl2) GetRedVideoGain(
+	ctx context.Context,
+	InstanceID uint32,
+) (CurrentRedVideoGain uint16, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -5766,7 +6288,7 @@ func (client *RenderingControl2) GetRedVideoGain(InstanceID uint32) (CurrentRedV
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_2, "GetRedVideoGain", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_2, "GetRedVideoGain", request, response); err != nil {
 		return
 	}
 
@@ -5784,7 +6306,11 @@ func (client *RenderingControl2) GetRedVideoGain(InstanceID uint32) (CurrentRedV
 //
 // * DesiredRedVideoGain: allowed value range: minimum=0, step=1
 
-func (client *RenderingControl2) SetRedVideoGain(InstanceID uint32, DesiredRedVideoGain uint16) (err error) {
+func (client *RenderingControl2) SetRedVideoGain(
+	ctx context.Context,
+	InstanceID uint32,
+	DesiredRedVideoGain uint16,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID          string
@@ -5804,7 +6330,7 @@ func (client *RenderingControl2) SetRedVideoGain(InstanceID uint32, DesiredRedVi
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_2, "SetRedVideoGain", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_2, "SetRedVideoGain", request, response); err != nil {
 		return
 	}
 
@@ -5818,7 +6344,10 @@ func (client *RenderingControl2) SetRedVideoGain(InstanceID uint32, DesiredRedVi
 // Return values:
 //
 // * CurrentGreenVideoGain: allowed value range: minimum=0, step=1
-func (client *RenderingControl2) GetGreenVideoGain(InstanceID uint32) (CurrentGreenVideoGain uint16, err error) {
+func (client *RenderingControl2) GetGreenVideoGain(
+	ctx context.Context,
+	InstanceID uint32,
+) (CurrentGreenVideoGain uint16, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -5836,7 +6365,7 @@ func (client *RenderingControl2) GetGreenVideoGain(InstanceID uint32) (CurrentGr
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_2, "GetGreenVideoGain", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_2, "GetGreenVideoGain", request, response); err != nil {
 		return
 	}
 
@@ -5854,7 +6383,11 @@ func (client *RenderingControl2) GetGreenVideoGain(InstanceID uint32) (CurrentGr
 //
 // * DesiredGreenVideoGain: allowed value range: minimum=0, step=1
 
-func (client *RenderingControl2) SetGreenVideoGain(InstanceID uint32, DesiredGreenVideoGain uint16) (err error) {
+func (client *RenderingControl2) SetGreenVideoGain(
+	ctx context.Context,
+	InstanceID uint32,
+	DesiredGreenVideoGain uint16,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID            string
@@ -5874,7 +6407,7 @@ func (client *RenderingControl2) SetGreenVideoGain(InstanceID uint32, DesiredGre
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_2, "SetGreenVideoGain", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_2, "SetGreenVideoGain", request, response); err != nil {
 		return
 	}
 
@@ -5888,7 +6421,10 @@ func (client *RenderingControl2) SetGreenVideoGain(InstanceID uint32, DesiredGre
 // Return values:
 //
 // * CurrentBlueVideoGain: allowed value range: minimum=0, step=1
-func (client *RenderingControl2) GetBlueVideoGain(InstanceID uint32) (CurrentBlueVideoGain uint16, err error) {
+func (client *RenderingControl2) GetBlueVideoGain(
+	ctx context.Context,
+	InstanceID uint32,
+) (CurrentBlueVideoGain uint16, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -5906,7 +6442,7 @@ func (client *RenderingControl2) GetBlueVideoGain(InstanceID uint32) (CurrentBlu
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_2, "GetBlueVideoGain", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_2, "GetBlueVideoGain", request, response); err != nil {
 		return
 	}
 
@@ -5924,7 +6460,11 @@ func (client *RenderingControl2) GetBlueVideoGain(InstanceID uint32) (CurrentBlu
 //
 // * DesiredBlueVideoGain: allowed value range: minimum=0, step=1
 
-func (client *RenderingControl2) SetBlueVideoGain(InstanceID uint32, DesiredBlueVideoGain uint16) (err error) {
+func (client *RenderingControl2) SetBlueVideoGain(
+	ctx context.Context,
+	InstanceID uint32,
+	DesiredBlueVideoGain uint16,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID           string
@@ -5944,7 +6484,7 @@ func (client *RenderingControl2) SetBlueVideoGain(InstanceID uint32, DesiredBlue
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_2, "SetBlueVideoGain", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_2, "SetBlueVideoGain", request, response); err != nil {
 		return
 	}
 
@@ -5958,7 +6498,10 @@ func (client *RenderingControl2) SetBlueVideoGain(InstanceID uint32, DesiredBlue
 // Return values:
 //
 // * CurrentRedVideoBlackLevel: allowed value range: minimum=0, step=1
-func (client *RenderingControl2) GetRedVideoBlackLevel(InstanceID uint32) (CurrentRedVideoBlackLevel uint16, err error) {
+func (client *RenderingControl2) GetRedVideoBlackLevel(
+	ctx context.Context,
+	InstanceID uint32,
+) (CurrentRedVideoBlackLevel uint16, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -5976,7 +6519,7 @@ func (client *RenderingControl2) GetRedVideoBlackLevel(InstanceID uint32) (Curre
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_2, "GetRedVideoBlackLevel", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_2, "GetRedVideoBlackLevel", request, response); err != nil {
 		return
 	}
 
@@ -5994,7 +6537,11 @@ func (client *RenderingControl2) GetRedVideoBlackLevel(InstanceID uint32) (Curre
 //
 // * DesiredRedVideoBlackLevel: allowed value range: minimum=0, step=1
 
-func (client *RenderingControl2) SetRedVideoBlackLevel(InstanceID uint32, DesiredRedVideoBlackLevel uint16) (err error) {
+func (client *RenderingControl2) SetRedVideoBlackLevel(
+	ctx context.Context,
+	InstanceID uint32,
+	DesiredRedVideoBlackLevel uint16,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID                string
@@ -6014,7 +6561,7 @@ func (client *RenderingControl2) SetRedVideoBlackLevel(InstanceID uint32, Desire
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_2, "SetRedVideoBlackLevel", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_2, "SetRedVideoBlackLevel", request, response); err != nil {
 		return
 	}
 
@@ -6028,7 +6575,10 @@ func (client *RenderingControl2) SetRedVideoBlackLevel(InstanceID uint32, Desire
 // Return values:
 //
 // * CurrentGreenVideoBlackLevel: allowed value range: minimum=0, step=1
-func (client *RenderingControl2) GetGreenVideoBlackLevel(InstanceID uint32) (CurrentGreenVideoBlackLevel uint16, err error) {
+func (client *RenderingControl2) GetGreenVideoBlackLevel(
+	ctx context.Context,
+	InstanceID uint32,
+) (CurrentGreenVideoBlackLevel uint16, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -6046,7 +6596,7 @@ func (client *RenderingControl2) GetGreenVideoBlackLevel(InstanceID uint32) (Cur
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_2, "GetGreenVideoBlackLevel", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_2, "GetGreenVideoBlackLevel", request, response); err != nil {
 		return
 	}
 
@@ -6064,7 +6614,11 @@ func (client *RenderingControl2) GetGreenVideoBlackLevel(InstanceID uint32) (Cur
 //
 // * DesiredGreenVideoBlackLevel: allowed value range: minimum=0, step=1
 
-func (client *RenderingControl2) SetGreenVideoBlackLevel(InstanceID uint32, DesiredGreenVideoBlackLevel uint16) (err error) {
+func (client *RenderingControl2) SetGreenVideoBlackLevel(
+	ctx context.Context,
+	InstanceID uint32,
+	DesiredGreenVideoBlackLevel uint16,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID                  string
@@ -6084,7 +6638,7 @@ func (client *RenderingControl2) SetGreenVideoBlackLevel(InstanceID uint32, Desi
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_2, "SetGreenVideoBlackLevel", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_2, "SetGreenVideoBlackLevel", request, response); err != nil {
 		return
 	}
 
@@ -6098,7 +6652,10 @@ func (client *RenderingControl2) SetGreenVideoBlackLevel(InstanceID uint32, Desi
 // Return values:
 //
 // * CurrentBlueVideoBlackLevel: allowed value range: minimum=0, step=1
-func (client *RenderingControl2) GetBlueVideoBlackLevel(InstanceID uint32) (CurrentBlueVideoBlackLevel uint16, err error) {
+func (client *RenderingControl2) GetBlueVideoBlackLevel(
+	ctx context.Context,
+	InstanceID uint32,
+) (CurrentBlueVideoBlackLevel uint16, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -6116,7 +6673,7 @@ func (client *RenderingControl2) GetBlueVideoBlackLevel(InstanceID uint32) (Curr
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_2, "GetBlueVideoBlackLevel", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_2, "GetBlueVideoBlackLevel", request, response); err != nil {
 		return
 	}
 
@@ -6134,7 +6691,11 @@ func (client *RenderingControl2) GetBlueVideoBlackLevel(InstanceID uint32) (Curr
 //
 // * DesiredBlueVideoBlackLevel: allowed value range: minimum=0, step=1
 
-func (client *RenderingControl2) SetBlueVideoBlackLevel(InstanceID uint32, DesiredBlueVideoBlackLevel uint16) (err error) {
+func (client *RenderingControl2) SetBlueVideoBlackLevel(
+	ctx context.Context,
+	InstanceID uint32,
+	DesiredBlueVideoBlackLevel uint16,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID                 string
@@ -6154,7 +6715,7 @@ func (client *RenderingControl2) SetBlueVideoBlackLevel(InstanceID uint32, Desir
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_2, "SetBlueVideoBlackLevel", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_2, "SetBlueVideoBlackLevel", request, response); err != nil {
 		return
 	}
 
@@ -6168,7 +6729,10 @@ func (client *RenderingControl2) SetBlueVideoBlackLevel(InstanceID uint32, Desir
 // Return values:
 //
 // * CurrentColorTemperature: allowed value range: minimum=0, step=1
-func (client *RenderingControl2) GetColorTemperature(InstanceID uint32) (CurrentColorTemperature uint16, err error) {
+func (client *RenderingControl2) GetColorTemperature(
+	ctx context.Context,
+	InstanceID uint32,
+) (CurrentColorTemperature uint16, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -6186,7 +6750,7 @@ func (client *RenderingControl2) GetColorTemperature(InstanceID uint32) (Current
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_2, "GetColorTemperature", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_2, "GetColorTemperature", request, response); err != nil {
 		return
 	}
 
@@ -6204,7 +6768,11 @@ func (client *RenderingControl2) GetColorTemperature(InstanceID uint32) (Current
 //
 // * DesiredColorTemperature: allowed value range: minimum=0, step=1
 
-func (client *RenderingControl2) SetColorTemperature(InstanceID uint32, DesiredColorTemperature uint16) (err error) {
+func (client *RenderingControl2) SetColorTemperature(
+	ctx context.Context,
+	InstanceID uint32,
+	DesiredColorTemperature uint16,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID              string
@@ -6224,7 +6792,7 @@ func (client *RenderingControl2) SetColorTemperature(InstanceID uint32, DesiredC
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_2, "SetColorTemperature", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_2, "SetColorTemperature", request, response); err != nil {
 		return
 	}
 
@@ -6238,7 +6806,10 @@ func (client *RenderingControl2) SetColorTemperature(InstanceID uint32, DesiredC
 // Return values:
 //
 // * CurrentHorizontalKeystone: allowed value range: step=1
-func (client *RenderingControl2) GetHorizontalKeystone(InstanceID uint32) (CurrentHorizontalKeystone int16, err error) {
+func (client *RenderingControl2) GetHorizontalKeystone(
+	ctx context.Context,
+	InstanceID uint32,
+) (CurrentHorizontalKeystone int16, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -6256,7 +6827,7 @@ func (client *RenderingControl2) GetHorizontalKeystone(InstanceID uint32) (Curre
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_2, "GetHorizontalKeystone", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_2, "GetHorizontalKeystone", request, response); err != nil {
 		return
 	}
 
@@ -6274,7 +6845,11 @@ func (client *RenderingControl2) GetHorizontalKeystone(InstanceID uint32) (Curre
 //
 // * DesiredHorizontalKeystone: allowed value range: step=1
 
-func (client *RenderingControl2) SetHorizontalKeystone(InstanceID uint32, DesiredHorizontalKeystone int16) (err error) {
+func (client *RenderingControl2) SetHorizontalKeystone(
+	ctx context.Context,
+	InstanceID uint32,
+	DesiredHorizontalKeystone int16,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID                string
@@ -6294,7 +6869,7 @@ func (client *RenderingControl2) SetHorizontalKeystone(InstanceID uint32, Desire
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_2, "SetHorizontalKeystone", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_2, "SetHorizontalKeystone", request, response); err != nil {
 		return
 	}
 
@@ -6308,7 +6883,10 @@ func (client *RenderingControl2) SetHorizontalKeystone(InstanceID uint32, Desire
 // Return values:
 //
 // * CurrentVerticalKeystone: allowed value range: step=1
-func (client *RenderingControl2) GetVerticalKeystone(InstanceID uint32) (CurrentVerticalKeystone int16, err error) {
+func (client *RenderingControl2) GetVerticalKeystone(
+	ctx context.Context,
+	InstanceID uint32,
+) (CurrentVerticalKeystone int16, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -6326,7 +6904,7 @@ func (client *RenderingControl2) GetVerticalKeystone(InstanceID uint32) (Current
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_2, "GetVerticalKeystone", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_2, "GetVerticalKeystone", request, response); err != nil {
 		return
 	}
 
@@ -6344,7 +6922,11 @@ func (client *RenderingControl2) GetVerticalKeystone(InstanceID uint32) (Current
 //
 // * DesiredVerticalKeystone: allowed value range: step=1
 
-func (client *RenderingControl2) SetVerticalKeystone(InstanceID uint32, DesiredVerticalKeystone int16) (err error) {
+func (client *RenderingControl2) SetVerticalKeystone(
+	ctx context.Context,
+	InstanceID uint32,
+	DesiredVerticalKeystone int16,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID              string
@@ -6364,7 +6946,7 @@ func (client *RenderingControl2) SetVerticalKeystone(InstanceID uint32, DesiredV
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_2, "SetVerticalKeystone", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_2, "SetVerticalKeystone", request, response); err != nil {
 		return
 	}
 
@@ -6379,7 +6961,11 @@ func (client *RenderingControl2) SetVerticalKeystone(InstanceID uint32, DesiredV
 //
 // * Channel: allowed values: Master
 
-func (client *RenderingControl2) GetMute(InstanceID uint32, Channel string) (CurrentMute bool, err error) {
+func (client *RenderingControl2) GetMute(
+	ctx context.Context,
+	InstanceID uint32,
+	Channel string,
+) (CurrentMute bool, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -6401,7 +6987,7 @@ func (client *RenderingControl2) GetMute(InstanceID uint32, Channel string) (Cur
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_2, "GetMute", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_2, "GetMute", request, response); err != nil {
 		return
 	}
 
@@ -6419,7 +7005,12 @@ func (client *RenderingControl2) GetMute(InstanceID uint32, Channel string) (Cur
 //
 // * Channel: allowed values: Master
 
-func (client *RenderingControl2) SetMute(InstanceID uint32, Channel string, DesiredMute bool) (err error) {
+func (client *RenderingControl2) SetMute(
+	ctx context.Context,
+	InstanceID uint32,
+	Channel string,
+	DesiredMute bool,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID  string
@@ -6443,7 +7034,7 @@ func (client *RenderingControl2) SetMute(InstanceID uint32, Channel string, Desi
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_2, "SetMute", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_2, "SetMute", request, response); err != nil {
 		return
 	}
 
@@ -6462,7 +7053,11 @@ func (client *RenderingControl2) SetMute(InstanceID uint32, Channel string, Desi
 // Return values:
 //
 // * CurrentVolume: allowed value range: minimum=0, step=1
-func (client *RenderingControl2) GetVolume(InstanceID uint32, Channel string) (CurrentVolume uint16, err error) {
+func (client *RenderingControl2) GetVolume(
+	ctx context.Context,
+	InstanceID uint32,
+	Channel string,
+) (CurrentVolume uint16, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -6484,7 +7079,7 @@ func (client *RenderingControl2) GetVolume(InstanceID uint32, Channel string) (C
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_2, "GetVolume", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_2, "GetVolume", request, response); err != nil {
 		return
 	}
 
@@ -6504,7 +7099,12 @@ func (client *RenderingControl2) GetVolume(InstanceID uint32, Channel string) (C
 //
 // * DesiredVolume: allowed value range: minimum=0, step=1
 
-func (client *RenderingControl2) SetVolume(InstanceID uint32, Channel string, DesiredVolume uint16) (err error) {
+func (client *RenderingControl2) SetVolume(
+	ctx context.Context,
+	InstanceID uint32,
+	Channel string,
+	DesiredVolume uint16,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID    string
@@ -6528,7 +7128,7 @@ func (client *RenderingControl2) SetVolume(InstanceID uint32, Channel string, De
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_2, "SetVolume", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_2, "SetVolume", request, response); err != nil {
 		return
 	}
 
@@ -6543,7 +7143,11 @@ func (client *RenderingControl2) SetVolume(InstanceID uint32, Channel string, De
 //
 // * Channel: allowed values: Master
 
-func (client *RenderingControl2) GetVolumeDB(InstanceID uint32, Channel string) (CurrentVolume int16, err error) {
+func (client *RenderingControl2) GetVolumeDB(
+	ctx context.Context,
+	InstanceID uint32,
+	Channel string,
+) (CurrentVolume int16, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -6565,7 +7169,7 @@ func (client *RenderingControl2) GetVolumeDB(InstanceID uint32, Channel string) 
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_2, "GetVolumeDB", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_2, "GetVolumeDB", request, response); err != nil {
 		return
 	}
 
@@ -6583,7 +7187,12 @@ func (client *RenderingControl2) GetVolumeDB(InstanceID uint32, Channel string) 
 //
 // * Channel: allowed values: Master
 
-func (client *RenderingControl2) SetVolumeDB(InstanceID uint32, Channel string, DesiredVolume int16) (err error) {
+func (client *RenderingControl2) SetVolumeDB(
+	ctx context.Context,
+	InstanceID uint32,
+	Channel string,
+	DesiredVolume int16,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID    string
@@ -6607,7 +7216,7 @@ func (client *RenderingControl2) SetVolumeDB(InstanceID uint32, Channel string, 
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_2, "SetVolumeDB", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_2, "SetVolumeDB", request, response); err != nil {
 		return
 	}
 
@@ -6622,7 +7231,11 @@ func (client *RenderingControl2) SetVolumeDB(InstanceID uint32, Channel string, 
 //
 // * Channel: allowed values: Master
 
-func (client *RenderingControl2) GetVolumeDBRange(InstanceID uint32, Channel string) (MinValue int16, MaxValue int16, err error) {
+func (client *RenderingControl2) GetVolumeDBRange(
+	ctx context.Context,
+	InstanceID uint32,
+	Channel string,
+) (MinValue int16, MaxValue int16, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -6645,7 +7258,7 @@ func (client *RenderingControl2) GetVolumeDBRange(InstanceID uint32, Channel str
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_2, "GetVolumeDBRange", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_2, "GetVolumeDBRange", request, response); err != nil {
 		return
 	}
 
@@ -6666,7 +7279,11 @@ func (client *RenderingControl2) GetVolumeDBRange(InstanceID uint32, Channel str
 //
 // * Channel: allowed values: Master
 
-func (client *RenderingControl2) GetLoudness(InstanceID uint32, Channel string) (CurrentLoudness bool, err error) {
+func (client *RenderingControl2) GetLoudness(
+	ctx context.Context,
+	InstanceID uint32,
+	Channel string,
+) (CurrentLoudness bool, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID string
@@ -6688,7 +7305,7 @@ func (client *RenderingControl2) GetLoudness(InstanceID uint32, Channel string) 
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_2, "GetLoudness", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_2, "GetLoudness", request, response); err != nil {
 		return
 	}
 
@@ -6706,7 +7323,12 @@ func (client *RenderingControl2) GetLoudness(InstanceID uint32, Channel string) 
 //
 // * Channel: allowed values: Master
 
-func (client *RenderingControl2) SetLoudness(InstanceID uint32, Channel string, DesiredLoudness bool) (err error) {
+func (client *RenderingControl2) SetLoudness(
+	ctx context.Context,
+	InstanceID uint32,
+	Channel string,
+	DesiredLoudness bool,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID      string
@@ -6730,7 +7352,7 @@ func (client *RenderingControl2) SetLoudness(InstanceID uint32, Channel string, 
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_2, "SetLoudness", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_2, "SetLoudness", request, response); err != nil {
 		return
 	}
 
@@ -6740,7 +7362,11 @@ func (client *RenderingControl2) SetLoudness(InstanceID uint32, Channel string, 
 	return
 }
 
-func (client *RenderingControl2) GetStateVariables(InstanceID uint32, StateVariableList string) (StateVariableValuePairs string, err error) {
+func (client *RenderingControl2) GetStateVariables(
+	ctx context.Context,
+	InstanceID uint32,
+	StateVariableList string,
+) (StateVariableValuePairs string, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID        string
@@ -6762,7 +7388,7 @@ func (client *RenderingControl2) GetStateVariables(InstanceID uint32, StateVaria
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_2, "GetStateVariables", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_2, "GetStateVariables", request, response); err != nil {
 		return
 	}
 
@@ -6775,7 +7401,14 @@ func (client *RenderingControl2) GetStateVariables(InstanceID uint32, StateVaria
 	return
 }
 
-func (client *RenderingControl2) SetStateVariables(InstanceID uint32, RenderingControlUDN string, ServiceType string, ServiceId string, StateVariableValuePairs string) (StateVariableList string, err error) {
+func (client *RenderingControl2) SetStateVariables(
+	ctx context.Context,
+	InstanceID uint32,
+	RenderingControlUDN string,
+	ServiceType string,
+	ServiceId string,
+	StateVariableValuePairs string,
+) (StateVariableList string, err error) {
 	// Request structure.
 	request := &struct {
 		InstanceID              string
@@ -6809,7 +7442,7 @@ func (client *RenderingControl2) SetStateVariables(InstanceID uint32, RenderingC
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_RenderingControl_2, "SetStateVariables", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_RenderingControl_2, "SetStateVariables", request, response); err != nil {
 		return
 	}
 
@@ -6835,9 +7468,9 @@ type ScheduledRecording1 struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewScheduledRecording1Clients() (clients []*ScheduledRecording1, errors []error, err error) {
+func NewScheduledRecording1Clients(ctx context.Context) (clients []*ScheduledRecording1, errors []error, err error) {
 	var genericClients []discover.ServiceClient
-	if genericClients, errors, err = discover.NewServiceClients(URN_ScheduledRecording_1); err != nil {
+	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_ScheduledRecording_1); err != nil {
 		return
 	}
 	clients = newScheduledRecording1ClientsFromGenericClients(genericClients)
@@ -6850,8 +7483,8 @@ func NewScheduledRecording1Clients() (clients []*ScheduledRecording1, errors []e
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
-func NewScheduledRecording1ClientsByURL(loc *url.URL) ([]*ScheduledRecording1, error) {
-	genericClients, err := discover.NewServiceClientsByURL(loc, URN_ScheduledRecording_1)
+func NewScheduledRecording1ClientsByURL(ctx context.Context, loc *url.URL) ([]*ScheduledRecording1, error) {
+	genericClients, err := discover.NewServiceClientsByURL(ctx, loc, URN_ScheduledRecording_1)
 	if err != nil {
 		return nil, err
 	}
@@ -6882,7 +7515,9 @@ func newScheduledRecording1ClientsFromGenericClients(genericClients []discover.S
 	return clients
 }
 
-func (client *ScheduledRecording1) GetSortCapabilities() (SortCaps string, SortLevelCap uint32, err error) {
+func (client *ScheduledRecording1) GetSortCapabilities(
+	ctx context.Context,
+) (SortCaps string, SortLevelCap uint32, err error) {
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -6896,7 +7531,7 @@ func (client *ScheduledRecording1) GetSortCapabilities() (SortCaps string, SortL
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ScheduledRecording_1, "GetSortCapabilities", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ScheduledRecording_1, "GetSortCapabilities", request, response); err != nil {
 		return
 	}
 
@@ -6917,7 +7552,10 @@ func (client *ScheduledRecording1) GetSortCapabilities() (SortCaps string, SortL
 //
 // * DataTypeID: allowed values: A_ARG_TYPE_RecordSchedule, A_ARG_TYPE_RecordTask, A_ARG_TYPE_RecordScheduleParts
 
-func (client *ScheduledRecording1) GetPropertyList(DataTypeID string) (PropertyList string, err error) {
+func (client *ScheduledRecording1) GetPropertyList(
+	ctx context.Context,
+	DataTypeID string,
+) (PropertyList string, err error) {
 	// Request structure.
 	request := &struct {
 		DataTypeID string
@@ -6935,7 +7573,7 @@ func (client *ScheduledRecording1) GetPropertyList(DataTypeID string) (PropertyL
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ScheduledRecording_1, "GetPropertyList", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ScheduledRecording_1, "GetPropertyList", request, response); err != nil {
 		return
 	}
 
@@ -6953,7 +7591,11 @@ func (client *ScheduledRecording1) GetPropertyList(DataTypeID string) (PropertyL
 //
 // * DataTypeID: allowed values: A_ARG_TYPE_RecordSchedule, A_ARG_TYPE_RecordTask, A_ARG_TYPE_RecordScheduleParts
 
-func (client *ScheduledRecording1) GetAllowedValues(DataTypeID string, Filter string) (PropertyInfo string, err error) {
+func (client *ScheduledRecording1) GetAllowedValues(
+	ctx context.Context,
+	DataTypeID string,
+	Filter string,
+) (PropertyInfo string, err error) {
 	// Request structure.
 	request := &struct {
 		DataTypeID string
@@ -6975,7 +7617,7 @@ func (client *ScheduledRecording1) GetAllowedValues(DataTypeID string, Filter st
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ScheduledRecording_1, "GetAllowedValues", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ScheduledRecording_1, "GetAllowedValues", request, response); err != nil {
 		return
 	}
 
@@ -6988,7 +7630,9 @@ func (client *ScheduledRecording1) GetAllowedValues(DataTypeID string, Filter st
 	return
 }
 
-func (client *ScheduledRecording1) GetStateUpdateID() (Id uint32, err error) {
+func (client *ScheduledRecording1) GetStateUpdateID(
+	ctx context.Context,
+) (Id uint32, err error) {
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -7001,7 +7645,7 @@ func (client *ScheduledRecording1) GetStateUpdateID() (Id uint32, err error) {
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ScheduledRecording_1, "GetStateUpdateID", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ScheduledRecording_1, "GetStateUpdateID", request, response); err != nil {
 		return
 	}
 
@@ -7014,7 +7658,13 @@ func (client *ScheduledRecording1) GetStateUpdateID() (Id uint32, err error) {
 	return
 }
 
-func (client *ScheduledRecording1) BrowseRecordSchedules(Filter string, StartingIndex uint32, RequestedCount uint32, SortCriteria string) (Result string, NumberReturned uint32, TotalMatches uint32, UpdateID uint32, err error) {
+func (client *ScheduledRecording1) BrowseRecordSchedules(
+	ctx context.Context,
+	Filter string,
+	StartingIndex uint32,
+	RequestedCount uint32,
+	SortCriteria string,
+) (Result string, NumberReturned uint32, TotalMatches uint32, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
 		Filter         string
@@ -7047,7 +7697,7 @@ func (client *ScheduledRecording1) BrowseRecordSchedules(Filter string, Starting
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ScheduledRecording_1, "BrowseRecordSchedules", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ScheduledRecording_1, "BrowseRecordSchedules", request, response); err != nil {
 		return
 	}
 
@@ -7069,7 +7719,14 @@ func (client *ScheduledRecording1) BrowseRecordSchedules(Filter string, Starting
 	return
 }
 
-func (client *ScheduledRecording1) BrowseRecordTasks(RecordScheduleID string, Filter string, StartingIndex uint32, RequestedCount uint32, SortCriteria string) (Result string, NumberReturned uint32, TotalMatches uint32, UpdateID uint32, err error) {
+func (client *ScheduledRecording1) BrowseRecordTasks(
+	ctx context.Context,
+	RecordScheduleID string,
+	Filter string,
+	StartingIndex uint32,
+	RequestedCount uint32,
+	SortCriteria string,
+) (Result string, NumberReturned uint32, TotalMatches uint32, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
 		RecordScheduleID string
@@ -7106,7 +7763,7 @@ func (client *ScheduledRecording1) BrowseRecordTasks(RecordScheduleID string, Fi
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ScheduledRecording_1, "BrowseRecordTasks", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ScheduledRecording_1, "BrowseRecordTasks", request, response); err != nil {
 		return
 	}
 
@@ -7128,7 +7785,10 @@ func (client *ScheduledRecording1) BrowseRecordTasks(RecordScheduleID string, Fi
 	return
 }
 
-func (client *ScheduledRecording1) CreateRecordSchedule(Elements string) (RecordScheduleID string, Result string, UpdateID uint32, err error) {
+func (client *ScheduledRecording1) CreateRecordSchedule(
+	ctx context.Context,
+	Elements string,
+) (RecordScheduleID string, Result string, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
 		Elements string
@@ -7148,7 +7808,7 @@ func (client *ScheduledRecording1) CreateRecordSchedule(Elements string) (Record
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ScheduledRecording_1, "CreateRecordSchedule", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ScheduledRecording_1, "CreateRecordSchedule", request, response); err != nil {
 		return
 	}
 
@@ -7167,7 +7827,10 @@ func (client *ScheduledRecording1) CreateRecordSchedule(Elements string) (Record
 	return
 }
 
-func (client *ScheduledRecording1) DeleteRecordSchedule(RecordScheduleID string) (err error) {
+func (client *ScheduledRecording1) DeleteRecordSchedule(
+	ctx context.Context,
+	RecordScheduleID string,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		RecordScheduleID string
@@ -7183,7 +7846,7 @@ func (client *ScheduledRecording1) DeleteRecordSchedule(RecordScheduleID string)
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ScheduledRecording_1, "DeleteRecordSchedule", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ScheduledRecording_1, "DeleteRecordSchedule", request, response); err != nil {
 		return
 	}
 
@@ -7193,7 +7856,11 @@ func (client *ScheduledRecording1) DeleteRecordSchedule(RecordScheduleID string)
 	return
 }
 
-func (client *ScheduledRecording1) GetRecordSchedule(RecordScheduleID string, Filter string) (Result string, UpdateID uint32, err error) {
+func (client *ScheduledRecording1) GetRecordSchedule(
+	ctx context.Context,
+	RecordScheduleID string,
+	Filter string,
+) (Result string, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
 		RecordScheduleID string
@@ -7216,7 +7883,7 @@ func (client *ScheduledRecording1) GetRecordSchedule(RecordScheduleID string, Fi
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ScheduledRecording_1, "GetRecordSchedule", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ScheduledRecording_1, "GetRecordSchedule", request, response); err != nil {
 		return
 	}
 
@@ -7232,7 +7899,10 @@ func (client *ScheduledRecording1) GetRecordSchedule(RecordScheduleID string, Fi
 	return
 }
 
-func (client *ScheduledRecording1) EnableRecordSchedule(RecordScheduleID string) (err error) {
+func (client *ScheduledRecording1) EnableRecordSchedule(
+	ctx context.Context,
+	RecordScheduleID string,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		RecordScheduleID string
@@ -7248,7 +7918,7 @@ func (client *ScheduledRecording1) EnableRecordSchedule(RecordScheduleID string)
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ScheduledRecording_1, "EnableRecordSchedule", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ScheduledRecording_1, "EnableRecordSchedule", request, response); err != nil {
 		return
 	}
 
@@ -7258,7 +7928,10 @@ func (client *ScheduledRecording1) EnableRecordSchedule(RecordScheduleID string)
 	return
 }
 
-func (client *ScheduledRecording1) DisableRecordSchedule(RecordScheduleID string) (err error) {
+func (client *ScheduledRecording1) DisableRecordSchedule(
+	ctx context.Context,
+	RecordScheduleID string,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		RecordScheduleID string
@@ -7274,7 +7947,7 @@ func (client *ScheduledRecording1) DisableRecordSchedule(RecordScheduleID string
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ScheduledRecording_1, "DisableRecordSchedule", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ScheduledRecording_1, "DisableRecordSchedule", request, response); err != nil {
 		return
 	}
 
@@ -7284,7 +7957,10 @@ func (client *ScheduledRecording1) DisableRecordSchedule(RecordScheduleID string
 	return
 }
 
-func (client *ScheduledRecording1) DeleteRecordTask(RecordTaskID string) (err error) {
+func (client *ScheduledRecording1) DeleteRecordTask(
+	ctx context.Context,
+	RecordTaskID string,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		RecordTaskID string
@@ -7300,7 +7976,7 @@ func (client *ScheduledRecording1) DeleteRecordTask(RecordTaskID string) (err er
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ScheduledRecording_1, "DeleteRecordTask", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ScheduledRecording_1, "DeleteRecordTask", request, response); err != nil {
 		return
 	}
 
@@ -7310,7 +7986,11 @@ func (client *ScheduledRecording1) DeleteRecordTask(RecordTaskID string) (err er
 	return
 }
 
-func (client *ScheduledRecording1) GetRecordTask(RecordTaskID string, Filter string) (Result string, UpdateID uint32, err error) {
+func (client *ScheduledRecording1) GetRecordTask(
+	ctx context.Context,
+	RecordTaskID string,
+	Filter string,
+) (Result string, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
 		RecordTaskID string
@@ -7333,7 +8013,7 @@ func (client *ScheduledRecording1) GetRecordTask(RecordTaskID string, Filter str
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ScheduledRecording_1, "GetRecordTask", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ScheduledRecording_1, "GetRecordTask", request, response); err != nil {
 		return
 	}
 
@@ -7349,7 +8029,10 @@ func (client *ScheduledRecording1) GetRecordTask(RecordTaskID string, Filter str
 	return
 }
 
-func (client *ScheduledRecording1) EnableRecordTask(RecordTaskID string) (err error) {
+func (client *ScheduledRecording1) EnableRecordTask(
+	ctx context.Context,
+	RecordTaskID string,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		RecordTaskID string
@@ -7365,7 +8048,7 @@ func (client *ScheduledRecording1) EnableRecordTask(RecordTaskID string) (err er
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ScheduledRecording_1, "EnableRecordTask", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ScheduledRecording_1, "EnableRecordTask", request, response); err != nil {
 		return
 	}
 
@@ -7375,7 +8058,10 @@ func (client *ScheduledRecording1) EnableRecordTask(RecordTaskID string) (err er
 	return
 }
 
-func (client *ScheduledRecording1) DisableRecordTask(RecordTaskID string) (err error) {
+func (client *ScheduledRecording1) DisableRecordTask(
+	ctx context.Context,
+	RecordTaskID string,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		RecordTaskID string
@@ -7391,7 +8077,7 @@ func (client *ScheduledRecording1) DisableRecordTask(RecordTaskID string) (err e
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ScheduledRecording_1, "DisableRecordTask", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ScheduledRecording_1, "DisableRecordTask", request, response); err != nil {
 		return
 	}
 
@@ -7401,7 +8087,10 @@ func (client *ScheduledRecording1) DisableRecordTask(RecordTaskID string) (err e
 	return
 }
 
-func (client *ScheduledRecording1) ResetRecordTask(RecordTaskID string) (err error) {
+func (client *ScheduledRecording1) ResetRecordTask(
+	ctx context.Context,
+	RecordTaskID string,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		RecordTaskID string
@@ -7417,7 +8106,7 @@ func (client *ScheduledRecording1) ResetRecordTask(RecordTaskID string) (err err
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ScheduledRecording_1, "ResetRecordTask", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ScheduledRecording_1, "ResetRecordTask", request, response); err != nil {
 		return
 	}
 
@@ -7427,7 +8116,10 @@ func (client *ScheduledRecording1) ResetRecordTask(RecordTaskID string) (err err
 	return
 }
 
-func (client *ScheduledRecording1) GetRecordScheduleConflicts(RecordScheduleID string) (RecordScheduleConflictIDList string, UpdateID uint32, err error) {
+func (client *ScheduledRecording1) GetRecordScheduleConflicts(
+	ctx context.Context,
+	RecordScheduleID string,
+) (RecordScheduleConflictIDList string, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
 		RecordScheduleID string
@@ -7446,7 +8138,7 @@ func (client *ScheduledRecording1) GetRecordScheduleConflicts(RecordScheduleID s
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ScheduledRecording_1, "GetRecordScheduleConflicts", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ScheduledRecording_1, "GetRecordScheduleConflicts", request, response); err != nil {
 		return
 	}
 
@@ -7462,7 +8154,10 @@ func (client *ScheduledRecording1) GetRecordScheduleConflicts(RecordScheduleID s
 	return
 }
 
-func (client *ScheduledRecording1) GetRecordTaskConflicts(RecordTaskID string) (RecordTaskConflictIDList string, UpdateID uint32, err error) {
+func (client *ScheduledRecording1) GetRecordTaskConflicts(
+	ctx context.Context,
+	RecordTaskID string,
+) (RecordTaskConflictIDList string, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
 		RecordTaskID string
@@ -7481,7 +8176,7 @@ func (client *ScheduledRecording1) GetRecordTaskConflicts(RecordTaskID string) (
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ScheduledRecording_1, "GetRecordTaskConflicts", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ScheduledRecording_1, "GetRecordTaskConflicts", request, response); err != nil {
 		return
 	}
 
@@ -7510,9 +8205,9 @@ type ScheduledRecording2 struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewScheduledRecording2Clients() (clients []*ScheduledRecording2, errors []error, err error) {
+func NewScheduledRecording2Clients(ctx context.Context) (clients []*ScheduledRecording2, errors []error, err error) {
 	var genericClients []discover.ServiceClient
-	if genericClients, errors, err = discover.NewServiceClients(URN_ScheduledRecording_2); err != nil {
+	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_ScheduledRecording_2); err != nil {
 		return
 	}
 	clients = newScheduledRecording2ClientsFromGenericClients(genericClients)
@@ -7525,8 +8220,8 @@ func NewScheduledRecording2Clients() (clients []*ScheduledRecording2, errors []e
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
-func NewScheduledRecording2ClientsByURL(loc *url.URL) ([]*ScheduledRecording2, error) {
-	genericClients, err := discover.NewServiceClientsByURL(loc, URN_ScheduledRecording_2)
+func NewScheduledRecording2ClientsByURL(ctx context.Context, loc *url.URL) ([]*ScheduledRecording2, error) {
+	genericClients, err := discover.NewServiceClientsByURL(ctx, loc, URN_ScheduledRecording_2)
 	if err != nil {
 		return nil, err
 	}
@@ -7557,7 +8252,9 @@ func newScheduledRecording2ClientsFromGenericClients(genericClients []discover.S
 	return clients
 }
 
-func (client *ScheduledRecording2) GetSortCapabilities() (SortCaps string, SortLevelCap uint32, err error) {
+func (client *ScheduledRecording2) GetSortCapabilities(
+	ctx context.Context,
+) (SortCaps string, SortLevelCap uint32, err error) {
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -7571,7 +8268,7 @@ func (client *ScheduledRecording2) GetSortCapabilities() (SortCaps string, SortL
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ScheduledRecording_2, "GetSortCapabilities", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ScheduledRecording_2, "GetSortCapabilities", request, response); err != nil {
 		return
 	}
 
@@ -7592,7 +8289,10 @@ func (client *ScheduledRecording2) GetSortCapabilities() (SortCaps string, SortL
 //
 // * DataTypeID: allowed values: A_ARG_TYPE_RecordSchedule, A_ARG_TYPE_RecordTask, A_ARG_TYPE_RecordScheduleParts
 
-func (client *ScheduledRecording2) GetPropertyList(DataTypeID string) (PropertyList string, err error) {
+func (client *ScheduledRecording2) GetPropertyList(
+	ctx context.Context,
+	DataTypeID string,
+) (PropertyList string, err error) {
 	// Request structure.
 	request := &struct {
 		DataTypeID string
@@ -7610,7 +8310,7 @@ func (client *ScheduledRecording2) GetPropertyList(DataTypeID string) (PropertyL
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ScheduledRecording_2, "GetPropertyList", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ScheduledRecording_2, "GetPropertyList", request, response); err != nil {
 		return
 	}
 
@@ -7628,7 +8328,11 @@ func (client *ScheduledRecording2) GetPropertyList(DataTypeID string) (PropertyL
 //
 // * DataTypeID: allowed values: A_ARG_TYPE_RecordSchedule, A_ARG_TYPE_RecordTask, A_ARG_TYPE_RecordScheduleParts
 
-func (client *ScheduledRecording2) GetAllowedValues(DataTypeID string, Filter string) (PropertyInfo string, err error) {
+func (client *ScheduledRecording2) GetAllowedValues(
+	ctx context.Context,
+	DataTypeID string,
+	Filter string,
+) (PropertyInfo string, err error) {
 	// Request structure.
 	request := &struct {
 		DataTypeID string
@@ -7650,7 +8354,7 @@ func (client *ScheduledRecording2) GetAllowedValues(DataTypeID string, Filter st
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ScheduledRecording_2, "GetAllowedValues", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ScheduledRecording_2, "GetAllowedValues", request, response); err != nil {
 		return
 	}
 
@@ -7663,7 +8367,9 @@ func (client *ScheduledRecording2) GetAllowedValues(DataTypeID string, Filter st
 	return
 }
 
-func (client *ScheduledRecording2) GetStateUpdateID() (Id uint32, err error) {
+func (client *ScheduledRecording2) GetStateUpdateID(
+	ctx context.Context,
+) (Id uint32, err error) {
 	// Request structure.
 	request := interface{}(nil)
 	// BEGIN Marshal arguments into request.
@@ -7676,7 +8382,7 @@ func (client *ScheduledRecording2) GetStateUpdateID() (Id uint32, err error) {
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ScheduledRecording_2, "GetStateUpdateID", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ScheduledRecording_2, "GetStateUpdateID", request, response); err != nil {
 		return
 	}
 
@@ -7689,7 +8395,13 @@ func (client *ScheduledRecording2) GetStateUpdateID() (Id uint32, err error) {
 	return
 }
 
-func (client *ScheduledRecording2) BrowseRecordSchedules(Filter string, StartingIndex uint32, RequestedCount uint32, SortCriteria string) (Result string, NumberReturned uint32, TotalMatches uint32, UpdateID uint32, err error) {
+func (client *ScheduledRecording2) BrowseRecordSchedules(
+	ctx context.Context,
+	Filter string,
+	StartingIndex uint32,
+	RequestedCount uint32,
+	SortCriteria string,
+) (Result string, NumberReturned uint32, TotalMatches uint32, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
 		Filter         string
@@ -7722,7 +8434,7 @@ func (client *ScheduledRecording2) BrowseRecordSchedules(Filter string, Starting
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ScheduledRecording_2, "BrowseRecordSchedules", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ScheduledRecording_2, "BrowseRecordSchedules", request, response); err != nil {
 		return
 	}
 
@@ -7744,7 +8456,14 @@ func (client *ScheduledRecording2) BrowseRecordSchedules(Filter string, Starting
 	return
 }
 
-func (client *ScheduledRecording2) BrowseRecordTasks(RecordScheduleID string, Filter string, StartingIndex uint32, RequestedCount uint32, SortCriteria string) (Result string, NumberReturned uint32, TotalMatches uint32, UpdateID uint32, err error) {
+func (client *ScheduledRecording2) BrowseRecordTasks(
+	ctx context.Context,
+	RecordScheduleID string,
+	Filter string,
+	StartingIndex uint32,
+	RequestedCount uint32,
+	SortCriteria string,
+) (Result string, NumberReturned uint32, TotalMatches uint32, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
 		RecordScheduleID string
@@ -7781,7 +8500,7 @@ func (client *ScheduledRecording2) BrowseRecordTasks(RecordScheduleID string, Fi
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ScheduledRecording_2, "BrowseRecordTasks", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ScheduledRecording_2, "BrowseRecordTasks", request, response); err != nil {
 		return
 	}
 
@@ -7803,7 +8522,10 @@ func (client *ScheduledRecording2) BrowseRecordTasks(RecordScheduleID string, Fi
 	return
 }
 
-func (client *ScheduledRecording2) CreateRecordSchedule(Elements string) (RecordScheduleID string, Result string, UpdateID uint32, err error) {
+func (client *ScheduledRecording2) CreateRecordSchedule(
+	ctx context.Context,
+	Elements string,
+) (RecordScheduleID string, Result string, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
 		Elements string
@@ -7823,7 +8545,7 @@ func (client *ScheduledRecording2) CreateRecordSchedule(Elements string) (Record
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ScheduledRecording_2, "CreateRecordSchedule", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ScheduledRecording_2, "CreateRecordSchedule", request, response); err != nil {
 		return
 	}
 
@@ -7842,7 +8564,10 @@ func (client *ScheduledRecording2) CreateRecordSchedule(Elements string) (Record
 	return
 }
 
-func (client *ScheduledRecording2) DeleteRecordSchedule(RecordScheduleID string) (err error) {
+func (client *ScheduledRecording2) DeleteRecordSchedule(
+	ctx context.Context,
+	RecordScheduleID string,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		RecordScheduleID string
@@ -7858,7 +8583,7 @@ func (client *ScheduledRecording2) DeleteRecordSchedule(RecordScheduleID string)
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ScheduledRecording_2, "DeleteRecordSchedule", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ScheduledRecording_2, "DeleteRecordSchedule", request, response); err != nil {
 		return
 	}
 
@@ -7868,7 +8593,11 @@ func (client *ScheduledRecording2) DeleteRecordSchedule(RecordScheduleID string)
 	return
 }
 
-func (client *ScheduledRecording2) GetRecordSchedule(RecordScheduleID string, Filter string) (Result string, UpdateID uint32, err error) {
+func (client *ScheduledRecording2) GetRecordSchedule(
+	ctx context.Context,
+	RecordScheduleID string,
+	Filter string,
+) (Result string, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
 		RecordScheduleID string
@@ -7891,7 +8620,7 @@ func (client *ScheduledRecording2) GetRecordSchedule(RecordScheduleID string, Fi
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ScheduledRecording_2, "GetRecordSchedule", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ScheduledRecording_2, "GetRecordSchedule", request, response); err != nil {
 		return
 	}
 
@@ -7907,7 +8636,10 @@ func (client *ScheduledRecording2) GetRecordSchedule(RecordScheduleID string, Fi
 	return
 }
 
-func (client *ScheduledRecording2) EnableRecordSchedule(RecordScheduleID string) (err error) {
+func (client *ScheduledRecording2) EnableRecordSchedule(
+	ctx context.Context,
+	RecordScheduleID string,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		RecordScheduleID string
@@ -7923,7 +8655,7 @@ func (client *ScheduledRecording2) EnableRecordSchedule(RecordScheduleID string)
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ScheduledRecording_2, "EnableRecordSchedule", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ScheduledRecording_2, "EnableRecordSchedule", request, response); err != nil {
 		return
 	}
 
@@ -7933,7 +8665,10 @@ func (client *ScheduledRecording2) EnableRecordSchedule(RecordScheduleID string)
 	return
 }
 
-func (client *ScheduledRecording2) DisableRecordSchedule(RecordScheduleID string) (err error) {
+func (client *ScheduledRecording2) DisableRecordSchedule(
+	ctx context.Context,
+	RecordScheduleID string,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		RecordScheduleID string
@@ -7949,7 +8684,7 @@ func (client *ScheduledRecording2) DisableRecordSchedule(RecordScheduleID string
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ScheduledRecording_2, "DisableRecordSchedule", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ScheduledRecording_2, "DisableRecordSchedule", request, response); err != nil {
 		return
 	}
 
@@ -7959,7 +8694,10 @@ func (client *ScheduledRecording2) DisableRecordSchedule(RecordScheduleID string
 	return
 }
 
-func (client *ScheduledRecording2) DeleteRecordTask(RecordTaskID string) (err error) {
+func (client *ScheduledRecording2) DeleteRecordTask(
+	ctx context.Context,
+	RecordTaskID string,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		RecordTaskID string
@@ -7975,7 +8713,7 @@ func (client *ScheduledRecording2) DeleteRecordTask(RecordTaskID string) (err er
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ScheduledRecording_2, "DeleteRecordTask", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ScheduledRecording_2, "DeleteRecordTask", request, response); err != nil {
 		return
 	}
 
@@ -7985,7 +8723,11 @@ func (client *ScheduledRecording2) DeleteRecordTask(RecordTaskID string) (err er
 	return
 }
 
-func (client *ScheduledRecording2) GetRecordTask(RecordTaskID string, Filter string) (Result string, UpdateID uint32, err error) {
+func (client *ScheduledRecording2) GetRecordTask(
+	ctx context.Context,
+	RecordTaskID string,
+	Filter string,
+) (Result string, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
 		RecordTaskID string
@@ -8008,7 +8750,7 @@ func (client *ScheduledRecording2) GetRecordTask(RecordTaskID string, Filter str
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ScheduledRecording_2, "GetRecordTask", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ScheduledRecording_2, "GetRecordTask", request, response); err != nil {
 		return
 	}
 
@@ -8024,7 +8766,10 @@ func (client *ScheduledRecording2) GetRecordTask(RecordTaskID string, Filter str
 	return
 }
 
-func (client *ScheduledRecording2) EnableRecordTask(RecordTaskID string) (err error) {
+func (client *ScheduledRecording2) EnableRecordTask(
+	ctx context.Context,
+	RecordTaskID string,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		RecordTaskID string
@@ -8040,7 +8785,7 @@ func (client *ScheduledRecording2) EnableRecordTask(RecordTaskID string) (err er
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ScheduledRecording_2, "EnableRecordTask", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ScheduledRecording_2, "EnableRecordTask", request, response); err != nil {
 		return
 	}
 
@@ -8050,7 +8795,10 @@ func (client *ScheduledRecording2) EnableRecordTask(RecordTaskID string) (err er
 	return
 }
 
-func (client *ScheduledRecording2) DisableRecordTask(RecordTaskID string) (err error) {
+func (client *ScheduledRecording2) DisableRecordTask(
+	ctx context.Context,
+	RecordTaskID string,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		RecordTaskID string
@@ -8066,7 +8814,7 @@ func (client *ScheduledRecording2) DisableRecordTask(RecordTaskID string) (err e
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ScheduledRecording_2, "DisableRecordTask", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ScheduledRecording_2, "DisableRecordTask", request, response); err != nil {
 		return
 	}
 
@@ -8076,7 +8824,10 @@ func (client *ScheduledRecording2) DisableRecordTask(RecordTaskID string) (err e
 	return
 }
 
-func (client *ScheduledRecording2) ResetRecordTask(RecordTaskID string) (err error) {
+func (client *ScheduledRecording2) ResetRecordTask(
+	ctx context.Context,
+	RecordTaskID string,
+) (err error) {
 	// Request structure.
 	request := &struct {
 		RecordTaskID string
@@ -8092,7 +8843,7 @@ func (client *ScheduledRecording2) ResetRecordTask(RecordTaskID string) (err err
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ScheduledRecording_2, "ResetRecordTask", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ScheduledRecording_2, "ResetRecordTask", request, response); err != nil {
 		return
 	}
 
@@ -8102,7 +8853,10 @@ func (client *ScheduledRecording2) ResetRecordTask(RecordTaskID string) (err err
 	return
 }
 
-func (client *ScheduledRecording2) GetRecordScheduleConflicts(RecordScheduleID string) (RecordScheduleConflictIDList string, UpdateID uint32, err error) {
+func (client *ScheduledRecording2) GetRecordScheduleConflicts(
+	ctx context.Context,
+	RecordScheduleID string,
+) (RecordScheduleConflictIDList string, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
 		RecordScheduleID string
@@ -8121,7 +8875,7 @@ func (client *ScheduledRecording2) GetRecordScheduleConflicts(RecordScheduleID s
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ScheduledRecording_2, "GetRecordScheduleConflicts", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ScheduledRecording_2, "GetRecordScheduleConflicts", request, response); err != nil {
 		return
 	}
 
@@ -8137,7 +8891,10 @@ func (client *ScheduledRecording2) GetRecordScheduleConflicts(RecordScheduleID s
 	return
 }
 
-func (client *ScheduledRecording2) GetRecordTaskConflicts(RecordTaskID string) (RecordTaskConflictIDList string, UpdateID uint32, err error) {
+func (client *ScheduledRecording2) GetRecordTaskConflicts(
+	ctx context.Context,
+	RecordTaskID string,
+) (RecordTaskConflictIDList string, UpdateID uint32, err error) {
 	// Request structure.
 	request := &struct {
 		RecordTaskID string
@@ -8156,7 +8913,7 @@ func (client *ScheduledRecording2) GetRecordTaskConflicts(RecordTaskID string) (
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(URN_ScheduledRecording_2, "GetRecordTaskConflicts", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(ctx, URN_ScheduledRecording_2, "GetRecordTaskConflicts", request, response); err != nil {
 		return
 	}
 
