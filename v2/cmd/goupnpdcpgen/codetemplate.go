@@ -22,6 +22,7 @@ import (
 	"time"
 
 	"github.com/huin/goupnp/v2/discover"
+	"github.com/huin/goupnp/v2/ssdp"
 	"github.com/huin/goupnp/v2/soap"
 )
 
@@ -55,9 +56,9 @@ type {{$srvIdent}} struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func New{{$srvIdent}}Clients(ctx context.Context) (clients []*{{$srvIdent}}, errors []error, err error) {
+func New{{$srvIdent}}Clients(ctx context.Context, searchOpts ...ssdp.SearchOption) (clients []*{{$srvIdent}}, errors []error, err error) {
 	var genericClients []discover.ServiceClient
-	if genericClients, errors, err = discover.NewServiceClients(ctx, {{$srv.Const}}); err != nil {
+	if genericClients, errors, err = discover.NewServiceClients(ctx, {{$srv.Const}}, searchOpts...); err != nil {
 		return
 	}
 	clients = new{{$srvIdent}}ClientsFromGenericClients(genericClients)

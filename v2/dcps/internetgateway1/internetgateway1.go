@@ -16,6 +16,7 @@ import (
 
 	"github.com/huin/goupnp/v2/discover"
 	"github.com/huin/goupnp/v2/soap"
+	"github.com/huin/goupnp/v2/ssdp"
 )
 
 // Hack to avoid Go complaining if time isn't used.
@@ -54,9 +55,9 @@ type LANHostConfigManagement1 struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewLANHostConfigManagement1Clients(ctx context.Context) (clients []*LANHostConfigManagement1, errors []error, err error) {
+func NewLANHostConfigManagement1Clients(ctx context.Context, searchOpts ...ssdp.SearchOption) (clients []*LANHostConfigManagement1, errors []error, err error) {
 	var genericClients []discover.ServiceClient
-	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_LANHostConfigManagement_1); err != nil {
+	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_LANHostConfigManagement_1, searchOpts...); err != nil {
 		return
 	}
 	clients = newLANHostConfigManagement1ClientsFromGenericClients(genericClients)
@@ -666,9 +667,9 @@ type Layer3Forwarding1 struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewLayer3Forwarding1Clients(ctx context.Context) (clients []*Layer3Forwarding1, errors []error, err error) {
+func NewLayer3Forwarding1Clients(ctx context.Context, searchOpts ...ssdp.SearchOption) (clients []*Layer3Forwarding1, errors []error, err error) {
 	var genericClients []discover.ServiceClient
-	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_Layer3Forwarding_1); err != nil {
+	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_Layer3Forwarding_1, searchOpts...); err != nil {
 		return
 	}
 	clients = newLayer3Forwarding1ClientsFromGenericClients(genericClients)
@@ -783,9 +784,9 @@ type WANCableLinkConfig1 struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewWANCableLinkConfig1Clients(ctx context.Context) (clients []*WANCableLinkConfig1, errors []error, err error) {
+func NewWANCableLinkConfig1Clients(ctx context.Context, searchOpts ...ssdp.SearchOption) (clients []*WANCableLinkConfig1, errors []error, err error) {
 	var genericClients []discover.ServiceClient
-	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_WANCableLinkConfig_1); err != nil {
+	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_WANCableLinkConfig_1, searchOpts...); err != nil {
 		return
 	}
 	clients = newWANCableLinkConfig1ClientsFromGenericClients(genericClients)
@@ -1141,9 +1142,9 @@ type WANCommonInterfaceConfig1 struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewWANCommonInterfaceConfig1Clients(ctx context.Context) (clients []*WANCommonInterfaceConfig1, errors []error, err error) {
+func NewWANCommonInterfaceConfig1Clients(ctx context.Context, searchOpts ...ssdp.SearchOption) (clients []*WANCommonInterfaceConfig1, errors []error, err error) {
 	var genericClients []discover.ServiceClient
-	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_WANCommonInterfaceConfig_1); err != nil {
+	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_WANCommonInterfaceConfig_1, searchOpts...); err != nil {
 		return
 	}
 	clients = newWANCommonInterfaceConfig1ClientsFromGenericClients(genericClients)
@@ -1514,9 +1515,9 @@ type WANDSLLinkConfig1 struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewWANDSLLinkConfig1Clients(ctx context.Context) (clients []*WANDSLLinkConfig1, errors []error, err error) {
+func NewWANDSLLinkConfig1Clients(ctx context.Context, searchOpts ...ssdp.SearchOption) (clients []*WANDSLLinkConfig1, errors []error, err error) {
 	var genericClients []discover.ServiceClient
-	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_WANDSLLinkConfig_1); err != nil {
+	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_WANDSLLinkConfig_1, searchOpts...); err != nil {
 		return
 	}
 	clients = newWANDSLLinkConfig1ClientsFromGenericClients(genericClients)
@@ -1866,9 +1867,9 @@ type WANEthernetLinkConfig1 struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewWANEthernetLinkConfig1Clients(ctx context.Context) (clients []*WANEthernetLinkConfig1, errors []error, err error) {
+func NewWANEthernetLinkConfig1Clients(ctx context.Context, searchOpts ...ssdp.SearchOption) (clients []*WANEthernetLinkConfig1, errors []error, err error) {
 	var genericClients []discover.ServiceClient
-	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_WANEthernetLinkConfig_1); err != nil {
+	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_WANEthernetLinkConfig_1, searchOpts...); err != nil {
 		return
 	}
 	clients = newWANEthernetLinkConfig1ClientsFromGenericClients(genericClients)
@@ -1958,9 +1959,9 @@ type WANIPConnection1 struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewWANIPConnection1Clients(ctx context.Context) (clients []*WANIPConnection1, errors []error, err error) {
+func NewWANIPConnection1Clients(ctx context.Context, searchOpts ...ssdp.SearchOption) (clients []*WANIPConnection1, errors []error, err error) {
 	var genericClients []discover.ServiceClient
-	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_WANIPConnection_1); err != nil {
+	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_WANIPConnection_1, searchOpts...); err != nil {
 		return
 	}
 	clients = newWANIPConnection1ClientsFromGenericClients(genericClients)
@@ -2669,9 +2670,9 @@ type WANPOTSLinkConfig1 struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewWANPOTSLinkConfig1Clients(ctx context.Context) (clients []*WANPOTSLinkConfig1, errors []error, err error) {
+func NewWANPOTSLinkConfig1Clients(ctx context.Context, searchOpts ...ssdp.SearchOption) (clients []*WANPOTSLinkConfig1, errors []error, err error) {
 	var genericClients []discover.ServiceClient
-	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_WANPOTSLinkConfig_1); err != nil {
+	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_WANPOTSLinkConfig_1, searchOpts...); err != nil {
 		return
 	}
 	clients = newWANPOTSLinkConfig1ClientsFromGenericClients(genericClients)
@@ -3019,9 +3020,9 @@ type WANPPPConnection1 struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewWANPPPConnection1Clients(ctx context.Context) (clients []*WANPPPConnection1, errors []error, err error) {
+func NewWANPPPConnection1Clients(ctx context.Context, searchOpts ...ssdp.SearchOption) (clients []*WANPPPConnection1, errors []error, err error) {
 	var genericClients []discover.ServiceClient
-	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_WANPPPConnection_1); err != nil {
+	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_WANPPPConnection_1, searchOpts...); err != nil {
 		return
 	}
 	clients = newWANPPPConnection1ClientsFromGenericClients(genericClients)

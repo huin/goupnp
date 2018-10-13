@@ -16,6 +16,7 @@ import (
 
 	"github.com/huin/goupnp/v2/discover"
 	"github.com/huin/goupnp/v2/soap"
+	"github.com/huin/goupnp/v2/ssdp"
 )
 
 // Hack to avoid Go complaining if time isn't used.
@@ -52,9 +53,9 @@ type AVTransport1 struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewAVTransport1Clients(ctx context.Context) (clients []*AVTransport1, errors []error, err error) {
+func NewAVTransport1Clients(ctx context.Context, searchOpts ...ssdp.SearchOption) (clients []*AVTransport1, errors []error, err error) {
 	var genericClients []discover.ServiceClient
-	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_AVTransport_1); err != nil {
+	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_AVTransport_1, searchOpts...); err != nil {
 		return
 	}
 	clients = newAVTransport1ClientsFromGenericClients(genericClients)
@@ -795,9 +796,9 @@ type AVTransport2 struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewAVTransport2Clients(ctx context.Context) (clients []*AVTransport2, errors []error, err error) {
+func NewAVTransport2Clients(ctx context.Context, searchOpts ...ssdp.SearchOption) (clients []*AVTransport2, errors []error, err error) {
 	var genericClients []discover.ServiceClient
-	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_AVTransport_2); err != nil {
+	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_AVTransport_2, searchOpts...); err != nil {
 		return
 	}
 	clients = newAVTransport2ClientsFromGenericClients(genericClients)
@@ -1745,9 +1746,9 @@ type ConnectionManager1 struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewConnectionManager1Clients(ctx context.Context) (clients []*ConnectionManager1, errors []error, err error) {
+func NewConnectionManager1Clients(ctx context.Context, searchOpts ...ssdp.SearchOption) (clients []*ConnectionManager1, errors []error, err error) {
 	var genericClients []discover.ServiceClient
-	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_ConnectionManager_1); err != nil {
+	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_ConnectionManager_1, searchOpts...); err != nil {
 		return
 	}
 	clients = newConnectionManager1ClientsFromGenericClients(genericClients)
@@ -2020,9 +2021,9 @@ type ConnectionManager2 struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewConnectionManager2Clients(ctx context.Context) (clients []*ConnectionManager2, errors []error, err error) {
+func NewConnectionManager2Clients(ctx context.Context, searchOpts ...ssdp.SearchOption) (clients []*ConnectionManager2, errors []error, err error) {
 	var genericClients []discover.ServiceClient
-	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_ConnectionManager_2); err != nil {
+	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_ConnectionManager_2, searchOpts...); err != nil {
 		return
 	}
 	clients = newConnectionManager2ClientsFromGenericClients(genericClients)
@@ -2295,9 +2296,9 @@ type ContentDirectory1 struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewContentDirectory1Clients(ctx context.Context) (clients []*ContentDirectory1, errors []error, err error) {
+func NewContentDirectory1Clients(ctx context.Context, searchOpts ...ssdp.SearchOption) (clients []*ContentDirectory1, errors []error, err error) {
 	var genericClients []discover.ServiceClient
-	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_ContentDirectory_1); err != nil {
+	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_ContentDirectory_1, searchOpts...); err != nil {
 		return
 	}
 	clients = newContentDirectory1ClientsFromGenericClients(genericClients)
@@ -2918,9 +2919,9 @@ type ContentDirectory2 struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewContentDirectory2Clients(ctx context.Context) (clients []*ContentDirectory2, errors []error, err error) {
+func NewContentDirectory2Clients(ctx context.Context, searchOpts ...ssdp.SearchOption) (clients []*ContentDirectory2, errors []error, err error) {
 	var genericClients []discover.ServiceClient
-	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_ContentDirectory_2); err != nil {
+	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_ContentDirectory_2, searchOpts...); err != nil {
 		return
 	}
 	clients = newContentDirectory2ClientsFromGenericClients(genericClients)
@@ -3636,9 +3637,9 @@ type ContentDirectory3 struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewContentDirectory3Clients(ctx context.Context) (clients []*ContentDirectory3, errors []error, err error) {
+func NewContentDirectory3Clients(ctx context.Context, searchOpts ...ssdp.SearchOption) (clients []*ContentDirectory3, errors []error, err error) {
 	var genericClients []discover.ServiceClient
-	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_ContentDirectory_3); err != nil {
+	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_ContentDirectory_3, searchOpts...); err != nil {
 		return
 	}
 	clients = newContentDirectory3ClientsFromGenericClients(genericClients)
@@ -4458,9 +4459,9 @@ type RenderingControl1 struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewRenderingControl1Clients(ctx context.Context) (clients []*RenderingControl1, errors []error, err error) {
+func NewRenderingControl1Clients(ctx context.Context, searchOpts ...ssdp.SearchOption) (clients []*RenderingControl1, errors []error, err error) {
 	var genericClients []discover.ServiceClient
-	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_RenderingControl_1); err != nil {
+	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_RenderingControl_1, searchOpts...); err != nil {
 		return
 	}
 	clients = newRenderingControl1ClientsFromGenericClients(genericClients)
@@ -5912,9 +5913,9 @@ type RenderingControl2 struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewRenderingControl2Clients(ctx context.Context) (clients []*RenderingControl2, errors []error, err error) {
+func NewRenderingControl2Clients(ctx context.Context, searchOpts ...ssdp.SearchOption) (clients []*RenderingControl2, errors []error, err error) {
 	var genericClients []discover.ServiceClient
-	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_RenderingControl_2); err != nil {
+	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_RenderingControl_2, searchOpts...); err != nil {
 		return
 	}
 	clients = newRenderingControl2ClientsFromGenericClients(genericClients)
@@ -7468,9 +7469,9 @@ type ScheduledRecording1 struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewScheduledRecording1Clients(ctx context.Context) (clients []*ScheduledRecording1, errors []error, err error) {
+func NewScheduledRecording1Clients(ctx context.Context, searchOpts ...ssdp.SearchOption) (clients []*ScheduledRecording1, errors []error, err error) {
 	var genericClients []discover.ServiceClient
-	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_ScheduledRecording_1); err != nil {
+	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_ScheduledRecording_1, searchOpts...); err != nil {
 		return
 	}
 	clients = newScheduledRecording1ClientsFromGenericClients(genericClients)
@@ -8205,9 +8206,9 @@ type ScheduledRecording2 struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewScheduledRecording2Clients(ctx context.Context) (clients []*ScheduledRecording2, errors []error, err error) {
+func NewScheduledRecording2Clients(ctx context.Context, searchOpts ...ssdp.SearchOption) (clients []*ScheduledRecording2, errors []error, err error) {
 	var genericClients []discover.ServiceClient
-	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_ScheduledRecording_2); err != nil {
+	if genericClients, errors, err = discover.NewServiceClients(ctx, URN_ScheduledRecording_2, searchOpts...); err != nil {
 		return
 	}
 	clients = newScheduledRecording2ClientsFromGenericClients(genericClients)

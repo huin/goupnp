@@ -6,6 +6,7 @@ import (
 	"net/url"
 
 	"github.com/huin/goupnp/v2/soap"
+	"github.com/huin/goupnp/v2/ssdp"
 )
 
 // ServiceClient is a SOAP client, root device and the service for the SOAP
@@ -23,9 +24,13 @@ type ServiceClient struct {
 // NewServiceClients discovers services, and returns clients for them. err will
 // report any error with the discovery process (blocking any device/service
 // discovery), errors reports errors on a per-root-device basis.
-func NewServiceClients(ctx context.Context, searchTarget string) (clients []ServiceClient, errors []error, err error) {
+func NewServiceClients(
+	ctx context.Context,
+	searchTarget string,
+	searchOpts ...ssdp.SearchOption,
+) (clients []ServiceClient, errors []error, err error) {
 	var maybeRootDevices []MaybeRootDevice
-	if maybeRootDevices, err = Devices(ctx, searchTarget); err != nil {
+	if maybeRootDevices, err = Devices(ctx, searchTarget, searchOpts...); err != nil {
 		return
 	}
 
