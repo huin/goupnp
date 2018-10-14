@@ -18,11 +18,10 @@ var (
 	crlf                 = []byte("\r\n")
 )
 
-// Handler is the interface by which received HTTPU messages are passed to
-// handling code.
+// Handler is the interface by which received HTTPU messages are passed to handling code.
 type Handler interface {
-	// ServeMessage is called for each HTTPU message received. peerAddr contains
-	// the address that the message was received from.
+	// ServeMessage is called for each HTTPU message received. peerAddr contains the address that
+	// the message was received from.
 	ServeMessage(r *http.Request)
 }
 
@@ -42,9 +41,8 @@ type Server struct {
 	MaxMessageBytes int            // maximum number of bytes to read from a packet, DefaultMaxMessageBytes if 0
 }
 
-// ListenAndServe listens on the UDP network address srv.Addr. If srv.Multicast
-// is true, then a multicast UDP listener will be used on srv.Interface (or
-// default interface if nil).
+// ListenAndServe listens on the UDP network address srv.Addr. If srv.Multicast is true, then a
+// multicast UDP listener will be used on srv.Interface (or default interface if nil).
 func (srv *Server) ListenAndServe() error {
 	var err error
 

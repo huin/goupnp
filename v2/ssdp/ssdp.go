@@ -1,3 +1,7 @@
+// package ssdp implements a client for the Simple Service Discovery Protocol, typically used to
+// discover available UPnP devices on the network.
+//
+// See also: https://en.wikipedia.org/wiki/Simple_Service_Discovery_Protocol
 package ssdp
 
 import (
@@ -27,9 +31,9 @@ const (
 	UPNPRootDevice = "upnp:rootdevice"
 )
 
-// SSDPRawSearch performs a fairly raw SSDP search request, and returns the unique response(s) that
-// it receives. Each response has the requested searchTarget, a USN, and a valid location.
-func SSDPRawSearch(
+// RawSearch performs a fairly raw SSDP search request, and returns the unique response(s) that it
+// receives. Each response has the requested searchTarget, a USN, and a valid location.
+func RawSearch(
 	ctx context.Context,
 	hc HTTPUClient,
 	searchTarget string,

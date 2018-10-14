@@ -56,12 +56,12 @@ type MaybeRootDevice struct {
 // "urn:schemas-upnp-org:service:...". A single error is returned for errors while attempting to
 // send the query. An error or RootDevice is returned for each discovered RootDevice.
 func Devices(ctx context.Context, searchTarget string, searchOpts ...ssdp.SearchOption) ([]MaybeRootDevice, error) {
-	httpu, err := httpu.NewHTTPUClient(ctx)
+	httpu, err := httpu.NewClient(ctx)
 	if err != nil {
 		return nil, err
 	}
 	defer httpu.Close()
-	responses, err := ssdp.SSDPRawSearch(ctx, httpu, string(searchTarget), searchOpts...)
+	responses, err := ssdp.RawSearch(ctx, httpu, string(searchTarget), searchOpts...)
 	if err != nil {
 		return nil, err
 	}

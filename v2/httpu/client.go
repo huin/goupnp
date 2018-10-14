@@ -13,28 +13,27 @@ import (
 	"time"
 )
 
-// HTTPUClient is a client for dealing with HTTPU (HTTP over UDP). Its typical
-// function is for HTTPMU, and particularly SSDP.
-type HTTPUClient struct {
+// Client is a client for dealing with HTTPU (HTTP over UDP). Its typical function is for HTTPMU,
+// and particularly SSDP.
+type Client struct {
 	connLock sync.Mutex // Protects use of conn.
 	conn     net.PacketConn
 }
 
-// NewHTTPUClient creates a new HTTPUClient, opening up a new UDP socket for the
-// purpose.
-func NewHTTPUClient(ctx context.Context) (*HTTPUClient, error) {
+// NewClient creates a new Client, opening up a new UDP socket for the purpose.
+func NewClient(ctx context.Context) (*Client, error) {
 	lc := &net.ListenConfig{}
 
 	conn, err := lc.ListenPacket(ctx, "udp", ":0")
 	if err != nil {
 		return nil, err
 	}
-	return &HTTPUClient{conn: conn}, nil
+	return &Client{conn: conn}, nil
 }
 
-// NewHTTPUClientAddr creates a new HTTPUClient which will broadcast packets
-// from the specified address, opening up a new UDP socket for the purpose
-func NewHTTPUClientAddr(ctx context.Context, addr string) (*HTTPUClient, error) {
+// NewClientAddr creates a new Client which will broadcast packets from the specified address,
+// opening up a new UDP socket for the purpose
+func NewClientAddr(ctx context.Context, addr string) (*Client, error) {
 	ip := net.ParseIP(addr)
 	if ip == nil {
 		return nil, errors.New("invalid listening address")
@@ -46,12 +45,11 @@ func NewHTTPUClientAddr(ctx context.Context, addr string) (*HTTPUClient, error) 
 	if err != nil {
 		return nil, err
 	}
-	return &HTTPUClient{conn: conn}, nil
+	return &Client{conn: conn}, nil
 }
 
-// Close shuts down the client. The client will no longer be useful following
-// this.
-func (httpu *HTTPUClient) Close() error {
+// Close shuts down the client. The client will no longer be useful following this.
+func (httpu *Client) Close() error {
 	httpu.connLock.Lock()
 	defer httpu.connLock.Unlock()
 	return httpu.conn.Close()
@@ -62,8 +60,8 @@ func (httpu *HTTPUClient) Close() error {
 //
 // By default it sends 2 requests, and waits 3 seconds for responses to them.
 //
-// Note that at present only one concurrent request will happen per HTTPUClient.
-func (httpu *HTTPUClient) Do(req *http.Request, options ...RequestOption) ([]*http.Response, error) {
+// Note that at present only one concurrent request will happen per Client.
+func (httpu *Client) Do(req *http.Request, options ...RequestOption) ([]*http.Response, error) {
 	ctx := req.Context()
 
 	now := time.Now()
@@ -106,7 +104,7 @@ func (httpu *HTTPUClient) Do(req *http.Request, options ...RequestOption) ([]*ht
 	return httpu.doInternal(destAddr, req, requestBuf.Bytes(), rs)
 }
 
-func (httpu *HTTPUClient) doInternal(destAddr net.Addr, req *http.Request, reqBytes []byte, rs *requestSettings) ([]*http.Response, error) {
+func (httpu *Client) doInternal(destAddr net.Addr, req *http.Request, reqBytes []byte, rs *requestSettings) ([]*http.Response, error) {
 	httpu.connLock.Lock()
 	defer httpu.connLock.Unlock()
 
