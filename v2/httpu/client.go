@@ -4,13 +4,14 @@ import (
 	"bufio"
 	"bytes"
 	"context"
-	"errors"
 	"fmt"
 	"log"
 	"net"
 	"net/http"
 	"sync"
 	"time"
+
+	"github.com/huin/goupnp/v2/errkind"
 )
 
 // Client is a client for dealing with HTTPU (HTTP over UDP). Its typical
@@ -36,14 +37,16 @@ func NewClient(ctx context.Context) (*Client, error) {
 func NewClientAddr(ctx context.Context, addr string) (*Client, error) {
 	ip := net.ParseIP(addr)
 	if ip == nil {
-		return nil, errors.New("invalid listening address")
+		return nil, errkind.New(
+			errkind.InvalidArgument, "invalid listening address %q", addr,
+		)
 	}
 
 	lc := &net.ListenConfig{}
 
 	conn, err := lc.ListenPacket(ctx, "udp", ip.String()+":0")
 	if err != nil {
-		return nil, err
+		return nil, errkind.Network.Wrap(err)
 	}
 	return &Client{conn: conn}, nil
 }
@@ -90,20 +93,15 @@ func (httpu *Client) Do(
 	if method == "" {
 		method = "GET"
 	}
-	if _, err := fmt.Fprintf(&requestBuf, "%s %s HTTP/1.1\r\n",
-		method, req.URL.RequestURI()); err != nil {
-		return nil, err
-	}
+	fmt.Fprintf(&requestBuf, "%s %s HTTP/1.1\r\n", method, req.URL.RequestURI())
 	if err := req.Header.Write(&requestBuf); err != nil {
 		return nil, err
 	}
-	if _, err := requestBuf.Write([]byte{'\r', '\n'}); err != nil {
-		return nil, err
-	}
+	requestBuf.Write([]byte{'\r', '\n'})
 
 	destAddr, err := net.ResolveUDPAddr("udp", req.Host)
 	if err != nil {
-		return nil, err
+		return nil, errkind.Network.Wrap(err)
 	}
 
 	return httpu.doInternal(destAddr, req, requestBuf.Bytes(), rs)
@@ -125,11 +123,15 @@ func (httpu *Client) doInternal(
 	// Send request.
 	for i := 0; i < rs.numSends; i++ {
 		if n, err := httpu.conn.WriteTo(reqBytes, destAddr); err != nil {
-			return nil, err
+			return nil, errkind.Wrap(
+				errkind.Network, err, "sending HTTPU request",
+			)
 		} else if n < len(reqBytes) {
-			return nil, fmt.Errorf(
-				"httpu: wrote %d bytes rather than full %d in request",
-				n, len(reqBytes))
+			return nil, errkind.New(
+				errkind.Network,
+				"wrote %d bytes rather than full %d in request",
+				n, len(reqBytes),
+			)
 		}
 		time.Sleep(5 * time.Millisecond)
 	}

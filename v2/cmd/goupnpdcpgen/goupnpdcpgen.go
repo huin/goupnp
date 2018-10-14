@@ -3,10 +3,12 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
 	"os"
 	"path/filepath"
+
+	"github.com/huin/goupnp/v2/errkind"
+	errors "gopkg.in/src-d/go-errors.v1"
 )
 
 var (
@@ -39,7 +41,7 @@ func main() {
 
 func run(dcpName, specsDir string, useGofmt bool) error {
 	if err := os.MkdirAll(specsDir, os.ModePerm); err != nil {
-		return fmt.Errorf("could not create specs-dir %q: %v\n", specsDir, err)
+		return errors.NewKind("create specs directory").Wrap(err)
 	}
 
 	for _, d := range dcpMetadata {
@@ -49,32 +51,23 @@ func run(dcpName, specsDir string, useGofmt bool) error {
 		specFilename := filepath.Join(specsDir, d.Name+".zip")
 		err := acquireFile(specFilename, d.XMLSpecURL)
 		if err != nil {
-			return fmt.Errorf("could not acquire spec for %s: %v", d.Name, err)
+			return errkind.FileContext.Wrap(err, d.XMLSpecURL)
 		}
 		dcp := newDCP(d)
 		if err := dcp.processZipFile(specFilename); err != nil {
-			return fmt.Errorf(
-				"error processing spec for %s in file %q: %v",
-				d.Name, specFilename, err,
-			)
+			return errkind.FileContext.Wrap(err, specFilename)
 		}
 		for i, hack := range d.Hacks {
 			if err := hack(dcp); err != nil {
-				return fmt.Errorf(
-					"error with Hack[%d] for %s: %v",
-					i, d.Name, err,
-				)
+				return errors.NewKind("in Hack[%d]").Wrap(err, i)
 			}
 		}
 		if err := dcp.writeCode(d.Name+".go", useGofmt); err != nil {
-			return fmt.Errorf(
-				"error writing package %q: %v",
-				dcp.Metadata.Name, err,
-			)
+			return errors.NewKind("writing generated code").Wrap(err)
 		}
 
 		return nil
 	}
 
-	return fmt.Errorf("could not find DCP with name %q", dcpName)
+	return errkind.New(errkind.NotFound, "no DCP found with name %q", dcpName)
 }

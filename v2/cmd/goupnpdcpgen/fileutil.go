@@ -3,12 +3,13 @@ package main
 import (
 	"archive/zip"
 	"encoding/xml"
-	"fmt"
 	"io"
 	"net/http"
 	"os"
 	"path"
 	"regexp"
+
+	"github.com/huin/goupnp/v2/errkind"
 )
 
 func acquireFile(specFilename string, xmlSpecURL string) error {
@@ -28,8 +29,7 @@ func acquireFile(specFilename string, xmlSpecURL string) error {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("could not download spec %q from %q: %v",
-			specFilename, xmlSpecURL, resp.Status)
+		return errkind.NewUnexpectedHTTPStatus(resp.StatusCode, resp.Status)
 	}
 
 	tmpFilename := specFilename + ".download"
@@ -71,13 +71,13 @@ func unmarshalXmlFile(file *zip.File, data interface{}) error {
 	return decoder.Decode(data)
 }
 
-var scpdFilenameRe = regexp.MustCompile(
-	`.*/([a-zA-Z0-9]+)([0-9]+)\.xml`)
+var scpdFilenameRe = regexp.MustCompile(`.*/([a-zA-Z0-9]+)([0-9]+)\.xml`)
 
 func urnPartsFromSCPDFilename(filename string) (*URNParts, error) {
 	parts := scpdFilenameRe.FindStringSubmatch(filename)
 	if len(parts) != 3 {
-		return nil, fmt.Errorf(
+		return nil, errkind.New(
+			errkind.InvalidArgument,
 			"SCPD filename %q does not have expected number of parts",
 			filename,
 		)

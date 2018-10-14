@@ -17,7 +17,6 @@ package discover
 import (
 	"context"
 	"encoding/xml"
-	"fmt"
 	"net/http"
 	"net/url"
 	"time"
@@ -25,17 +24,18 @@ import (
 	"github.com/huin/goupnp/v2/httpu"
 	"github.com/huin/goupnp/v2/ssdp"
 	"golang.org/x/net/html/charset"
+	errors "gopkg.in/src-d/go-errors.v1"
 )
 
-// ContextError is an error that wraps an error with some context information.
-type ContextError struct {
-	Context string
-	Err     error
-}
-
-func (err ContextError) Error() string {
-	return fmt.Sprintf("%s: %v", err.Context, err.Err)
-}
+var (
+	// ErrBadResponse matches errors due to bad responses received for a search.
+	ErrBadResponse = errors.NewKind("bad response data in %s")
+	// ErrBadResponseStatus matches errors due to HTTP response status codes that
+	// were unexpected or that indicate failure.
+	ErrBadResponseStatus = errors.NewKind("bad response status %d %s")
+	// ErrResponseFrom matches errors annotating where a bad response came from.
+	ErrResponseFrom = errors.NewKind("from %q")
+)
 
 // MaybeRootDevice contains either a RootDevice or an error.
 type MaybeRootDevice struct {
@@ -82,10 +82,7 @@ func Devices(
 		maybe := &results[i]
 		loc, err := response.Location()
 		if err != nil {
-			maybe.Err = ContextError{
-				"unexpected bad location from search",
-				err,
-			}
+			maybe.Err = ErrBadResponse.Wrap(err, "location")
 			continue
 		}
 		maybe.Location = loc
@@ -103,10 +100,7 @@ func DeviceByURL(ctx context.Context, loc *url.URL) (*RootDevice, error) {
 	locStr := loc.String()
 	root := new(RootDevice)
 	if err := requestXml(ctx, locStr, DeviceXMLNamespace, root); err != nil {
-		return nil, ContextError{
-			fmt.Sprintf("error requesting root device details from %q", locStr),
-			err,
-		}
+		return nil, ErrResponseFrom.Wrap(err, locStr)
 	}
 	var urlBaseStr string
 	if root.URLBaseStr != "" {
@@ -116,10 +110,7 @@ func DeviceByURL(ctx context.Context, loc *url.URL) (*RootDevice, error) {
 	}
 	urlBase, err := url.Parse(urlBaseStr)
 	if err != nil {
-		return nil, ContextError{
-			fmt.Sprintf("error parsing location URL %q", locStr),
-			err,
-		}
+		return nil, ErrBadResponse.Wrap(err, "location")
 	}
 	root.SetURLBase(urlBase)
 	return root, nil
@@ -144,8 +135,7 @@ func requestXml(
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
-		return fmt.Errorf("goupnp: got response status %s from %q",
-			resp.Status, url)
+		return ErrBadResponseStatus.New(resp.StatusCode, resp.Status)
 	}
 
 	decoder := xml.NewDecoder(resp.Body)

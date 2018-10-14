@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/huin/goupnp/v2/discover"
+	"github.com/huin/goupnp/v2/errkind"
 	"github.com/huin/goupnp/v2/scpd"
 	"github.com/huin/goutil/codegen"
 )
@@ -31,17 +32,17 @@ func newDCP(metadata DCPMetadata) *DCP {
 func (dcp *DCP) processZipFile(filename string) error {
 	archive, err := zip.OpenReader(filename)
 	if err != nil {
-		return fmt.Errorf("error reading zip file %q: %v", filename, err)
+		return err
 	}
 	defer archive.Close()
 	for _, deviceFile := range globFiles("*/device/*.xml", archive) {
 		if err := dcp.processDeviceFile(deviceFile); err != nil {
-			return err
+			return errkind.FileContext.Wrap(err, deviceFile)
 		}
 	}
 	for _, scpdFile := range globFiles("*/service/*.xml", archive) {
 		if err := dcp.processSCPDFile(scpdFile); err != nil {
-			return err
+			return errkind.FileContext.Wrap(err, scpdFile)
 		}
 	}
 	return nil
@@ -50,10 +51,7 @@ func (dcp *DCP) processZipFile(filename string) error {
 func (dcp *DCP) processDeviceFile(file *zip.File) error {
 	var device discover.Device
 	if err := unmarshalXmlFile(file, &device); err != nil {
-		return fmt.Errorf(
-			"error decoding device XML from file %q: %v",
-			file.Name, err,
-		)
+		return err
 	}
 	var mainErr error
 	device.VisitDevices(func(d *discover.Device) {
@@ -98,18 +96,12 @@ func (dcp *DCP) writeCode(outFile string, useGofmt bool) error {
 func (dcp *DCP) processSCPDFile(file *zip.File) error {
 	scpd := new(scpd.SCPD)
 	if err := unmarshalXmlFile(file, scpd); err != nil {
-		return fmt.Errorf(
-			"error decoding SCPD XML from file %q: %v",
-			file.Name, err,
-		)
+		return err
 	}
 	scpd.Clean()
 	urnParts, err := urnPartsFromSCPDFilename(file.Name)
 	if err != nil {
-		return fmt.Errorf(
-			"could not recognize SCPD filename %q: %v",
-			file.Name, err,
-		)
+		return err
 	}
 	dcp.Services = append(dcp.Services, SCPDWithURN{
 		URNParts: urnParts,
@@ -142,14 +134,16 @@ func (s *SCPDWithURN) wrapArgument(
 ) (*argumentWrapper, error) {
 	relVar := s.SCPD.GetStateVariable(arg.RelatedStateVariable)
 	if relVar == nil {
-		return nil, fmt.Errorf(
+		return nil, errkind.New(
+			errkind.BadData,
 			"no such state variable: %q, for argument %q",
 			arg.RelatedStateVariable, arg.Name,
 		)
 	}
 	cnv, ok := typeConvs[relVar.DataType.Name]
 	if !ok {
-		return nil, fmt.Errorf(
+		return nil, errkind.New(
+			errkind.BadData,
 			"unknown data type: %q, for state variable %q, for argument %q",
 			relVar.DataType.Type,
 			arg.RelatedStateVariable,
@@ -235,14 +229,16 @@ func (u *URNParts) Const() string {
 // extractURNParts extracts the name and version from a URN string.
 func extractURNParts(urn, expectedPrefix string) (*URNParts, error) {
 	if !strings.HasPrefix(urn, expectedPrefix) {
-		return nil, fmt.Errorf(
-			"%q does not have expected prefix %q",
+		return nil, errkind.New(
+			errkind.BadData, "%q does not have expected prefix %q",
 			urn, expectedPrefix,
 		)
 	}
 	parts := strings.SplitN(strings.TrimPrefix(urn, expectedPrefix), ":", 2)
 	if len(parts) != 2 {
-		return nil, fmt.Errorf("%q does not have a name and version", urn)
+		return nil, errkind.New(
+			errkind.BadData, "%q does not have a name and version", urn,
+		)
 	}
 	name, version := parts[0], parts[1]
 	return &URNParts{urn, name, version}, nil

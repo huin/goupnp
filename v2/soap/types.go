@@ -3,7 +3,6 @@ package soap
 import (
 	"encoding/base64"
 	"encoding/hex"
-	"errors"
 	"fmt"
 	"net/url"
 	"regexp"
@@ -11,6 +10,8 @@ import (
 	"strings"
 	"time"
 	"unicode/utf8"
+
+	"github.com/huin/goupnp/v2/errkind"
 )
 
 var (
@@ -112,7 +113,9 @@ func UnmarshalR8(s string) (float64, error) {
 // MarshalFixed14_4 marshals float64 to SOAP "fixed.14.4" type.
 func MarshalFixed14_4(v float64) (string, error) {
 	if v >= 1e14 || v <= -1e14 {
-		return "", fmt.Errorf("soap fixed14.4: value %v out of bounds", v)
+		return "", errkind.New(
+			errkind.SOAP, "soap fixed14.4: value %v out of bounds", v,
+		)
 	}
 	return strconv.FormatFloat(v, 'f', 4, 64), nil
 }
@@ -124,7 +127,10 @@ func UnmarshalFixed14_4(s string) (float64, error) {
 		return 0, err
 	}
 	if v >= 1e14 || v <= -1e14 {
-		return 0, fmt.Errorf("soap fixed14.4: value %q out of bounds", s)
+		return 0, errkind.New(
+			errkind.SOAP,
+			"soap fixed14.4: value %q out of bounds", s,
+		)
 	}
 	return v, nil
 }
@@ -132,7 +138,10 @@ func UnmarshalFixed14_4(s string) (float64, error) {
 // MarshalChar marshals rune to SOAP "char" type.
 func MarshalChar(v rune) (string, error) {
 	if v == 0 {
-		return "", errors.New("soap char: rune 0 is not allowed")
+		return "", errkind.New(
+			errkind.SOAP,
+			"soap char: rune 0 is not allowed",
+		)
 	}
 	return string(v), nil
 }
@@ -140,11 +149,17 @@ func MarshalChar(v rune) (string, error) {
 // UnmarshalChar unmarshals rune from SOAP "char" type.
 func UnmarshalChar(s string) (rune, error) {
 	if len(s) == 0 {
-		return 0, errors.New("soap char: got empty string")
+		return 0, errkind.New(
+			errkind.SOAP,
+			"soap char: rune 0 is not allowed",
+		)
 	}
 	r, n := utf8.DecodeRune([]byte(s))
 	if n != len(s) {
-		return 0, fmt.Errorf("soap char: value %q is not a single rune", s)
+		return 0, errkind.New(
+			errkind.SOAP,
+			"soap char: value %q is not a single rune", s,
+		)
 	}
 	return r, nil
 }
@@ -181,8 +196,9 @@ func parseDateParts(s string) (year, month, day int, err error) {
 		}
 	}
 	if parts == nil {
-		err = fmt.Errorf(
-			"soap date: value %q is not in a recognized ISO8601 date format",
+		err = errkind.New(
+			errkind.SOAP,
+			"value %q is not in a recognized ISO8601 date format",
 			s,
 		)
 		return
@@ -199,7 +215,7 @@ func parseDateParts(s string) (year, month, day int, err error) {
 	}
 
 	if err != nil {
-		err = fmt.Errorf("soap date: %q: %v", s, err)
+		err = errkind.Wrap(errkind.SOAP, err, "in SOAP date %q", s)
 	}
 
 	return
@@ -221,7 +237,11 @@ func parseTimeParts(s string) (hour, minute, second int, err error) {
 		}
 	}
 	if parts == nil {
-		err = fmt.Errorf("soap time: value %q is not in ISO8601 time format", s)
+		err = errkind.New(
+			errkind.SOAP,
+			"value %q is not in a recognized ISO8601 time format",
+			s,
+		)
 		return
 	}
 
@@ -234,7 +254,7 @@ func parseTimeParts(s string) (hour, minute, second int, err error) {
 	}
 
 	if err != nil {
-		err = fmt.Errorf("soap time: %q: %v", s, err)
+		err = errkind.Wrap(errkind.SOAP, err, "in SOAP time %q", s)
 	}
 
 	return
@@ -249,8 +269,9 @@ func parseTimezone(s string) (offset int, err error) {
 	}
 	parts := timezoneRegexp.FindStringSubmatch(s)
 	if parts == nil {
-		err = fmt.Errorf(
-			"soap timezone: value %q is not in ISO8601 timezone format",
+		err = errkind.Wrap(
+			errkind.SOAP, err,
+			"value %q is not in ISO8601 timezone format",
 			s,
 		)
 		return
@@ -265,7 +286,10 @@ func parseTimezone(s string) (offset int, err error) {
 	}
 
 	if err != nil {
-		err = fmt.Errorf("soap timezone: %q: %v", s, err)
+		err = errkind.Wrap(
+			errkind.SOAP, err,
+			"in SOAP timezone %q", s,
+		)
 	}
 
 	return
@@ -288,8 +312,9 @@ func splitCompleteDateTimeZone(s string) (
 ) {
 	parts := completeDateTimeZoneRegexp.FindStringSubmatch(s)
 	if parts == nil {
-		err = fmt.Errorf(
-			"soap date/time/zone: value %q is not in ISO8601 datetime format",
+		err = errkind.Wrap(
+			errkind.SOAP, err,
+			"value %q is not in ISO8601 datetime format",
 			s,
 		)
 		return
@@ -350,9 +375,9 @@ func UnmarshalTimeOfDay(s string) (TimeOfDay, error) {
 	if err != nil {
 		return TimeOfDay{}, err
 	} else if t.HasOffset {
-		return TimeOfDay{}, fmt.Errorf(
-			"soap time: value %q contains unexpected timezone",
-			s,
+		return TimeOfDay{}, errkind.New(
+			errkind.SOAP,
+			"soap time: value %q contains unexpected timezone", s,
 		)
 	}
 	return t, nil
@@ -411,9 +436,9 @@ func UnmarshalTimeOfDayTz(s string) (tod TimeOfDay, err error) {
 	// ISO8601 special case - values up to 24:00:00 are allowed, so using
 	// strictly greater-than for the maximum value.
 	if fromMidnight > 24*time.Hour || minute >= 60 || second >= 60 {
-		return TimeOfDay{}, fmt.Errorf(
-			"soap time.tz: value %q has value(s) out of range",
-			s,
+		return TimeOfDay{}, errkind.New(
+			errkind.SOAP,
+			"soap time.tz: value %q has value(s) out of range", s,
 		)
 	}
 
@@ -433,13 +458,17 @@ func MarshalDateTime(v time.Time) (string, error) {
 // UnmarshalDateTime unmarshals time.Time from the SOAP "dateTime" type. This
 // returns a value in the local timezone.
 func UnmarshalDateTime(s string) (result time.Time, err error) {
-	dateStr, timeStr, zoneStr, err := splitCompleteDateTimeZone(s)
+	var dateStr, timeStr, zoneStr string
+	dateStr, timeStr, zoneStr, err = splitCompleteDateTimeZone(s)
 	if err != nil {
 		return
 	}
 
 	if len(zoneStr) != 0 {
-		err = fmt.Errorf("soap datetime: unexpected timezone in %q", s)
+		err = errkind.New(
+			errkind.SOAP,
+			"unexpected timezone in %q", s,
+		)
 		return
 	}
 
@@ -524,7 +553,10 @@ func UnmarshalBoolean(s string) (bool, error) {
 	case "1", "true", "yes":
 		return true, nil
 	}
-	return false, fmt.Errorf("soap boolean: %q is not a valid boolean value", s)
+	return false, errkind.New(
+		errkind.SOAP,
+		"%q is not a valid boolean value", s,
+	)
 }
 
 // MarshalBinBase64 marshals []byte to SOAP "bin.base64" type.

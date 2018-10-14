@@ -2,9 +2,9 @@ package discover
 
 import (
 	"context"
-	"fmt"
 	"net/url"
 
+	"github.com/huin/goupnp/v2/errkind"
 	"github.com/huin/goupnp/v2/soap"
 	"github.com/huin/goupnp/v2/ssdp"
 )
@@ -82,8 +82,9 @@ func NewServiceClientsFromRootDevice(
 	device := &rootDevice.Device
 	srvs := device.FindService(searchTarget)
 	if len(srvs) == 0 {
-		return nil, fmt.Errorf(
-			"goupnp: service %q not found within device %q (UDN=%q)",
+		return nil, errkind.New(
+			errkind.NotFound,
+			"service %q not found within device %q (UDN=%q)",
 			searchTarget, device.FriendlyName, device.UDN,
 		)
 	}

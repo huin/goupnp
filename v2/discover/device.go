@@ -5,10 +5,10 @@ package discover
 import (
 	"context"
 	"encoding/xml"
-	"errors"
 	"fmt"
 	"net/url"
 
+	"github.com/huin/goupnp/v2/errkind"
 	"github.com/huin/goupnp/v2/scpd"
 	"github.com/huin/goupnp/v2/soap"
 )
@@ -152,7 +152,10 @@ func (srv *Service) String() string {
 // for the service.
 func (srv *Service) RequestSCPD(ctx context.Context) (*scpd.SCPD, error) {
 	if !srv.SCPDURL.Ok {
-		return nil, errors.New("bad/missing SCPD URL, or no URLBase has been set")
+		return nil, errkind.New(
+			errkind.InvalidArgument,
+			"bad/missing SCPD URL, or no URLBase has been set",
+		)
 	}
 	s := new(scpd.SCPD)
 	if err := requestXml(ctx, srv.SCPDURL.URL.String(), scpd.SCPDXMLNamespace, s); err != nil {

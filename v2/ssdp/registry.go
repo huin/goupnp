@@ -10,6 +10,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/huin/goupnp/v2/errkind"
 	"github.com/huin/goupnp/v2/httpu"
 )
 
@@ -88,17 +89,14 @@ func newEntryFromRequest(r *http.Request) (*Entry, error) {
 		r.Header.Get("CACHE-CONTROL"),
 	)
 	if err != nil {
-		return nil, fmt.Errorf(
-			"ssdp: error parsing CACHE-CONTROL max age: %v",
-			err,
-		)
+		return nil, err
 	}
 
 	loc, err := url.Parse(r.Header.Get("LOCATION"))
 	if err != nil {
-		return nil, fmt.Errorf(
-			"ssdp: error parsing entry Location URL: %v",
-			err,
+		return nil, errkind.Wrap(
+			errkind.SSDP, err,
+			"parsing SSDP request entry Location URL",
 		)
 	}
 
@@ -118,9 +116,9 @@ func newEntryFromRequest(r *http.Request) (*Entry, error) {
 	}
 
 	if searchPort < 1 || searchPort > 65535 {
-		return nil, fmt.Errorf(
-			"ssdp: search port %d is out of range",
-			searchPort,
+		return nil, errkind.New(
+			errkind.SSDP,
+			"SSDP port %d is out of range", searchPort,
 		)
 	}
 
@@ -142,19 +140,20 @@ func newEntryFromRequest(r *http.Request) (*Entry, error) {
 func parseCacheControlMaxAge(cc string) (time.Duration, error) {
 	matches := maxAgeRx.FindStringSubmatch(cc)
 	if len(matches) != 2 {
-		return 0, fmt.Errorf(
-			"did not find exactly one max-age in cache control header: %q",
+		return 0, errkind.New(
+			errkind.SSDP,
+			"did not find exactly one max-age in cache control SSDP header: %q",
 			cc,
 		)
 	}
 	expirySeconds, err := strconv.ParseInt(matches[1], 10, 16)
 	if err != nil {
-		return 0, err
+		return 0, errkind.Wrap(errkind.SSDP, err, "parsing expiry seconds")
 	}
 	if expirySeconds < 1 || expirySeconds > maxExpiryTimeSeconds {
-		return 0, fmt.Errorf(
-			"rejecting bad expiry time of %d seconds",
-			expirySeconds,
+		return 0, errkind.New(
+			errkind.SSDP,
+			"rejecting bad SSDP expiry time of %d seconds", expirySeconds,
 		)
 	}
 	return time.Duration(expirySeconds) * time.Second, nil
@@ -174,10 +173,9 @@ func parseUpnpIntHeader(
 	}
 	v, err := strconv.ParseInt(s, 10, 32)
 	if err != nil {
-		return 0, fmt.Errorf(
-			"ssdp: could not parse header %s: %v",
-			headerName,
-			err,
+		return 0, errkind.Wrap(
+			errkind.SSDP, err,
+			"could not parse SSDP header %s with value %q", headerName, s,
 		)
 	}
 	return int32(v), nil
@@ -271,11 +269,11 @@ func (reg *Registry) ServeMessage(r *http.Request) {
 	case ntsByebye:
 		err = reg.handleNTSByebye(r)
 	default:
-		err = fmt.Errorf("unknown NTS value: %q", nts)
+		err = errkind.New(errkind.SSDP, "unknown NTS value: %q", nts)
 	}
 	if err != nil {
 		log.Printf(
-			"goupnp/ssdp: failed to handle %s message from %s: %v",
+			"Failed to handle %s message from %s: %v",
 			nts, r.RemoteAddr, err,
 		)
 	}

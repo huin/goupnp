@@ -13,6 +13,8 @@ import (
 	"net/url"
 	"reflect"
 	"regexp"
+
+	"github.com/huin/goupnp/v2/errkind"
 )
 
 const (
@@ -72,21 +74,23 @@ func (client *SOAPClient) PerformAction(
 	request = request.WithContext(ctx)
 	response, err := client.HTTPClient.Do(request)
 	if err != nil {
-		return fmt.Errorf("goupnp: error performing SOAP HTTP request: %v", err)
+		return err
 	}
 	defer response.Body.Close()
 	if response.StatusCode != 200 {
-		return fmt.Errorf("goupnp: SOAP request got HTTP %s", response.Status)
+		return errkind.NewUnexpectedHTTPStatus(
+			response.StatusCode, response.Status,
+		)
 	}
 
 	responseEnv := newSOAPEnvelope()
 	decoder := xml.NewDecoder(response.Body)
 	if err := decoder.Decode(responseEnv); err != nil {
-		return fmt.Errorf("goupnp: error decoding response body: %v", err)
+		return errkind.Wrap(errkind.SOAP, err, "decoding response body")
 	}
 
 	if responseEnv.Body.Fault != nil {
-		return responseEnv.Body.Fault
+		return errkind.Wrap(errkind.SOAP, responseEnv.Body.Fault, "SOAP fault")
 	}
 
 	if outAction != nil {
@@ -94,11 +98,7 @@ func (client *SOAPClient) PerformAction(
 			responseEnv.Body.RawAction,
 			outAction,
 		); err != nil {
-			return fmt.Errorf(
-				"goupnp: error unmarshalling out action: %v, %v",
-				err,
-				responseEnv.Body.RawAction,
-			)
+			return errkind.Wrap(errkind.SOAP, err, "unmarshalling out action")
 		}
 	}
 
@@ -144,9 +144,9 @@ func encodeRequestAction(
 func encodeRequestArgs(w *bytes.Buffer, inAction interface{}) error {
 	in := reflect.Indirect(reflect.ValueOf(inAction))
 	if in.Kind() != reflect.Struct {
-		return fmt.Errorf(
-			"goupnp: SOAP inAction is not a struct but of type %v",
-			in.Type(),
+		return errkind.New(
+			errkind.SOAP,
+			"SOAP inAction is not a struct but of type %v", in.Type(),
 		)
 	}
 	enc := xml.NewEncoder(w)
@@ -160,41 +160,36 @@ func encodeRequestArgs(w *bytes.Buffer, inAction interface{}) error {
 		}
 		value := in.Field(i)
 		if value.Kind() != reflect.String {
-			return fmt.Errorf(
-				"goupnp: SOAP arg %q is not of type string, but of type %v",
-				argName,
-				value.Type(),
+			return errkind.New(
+				errkind.SOAP,
+				"SOAP arg %q is not of type string, but of type %v",
+				argName, value.Type(),
 			)
 		}
 		elem := xml.StartElement{xml.Name{"", argName}, nil}
 		if err := enc.EncodeToken(elem); err != nil {
-			return fmt.Errorf(
-				"goupnp: error encoding start element for SOAP arg %q: %v",
-				argName,
-				err,
+			return errkind.Wrap(
+				errkind.SOAP, err,
+				"encoding start element for SOAP arg %q", argName,
 			)
 		}
 		if err := enc.Flush(); err != nil {
-			return fmt.Errorf(
-				"goupnp: error flushing start element for SOAP arg %q: %v",
-				argName,
-				err,
+			return errkind.Wrap(
+				errkind.SOAP, err,
+				"flushing start element for SOAP arg %q", argName,
 			)
 		}
 		if _, err := w.Write(
 			[]byte(escapeXMLText(value.Interface().(string))),
 		); err != nil {
-			return fmt.Errorf(
-				"goupnp: error writing value for SOAP arg %q: %v",
-				argName,
-				err,
+			return errkind.Wrap(
+				errkind.SOAP, err, "writing value for SOAP arg %q", argName,
 			)
 		}
 		if err := enc.EncodeToken(elem.End()); err != nil {
-			return fmt.Errorf(
-				"goupnp: error encoding end element for SOAP arg %q: %v",
-				argName,
-				err,
+			return errkind.Wrap(
+				errkind.SOAP, err,
+				"encoding end element for SOAP arg %q", argName,
 			)
 		}
 	}
