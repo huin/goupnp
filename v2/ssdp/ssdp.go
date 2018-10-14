@@ -31,7 +31,7 @@ const (
 // it receives. Each response has the requested searchTarget, a USN, and a valid location.
 func SSDPRawSearch(
 	ctx context.Context,
-	hc *httpu.HTTPUClient,
+	hc HTTPUClient,
 	searchTarget string,
 	options ...SearchOption,
 ) ([]*http.Response, error) {
@@ -117,4 +117,10 @@ func WaitFor(d time.Duration) SearchOption {
 	return func(ss *searchSettings) {
 		ss.waitFor = d
 	}
+}
+
+// HTTPUClient is the interface required for SSDP searches. Typically implemented by
+// *httpu.HTTPUClient.
+type HTTPUClient interface {
+	Do(req *http.Request, options ...httpu.RequestOption) ([]*http.Response, error)
 }
