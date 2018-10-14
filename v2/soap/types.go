@@ -181,7 +181,10 @@ func parseDateParts(s string) (year, month, day int, err error) {
 		}
 	}
 	if parts == nil {
-		err = fmt.Errorf("soap date: value %q is not in a recognized ISO8601 date format", s)
+		err = fmt.Errorf(
+			"soap date: value %q is not in a recognized ISO8601 date format",
+			s,
+		)
 		return
 	}
 
@@ -246,7 +249,10 @@ func parseTimezone(s string) (offset int, err error) {
 	}
 	parts := timezoneRegexp.FindStringSubmatch(s)
 	if parts == nil {
-		err = fmt.Errorf("soap timezone: value %q is not in ISO8601 timezone format", s)
+		err = fmt.Errorf(
+			"soap timezone: value %q is not in ISO8601 timezone format",
+			s,
+		)
 		return
 	}
 
@@ -265,17 +271,27 @@ func parseTimezone(s string) (offset int, err error) {
 	return
 }
 
-var completeDateTimeZoneRegexp = regexp.MustCompile(`^([^T]+)(?:T([^-+Z]+)(.+)?)?$`)
+var completeDateTimeZoneRegexp = regexp.MustCompile(
+	`^([^T]+)(?:T([^-+Z]+)(.+)?)?$`,
+)
 
 // splitCompleteDateTimeZone splits date, time and timezone apart from an
 // ISO8601 string. It does not ensure that the contents of each part are
 // correct, it merely splits on certain delimiters.
 // e.g "2010-09-08T12:15:10+0700" => "2010-09-08", "12:15:10", "+0700".
 // Timezone can only be present if time is also present.
-func splitCompleteDateTimeZone(s string) (dateStr, timeStr, zoneStr string, err error) {
+func splitCompleteDateTimeZone(s string) (
+	dateStr,
+	timeStr,
+	zoneStr string,
+	err error,
+) {
 	parts := completeDateTimeZoneRegexp.FindStringSubmatch(s)
 	if parts == nil {
-		err = fmt.Errorf("soap date/time/zone: value %q is not in ISO8601 datetime format", s)
+		err = fmt.Errorf(
+			"soap date/time/zone: value %q is not in ISO8601 datetime format",
+			s,
+		)
 		return
 	}
 	dateStr = parts[1]
@@ -334,7 +350,10 @@ func UnmarshalTimeOfDay(s string) (TimeOfDay, error) {
 	if err != nil {
 		return TimeOfDay{}, err
 	} else if t.HasOffset {
-		return TimeOfDay{}, fmt.Errorf("soap time: value %q contains unexpected timezone", s)
+		return TimeOfDay{}, fmt.Errorf(
+			"soap time: value %q contains unexpected timezone",
+			s,
+		)
 	}
 	return t, nil
 }
@@ -392,7 +411,10 @@ func UnmarshalTimeOfDayTz(s string) (tod TimeOfDay, err error) {
 	// ISO8601 special case - values up to 24:00:00 are allowed, so using
 	// strictly greater-than for the maximum value.
 	if fromMidnight > 24*time.Hour || minute >= 60 || second >= 60 {
-		return TimeOfDay{}, fmt.Errorf("soap time.tz: value %q has value(s) out of range", s)
+		return TimeOfDay{}, fmt.Errorf(
+			"soap time.tz: value %q has value(s) out of range",
+			s,
+		)
 	}
 
 	return TimeOfDay{
@@ -434,7 +456,11 @@ func UnmarshalDateTime(s string) (result time.Time, err error) {
 		}
 	}
 
-	result = time.Date(year, time.Month(month), day, hour, minute, second, 0, localLoc)
+	result = time.Date(
+		year, time.Month(month), day,
+		hour, minute, second, 0,
+		localLoc,
+	)
 	return
 }
 
@@ -474,7 +500,11 @@ func UnmarshalDateTimeTz(s string) (result time.Time, err error) {
 		}
 	}
 
-	result = time.Date(year, time.Month(month), day, hour, minute, second, 0, location)
+	result = time.Date(
+		year, time.Month(month), day,
+		hour, minute, second, 0,
+		location,
+	)
 	return
 }
 

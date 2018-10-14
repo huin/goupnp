@@ -7,8 +7,8 @@
 // A commonly used client is internetgateway1.WANPPPConnection1:
 // http://godoc.org/github.com/huin/goupnp/v2/dcps/internetgateway1#WANPPPConnection1
 //
-// Currently only a couple of schemas have code generated for them from the
-// UPnP example XML specifications. Not all methods will work on these clients,
+// Currently only a couple of schemas have code generated for them from the UPnP
+// example XML specifications. Not all methods will work on these clients,
 // because the generated stubs contain the full set of specified methods from
 // the XML specifications, and the discovered services will likely support a
 // subset of those methods.
@@ -44,24 +44,35 @@ type MaybeRootDevice struct {
 
 	// The location the device was discovered at. This can be used with
 	// DeviceByURL, assuming the device is still present. A location represents
-	// the discovery of a device, regardless of if there was an error probing it.
+	// the discovery of a device, regardless of if there was an error probing
+	// it.
 	Location *url.URL
 
 	// Any error encountered probing a discovered device.
 	Err error
 }
 
-// Devices attempts to find targets of the given type. This is typically the entry-point for this
-// package. searchTarget is typically a URN in the form "urn:schemas-upnp-org:device:..." or
-// "urn:schemas-upnp-org:service:...". A single error is returned for errors while attempting to
-// send the query. An error or RootDevice is returned for each discovered RootDevice.
-func Devices(ctx context.Context, searchTarget string, searchOpts ...ssdp.SearchOption) ([]MaybeRootDevice, error) {
+// Devices attempts to find targets of the given type. This is typically the
+// entry-point for this package. searchTarget is typically a URN in the form
+// "urn:schemas-upnp-org:device:..." or "urn:schemas-upnp-org:service:...". A
+// single error is returned for errors while attempting to send the query. An
+// error or RootDevice is returned for each discovered RootDevice.
+func Devices(
+	ctx context.Context,
+	searchTarget string,
+	searchOpts ...ssdp.SearchOption,
+) ([]MaybeRootDevice, error) {
 	httpu, err := httpu.NewClient(ctx)
 	if err != nil {
 		return nil, err
 	}
 	defer httpu.Close()
-	responses, err := ssdp.RawSearch(ctx, httpu, string(searchTarget), searchOpts...)
+	responses, err := ssdp.RawSearch(
+		ctx,
+		httpu,
+		string(searchTarget),
+		searchOpts...,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -71,7 +82,10 @@ func Devices(ctx context.Context, searchTarget string, searchOpts ...ssdp.Search
 		maybe := &results[i]
 		loc, err := response.Location()
 		if err != nil {
-			maybe.Err = ContextError{"unexpected bad location from search", err}
+			maybe.Err = ContextError{
+				"unexpected bad location from search",
+				err,
+			}
 			continue
 		}
 		maybe.Location = loc
@@ -89,7 +103,10 @@ func DeviceByURL(ctx context.Context, loc *url.URL) (*RootDevice, error) {
 	locStr := loc.String()
 	root := new(RootDevice)
 	if err := requestXml(ctx, locStr, DeviceXMLNamespace, root); err != nil {
-		return nil, ContextError{fmt.Sprintf("error requesting root device details from %q", locStr), err}
+		return nil, ContextError{
+			fmt.Sprintf("error requesting root device details from %q", locStr),
+			err,
+		}
 	}
 	var urlBaseStr string
 	if root.URLBaseStr != "" {
@@ -99,13 +116,21 @@ func DeviceByURL(ctx context.Context, loc *url.URL) (*RootDevice, error) {
 	}
 	urlBase, err := url.Parse(urlBaseStr)
 	if err != nil {
-		return nil, ContextError{fmt.Sprintf("error parsing location URL %q", locStr), err}
+		return nil, ContextError{
+			fmt.Sprintf("error parsing location URL %q", locStr),
+			err,
+		}
 	}
 	root.SetURLBase(urlBase)
 	return root, nil
 }
 
-func requestXml(ctx context.Context, url string, defaultSpace string, doc interface{}) error {
+func requestXml(
+	ctx context.Context,
+	url string,
+	defaultSpace string,
+	doc interface{},
+) error {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return err

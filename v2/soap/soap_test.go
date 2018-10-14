@@ -16,7 +16,9 @@ type capturingRoundTripper struct {
 	capturedReq *http.Request
 }
 
-func (rt *capturingRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
+func (rt *capturingRoundTripper) RoundTrip(
+	req *http.Request,
+) (*http.Response, error) {
 	rt.capturedReq = req
 	return rt.resp, rt.err
 }

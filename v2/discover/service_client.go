@@ -29,8 +29,8 @@ func NewServiceClients(
 	searchTarget string,
 	searchOpts ...ssdp.SearchOption,
 ) (clients []ServiceClient, errors []error, err error) {
-	var maybeRootDevices []MaybeRootDevice
-	if maybeRootDevices, err = Devices(ctx, searchTarget, searchOpts...); err != nil {
+	maybeRootDevices, err := Devices(ctx, searchTarget, searchOpts...)
+	if err != nil {
 		return
 	}
 
@@ -42,7 +42,11 @@ func NewServiceClients(
 			continue
 		}
 
-		deviceClients, err := NewServiceClientsFromRootDevice(maybeRootDevice.Root, maybeRootDevice.Location, searchTarget)
+		deviceClients, err := NewServiceClientsFromRootDevice(
+			maybeRootDevice.Root,
+			maybeRootDevice.Location,
+			searchTarget,
+		)
 		if err != nil {
 			errors = append(errors, err)
 			continue
@@ -55,7 +59,11 @@ func NewServiceClients(
 
 // NewServiceClientsByURL creates client(s) for the given service URN, for a
 // root device at the given URL.
-func NewServiceClientsByURL(ctx context.Context, loc *url.URL, searchTarget string) ([]ServiceClient, error) {
+func NewServiceClientsByURL(
+	ctx context.Context,
+	loc *url.URL,
+	searchTarget string,
+) ([]ServiceClient, error) {
 	rootDevice, err := DeviceByURL(ctx, loc)
 	if err != nil {
 		return nil, err
@@ -63,15 +71,21 @@ func NewServiceClientsByURL(ctx context.Context, loc *url.URL, searchTarget stri
 	return NewServiceClientsFromRootDevice(rootDevice, loc, searchTarget)
 }
 
-// NewServiceClientsFromDevice creates client(s) for the given service URN, in
-// a given root device. The loc parameter is simply assigned to the
-// Location attribute of the returned ServiceClient(s).
-func NewServiceClientsFromRootDevice(rootDevice *RootDevice, loc *url.URL, searchTarget string) ([]ServiceClient, error) {
+// NewServiceClientsFromDevice creates client(s) for the given service URN, in a
+// given root device. The loc parameter is simply assigned to the Location
+// attribute of the returned ServiceClient(s).
+func NewServiceClientsFromRootDevice(
+	rootDevice *RootDevice,
+	loc *url.URL,
+	searchTarget string,
+) ([]ServiceClient, error) {
 	device := &rootDevice.Device
 	srvs := device.FindService(searchTarget)
 	if len(srvs) == 0 {
-		return nil, fmt.Errorf("goupnp: service %q not found within device %q (UDN=%q)",
-			searchTarget, device.FriendlyName, device.UDN)
+		return nil, fmt.Errorf(
+			"goupnp: service %q not found within device %q (UDN=%q)",
+			searchTarget, device.FriendlyName, device.UDN,
+		)
 	}
 
 	clients := make([]ServiceClient, 0, len(srvs))
@@ -86,8 +100,8 @@ func NewServiceClientsFromRootDevice(rootDevice *RootDevice, loc *url.URL, searc
 	return clients, nil
 }
 
-// GetServiceClient returns the ServiceClient itself. This is provided so that the
-// service client attributes can be accessed via an interface method on a
+// GetServiceClient returns the ServiceClient itself. This is provided so that
+// the service client attributes can be accessed via an interface method on a
 // wrapping type.
 func (client *ServiceClient) GetServiceClient() *ServiceClient {
 	return client

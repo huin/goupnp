@@ -2,10 +2,14 @@ package main
 
 // DCP contains extra metadata to use when generating DCP source files.
 type DCPMetadata struct {
-	Name         string // What to name the Go DCP package.
-	OfficialName string // Official name for the DCP.
-	DocURL       string // Optional - URL for further documentation about the DCP.
-	XMLSpecURL   string // Where to download the XML spec from.
+	// What to name the Go DCP package.
+	Name string
+	// Official name for the DCP.
+	OfficialName string
+	// Optional - URL for further documentation about the DCP.
+	DocURL string
+	// Where to download the XML spec from.
+	XMLSpecURL string
 	// Any special-case functions to run against the DCP before writing it out.
 	Hacks []DCPHackFn
 }
@@ -53,7 +57,8 @@ func totalBytesHack(dcp *DCP) error {
 			for key, variable := range variables {
 				varName := variable.Name
 				if varName == "TotalBytesSent" || varName == "TotalBytesReceived" {
-					// Fix size of total bytes which is by default ui4 or maximum 4 GiB.
+					// Fix size of total bytes which is by default ui4 or
+					// maximum 4 GiB.
 					variable.DataType.Name = "ui8"
 					variables[key] = variable
 				}

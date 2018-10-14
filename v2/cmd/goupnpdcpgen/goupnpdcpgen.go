@@ -16,12 +16,19 @@ var (
 
 func main() {
 	var (
-		dcpName  = flag.String("dcp_name", "", "Name of the DCP to generate.")
-		specsDir = flag.String("specs_dir", ".", "Path to the specification storage directory. "+
-			"This is used to find (and download if not present) the specification ZIP files.")
-		useGofmt = flag.Bool("gofmt", true, "Pass the generated code through gofmt. "+
-			"Disable this if debugging code generation and needing to see the generated code "+
-			"prior to being passed through gofmt.")
+		dcpName = flag.String("dcp_name", "",
+			"Name of the DCP to generate.",
+		)
+		specsDir = flag.String("specs_dir", ".",
+			"Path to the specification storage directory. "+
+				"This is used to find (and download if not present) the "+
+				"specification ZIP files.",
+		)
+		useGofmt = flag.Bool("gofmt", true,
+			"Pass the generated code through gofmt. "+
+				"Disable this if debugging code generation and needing to see "+
+				"the generated code prior to being passed through gofmt.",
+		)
 	)
 	flag.Parse()
 
@@ -46,15 +53,24 @@ func run(dcpName, specsDir string, useGofmt bool) error {
 		}
 		dcp := newDCP(d)
 		if err := dcp.processZipFile(specFilename); err != nil {
-			return fmt.Errorf("error processing spec for %s in file %q: %v", d.Name, specFilename, err)
+			return fmt.Errorf(
+				"error processing spec for %s in file %q: %v",
+				d.Name, specFilename, err,
+			)
 		}
 		for i, hack := range d.Hacks {
 			if err := hack(dcp); err != nil {
-				return fmt.Errorf("error with Hack[%d] for %s: %v", i, d.Name, err)
+				return fmt.Errorf(
+					"error with Hack[%d] for %s: %v",
+					i, d.Name, err,
+				)
 			}
 		}
 		if err := dcp.writeCode(d.Name+".go", useGofmt); err != nil {
-			return fmt.Errorf("error writing package %q: %v", dcp.Metadata.Name, err)
+			return fmt.Errorf(
+				"error writing package %q: %v",
+				dcp.Metadata.Name, err,
+			)
 		}
 
 		return nil

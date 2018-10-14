@@ -1,5 +1,6 @@
-// Definition for the SOAP structure required for UPnP's SOAP usage.
-
+// Package soap implements a SOAP client for the purpose of performing actions
+// on UPnP devices. It contains hacks for compatibility based on experience with
+// existing UPnP devices.
 package soap
 
 import (
@@ -16,8 +17,12 @@ import (
 
 const (
 	soapEncodingStyle = "http://schemas.xmlsoap.org/soap/encoding/"
-	soapPrefix        = xml.Header + `<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"><s:Body>`
-	soapSuffix        = `</s:Body></s:Envelope>`
+	soapPrefix        = xml.Header +
+		`<s:Envelope ` +
+		`xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" ` +
+		`s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">` +
+		`<s:Body>`
+	soapSuffix = `</s:Body></s:Envelope>`
 )
 
 type SOAPClient struct {
@@ -34,9 +39,18 @@ func NewSOAPClient(endpointURL url.URL) *SOAPClient {
 // PerformSOAPAction makes a SOAP request, with the given action.
 // inAction and outAction must both be pointers to structs with string fields
 // only.
-func (client *SOAPClient) PerformAction(ctx context.Context, actionNamespace, actionName string,
-	inAction interface{}, outAction interface{}) error {
-	requestBytes, err := encodeRequestAction(actionNamespace, actionName, inAction)
+func (client *SOAPClient) PerformAction(
+	ctx context.Context,
+	actionNamespace,
+	actionName string,
+	inAction interface{},
+	outAction interface{},
+) error {
+	requestBytes, err := encodeRequestAction(
+		actionNamespace,
+		actionName,
+		inAction,
+	)
 	if err != nil {
 		return err
 	}
@@ -45,11 +59,14 @@ func (client *SOAPClient) PerformAction(ctx context.Context, actionNamespace, ac
 		Method: "POST",
 		URL:    &client.EndpointURL,
 		Header: http.Header{
-			"SOAPACTION":   []string{`"` + actionNamespace + "#" + actionName + `"`},
+			"SOAPACTION": []string{
+				`"` + actionNamespace + "#" + actionName + `"`,
+			},
 			"CONTENT-TYPE": []string{"text/xml; charset=\"utf-8\""},
 		},
 		Body: ioutil.NopCloser(bytes.NewBuffer(requestBytes)),
-		// Set ContentLength to avoid chunked encoding - some servers might not support it.
+		// Set ContentLength to avoid chunked encoding - some servers might not
+		// support it.
 		ContentLength: int64(len(requestBytes)),
 	}
 	request = request.WithContext(ctx)
@@ -73,8 +90,15 @@ func (client *SOAPClient) PerformAction(ctx context.Context, actionNamespace, ac
 	}
 
 	if outAction != nil {
-		if err := xml.Unmarshal(responseEnv.Body.RawAction, outAction); err != nil {
-			return fmt.Errorf("goupnp: error unmarshalling out action: %v, %v", err, responseEnv.Body.RawAction)
+		if err := xml.Unmarshal(
+			responseEnv.Body.RawAction,
+			outAction,
+		); err != nil {
+			return fmt.Errorf(
+				"goupnp: error unmarshalling out action: %v, %v",
+				err,
+				responseEnv.Body.RawAction,
+			)
 		}
 	}
 
@@ -90,10 +114,14 @@ func newSOAPEnvelope() *soapEnvelope {
 
 // encodeRequestAction is a hacky way to create an encoded SOAP envelope
 // containing the given action. Experiments with one router have shown that it
-// 500s for requests where the outer default xmlns is set to the SOAP
-// namespace, and then reassigning the default namespace within that to the
-// service namespace. Hand-coding the outer XML to work-around this.
-func encodeRequestAction(actionNamespace, actionName string, inAction interface{}) ([]byte, error) {
+// 500s for requests where the outer default xmlns is set to the SOAP namespace,
+// and then reassigning the default namespace within that to the service
+// namespace. Hand-coding the outer XML to work-around this.
+func encodeRequestAction(
+	actionNamespace,
+	actionName string,
+	inAction interface{},
+) ([]byte, error) {
 	requestBuf := new(bytes.Buffer)
 	requestBuf.WriteString(soapPrefix)
 	requestBuf.WriteString(`<u:`)
@@ -116,7 +144,10 @@ func encodeRequestAction(actionNamespace, actionName string, inAction interface{
 func encodeRequestArgs(w *bytes.Buffer, inAction interface{}) error {
 	in := reflect.Indirect(reflect.ValueOf(inAction))
 	if in.Kind() != reflect.Struct {
-		return fmt.Errorf("goupnp: SOAP inAction is not a struct but of type %v", in.Type())
+		return fmt.Errorf(
+			"goupnp: SOAP inAction is not a struct but of type %v",
+			in.Type(),
+		)
 	}
 	enc := xml.NewEncoder(w)
 	nFields := in.NumField()
@@ -129,20 +160,42 @@ func encodeRequestArgs(w *bytes.Buffer, inAction interface{}) error {
 		}
 		value := in.Field(i)
 		if value.Kind() != reflect.String {
-			return fmt.Errorf("goupnp: SOAP arg %q is not of type string, but of type %v", argName, value.Type())
+			return fmt.Errorf(
+				"goupnp: SOAP arg %q is not of type string, but of type %v",
+				argName,
+				value.Type(),
+			)
 		}
 		elem := xml.StartElement{xml.Name{"", argName}, nil}
 		if err := enc.EncodeToken(elem); err != nil {
-			return fmt.Errorf("goupnp: error encoding start element for SOAP arg %q: %v", argName, err)
+			return fmt.Errorf(
+				"goupnp: error encoding start element for SOAP arg %q: %v",
+				argName,
+				err,
+			)
 		}
 		if err := enc.Flush(); err != nil {
-			return fmt.Errorf("goupnp: error flushing start element for SOAP arg %q: %v", argName, err)
+			return fmt.Errorf(
+				"goupnp: error flushing start element for SOAP arg %q: %v",
+				argName,
+				err,
+			)
 		}
-		if _, err := w.Write([]byte(escapeXMLText(value.Interface().(string)))); err != nil {
-			return fmt.Errorf("goupnp: error writing value for SOAP arg %q: %v", argName, err)
+		if _, err := w.Write(
+			[]byte(escapeXMLText(value.Interface().(string))),
+		); err != nil {
+			return fmt.Errorf(
+				"goupnp: error writing value for SOAP arg %q: %v",
+				argName,
+				err,
+			)
 		}
 		if err := enc.EncodeToken(elem.End()); err != nil {
-			return fmt.Errorf("goupnp: error encoding end element for SOAP arg %q: %v", argName, err)
+			return fmt.Errorf(
+				"goupnp: error encoding end element for SOAP arg %q: %v",
+				argName,
+				err,
+			)
 		}
 	}
 	enc.Flush()

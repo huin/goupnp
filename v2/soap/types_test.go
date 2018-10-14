@@ -476,22 +476,44 @@ func Test(t *testing.T) {
 	tests = append(tests, extras...)
 
 	for _, test := range tests {
-		if test.noMarshal {
-		} else if resultStr, err := test.value.Marshal(); err != nil && !test.wantMarshalErr {
-			t.Errorf("For %T marshal %v, want %q, got error: %v", test.value, test.value, test.str, err)
-		} else if err == nil && test.wantMarshalErr {
-			t.Errorf("For %T marshal %v, want error, got %q", test.value, test.value, resultStr)
-		} else if err == nil && resultStr != test.str {
-			t.Errorf("For %T marshal %v, want %q, got %q", test.value, test.value, test.str, resultStr)
+		if !test.noMarshal {
+			resultStr, err := test.value.Marshal()
+			if err != nil && !test.wantMarshalErr {
+				t.Errorf(
+					"For %T marshal %v, want %q, got error: %v",
+					test.value, test.value, test.str, err,
+				)
+			} else if err == nil && test.wantMarshalErr {
+				t.Errorf(
+					"For %T marshal %v, want error, got %q",
+					test.value, test.value, resultStr,
+				)
+			} else if err == nil && resultStr != test.str {
+				t.Errorf(
+					"For %T marshal %v, want %q, got %q",
+					test.value, test.value, test.str, resultStr,
+				)
+			}
 		}
 
-		if test.noUnMarshal {
-		} else if resultValue, err := test.value.Unmarshal(test.str); err != nil && !test.wantUnmarshalErr {
-			t.Errorf("For %T unmarshal %q, want %v, got error: %v", test.value, test.str, test.value, err)
-		} else if err == nil && test.wantUnmarshalErr {
-			t.Errorf("For %T unmarshal %q, want error, got %v", test.value, test.str, resultValue)
-		} else if err == nil && !test.value.Equal(resultValue) {
-			t.Errorf("For %T unmarshal %q, want %v, got %v", test.value, test.str, test.value, resultValue)
+		if !test.noUnMarshal {
+			resultValue, err := test.value.Unmarshal(test.str)
+			if err != nil && !test.wantUnmarshalErr {
+				t.Errorf(
+					"For %T unmarshal %q, want %v, got error: %v",
+					test.value, test.str, test.value, err,
+				)
+			} else if err == nil && test.wantUnmarshalErr {
+				t.Errorf(
+					"For %T unmarshal %q, want error, got %v",
+					test.value, test.str, resultValue,
+				)
+			} else if err == nil && !test.value.Equal(resultValue) {
+				t.Errorf(
+					"For %T unmarshal %q, want %v, got %v",
+					test.value, test.str, test.value, resultValue,
+				)
+			}
 		}
 	}
 }

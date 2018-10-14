@@ -13,8 +13,8 @@ import (
 	"time"
 )
 
-// Client is a client for dealing with HTTPU (HTTP over UDP). Its typical function is for HTTPMU,
-// and particularly SSDP.
+// Client is a client for dealing with HTTPU (HTTP over UDP). Its typical
+// function is for HTTPMU, and particularly SSDP.
 type Client struct {
 	connLock sync.Mutex // Protects use of conn.
 	conn     net.PacketConn
@@ -31,8 +31,8 @@ func NewClient(ctx context.Context) (*Client, error) {
 	return &Client{conn: conn}, nil
 }
 
-// NewClientAddr creates a new Client which will broadcast packets from the specified address,
-// opening up a new UDP socket for the purpose
+// NewClientAddr creates a new Client which will broadcast packets from the
+// specified address, opening up a new UDP socket for the purpose
 func NewClientAddr(ctx context.Context, addr string) (*Client, error) {
 	ip := net.ParseIP(addr)
 	if ip == nil {
@@ -48,20 +48,24 @@ func NewClientAddr(ctx context.Context, addr string) (*Client, error) {
 	return &Client{conn: conn}, nil
 }
 
-// Close shuts down the client. The client will no longer be useful following this.
+// Close shuts down the client. The client will no longer be useful following
+// this.
 func (httpu *Client) Close() error {
 	httpu.connLock.Lock()
 	defer httpu.connLock.Unlock()
 	return httpu.conn.Close()
 }
 
-// Do performs a request. An error is only returned for failing to send the request. Failures in
-// receipt simply do not add to the resulting responses.
+// Do performs a request. An error is only returned for failing to send the
+// request. Failures in receipt simply do not add to the resulting responses.
 //
 // By default it sends 2 requests, and waits 3 seconds for responses to them.
 //
 // Note that at present only one concurrent request will happen per Client.
-func (httpu *Client) Do(req *http.Request, options ...RequestOption) ([]*http.Response, error) {
+func (httpu *Client) Do(
+	req *http.Request,
+	options ...RequestOption,
+) ([]*http.Response, error) {
 	ctx := req.Context()
 
 	now := time.Now()
@@ -86,7 +90,8 @@ func (httpu *Client) Do(req *http.Request, options ...RequestOption) ([]*http.Re
 	if method == "" {
 		method = "GET"
 	}
-	if _, err := fmt.Fprintf(&requestBuf, "%s %s HTTP/1.1\r\n", method, req.URL.RequestURI()); err != nil {
+	if _, err := fmt.Fprintf(&requestBuf, "%s %s HTTP/1.1\r\n",
+		method, req.URL.RequestURI()); err != nil {
 		return nil, err
 	}
 	if err := req.Header.Write(&requestBuf); err != nil {
@@ -104,7 +109,12 @@ func (httpu *Client) Do(req *http.Request, options ...RequestOption) ([]*http.Re
 	return httpu.doInternal(destAddr, req, requestBuf.Bytes(), rs)
 }
 
-func (httpu *Client) doInternal(destAddr net.Addr, req *http.Request, reqBytes []byte, rs *requestSettings) ([]*http.Response, error) {
+func (httpu *Client) doInternal(
+	destAddr net.Addr,
+	req *http.Request,
+	reqBytes []byte,
+	rs *requestSettings,
+) ([]*http.Response, error) {
 	httpu.connLock.Lock()
 	defer httpu.connLock.Unlock()
 
@@ -117,7 +127,8 @@ func (httpu *Client) doInternal(destAddr net.Addr, req *http.Request, reqBytes [
 		if n, err := httpu.conn.WriteTo(reqBytes, destAddr); err != nil {
 			return nil, err
 		} else if n < len(reqBytes) {
-			return nil, fmt.Errorf("httpu: wrote %d bytes rather than full %d in request",
+			return nil, fmt.Errorf(
+				"httpu: wrote %d bytes rather than full %d in request",
 				n, len(reqBytes))
 		}
 		time.Sleep(5 * time.Millisecond)
@@ -136,7 +147,8 @@ func (httpu *Client) doInternal(destAddr net.Addr, req *http.Request, reqBytes [
 					return responses, nil
 				}
 				if err.Temporary() {
-					// Sleep in case this is a persistent error to avoid pegging CPU until deadline.
+					// Sleep in case this is a persistent error to avoid pegging
+					// CPU until deadline.
 					time.Sleep(10 * time.Millisecond)
 					continue
 				}
@@ -145,7 +157,10 @@ func (httpu *Client) doInternal(destAddr net.Addr, req *http.Request, reqBytes [
 		}
 
 		// Parse response.
-		response, err := http.ReadResponse(bufio.NewReader(bytes.NewBuffer(responseBytes[:n])), req)
+		response, err := http.ReadResponse(
+			bufio.NewReader(bytes.NewBuffer(responseBytes[:n])),
+			req,
+		)
 		if err != nil {
 			log.Printf("httpu: error while parsing response: %v", err)
 			continue

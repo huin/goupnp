@@ -51,8 +51,8 @@ func globFiles(pattern string, archive *zip.ReadCloser) []*zip.File {
 	var files []*zip.File
 	for _, f := range archive.File {
 		if matched, err := path.Match(pattern, f.Name); err != nil {
-			// This shouldn't happen - all patterns are hard-coded, errors in them
-			// are a programming error.
+			// This shouldn't happen - all patterns are hard-coded, errors in
+			// them are a programming error.
 			panic(err)
 		} else if matched {
 			files = append(files, f)
@@ -77,7 +77,10 @@ var scpdFilenameRe = regexp.MustCompile(
 func urnPartsFromSCPDFilename(filename string) (*URNParts, error) {
 	parts := scpdFilenameRe.FindStringSubmatch(filename)
 	if len(parts) != 3 {
-		return nil, fmt.Errorf("SCPD filename %q does not have expected number of parts", filename)
+		return nil, fmt.Errorf(
+			"SCPD filename %q does not have expected number of parts",
+			filename,
+		)
 	}
 	name, version := parts[1], parts[2]
 	return &URNParts{

@@ -4,7 +4,8 @@ import (
 	"html/template"
 )
 
-var packageTmpl = template.Must(template.New("package").Parse(`{{$name := .Metadata.Name}}
+var packageTmpl = template.Must(template.New("package").Parse(`
+{{- $name := .Metadata.Name}}
 // Client for UPnP Device Control Protocol {{.Metadata.OfficialName}}.
 // {{if .Metadata.DocURL}}
 // This DCP is documented in detail at: {{.Metadata.DocURL}}{{end}}
@@ -43,9 +44,10 @@ const ({{range .ServiceTypes}}
 {{$srv := .}}
 {{$srvIdent := printf "%s%s" .Name .Version}}
 
-// {{$srvIdent}} is a client for UPnP SOAP service with URN "{{.URN}}". See
-// discover.ServiceClient, which contains RootDevice and Service attributes which
-// are provided for informational value.
+// {{$srvIdent}} is a client for UPnP SOAP service with URN
+// "{{.URN}}".
+// See discover.ServiceClient, which contains RootDevice and Service attributes
+// which are provided for informational value.
 type {{$srvIdent}} struct {
 	discover.ServiceClient
 }
@@ -56,12 +58,24 @@ type {{$srvIdent}} struct {
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func New{{$srvIdent}}Clients(ctx context.Context, searchOpts ...ssdp.SearchOption) (clients []*{{$srvIdent}}, errors []error, err error) {
+func New{{$srvIdent}}Clients(
+	ctx context.Context,
+	searchOpts ...ssdp.SearchOption,
+) (
+	clients []*{{$srvIdent}},
+	errors []error, err error,
+) {
 	var genericClients []discover.ServiceClient
-	if genericClients, errors, err = discover.NewServiceClients(ctx, {{$srv.Const}}, searchOpts...); err != nil {
+	if genericClients, errors, err = discover.NewServiceClients(
+		ctx,
+		{{$srv.Const}},
+		searchOpts...,
+	); err != nil {
 		return
 	}
-	clients = new{{$srvIdent}}ClientsFromGenericClients(genericClients)
+	clients = new{{$srvIdent}}ClientsFromGenericClients(
+		genericClients,
+	)
 	return
 }
 
@@ -71,12 +85,24 @@ func New{{$srvIdent}}Clients(ctx context.Context, searchOpts ...ssdp.SearchOptio
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
-func New{{$srvIdent}}ClientsByURL(ctx context.Context, loc *url.URL) ([]*{{$srvIdent}}, error) {
-	genericClients, err := discover.NewServiceClientsByURL(ctx, loc, {{$srv.Const}})
+func New{{$srvIdent}}ClientsByURL(
+	ctx context.Context,
+	loc *url.URL,
+) (
+	[]*{{$srvIdent}},
+	error,
+) {
+	genericClients, err := discover.NewServiceClientsByURL(
+		ctx,
+		loc,
+		{{$srv.Const}},
+	)
 	if err != nil {
 		return nil, err
 	}
-	return new{{$srvIdent}}ClientsFromGenericClients(genericClients), nil
+	return new{{$srvIdent}}ClientsFromGenericClients(
+		genericClients,
+	), nil
 }
 
 // New{{$srvIdent}}ClientsFromRootDevice discovers instances of the service in
@@ -87,15 +113,29 @@ func New{{$srvIdent}}ClientsByURL(ctx context.Context, loc *url.URL) ([]*{{$srvI
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
-func New{{$srvIdent}}ClientsFromRootDevice(rootDevice *discover.RootDevice, loc *url.URL) ([]*{{$srvIdent}}, error) {
-	genericClients, err := discover.NewServiceClientsFromRootDevice(rootDevice, loc, {{$srv.Const}})
+func New{{$srvIdent}}ClientsFromRootDevice(
+	rootDevice *discover.RootDevice,
+	loc *url.URL,
+) (
+	[]*{{$srvIdent}},
+	error,
+) {
+	genericClients, err := discover.NewServiceClientsFromRootDevice(
+		rootDevice,
+		loc,
+		{{$srv.Const}},
+	)
 	if err != nil {
 		return nil, err
 	}
-	return new{{$srvIdent}}ClientsFromGenericClients(genericClients), nil
+	return new{{$srvIdent}}ClientsFromGenericClients(
+		genericClients,
+	), nil
 }
 
-func new{{$srvIdent}}ClientsFromGenericClients(genericClients []discover.ServiceClient) []*{{$srvIdent}} {
+func new{{$srvIdent}}ClientsFromGenericClients(
+	genericClients []discover.ServiceClient,
+) []*{{$srvIdent}} {
 	clients := make([]*{{$srvIdent}}, len(genericClients))
 	for i := range genericClients {
 		clients[i] = &{{$srvIdent}}{genericClients[i]}
@@ -107,12 +147,13 @@ func new{{$srvIdent}}ClientsFromGenericClients(genericClients []discover.Service
 
 {{$winargs := $srv.WrapArguments .InputArguments}}
 {{$woutargs := $srv.WrapArguments .OutputArguments}}
-{{if $winargs.HasDoc}}
+// {{.Name}}
+{{- if $winargs.HasDoc}}
 //
-// Arguments:{{range $winargs}}{{if .HasDoc}}
+// Parameters:{{range $winargs}}{{if .HasDoc}}
 //
 // * {{.Name}}: {{.Document}}{{end}}{{end}}{{end}}
-{{if $woutargs.HasDoc}}
+{{- if $woutargs.HasDoc}}
 //
 // Return values:{{range $woutargs}}{{if .HasDoc}}
 //
@@ -122,31 +163,46 @@ func (client *{{$srvIdent}}) {{.Name}}(
 	{{range $winargs -}}
 		{{.AsParameter}},
 	{{end -}}
-) ({{range $woutargs -}}
-{{.AsParameter}}, {{end}} err error) {
+) (
+	{{range $woutargs -}}
+	{{.AsParameter}},
+	{{end}} err error,
+) {
 	// Request structure.
-	request := {{if $winargs}}&{{template "argstruct" $winargs}}{{"{}"}}{{else}}{{"interface{}(nil)"}}{{end}}
-	// BEGIN Marshal arguments into request.
-{{range $winargs}}
+	request :=
+	{{- if $winargs}}&{{template "argstruct" $winargs}}{{"{}"}}
+	{{- else}}{{"interface{}(nil)"}}{{end}}
+
+	// BEGIN Marshal arguments into request struct.
+{{- range $winargs}}
 	if request.{{.Name}}, err = {{.Marshal}}; err != nil {
 		return
 	}{{end}}
-	// END Marshal arguments into request.
+	// END Marshal arguments into request struct.
 
 	// Response structure.
-	response := {{if $woutargs}}&{{template "argstruct" $woutargs}}{{"{}"}}{{else}}{{"interface{}(nil)"}}{{end}}
+	response :=
+	{{- if $woutargs}}&{{template "argstruct" $woutargs}}{{"{}"}}
+	{{- else }}{{"interface{}(nil)"}}{{end}}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(ctx, {{$srv.URNParts.Const}}, "{{.Name}}", request, response); err != nil {
+	if err = client.SOAPClient.PerformAction(
+		ctx,
+		{{$srv.URNParts.Const}},
+		"{{.Name}}",
+		request,
+		response,
+	); err != nil {
 		return
 	}
 
-	// BEGIN Unmarshal arguments from response.
-{{range $woutargs}}
+	// BEGIN Unmarshal arguments from response struct.
+{{- range $woutargs}}
 	if {{.Name}}, err = {{.Unmarshal "response"}}; err != nil {
 		return
 	}{{end}}
-	// END Unmarshal arguments from response.
+	// END Unmarshal arguments from response struct.
+
 	return
 }
 {{end}}

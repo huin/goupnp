@@ -50,7 +50,10 @@ func (dcp *DCP) processZipFile(filename string) error {
 func (dcp *DCP) processDeviceFile(file *zip.File) error {
 	var device discover.Device
 	if err := unmarshalXmlFile(file, &device); err != nil {
-		return fmt.Errorf("error decoding device XML from file %q: %v", file.Name, err)
+		return fmt.Errorf(
+			"error decoding device XML from file %q: %v",
+			file.Name, err,
+		)
 	}
 	var mainErr error
 	device.VisitDevices(func(d *discover.Device) {
@@ -95,12 +98,18 @@ func (dcp *DCP) writeCode(outFile string, useGofmt bool) error {
 func (dcp *DCP) processSCPDFile(file *zip.File) error {
 	scpd := new(scpd.SCPD)
 	if err := unmarshalXmlFile(file, scpd); err != nil {
-		return fmt.Errorf("error decoding SCPD XML from file %q: %v", file.Name, err)
+		return fmt.Errorf(
+			"error decoding SCPD XML from file %q: %v",
+			file.Name, err,
+		)
 	}
 	scpd.Clean()
 	urnParts, err := urnPartsFromSCPDFilename(file.Name)
 	if err != nil {
-		return fmt.Errorf("could not recognize SCPD filename %q: %v", file.Name, err)
+		return fmt.Errorf(
+			"could not recognize SCPD filename %q: %v",
+			file.Name, err,
+		)
 	}
 	dcp.Services = append(dcp.Services, SCPDWithURN{
 		URNParts: urnParts,
@@ -114,7 +123,9 @@ type SCPDWithURN struct {
 	SCPD *scpd.SCPD
 }
 
-func (s *SCPDWithURN) WrapArguments(args []*scpd.Argument) (argumentWrapperList, error) {
+func (s *SCPDWithURN) WrapArguments(
+	args []*scpd.Argument,
+) (argumentWrapperList, error) {
 	wrappedArgs := make(argumentWrapperList, len(args))
 	for i, arg := range args {
 		wa, err := s.wrapArgument(arg)
@@ -126,14 +137,24 @@ func (s *SCPDWithURN) WrapArguments(args []*scpd.Argument) (argumentWrapperList,
 	return wrappedArgs, nil
 }
 
-func (s *SCPDWithURN) wrapArgument(arg *scpd.Argument) (*argumentWrapper, error) {
+func (s *SCPDWithURN) wrapArgument(
+	arg *scpd.Argument,
+) (*argumentWrapper, error) {
 	relVar := s.SCPD.GetStateVariable(arg.RelatedStateVariable)
 	if relVar == nil {
-		return nil, fmt.Errorf("no such state variable: %q, for argument %q", arg.RelatedStateVariable, arg.Name)
+		return nil, fmt.Errorf(
+			"no such state variable: %q, for argument %q",
+			arg.RelatedStateVariable, arg.Name,
+		)
 	}
 	cnv, ok := typeConvs[relVar.DataType.Name]
 	if !ok {
-		return nil, fmt.Errorf("unknown data type: %q, for state variable %q, for argument %q", relVar.DataType.Type, arg.RelatedStateVariable, arg.Name)
+		return nil, fmt.Errorf(
+			"unknown data type: %q, for state variable %q, for argument %q",
+			relVar.DataType.Type,
+			arg.RelatedStateVariable,
+			arg.Name,
+		)
 	}
 	return &argumentWrapper{
 		Argument: *arg,
@@ -154,7 +175,8 @@ func (arg *argumentWrapper) AsParameter() string {
 
 func (arg *argumentWrapper) HasDoc() bool {
 	rng := arg.relVar.AllowedValueRange
-	return ((rng != nil && (rng.Minimum != "" || rng.Maximum != "" || rng.Step != "")) ||
+	return ((rng != nil &&
+		(rng.Minimum != "" || rng.Maximum != "" || rng.Step != "")) ||
 		len(arg.relVar.AllowedValues) > 0)
 }
 
@@ -180,11 +202,13 @@ func (arg *argumentWrapper) Document() string {
 }
 
 func (arg *argumentWrapper) Marshal() string {
-	return fmt.Sprintf("soap.Marshal%s(%s)", arg.conv.FuncSuffix, arg.Name)
+	return fmt.Sprintf("soap.Marshal%s(\n%s,\n)", arg.conv.FuncSuffix, arg.Name)
 }
 
 func (arg *argumentWrapper) Unmarshal(objVar string) string {
-	return fmt.Sprintf("soap.Unmarshal%s(%s.%s)", arg.conv.FuncSuffix, objVar, arg.Name)
+	return fmt.Sprintf("soap.Unmarshal%s(\n%s.%s,\n)",
+		arg.conv.FuncSuffix, objVar, arg.Name,
+	)
 }
 
 type argumentWrapperList []*argumentWrapper
@@ -211,7 +235,10 @@ func (u *URNParts) Const() string {
 // extractURNParts extracts the name and version from a URN string.
 func extractURNParts(urn, expectedPrefix string) (*URNParts, error) {
 	if !strings.HasPrefix(urn, expectedPrefix) {
-		return nil, fmt.Errorf("%q does not have expected prefix %q", urn, expectedPrefix)
+		return nil, fmt.Errorf(
+			"%q does not have expected prefix %q",
+			urn, expectedPrefix,
+		)
 	}
 	parts := strings.SplitN(strings.TrimPrefix(urn, expectedPrefix), ":", 2)
 	if len(parts) != 2 {
