@@ -5,6 +5,7 @@ import (
 	"net/url"
 
 	"github.com/huin/goupnp/v2/errkind"
+	"github.com/huin/goupnp/v2/metadata"
 	"github.com/huin/goupnp/v2/soap"
 	"github.com/huin/goupnp/v2/ssdp"
 )
@@ -16,9 +17,9 @@ import (
 // bypassing the discovery process.
 type ServiceClient struct {
 	SOAPClient *soap.SOAPClient
-	RootDevice *RootDevice
+	RootDevice *metadata.RootDevice
 	Location   *url.URL
-	Service    *Service
+	Service    *metadata.Service
 }
 
 // NewServiceClients discovers services, and returns clients for them. err will
@@ -64,7 +65,7 @@ func NewServiceClientsByURL(
 	loc *url.URL,
 	searchTarget string,
 ) ([]ServiceClient, error) {
-	rootDevice, err := DeviceByURL(ctx, loc)
+	rootDevice, err := metadata.RequestRootDevice(ctx, loc)
 	if err != nil {
 		return nil, err
 	}
@@ -75,7 +76,7 @@ func NewServiceClientsByURL(
 // given root device. The loc parameter is simply assigned to the Location
 // attribute of the returned ServiceClient(s).
 func NewServiceClientsFromRootDevice(
-	rootDevice *RootDevice,
+	rootDevice *metadata.RootDevice,
 	loc *url.URL,
 	searchTarget string,
 ) ([]ServiceClient, error) {
@@ -92,7 +93,7 @@ func NewServiceClientsFromRootDevice(
 	clients := make([]ServiceClient, 0, len(srvs))
 	for _, srv := range srvs {
 		clients = append(clients, ServiceClient{
-			SOAPClient: srv.NewSOAPClient(),
+			SOAPClient: soap.NewSOAPClient(srv.ControlURL.URL),
 			RootDevice: rootDevice,
 			Location:   loc,
 			Service:    srv,

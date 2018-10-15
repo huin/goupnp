@@ -14,6 +14,9 @@ var (
 	// FileContext provides context for a file that an error was encountered in.
 	FileContext = errors.NewKind("in file %q")
 
+	// URLContext provides context for data retrieved from a given URL.
+	URLContext = errors.NewKind("from %q")
+
 	// HTTP matches errors from the HTTP protocol.
 	HTTP = errors.NewKind("%s")
 

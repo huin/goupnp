@@ -1,6 +1,5 @@
-// This file contains XML structures for communicating with UPnP devices.
-
-package discover
+// Package metadata contains structures for the XML UPnP metadata.
+package metadata
 
 import (
 	"context"
@@ -9,8 +8,6 @@ import (
 	"net/url"
 
 	"github.com/huin/goupnp/v2/errkind"
-	"github.com/huin/goupnp/v2/scpd"
-	"github.com/huin/goupnp/v2/soap"
 )
 
 const (
@@ -28,6 +25,26 @@ type RootDevice struct {
 	Device      Device      `xml:"device"`
 }
 
+// RequestRootDevice retrieves RootDevice XML metadata from the given URL.
+func RequestRootDevice(ctx context.Context, loc *url.URL) (*RootDevice, error) {
+	root := new(RootDevice)
+	if err := requestXml(ctx, loc, DeviceXMLNamespace, root); err != nil {
+		return nil, errkind.URLContext.Wrap(err, loc.String())
+	}
+	var urlBase *url.URL
+	if root.URLBaseStr != "" {
+		var err error
+		urlBase, err = url.Parse(root.URLBaseStr)
+		if err != nil {
+			return nil, errkind.Wrap(errkind.BadData, err, "bad URL base")
+		}
+	} else {
+		urlBase = loc
+	}
+	root.SetURLBase(urlBase)
+	return root, nil
+}
+
 // SetURLBase sets the URLBase for the RootDevice and its underlying components.
 func (root *RootDevice) SetURLBase(urlBase *url.URL) {
 	root.URLBase = *urlBase
@@ -35,8 +52,8 @@ func (root *RootDevice) SetURLBase(urlBase *url.URL) {
 	root.Device.SetURLBase(urlBase)
 }
 
-// SpecVersion is part of a RootDevice, describes the version of the
-// specification that the data adheres to.
+// SpecVersion is part of a RootDevice or SCPD document, describes the version
+// of the specification that the data adheres to.
 type SpecVersion struct {
 	Major int32 `xml:"major"`
 	Minor int32 `xml:"minor"`
@@ -126,46 +143,6 @@ type Icon struct {
 // SetURLBase sets the URLBase for the Icon.
 func (icon *Icon) SetURLBase(url *url.URL) {
 	icon.URL.SetURLBase(url)
-}
-
-// Service is a service provided by a UPnP Device.
-type Service struct {
-	ServiceType string   `xml:"serviceType"`
-	ServiceId   string   `xml:"serviceId"`
-	SCPDURL     URLField `xml:"SCPDURL"`
-	ControlURL  URLField `xml:"controlURL"`
-	EventSubURL URLField `xml:"eventSubURL"`
-}
-
-// SetURLBase sets the URLBase for the Service.
-func (srv *Service) SetURLBase(urlBase *url.URL) {
-	srv.SCPDURL.SetURLBase(urlBase)
-	srv.ControlURL.SetURLBase(urlBase)
-	srv.EventSubURL.SetURLBase(urlBase)
-}
-
-func (srv *Service) String() string {
-	return fmt.Sprintf("Service ID %s : %s", srv.ServiceId, srv.ServiceType)
-}
-
-// RequestSCPD requests the SCPD (soap actions and state variables description)
-// for the service.
-func (srv *Service) RequestSCPD(ctx context.Context) (*scpd.SCPD, error) {
-	if !srv.SCPDURL.Ok {
-		return nil, errkind.New(
-			errkind.InvalidArgument,
-			"bad/missing SCPD URL, or no URLBase has been set",
-		)
-	}
-	s := new(scpd.SCPD)
-	if err := requestXml(ctx, srv.SCPDURL.URL.String(), scpd.SCPDXMLNamespace, s); err != nil {
-		return nil, err
-	}
-	return s, nil
-}
-
-func (srv *Service) NewSOAPClient() *soap.SOAPClient {
-	return soap.NewSOAPClient(srv.ControlURL.URL)
 }
 
 // URLField is a URL that is part of a device description.

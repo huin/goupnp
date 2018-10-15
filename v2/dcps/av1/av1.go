@@ -15,6 +15,7 @@ import (
 	"time"
 
 	"github.com/huin/goupnp/v2/discover"
+	"github.com/huin/goupnp/v2/metadata"
 	"github.com/huin/goupnp/v2/soap"
 	"github.com/huin/goupnp/v2/ssdp"
 )
@@ -110,7 +111,7 @@ func NewAVTransport1ClientsByURL(
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
 func NewAVTransport1ClientsFromRootDevice(
-	rootDevice *discover.RootDevice,
+	rootDevice *metadata.RootDevice,
 	loc *url.URL,
 ) (
 	[]*AVTransport1,
@@ -1172,7 +1173,7 @@ func NewAVTransport2ClientsByURL(
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
 func NewAVTransport2ClientsFromRootDevice(
-	rootDevice *discover.RootDevice,
+	rootDevice *metadata.RootDevice,
 	loc *url.URL,
 ) (
 	[]*AVTransport2,
@@ -2534,7 +2535,7 @@ func NewConnectionManager1ClientsByURL(
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
 func NewConnectionManager1ClientsFromRootDevice(
-	rootDevice *discover.RootDevice,
+	rootDevice *metadata.RootDevice,
 	loc *url.URL,
 ) (
 	[]*ConnectionManager1,
@@ -2943,7 +2944,7 @@ func NewConnectionManager2ClientsByURL(
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
 func NewConnectionManager2ClientsFromRootDevice(
-	rootDevice *discover.RootDevice,
+	rootDevice *metadata.RootDevice,
 	loc *url.URL,
 ) (
 	[]*ConnectionManager2,
@@ -3352,7 +3353,7 @@ func NewContentDirectory1ClientsByURL(
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
 func NewContentDirectory1ClientsFromRootDevice(
-	rootDevice *discover.RootDevice,
+	rootDevice *metadata.RootDevice,
 	loc *url.URL,
 ) (
 	[]*ContentDirectory1,
@@ -4250,7 +4251,7 @@ func NewContentDirectory2ClientsByURL(
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
 func NewContentDirectory2ClientsFromRootDevice(
-	rootDevice *discover.RootDevice,
+	rootDevice *metadata.RootDevice,
 	loc *url.URL,
 ) (
 	[]*ContentDirectory2,
@@ -5283,7 +5284,7 @@ func NewContentDirectory3ClientsByURL(
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
 func NewContentDirectory3ClientsFromRootDevice(
-	rootDevice *discover.RootDevice,
+	rootDevice *metadata.RootDevice,
 	loc *url.URL,
 ) (
 	[]*ContentDirectory3,
@@ -6465,7 +6466,7 @@ func NewRenderingControl1ClientsByURL(
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
 func NewRenderingControl1ClientsFromRootDevice(
-	rootDevice *discover.RootDevice,
+	rootDevice *metadata.RootDevice,
 	loc *url.URL,
 ) (
 	[]*RenderingControl1,
@@ -8431,7 +8432,7 @@ func NewRenderingControl2ClientsByURL(
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
 func NewRenderingControl2ClientsFromRootDevice(
-	rootDevice *discover.RootDevice,
+	rootDevice *metadata.RootDevice,
 	loc *url.URL,
 ) (
 	[]*RenderingControl2,
@@ -10536,7 +10537,7 @@ func NewScheduledRecording1ClientsByURL(
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
 func NewScheduledRecording1ClientsFromRootDevice(
-	rootDevice *discover.RootDevice,
+	rootDevice *metadata.RootDevice,
 	loc *url.URL,
 ) (
 	[]*ScheduledRecording1,
@@ -11596,7 +11597,7 @@ func NewScheduledRecording2ClientsByURL(
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
 func NewScheduledRecording2ClientsFromRootDevice(
-	rootDevice *discover.RootDevice,
+	rootDevice *metadata.RootDevice,
 	loc *url.URL,
 ) (
 	[]*ScheduledRecording2,

@@ -7,9 +7,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/huin/goupnp/v2/discover"
 	"github.com/huin/goupnp/v2/errkind"
-	"github.com/huin/goupnp/v2/scpd"
+	"github.com/huin/goupnp/v2/metadata"
 	"github.com/huin/goutil/codegen"
 )
 
@@ -49,12 +48,12 @@ func (dcp *DCP) processZipFile(filename string) error {
 }
 
 func (dcp *DCP) processDeviceFile(file *zip.File) error {
-	var device discover.Device
+	var device metadata.Device
 	if err := unmarshalXmlFile(file, &device); err != nil {
 		return err
 	}
 	var mainErr error
-	device.VisitDevices(func(d *discover.Device) {
+	device.VisitDevices(func(d *metadata.Device) {
 		t := strings.TrimSpace(d.DeviceType)
 		if t != "" {
 			u, err := extractURNParts(t, deviceURNPrefix)
@@ -64,7 +63,7 @@ func (dcp *DCP) processDeviceFile(file *zip.File) error {
 			dcp.DeviceTypes[t] = u
 		}
 	})
-	device.VisitServices(func(s *discover.Service) {
+	device.VisitServices(func(s *metadata.Service) {
 		u, err := extractURNParts(s.ServiceType, serviceURNPrefix)
 		if err != nil {
 			mainErr = err
@@ -94,7 +93,7 @@ func (dcp *DCP) writeCode(outFile string, useGofmt bool) error {
 }
 
 func (dcp *DCP) processSCPDFile(file *zip.File) error {
-	scpd := new(scpd.SCPD)
+	scpd := new(metadata.SCPD)
 	if err := unmarshalXmlFile(file, scpd); err != nil {
 		return err
 	}
@@ -112,11 +111,11 @@ func (dcp *DCP) processSCPDFile(file *zip.File) error {
 
 type SCPDWithURN struct {
 	*URNParts
-	SCPD *scpd.SCPD
+	SCPD *metadata.SCPD
 }
 
 func (s *SCPDWithURN) WrapArguments(
-	args []*scpd.Argument,
+	args []*metadata.Argument,
 ) (argumentWrapperList, error) {
 	wrappedArgs := make(argumentWrapperList, len(args))
 	for i, arg := range args {
@@ -130,7 +129,7 @@ func (s *SCPDWithURN) WrapArguments(
 }
 
 func (s *SCPDWithURN) wrapArgument(
-	arg *scpd.Argument,
+	arg *metadata.Argument,
 ) (*argumentWrapper, error) {
 	relVar := s.SCPD.GetStateVariable(arg.RelatedStateVariable)
 	if relVar == nil {
@@ -158,8 +157,8 @@ func (s *SCPDWithURN) wrapArgument(
 }
 
 type argumentWrapper struct {
-	scpd.Argument
-	relVar *scpd.StateVariable
+	metadata.Argument
+	relVar *metadata.StateVariable
 	conv   conv
 }
 

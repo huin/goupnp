@@ -15,6 +15,7 @@ import (
 	"time"
 
 	"github.com/huin/goupnp/v2/discover"
+	"github.com/huin/goupnp/v2/metadata"
 	"github.com/huin/goupnp/v2/soap"
 	"github.com/huin/goupnp/v2/ssdp"
 )
@@ -112,7 +113,7 @@ func NewLANHostConfigManagement1ClientsByURL(
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
 func NewLANHostConfigManagement1ClientsFromRootDevice(
-	rootDevice *discover.RootDevice,
+	rootDevice *metadata.RootDevice,
 	loc *url.URL,
 ) (
 	[]*LANHostConfigManagement1,
@@ -985,7 +986,7 @@ func NewLayer3Forwarding1ClientsByURL(
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
 func NewLayer3Forwarding1ClientsFromRootDevice(
-	rootDevice *discover.RootDevice,
+	rootDevice *metadata.RootDevice,
 	loc *url.URL,
 ) (
 	[]*Layer3Forwarding1,
@@ -1164,7 +1165,7 @@ func NewWANCableLinkConfig1ClientsByURL(
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
 func NewWANCableLinkConfig1ClientsFromRootDevice(
-	rootDevice *discover.RootDevice,
+	rootDevice *metadata.RootDevice,
 	loc *url.URL,
 ) (
 	[]*WANCableLinkConfig1,
@@ -1684,7 +1685,7 @@ func NewWANCommonInterfaceConfig1ClientsByURL(
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
 func NewWANCommonInterfaceConfig1ClientsFromRootDevice(
-	rootDevice *discover.RootDevice,
+	rootDevice *metadata.RootDevice,
 	loc *url.URL,
 ) (
 	[]*WANCommonInterfaceConfig1,
@@ -2229,7 +2230,7 @@ func NewWANDSLLinkConfig1ClientsByURL(
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
 func NewWANDSLLinkConfig1ClientsFromRootDevice(
-	rootDevice *discover.RootDevice,
+	rootDevice *metadata.RootDevice,
 	loc *url.URL,
 ) (
 	[]*WANDSLLinkConfig1,
@@ -2739,7 +2740,7 @@ func NewWANEthernetLinkConfig1ClientsByURL(
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
 func NewWANEthernetLinkConfig1ClientsFromRootDevice(
-	rootDevice *discover.RootDevice,
+	rootDevice *metadata.RootDevice,
 	loc *url.URL,
 ) (
 	[]*WANEthernetLinkConfig1,
@@ -2882,7 +2883,7 @@ func NewWANIPConnection1ClientsByURL(
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
 func NewWANIPConnection1ClientsFromRootDevice(
-	rootDevice *discover.RootDevice,
+	rootDevice *metadata.RootDevice,
 	loc *url.URL,
 ) (
 	[]*WANIPConnection1,
@@ -3901,7 +3902,7 @@ func NewWANPOTSLinkConfig1ClientsByURL(
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
 func NewWANPOTSLinkConfig1ClientsFromRootDevice(
-	rootDevice *discover.RootDevice,
+	rootDevice *metadata.RootDevice,
 	loc *url.URL,
 ) (
 	[]*WANPOTSLinkConfig1,
@@ -4410,7 +4411,7 @@ func NewWANPPPConnection1ClientsByURL(
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
 func NewWANPPPConnection1ClientsFromRootDevice(
-	rootDevice *discover.RootDevice,
+	rootDevice *metadata.RootDevice,
 	loc *url.URL,
 ) (
 	[]*WANPPPConnection1,

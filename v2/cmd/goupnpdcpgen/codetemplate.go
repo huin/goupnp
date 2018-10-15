@@ -23,6 +23,7 @@ import (
 	"time"
 
 	"github.com/huin/goupnp/v2/discover"
+	"github.com/huin/goupnp/v2/metadata"
 	"github.com/huin/goupnp/v2/ssdp"
 	"github.com/huin/goupnp/v2/soap"
 )
@@ -114,7 +115,7 @@ func New{{$srvIdent}}ClientsByURL(
 // This is a typical entry calling point into this package when reusing an
 // previously discovered root device.
 func New{{$srvIdent}}ClientsFromRootDevice(
-	rootDevice *discover.RootDevice,
+	rootDevice *metadata.RootDevice,
 	loc *url.URL,
 ) (
 	[]*{{$srvIdent}},

@@ -16,31 +16,18 @@ package discover
 
 import (
 	"context"
-	"encoding/xml"
-	"net/http"
 	"net/url"
-	"time"
 
+	"github.com/huin/goupnp/v2/errkind"
 	"github.com/huin/goupnp/v2/httpu"
+	"github.com/huin/goupnp/v2/metadata"
 	"github.com/huin/goupnp/v2/ssdp"
-	"golang.org/x/net/html/charset"
-	errors "gopkg.in/src-d/go-errors.v1"
-)
-
-var (
-	// ErrBadResponse matches errors due to bad responses received for a search.
-	ErrBadResponse = errors.NewKind("bad response data in %s")
-	// ErrBadResponseStatus matches errors due to HTTP response status codes that
-	// were unexpected or that indicate failure.
-	ErrBadResponseStatus = errors.NewKind("bad response status %d %s")
-	// ErrResponseFrom matches errors annotating where a bad response came from.
-	ErrResponseFrom = errors.NewKind("from %q")
 )
 
 // MaybeRootDevice contains either a RootDevice or an error.
 type MaybeRootDevice struct {
 	// Set iff Err == nil.
-	Root *RootDevice
+	Root *metadata.RootDevice
 
 	// The location the device was discovered at. This can be used with
 	// DeviceByURL, assuming the device is still present. A location represents
@@ -82,11 +69,11 @@ func Devices(
 		maybe := &results[i]
 		loc, err := response.Location()
 		if err != nil {
-			maybe.Err = ErrBadResponse.Wrap(err, "location")
+			maybe.Err = errkind.Wrap(errkind.BadData, err, "response location")
 			continue
 		}
 		maybe.Location = loc
-		if root, err := DeviceByURL(ctx, loc); err != nil {
+		if root, err := metadata.RequestRootDevice(ctx, loc); err != nil {
 			maybe.Err = err
 		} else {
 			maybe.Root = root
@@ -94,53 +81,4 @@ func Devices(
 	}
 
 	return results, nil
-}
-
-func DeviceByURL(ctx context.Context, loc *url.URL) (*RootDevice, error) {
-	locStr := loc.String()
-	root := new(RootDevice)
-	if err := requestXml(ctx, locStr, DeviceXMLNamespace, root); err != nil {
-		return nil, ErrResponseFrom.Wrap(err, locStr)
-	}
-	var urlBaseStr string
-	if root.URLBaseStr != "" {
-		urlBaseStr = root.URLBaseStr
-	} else {
-		urlBaseStr = locStr
-	}
-	urlBase, err := url.Parse(urlBaseStr)
-	if err != nil {
-		return nil, ErrBadResponse.Wrap(err, "location")
-	}
-	root.SetURLBase(urlBase)
-	return root, nil
-}
-
-func requestXml(
-	ctx context.Context,
-	url string,
-	defaultSpace string,
-	doc interface{},
-) error {
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		return err
-	}
-	ctx, _ = context.WithTimeout(ctx, 3*time.Second)
-	req = req.WithContext(ctx)
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != 200 {
-		return ErrBadResponseStatus.New(resp.StatusCode, resp.Status)
-	}
-
-	decoder := xml.NewDecoder(resp.Body)
-	decoder.DefaultSpace = defaultSpace
-	decoder.CharsetReader = charset.NewReaderLabel
-
-	return decoder.Decode(doc)
 }

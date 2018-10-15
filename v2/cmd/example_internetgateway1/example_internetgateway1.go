@@ -6,6 +6,7 @@ import (
 	"log"
 
 	"github.com/huin/goupnp/v2/dcps/internetgateway1"
+	"github.com/huin/goupnp/v2/metadata"
 )
 
 func main() {
@@ -26,20 +27,25 @@ func main() {
 		dev := &c.ServiceClient.RootDevice.Device
 		srv := c.ServiceClient.Service
 		fmt.Println(dev.FriendlyName, " :: ", srv.String())
-		scpd, err := srv.RequestSCPD(ctx)
+		if !srv.SCPDURL.Ok {
+			fmt.Printf("  Bad/missing SCPD URL")
+			continue
+		}
+		scpd, err := metadata.RequestSCPD(ctx, &srv.SCPDURL.URL)
 		if err != nil {
 			fmt.Printf("  Error requesting service SCPD: %v\n", err)
-		} else {
-			fmt.Println("  Available actions:")
-			for _, action := range scpd.Actions {
-				fmt.Printf("  * %s\n", action.Name)
-				for _, arg := range action.Arguments {
-					var varDesc string
-					if stateVar := scpd.GetStateVariable(arg.RelatedStateVariable); stateVar != nil {
-						varDesc = fmt.Sprintf(" (%s)", stateVar.DataType.Name)
-					}
-					fmt.Printf("    * [%s] %s%s\n", arg.Direction, arg.Name, varDesc)
+			continue
+		}
+
+		fmt.Println("  Available actions:")
+		for _, action := range scpd.Actions {
+			fmt.Printf("  * %s\n", action.Name)
+			for _, arg := range action.Arguments {
+				var varDesc string
+				if stateVar := scpd.GetStateVariable(arg.RelatedStateVariable); stateVar != nil {
+					varDesc = fmt.Sprintf(" (%s)", stateVar.DataType.Name)
 				}
+				fmt.Printf("    * [%s] %s%s\n", arg.Direction, arg.Name, varDesc)
 			}
 		}
 

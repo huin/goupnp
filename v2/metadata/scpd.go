@@ -1,8 +1,12 @@
-package scpd
+package metadata
 
 import (
+	"context"
 	"encoding/xml"
+	"net/url"
 	"strings"
+
+	"github.com/huin/goupnp/v2/errkind"
 )
 
 const (
@@ -13,22 +17,32 @@ func cleanWhitespace(s *string) {
 	*s = strings.TrimSpace(*s)
 }
 
-// SCPD is the service description as described by section 2.5 "Service
+// SCPD is the SOAP service description as described by section 2.5 "Service
 // description" in
 // http://upnp.org/specs/arch/UPnP-arch-DeviceArchitecture-v1.1.pdf
 type SCPD struct {
 	XMLName        xml.Name        `xml:"scpd"`
-	ConfigId       string          `xml:"configId,attr"`
+	ConfigID       string          `xml:"configId,attr"`
 	SpecVersion    SpecVersion     `xml:"specVersion"`
 	Actions        []Action        `xml:"actionList>action"`
 	StateVariables []StateVariable `xml:"serviceStateTable>stateVariable"`
+}
+
+// RequestSCPD requests the SCPD (SOAP actions and state variables description)
+// for the service.
+func RequestSCPD(ctx context.Context, loc *url.URL) (*SCPD, error) {
+	s := new(SCPD)
+	if err := requestXml(ctx, loc, SCPDXMLNamespace, s); err != nil {
+		return nil, errkind.URLContext.Wrap(err, loc.String())
+	}
+	return s, nil
 }
 
 // Clean attempts to remove stray whitespace etc. in the structure. It seems
 // unfortunately common for stray whitespace to be present in SCPD documents,
 // this method attempts to make it easy to clean them out.
 func (scpd *SCPD) Clean() {
-	cleanWhitespace(&scpd.ConfigId)
+	cleanWhitespace(&scpd.ConfigID)
 	for i := range scpd.Actions {
 		scpd.Actions[i].clean()
 	}
@@ -55,13 +69,6 @@ func (scpd *SCPD) GetAction(action string) *Action {
 		}
 	}
 	return nil
-}
-
-// SpecVersion is part of a SCPD document, describes the version of the
-// specification that the data adheres to.
-type SpecVersion struct {
-	Major int32 `xml:"major"`
-	Minor int32 `xml:"minor"`
 }
 
 type Action struct {
