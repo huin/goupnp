@@ -60,7 +60,7 @@ outside of goupnp.
 
 Supporting additional services is, in the trivial case, simply a matter of
 adding the service to the `dcpMetadata` whitelist in
-`cmd/goupnpdcpgen/metadata.go`, regenerating the source code (see above), and
+`cmd/goupnpdcpgen/registry.go`, regenerating the source code (see above), and
 committing that source code.
 
 However, it would be helpful if anyone needing such a service could test the
