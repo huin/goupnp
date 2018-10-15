@@ -61,7 +61,7 @@ func globFiles(pattern string, archive *zip.ReadCloser) []*zip.File {
 	return files
 }
 
-func unmarshalXmlFile(file *zip.File, data interface{}) error {
+func unmarshalXMLFile(file *zip.File, data interface{}) error {
 	r, err := file.Open()
 	if err != nil {
 		return err
@@ -73,7 +73,7 @@ func unmarshalXmlFile(file *zip.File, data interface{}) error {
 
 var scpdFilenameRe = regexp.MustCompile(`.*/([a-zA-Z0-9]+)([0-9]+)\.xml`)
 
-func urnPartsFromSCPDFilename(filename string) (*URNParts, error) {
+func urnPartsFromSCPDFilename(filename string) (*urnParts, error) {
 	parts := scpdFilenameRe.FindStringSubmatch(filename)
 	if len(parts) != 3 {
 		return nil, errkind.New(
@@ -83,7 +83,7 @@ func urnPartsFromSCPDFilename(filename string) (*URNParts, error) {
 		)
 	}
 	name, version := parts[1], parts[2]
-	return &URNParts{
+	return &urnParts{
 		URN:     serviceURNPrefix + name + ":" + version,
 		Name:    name,
 		Version: version,

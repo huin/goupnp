@@ -1,4 +1,5 @@
-// Client for UPnP Device Control Protocol MediaServer v1 and MediaRenderer v1.
+// Package av1 is a client for UPnP Device Control Protocol
+// MediaServer v1 and MediaRenderer v1.
 //
 // This DCP is documented in detail at: http://upnp.org/specs/av/av1/
 //
@@ -140,7 +141,7 @@ func newAVTransport1ClientsFromGenericClients(
 	return clients
 }
 
-// SetAVTransportURI
+// SetAVTransportURI implements a UPnP action of the same name.
 func (client *AVTransport1) SetAVTransportURI(
 	ctx context.Context,
 	InstanceID uint32,
@@ -151,13 +152,13 @@ func (client *AVTransport1) SetAVTransportURI(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID         string
-		CurrentURI         string
-		CurrentURIMetaData string
+		InstanceID         string `xml:"InstanceID"`
+		CurrentURI         string `xml:"CurrentURI"`
+		CurrentURIMetaData string `xml:"CurrentURIMetaData"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -178,7 +179,7 @@ func (client *AVTransport1) SetAVTransportURI(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_AVTransport_1,
 		"SetAVTransportURI",
@@ -194,7 +195,7 @@ func (client *AVTransport1) SetAVTransportURI(
 	return
 }
 
-// SetNextAVTransportURI
+// SetNextAVTransportURI implements a UPnP action of the same name.
 func (client *AVTransport1) SetNextAVTransportURI(
 	ctx context.Context,
 	InstanceID uint32,
@@ -205,13 +206,13 @@ func (client *AVTransport1) SetNextAVTransportURI(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID      string
-		NextURI         string
-		NextURIMetaData string
+		InstanceID      string `xml:"InstanceID"`
+		NextURI         string `xml:"NextURI"`
+		NextURIMetaData string `xml:"NextURIMetaData"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -232,7 +233,7 @@ func (client *AVTransport1) SetNextAVTransportURI(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_AVTransport_1,
 		"SetNextAVTransportURI",
@@ -248,7 +249,7 @@ func (client *AVTransport1) SetNextAVTransportURI(
 	return
 }
 
-// GetMediaInfo
+// GetMediaInfo implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -270,11 +271,11 @@ func (client *AVTransport1) GetMediaInfo(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -283,19 +284,19 @@ func (client *AVTransport1) GetMediaInfo(
 
 	// Response structure.
 	response := &struct {
-		NrTracks           string
-		MediaDuration      string
-		CurrentURI         string
-		CurrentURIMetaData string
-		NextURI            string
-		NextURIMetaData    string
-		PlayMedium         string
-		RecordMedium       string
-		WriteStatus        string
+		NrTracks           string `xml:"NrTracks"`
+		MediaDuration      string `xml:"MediaDuration"`
+		CurrentURI         string `xml:"CurrentURI"`
+		CurrentURIMetaData string `xml:"CurrentURIMetaData"`
+		NextURI            string `xml:"NextURI"`
+		NextURIMetaData    string `xml:"NextURIMetaData"`
+		PlayMedium         string `xml:"PlayMedium"`
+		RecordMedium       string `xml:"RecordMedium"`
+		WriteStatus        string `xml:"WriteStatus"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_AVTransport_1,
 		"GetMediaInfo",
@@ -306,7 +307,7 @@ func (client *AVTransport1) GetMediaInfo(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if NrTracks, err = soap.UnmarshalUi4(
+	if NrTracks, err = soap.UnmarshalUI4(
 		response.NrTracks,
 	); err != nil {
 		return
@@ -356,7 +357,7 @@ func (client *AVTransport1) GetMediaInfo(
 	return
 }
 
-// GetTransportInfo
+// GetTransportInfo implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -376,11 +377,11 @@ func (client *AVTransport1) GetTransportInfo(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -389,13 +390,13 @@ func (client *AVTransport1) GetTransportInfo(
 
 	// Response structure.
 	response := &struct {
-		CurrentTransportState  string
-		CurrentTransportStatus string
-		CurrentSpeed           string
+		CurrentTransportState  string `xml:"CurrentTransportState"`
+		CurrentTransportStatus string `xml:"CurrentTransportStatus"`
+		CurrentSpeed           string `xml:"CurrentSpeed"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_AVTransport_1,
 		"GetTransportInfo",
@@ -426,7 +427,7 @@ func (client *AVTransport1) GetTransportInfo(
 	return
 }
 
-// GetPositionInfo
+// GetPositionInfo implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -447,11 +448,11 @@ func (client *AVTransport1) GetPositionInfo(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -460,18 +461,18 @@ func (client *AVTransport1) GetPositionInfo(
 
 	// Response structure.
 	response := &struct {
-		Track         string
-		TrackDuration string
-		TrackMetaData string
-		TrackURI      string
-		RelTime       string
-		AbsTime       string
-		RelCount      string
-		AbsCount      string
+		Track         string `xml:"Track"`
+		TrackDuration string `xml:"TrackDuration"`
+		TrackMetaData string `xml:"TrackMetaData"`
+		TrackURI      string `xml:"TrackURI"`
+		RelTime       string `xml:"RelTime"`
+		AbsTime       string `xml:"AbsTime"`
+		RelCount      string `xml:"RelCount"`
+		AbsCount      string `xml:"AbsCount"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_AVTransport_1,
 		"GetPositionInfo",
@@ -482,7 +483,7 @@ func (client *AVTransport1) GetPositionInfo(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if Track, err = soap.UnmarshalUi4(
+	if Track, err = soap.UnmarshalUI4(
 		response.Track,
 	); err != nil {
 		return
@@ -527,7 +528,7 @@ func (client *AVTransport1) GetPositionInfo(
 	return
 }
 
-// GetDeviceCapabilities
+// GetDeviceCapabilities implements a UPnP action of the same name.
 func (client *AVTransport1) GetDeviceCapabilities(
 	ctx context.Context,
 	InstanceID uint32,
@@ -539,11 +540,11 @@ func (client *AVTransport1) GetDeviceCapabilities(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -552,13 +553,13 @@ func (client *AVTransport1) GetDeviceCapabilities(
 
 	// Response structure.
 	response := &struct {
-		PlayMedia       string
-		RecMedia        string
-		RecQualityModes string
+		PlayMedia       string `xml:"PlayMedia"`
+		RecMedia        string `xml:"RecMedia"`
+		RecQualityModes string `xml:"RecQualityModes"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_AVTransport_1,
 		"GetDeviceCapabilities",
@@ -589,7 +590,7 @@ func (client *AVTransport1) GetDeviceCapabilities(
 	return
 }
 
-// GetTransportSettings
+// GetTransportSettings implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -604,11 +605,11 @@ func (client *AVTransport1) GetTransportSettings(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -617,12 +618,12 @@ func (client *AVTransport1) GetTransportSettings(
 
 	// Response structure.
 	response := &struct {
-		PlayMode       string
-		RecQualityMode string
+		PlayMode       string `xml:"PlayMode"`
+		RecQualityMode string `xml:"RecQualityMode"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_AVTransport_1,
 		"GetTransportSettings",
@@ -648,7 +649,7 @@ func (client *AVTransport1) GetTransportSettings(
 	return
 }
 
-// Stop
+// Stop implements a UPnP action of the same name.
 func (client *AVTransport1) Stop(
 	ctx context.Context,
 	InstanceID uint32,
@@ -657,11 +658,11 @@ func (client *AVTransport1) Stop(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -672,7 +673,7 @@ func (client *AVTransport1) Stop(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_AVTransport_1,
 		"Stop",
@@ -688,7 +689,7 @@ func (client *AVTransport1) Stop(
 	return
 }
 
-// Play
+// Play implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -702,12 +703,12 @@ func (client *AVTransport1) Play(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-		Speed      string
+		InstanceID string `xml:"InstanceID"`
+		Speed      string `xml:"Speed"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -723,7 +724,7 @@ func (client *AVTransport1) Play(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_AVTransport_1,
 		"Play",
@@ -739,7 +740,7 @@ func (client *AVTransport1) Play(
 	return
 }
 
-// Pause
+// Pause implements a UPnP action of the same name.
 func (client *AVTransport1) Pause(
 	ctx context.Context,
 	InstanceID uint32,
@@ -748,11 +749,11 @@ func (client *AVTransport1) Pause(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -763,7 +764,7 @@ func (client *AVTransport1) Pause(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_AVTransport_1,
 		"Pause",
@@ -779,7 +780,7 @@ func (client *AVTransport1) Pause(
 	return
 }
 
-// Record
+// Record implements a UPnP action of the same name.
 func (client *AVTransport1) Record(
 	ctx context.Context,
 	InstanceID uint32,
@@ -788,11 +789,11 @@ func (client *AVTransport1) Record(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -803,7 +804,7 @@ func (client *AVTransport1) Record(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_AVTransport_1,
 		"Record",
@@ -819,7 +820,7 @@ func (client *AVTransport1) Record(
 	return
 }
 
-// Seek
+// Seek implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -834,13 +835,13 @@ func (client *AVTransport1) Seek(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-		Unit       string
-		Target     string
+		InstanceID string `xml:"InstanceID"`
+		Unit       string `xml:"Unit"`
+		Target     string `xml:"Target"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -861,7 +862,7 @@ func (client *AVTransport1) Seek(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_AVTransport_1,
 		"Seek",
@@ -877,7 +878,7 @@ func (client *AVTransport1) Seek(
 	return
 }
 
-// Next
+// Next implements a UPnP action of the same name.
 func (client *AVTransport1) Next(
 	ctx context.Context,
 	InstanceID uint32,
@@ -886,11 +887,11 @@ func (client *AVTransport1) Next(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -901,7 +902,7 @@ func (client *AVTransport1) Next(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_AVTransport_1,
 		"Next",
@@ -917,7 +918,7 @@ func (client *AVTransport1) Next(
 	return
 }
 
-// Previous
+// Previous implements a UPnP action of the same name.
 func (client *AVTransport1) Previous(
 	ctx context.Context,
 	InstanceID uint32,
@@ -926,11 +927,11 @@ func (client *AVTransport1) Previous(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -941,7 +942,7 @@ func (client *AVTransport1) Previous(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_AVTransport_1,
 		"Previous",
@@ -957,7 +958,7 @@ func (client *AVTransport1) Previous(
 	return
 }
 
-// SetPlayMode
+// SetPlayMode implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -971,12 +972,12 @@ func (client *AVTransport1) SetPlayMode(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID  string
-		NewPlayMode string
+		InstanceID  string `xml:"InstanceID"`
+		NewPlayMode string `xml:"NewPlayMode"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -992,7 +993,7 @@ func (client *AVTransport1) SetPlayMode(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_AVTransport_1,
 		"SetPlayMode",
@@ -1008,7 +1009,7 @@ func (client *AVTransport1) SetPlayMode(
 	return
 }
 
-// SetRecordQualityMode
+// SetRecordQualityMode implements a UPnP action of the same name.
 func (client *AVTransport1) SetRecordQualityMode(
 	ctx context.Context,
 	InstanceID uint32,
@@ -1018,12 +1019,12 @@ func (client *AVTransport1) SetRecordQualityMode(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID           string
-		NewRecordQualityMode string
+		InstanceID           string `xml:"InstanceID"`
+		NewRecordQualityMode string `xml:"NewRecordQualityMode"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -1039,7 +1040,7 @@ func (client *AVTransport1) SetRecordQualityMode(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_AVTransport_1,
 		"SetRecordQualityMode",
@@ -1055,7 +1056,7 @@ func (client *AVTransport1) SetRecordQualityMode(
 	return
 }
 
-// GetCurrentTransportActions
+// GetCurrentTransportActions implements a UPnP action of the same name.
 func (client *AVTransport1) GetCurrentTransportActions(
 	ctx context.Context,
 	InstanceID uint32,
@@ -1065,11 +1066,11 @@ func (client *AVTransport1) GetCurrentTransportActions(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -1078,11 +1079,11 @@ func (client *AVTransport1) GetCurrentTransportActions(
 
 	// Response structure.
 	response := &struct {
-		Actions string
+		Actions string `xml:"Actions"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_AVTransport_1,
 		"GetCurrentTransportActions",
@@ -1202,7 +1203,7 @@ func newAVTransport2ClientsFromGenericClients(
 	return clients
 }
 
-// SetAVTransportURI
+// SetAVTransportURI implements a UPnP action of the same name.
 func (client *AVTransport2) SetAVTransportURI(
 	ctx context.Context,
 	InstanceID uint32,
@@ -1213,13 +1214,13 @@ func (client *AVTransport2) SetAVTransportURI(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID         string
-		CurrentURI         string
-		CurrentURIMetaData string
+		InstanceID         string `xml:"InstanceID"`
+		CurrentURI         string `xml:"CurrentURI"`
+		CurrentURIMetaData string `xml:"CurrentURIMetaData"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -1240,7 +1241,7 @@ func (client *AVTransport2) SetAVTransportURI(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_AVTransport_2,
 		"SetAVTransportURI",
@@ -1256,7 +1257,7 @@ func (client *AVTransport2) SetAVTransportURI(
 	return
 }
 
-// SetNextAVTransportURI
+// SetNextAVTransportURI implements a UPnP action of the same name.
 func (client *AVTransport2) SetNextAVTransportURI(
 	ctx context.Context,
 	InstanceID uint32,
@@ -1267,13 +1268,13 @@ func (client *AVTransport2) SetNextAVTransportURI(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID      string
-		NextURI         string
-		NextURIMetaData string
+		InstanceID      string `xml:"InstanceID"`
+		NextURI         string `xml:"NextURI"`
+		NextURIMetaData string `xml:"NextURIMetaData"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -1294,7 +1295,7 @@ func (client *AVTransport2) SetNextAVTransportURI(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_AVTransport_2,
 		"SetNextAVTransportURI",
@@ -1310,7 +1311,7 @@ func (client *AVTransport2) SetNextAVTransportURI(
 	return
 }
 
-// GetMediaInfo
+// GetMediaInfo implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -1332,11 +1333,11 @@ func (client *AVTransport2) GetMediaInfo(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -1345,19 +1346,19 @@ func (client *AVTransport2) GetMediaInfo(
 
 	// Response structure.
 	response := &struct {
-		NrTracks           string
-		MediaDuration      string
-		CurrentURI         string
-		CurrentURIMetaData string
-		NextURI            string
-		NextURIMetaData    string
-		PlayMedium         string
-		RecordMedium       string
-		WriteStatus        string
+		NrTracks           string `xml:"NrTracks"`
+		MediaDuration      string `xml:"MediaDuration"`
+		CurrentURI         string `xml:"CurrentURI"`
+		CurrentURIMetaData string `xml:"CurrentURIMetaData"`
+		NextURI            string `xml:"NextURI"`
+		NextURIMetaData    string `xml:"NextURIMetaData"`
+		PlayMedium         string `xml:"PlayMedium"`
+		RecordMedium       string `xml:"RecordMedium"`
+		WriteStatus        string `xml:"WriteStatus"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_AVTransport_2,
 		"GetMediaInfo",
@@ -1368,7 +1369,7 @@ func (client *AVTransport2) GetMediaInfo(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if NrTracks, err = soap.UnmarshalUi4(
+	if NrTracks, err = soap.UnmarshalUI4(
 		response.NrTracks,
 	); err != nil {
 		return
@@ -1418,7 +1419,7 @@ func (client *AVTransport2) GetMediaInfo(
 	return
 }
 
-// GetMediaInfo_Ext
+// GetMediaInfo_Ext implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -1443,11 +1444,11 @@ func (client *AVTransport2) GetMediaInfo_Ext(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -1456,20 +1457,20 @@ func (client *AVTransport2) GetMediaInfo_Ext(
 
 	// Response structure.
 	response := &struct {
-		CurrentType        string
-		NrTracks           string
-		MediaDuration      string
-		CurrentURI         string
-		CurrentURIMetaData string
-		NextURI            string
-		NextURIMetaData    string
-		PlayMedium         string
-		RecordMedium       string
-		WriteStatus        string
+		CurrentType        string `xml:"CurrentType"`
+		NrTracks           string `xml:"NrTracks"`
+		MediaDuration      string `xml:"MediaDuration"`
+		CurrentURI         string `xml:"CurrentURI"`
+		CurrentURIMetaData string `xml:"CurrentURIMetaData"`
+		NextURI            string `xml:"NextURI"`
+		NextURIMetaData    string `xml:"NextURIMetaData"`
+		PlayMedium         string `xml:"PlayMedium"`
+		RecordMedium       string `xml:"RecordMedium"`
+		WriteStatus        string `xml:"WriteStatus"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_AVTransport_2,
 		"GetMediaInfo_Ext",
@@ -1485,7 +1486,7 @@ func (client *AVTransport2) GetMediaInfo_Ext(
 	); err != nil {
 		return
 	}
-	if NrTracks, err = soap.UnmarshalUi4(
+	if NrTracks, err = soap.UnmarshalUI4(
 		response.NrTracks,
 	); err != nil {
 		return
@@ -1535,7 +1536,7 @@ func (client *AVTransport2) GetMediaInfo_Ext(
 	return
 }
 
-// GetTransportInfo
+// GetTransportInfo implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -1555,11 +1556,11 @@ func (client *AVTransport2) GetTransportInfo(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -1568,13 +1569,13 @@ func (client *AVTransport2) GetTransportInfo(
 
 	// Response structure.
 	response := &struct {
-		CurrentTransportState  string
-		CurrentTransportStatus string
-		CurrentSpeed           string
+		CurrentTransportState  string `xml:"CurrentTransportState"`
+		CurrentTransportStatus string `xml:"CurrentTransportStatus"`
+		CurrentSpeed           string `xml:"CurrentSpeed"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_AVTransport_2,
 		"GetTransportInfo",
@@ -1605,7 +1606,7 @@ func (client *AVTransport2) GetTransportInfo(
 	return
 }
 
-// GetPositionInfo
+// GetPositionInfo implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -1626,11 +1627,11 @@ func (client *AVTransport2) GetPositionInfo(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -1639,18 +1640,18 @@ func (client *AVTransport2) GetPositionInfo(
 
 	// Response structure.
 	response := &struct {
-		Track         string
-		TrackDuration string
-		TrackMetaData string
-		TrackURI      string
-		RelTime       string
-		AbsTime       string
-		RelCount      string
-		AbsCount      string
+		Track         string `xml:"Track"`
+		TrackDuration string `xml:"TrackDuration"`
+		TrackMetaData string `xml:"TrackMetaData"`
+		TrackURI      string `xml:"TrackURI"`
+		RelTime       string `xml:"RelTime"`
+		AbsTime       string `xml:"AbsTime"`
+		RelCount      string `xml:"RelCount"`
+		AbsCount      string `xml:"AbsCount"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_AVTransport_2,
 		"GetPositionInfo",
@@ -1661,7 +1662,7 @@ func (client *AVTransport2) GetPositionInfo(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if Track, err = soap.UnmarshalUi4(
+	if Track, err = soap.UnmarshalUI4(
 		response.Track,
 	); err != nil {
 		return
@@ -1706,7 +1707,7 @@ func (client *AVTransport2) GetPositionInfo(
 	return
 }
 
-// GetDeviceCapabilities
+// GetDeviceCapabilities implements a UPnP action of the same name.
 func (client *AVTransport2) GetDeviceCapabilities(
 	ctx context.Context,
 	InstanceID uint32,
@@ -1718,11 +1719,11 @@ func (client *AVTransport2) GetDeviceCapabilities(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -1731,13 +1732,13 @@ func (client *AVTransport2) GetDeviceCapabilities(
 
 	// Response structure.
 	response := &struct {
-		PlayMedia       string
-		RecMedia        string
-		RecQualityModes string
+		PlayMedia       string `xml:"PlayMedia"`
+		RecMedia        string `xml:"RecMedia"`
+		RecQualityModes string `xml:"RecQualityModes"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_AVTransport_2,
 		"GetDeviceCapabilities",
@@ -1768,7 +1769,7 @@ func (client *AVTransport2) GetDeviceCapabilities(
 	return
 }
 
-// GetTransportSettings
+// GetTransportSettings implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -1783,11 +1784,11 @@ func (client *AVTransport2) GetTransportSettings(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -1796,12 +1797,12 @@ func (client *AVTransport2) GetTransportSettings(
 
 	// Response structure.
 	response := &struct {
-		PlayMode       string
-		RecQualityMode string
+		PlayMode       string `xml:"PlayMode"`
+		RecQualityMode string `xml:"RecQualityMode"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_AVTransport_2,
 		"GetTransportSettings",
@@ -1827,7 +1828,7 @@ func (client *AVTransport2) GetTransportSettings(
 	return
 }
 
-// Stop
+// Stop implements a UPnP action of the same name.
 func (client *AVTransport2) Stop(
 	ctx context.Context,
 	InstanceID uint32,
@@ -1836,11 +1837,11 @@ func (client *AVTransport2) Stop(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -1851,7 +1852,7 @@ func (client *AVTransport2) Stop(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_AVTransport_2,
 		"Stop",
@@ -1867,7 +1868,7 @@ func (client *AVTransport2) Stop(
 	return
 }
 
-// Play
+// Play implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -1881,12 +1882,12 @@ func (client *AVTransport2) Play(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-		Speed      string
+		InstanceID string `xml:"InstanceID"`
+		Speed      string `xml:"Speed"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -1902,7 +1903,7 @@ func (client *AVTransport2) Play(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_AVTransport_2,
 		"Play",
@@ -1918,7 +1919,7 @@ func (client *AVTransport2) Play(
 	return
 }
 
-// Pause
+// Pause implements a UPnP action of the same name.
 func (client *AVTransport2) Pause(
 	ctx context.Context,
 	InstanceID uint32,
@@ -1927,11 +1928,11 @@ func (client *AVTransport2) Pause(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -1942,7 +1943,7 @@ func (client *AVTransport2) Pause(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_AVTransport_2,
 		"Pause",
@@ -1958,7 +1959,7 @@ func (client *AVTransport2) Pause(
 	return
 }
 
-// Record
+// Record implements a UPnP action of the same name.
 func (client *AVTransport2) Record(
 	ctx context.Context,
 	InstanceID uint32,
@@ -1967,11 +1968,11 @@ func (client *AVTransport2) Record(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -1982,7 +1983,7 @@ func (client *AVTransport2) Record(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_AVTransport_2,
 		"Record",
@@ -1998,7 +1999,7 @@ func (client *AVTransport2) Record(
 	return
 }
 
-// Seek
+// Seek implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -2013,13 +2014,13 @@ func (client *AVTransport2) Seek(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-		Unit       string
-		Target     string
+		InstanceID string `xml:"InstanceID"`
+		Unit       string `xml:"Unit"`
+		Target     string `xml:"Target"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -2040,7 +2041,7 @@ func (client *AVTransport2) Seek(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_AVTransport_2,
 		"Seek",
@@ -2056,7 +2057,7 @@ func (client *AVTransport2) Seek(
 	return
 }
 
-// Next
+// Next implements a UPnP action of the same name.
 func (client *AVTransport2) Next(
 	ctx context.Context,
 	InstanceID uint32,
@@ -2065,11 +2066,11 @@ func (client *AVTransport2) Next(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -2080,7 +2081,7 @@ func (client *AVTransport2) Next(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_AVTransport_2,
 		"Next",
@@ -2096,7 +2097,7 @@ func (client *AVTransport2) Next(
 	return
 }
 
-// Previous
+// Previous implements a UPnP action of the same name.
 func (client *AVTransport2) Previous(
 	ctx context.Context,
 	InstanceID uint32,
@@ -2105,11 +2106,11 @@ func (client *AVTransport2) Previous(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -2120,7 +2121,7 @@ func (client *AVTransport2) Previous(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_AVTransport_2,
 		"Previous",
@@ -2136,7 +2137,7 @@ func (client *AVTransport2) Previous(
 	return
 }
 
-// SetPlayMode
+// SetPlayMode implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -2150,12 +2151,12 @@ func (client *AVTransport2) SetPlayMode(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID  string
-		NewPlayMode string
+		InstanceID  string `xml:"InstanceID"`
+		NewPlayMode string `xml:"NewPlayMode"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -2171,7 +2172,7 @@ func (client *AVTransport2) SetPlayMode(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_AVTransport_2,
 		"SetPlayMode",
@@ -2187,7 +2188,7 @@ func (client *AVTransport2) SetPlayMode(
 	return
 }
 
-// SetRecordQualityMode
+// SetRecordQualityMode implements a UPnP action of the same name.
 func (client *AVTransport2) SetRecordQualityMode(
 	ctx context.Context,
 	InstanceID uint32,
@@ -2197,12 +2198,12 @@ func (client *AVTransport2) SetRecordQualityMode(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID           string
-		NewRecordQualityMode string
+		InstanceID           string `xml:"InstanceID"`
+		NewRecordQualityMode string `xml:"NewRecordQualityMode"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -2218,7 +2219,7 @@ func (client *AVTransport2) SetRecordQualityMode(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_AVTransport_2,
 		"SetRecordQualityMode",
@@ -2234,7 +2235,7 @@ func (client *AVTransport2) SetRecordQualityMode(
 	return
 }
 
-// GetCurrentTransportActions
+// GetCurrentTransportActions implements a UPnP action of the same name.
 func (client *AVTransport2) GetCurrentTransportActions(
 	ctx context.Context,
 	InstanceID uint32,
@@ -2244,11 +2245,11 @@ func (client *AVTransport2) GetCurrentTransportActions(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -2257,11 +2258,11 @@ func (client *AVTransport2) GetCurrentTransportActions(
 
 	// Response structure.
 	response := &struct {
-		Actions string
+		Actions string `xml:"Actions"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_AVTransport_2,
 		"GetCurrentTransportActions",
@@ -2282,7 +2283,7 @@ func (client *AVTransport2) GetCurrentTransportActions(
 	return
 }
 
-// GetDRMState
+// GetDRMState implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -2296,11 +2297,11 @@ func (client *AVTransport2) GetDRMState(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -2309,11 +2310,11 @@ func (client *AVTransport2) GetDRMState(
 
 	// Response structure.
 	response := &struct {
-		CurrentDRMState string
+		CurrentDRMState string `xml:"CurrentDRMState"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_AVTransport_2,
 		"GetDRMState",
@@ -2334,7 +2335,7 @@ func (client *AVTransport2) GetDRMState(
 	return
 }
 
-// GetStateVariables
+// GetStateVariables implements a UPnP action of the same name.
 func (client *AVTransport2) GetStateVariables(
 	ctx context.Context,
 	InstanceID uint32,
@@ -2345,12 +2346,12 @@ func (client *AVTransport2) GetStateVariables(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID        string
-		StateVariableList string
+		InstanceID        string `xml:"InstanceID"`
+		StateVariableList string `xml:"StateVariableList"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -2364,11 +2365,11 @@ func (client *AVTransport2) GetStateVariables(
 
 	// Response structure.
 	response := &struct {
-		StateVariableValuePairs string
+		StateVariableValuePairs string `xml:"StateVariableValuePairs"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_AVTransport_2,
 		"GetStateVariables",
@@ -2389,7 +2390,7 @@ func (client *AVTransport2) GetStateVariables(
 	return
 }
 
-// SetStateVariables
+// SetStateVariables implements a UPnP action of the same name.
 func (client *AVTransport2) SetStateVariables(
 	ctx context.Context,
 	InstanceID uint32,
@@ -2403,15 +2404,15 @@ func (client *AVTransport2) SetStateVariables(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID              string
-		AVTransportUDN          string
-		ServiceType             string
-		ServiceId               string
-		StateVariableValuePairs string
+		InstanceID              string `xml:"InstanceID"`
+		AVTransportUDN          string `xml:"AVTransportUDN"`
+		ServiceType             string `xml:"ServiceType"`
+		ServiceId               string `xml:"ServiceId"`
+		StateVariableValuePairs string `xml:"StateVariableValuePairs"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -2440,11 +2441,11 @@ func (client *AVTransport2) SetStateVariables(
 
 	// Response structure.
 	response := &struct {
-		StateVariableList string
+		StateVariableList string `xml:"StateVariableList"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_AVTransport_2,
 		"SetStateVariables",
@@ -2564,7 +2565,7 @@ func newConnectionManager1ClientsFromGenericClients(
 	return clients
 }
 
-// GetProtocolInfo
+// GetProtocolInfo implements a UPnP action of the same name.
 func (client *ConnectionManager1) GetProtocolInfo(
 	ctx context.Context,
 ) (
@@ -2580,12 +2581,12 @@ func (client *ConnectionManager1) GetProtocolInfo(
 
 	// Response structure.
 	response := &struct {
-		Source string
-		Sink   string
+		Source string `xml:"Source"`
+		Sink   string `xml:"Sink"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ConnectionManager_1,
 		"GetProtocolInfo",
@@ -2611,7 +2612,7 @@ func (client *ConnectionManager1) GetProtocolInfo(
 	return
 }
 
-// PrepareForConnection
+// PrepareForConnection implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -2630,10 +2631,10 @@ func (client *ConnectionManager1) PrepareForConnection(
 ) {
 	// Request structure.
 	request := &struct {
-		RemoteProtocolInfo    string
-		PeerConnectionManager string
-		PeerConnectionID      string
-		Direction             string
+		RemoteProtocolInfo    string `xml:"RemoteProtocolInfo"`
+		PeerConnectionManager string `xml:"PeerConnectionManager"`
+		PeerConnectionID      string `xml:"PeerConnectionID"`
+		Direction             string `xml:"Direction"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -2661,13 +2662,13 @@ func (client *ConnectionManager1) PrepareForConnection(
 
 	// Response structure.
 	response := &struct {
-		ConnectionID  string
-		AVTransportID string
-		RcsID         string
+		ConnectionID  string `xml:"ConnectionID"`
+		AVTransportID string `xml:"AVTransportID"`
+		RcsID         string `xml:"RcsID"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ConnectionManager_1,
 		"PrepareForConnection",
@@ -2698,7 +2699,7 @@ func (client *ConnectionManager1) PrepareForConnection(
 	return
 }
 
-// ConnectionComplete
+// ConnectionComplete implements a UPnP action of the same name.
 func (client *ConnectionManager1) ConnectionComplete(
 	ctx context.Context,
 	ConnectionID int32,
@@ -2707,7 +2708,7 @@ func (client *ConnectionManager1) ConnectionComplete(
 ) {
 	// Request structure.
 	request := &struct {
-		ConnectionID string
+		ConnectionID string `xml:"ConnectionID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -2722,7 +2723,7 @@ func (client *ConnectionManager1) ConnectionComplete(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ConnectionManager_1,
 		"ConnectionComplete",
@@ -2738,7 +2739,7 @@ func (client *ConnectionManager1) ConnectionComplete(
 	return
 }
 
-// GetCurrentConnectionIDs
+// GetCurrentConnectionIDs implements a UPnP action of the same name.
 func (client *ConnectionManager1) GetCurrentConnectionIDs(
 	ctx context.Context,
 ) (
@@ -2753,11 +2754,11 @@ func (client *ConnectionManager1) GetCurrentConnectionIDs(
 
 	// Response structure.
 	response := &struct {
-		ConnectionIDs string
+		ConnectionIDs string `xml:"ConnectionIDs"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ConnectionManager_1,
 		"GetCurrentConnectionIDs",
@@ -2778,7 +2779,7 @@ func (client *ConnectionManager1) GetCurrentConnectionIDs(
 	return
 }
 
-// GetCurrentConnectionInfo
+// GetCurrentConnectionInfo implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -2800,7 +2801,7 @@ func (client *ConnectionManager1) GetCurrentConnectionInfo(
 ) {
 	// Request structure.
 	request := &struct {
-		ConnectionID string
+		ConnectionID string `xml:"ConnectionID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -2813,17 +2814,17 @@ func (client *ConnectionManager1) GetCurrentConnectionInfo(
 
 	// Response structure.
 	response := &struct {
-		RcsID                 string
-		AVTransportID         string
-		ProtocolInfo          string
-		PeerConnectionManager string
-		PeerConnectionID      string
-		Direction             string
-		Status                string
+		RcsID                 string `xml:"RcsID"`
+		AVTransportID         string `xml:"AVTransportID"`
+		ProtocolInfo          string `xml:"ProtocolInfo"`
+		PeerConnectionManager string `xml:"PeerConnectionManager"`
+		PeerConnectionID      string `xml:"PeerConnectionID"`
+		Direction             string `xml:"Direction"`
+		Status                string `xml:"Status"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ConnectionManager_1,
 		"GetCurrentConnectionInfo",
@@ -2973,7 +2974,7 @@ func newConnectionManager2ClientsFromGenericClients(
 	return clients
 }
 
-// GetProtocolInfo
+// GetProtocolInfo implements a UPnP action of the same name.
 func (client *ConnectionManager2) GetProtocolInfo(
 	ctx context.Context,
 ) (
@@ -2989,12 +2990,12 @@ func (client *ConnectionManager2) GetProtocolInfo(
 
 	// Response structure.
 	response := &struct {
-		Source string
-		Sink   string
+		Source string `xml:"Source"`
+		Sink   string `xml:"Sink"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ConnectionManager_2,
 		"GetProtocolInfo",
@@ -3020,7 +3021,7 @@ func (client *ConnectionManager2) GetProtocolInfo(
 	return
 }
 
-// PrepareForConnection
+// PrepareForConnection implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -3039,10 +3040,10 @@ func (client *ConnectionManager2) PrepareForConnection(
 ) {
 	// Request structure.
 	request := &struct {
-		RemoteProtocolInfo    string
-		PeerConnectionManager string
-		PeerConnectionID      string
-		Direction             string
+		RemoteProtocolInfo    string `xml:"RemoteProtocolInfo"`
+		PeerConnectionManager string `xml:"PeerConnectionManager"`
+		PeerConnectionID      string `xml:"PeerConnectionID"`
+		Direction             string `xml:"Direction"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -3070,13 +3071,13 @@ func (client *ConnectionManager2) PrepareForConnection(
 
 	// Response structure.
 	response := &struct {
-		ConnectionID  string
-		AVTransportID string
-		RcsID         string
+		ConnectionID  string `xml:"ConnectionID"`
+		AVTransportID string `xml:"AVTransportID"`
+		RcsID         string `xml:"RcsID"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ConnectionManager_2,
 		"PrepareForConnection",
@@ -3107,7 +3108,7 @@ func (client *ConnectionManager2) PrepareForConnection(
 	return
 }
 
-// ConnectionComplete
+// ConnectionComplete implements a UPnP action of the same name.
 func (client *ConnectionManager2) ConnectionComplete(
 	ctx context.Context,
 	ConnectionID int32,
@@ -3116,7 +3117,7 @@ func (client *ConnectionManager2) ConnectionComplete(
 ) {
 	// Request structure.
 	request := &struct {
-		ConnectionID string
+		ConnectionID string `xml:"ConnectionID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -3131,7 +3132,7 @@ func (client *ConnectionManager2) ConnectionComplete(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ConnectionManager_2,
 		"ConnectionComplete",
@@ -3147,7 +3148,7 @@ func (client *ConnectionManager2) ConnectionComplete(
 	return
 }
 
-// GetCurrentConnectionIDs
+// GetCurrentConnectionIDs implements a UPnP action of the same name.
 func (client *ConnectionManager2) GetCurrentConnectionIDs(
 	ctx context.Context,
 ) (
@@ -3162,11 +3163,11 @@ func (client *ConnectionManager2) GetCurrentConnectionIDs(
 
 	// Response structure.
 	response := &struct {
-		ConnectionIDs string
+		ConnectionIDs string `xml:"ConnectionIDs"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ConnectionManager_2,
 		"GetCurrentConnectionIDs",
@@ -3187,7 +3188,7 @@ func (client *ConnectionManager2) GetCurrentConnectionIDs(
 	return
 }
 
-// GetCurrentConnectionInfo
+// GetCurrentConnectionInfo implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -3209,7 +3210,7 @@ func (client *ConnectionManager2) GetCurrentConnectionInfo(
 ) {
 	// Request structure.
 	request := &struct {
-		ConnectionID string
+		ConnectionID string `xml:"ConnectionID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -3222,17 +3223,17 @@ func (client *ConnectionManager2) GetCurrentConnectionInfo(
 
 	// Response structure.
 	response := &struct {
-		RcsID                 string
-		AVTransportID         string
-		ProtocolInfo          string
-		PeerConnectionManager string
-		PeerConnectionID      string
-		Direction             string
-		Status                string
+		RcsID                 string `xml:"RcsID"`
+		AVTransportID         string `xml:"AVTransportID"`
+		ProtocolInfo          string `xml:"ProtocolInfo"`
+		PeerConnectionManager string `xml:"PeerConnectionManager"`
+		PeerConnectionID      string `xml:"PeerConnectionID"`
+		Direction             string `xml:"Direction"`
+		Status                string `xml:"Status"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ConnectionManager_2,
 		"GetCurrentConnectionInfo",
@@ -3382,7 +3383,7 @@ func newContentDirectory1ClientsFromGenericClients(
 	return clients
 }
 
-// GetSearchCapabilities
+// GetSearchCapabilities implements a UPnP action of the same name.
 func (client *ContentDirectory1) GetSearchCapabilities(
 	ctx context.Context,
 ) (
@@ -3397,11 +3398,11 @@ func (client *ContentDirectory1) GetSearchCapabilities(
 
 	// Response structure.
 	response := &struct {
-		SearchCaps string
+		SearchCaps string `xml:"SearchCaps"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_1,
 		"GetSearchCapabilities",
@@ -3422,7 +3423,7 @@ func (client *ContentDirectory1) GetSearchCapabilities(
 	return
 }
 
-// GetSortCapabilities
+// GetSortCapabilities implements a UPnP action of the same name.
 func (client *ContentDirectory1) GetSortCapabilities(
 	ctx context.Context,
 ) (
@@ -3437,11 +3438,11 @@ func (client *ContentDirectory1) GetSortCapabilities(
 
 	// Response structure.
 	response := &struct {
-		SortCaps string
+		SortCaps string `xml:"SortCaps"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_1,
 		"GetSortCapabilities",
@@ -3462,7 +3463,7 @@ func (client *ContentDirectory1) GetSortCapabilities(
 	return
 }
 
-// GetSystemUpdateID
+// GetSystemUpdateID implements a UPnP action of the same name.
 func (client *ContentDirectory1) GetSystemUpdateID(
 	ctx context.Context,
 ) (
@@ -3477,11 +3478,11 @@ func (client *ContentDirectory1) GetSystemUpdateID(
 
 	// Response structure.
 	response := &struct {
-		Id string
+		Id string `xml:"Id"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_1,
 		"GetSystemUpdateID",
@@ -3492,7 +3493,7 @@ func (client *ContentDirectory1) GetSystemUpdateID(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if Id, err = soap.UnmarshalUi4(
+	if Id, err = soap.UnmarshalUI4(
 		response.Id,
 	); err != nil {
 		return
@@ -3502,7 +3503,7 @@ func (client *ContentDirectory1) GetSystemUpdateID(
 	return
 }
 
-// Browse
+// Browse implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -3524,12 +3525,12 @@ func (client *ContentDirectory1) Browse(
 ) {
 	// Request structure.
 	request := &struct {
-		ObjectID       string
-		BrowseFlag     string
-		Filter         string
-		StartingIndex  string
-		RequestedCount string
-		SortCriteria   string
+		ObjectID       string `xml:"ObjectID"`
+		BrowseFlag     string `xml:"BrowseFlag"`
+		Filter         string `xml:"Filter"`
+		StartingIndex  string `xml:"StartingIndex"`
+		RequestedCount string `xml:"RequestedCount"`
+		SortCriteria   string `xml:"SortCriteria"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -3548,12 +3549,12 @@ func (client *ContentDirectory1) Browse(
 	); err != nil {
 		return
 	}
-	if request.StartingIndex, err = soap.MarshalUi4(
+	if request.StartingIndex, err = soap.MarshalUI4(
 		StartingIndex,
 	); err != nil {
 		return
 	}
-	if request.RequestedCount, err = soap.MarshalUi4(
+	if request.RequestedCount, err = soap.MarshalUI4(
 		RequestedCount,
 	); err != nil {
 		return
@@ -3567,14 +3568,14 @@ func (client *ContentDirectory1) Browse(
 
 	// Response structure.
 	response := &struct {
-		Result         string
-		NumberReturned string
-		TotalMatches   string
-		UpdateID       string
+		Result         string `xml:"Result"`
+		NumberReturned string `xml:"NumberReturned"`
+		TotalMatches   string `xml:"TotalMatches"`
+		UpdateID       string `xml:"UpdateID"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_1,
 		"Browse",
@@ -3590,17 +3591,17 @@ func (client *ContentDirectory1) Browse(
 	); err != nil {
 		return
 	}
-	if NumberReturned, err = soap.UnmarshalUi4(
+	if NumberReturned, err = soap.UnmarshalUI4(
 		response.NumberReturned,
 	); err != nil {
 		return
 	}
-	if TotalMatches, err = soap.UnmarshalUi4(
+	if TotalMatches, err = soap.UnmarshalUI4(
 		response.TotalMatches,
 	); err != nil {
 		return
 	}
-	if UpdateID, err = soap.UnmarshalUi4(
+	if UpdateID, err = soap.UnmarshalUI4(
 		response.UpdateID,
 	); err != nil {
 		return
@@ -3610,7 +3611,7 @@ func (client *ContentDirectory1) Browse(
 	return
 }
 
-// Search
+// Search implements a UPnP action of the same name.
 func (client *ContentDirectory1) Search(
 	ctx context.Context,
 	ContainerID string,
@@ -3628,12 +3629,12 @@ func (client *ContentDirectory1) Search(
 ) {
 	// Request structure.
 	request := &struct {
-		ContainerID    string
-		SearchCriteria string
-		Filter         string
-		StartingIndex  string
-		RequestedCount string
-		SortCriteria   string
+		ContainerID    string `xml:"ContainerID"`
+		SearchCriteria string `xml:"SearchCriteria"`
+		Filter         string `xml:"Filter"`
+		StartingIndex  string `xml:"StartingIndex"`
+		RequestedCount string `xml:"RequestedCount"`
+		SortCriteria   string `xml:"SortCriteria"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -3652,12 +3653,12 @@ func (client *ContentDirectory1) Search(
 	); err != nil {
 		return
 	}
-	if request.StartingIndex, err = soap.MarshalUi4(
+	if request.StartingIndex, err = soap.MarshalUI4(
 		StartingIndex,
 	); err != nil {
 		return
 	}
-	if request.RequestedCount, err = soap.MarshalUi4(
+	if request.RequestedCount, err = soap.MarshalUI4(
 		RequestedCount,
 	); err != nil {
 		return
@@ -3671,14 +3672,14 @@ func (client *ContentDirectory1) Search(
 
 	// Response structure.
 	response := &struct {
-		Result         string
-		NumberReturned string
-		TotalMatches   string
-		UpdateID       string
+		Result         string `xml:"Result"`
+		NumberReturned string `xml:"NumberReturned"`
+		TotalMatches   string `xml:"TotalMatches"`
+		UpdateID       string `xml:"UpdateID"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_1,
 		"Search",
@@ -3694,17 +3695,17 @@ func (client *ContentDirectory1) Search(
 	); err != nil {
 		return
 	}
-	if NumberReturned, err = soap.UnmarshalUi4(
+	if NumberReturned, err = soap.UnmarshalUI4(
 		response.NumberReturned,
 	); err != nil {
 		return
 	}
-	if TotalMatches, err = soap.UnmarshalUi4(
+	if TotalMatches, err = soap.UnmarshalUI4(
 		response.TotalMatches,
 	); err != nil {
 		return
 	}
-	if UpdateID, err = soap.UnmarshalUi4(
+	if UpdateID, err = soap.UnmarshalUI4(
 		response.UpdateID,
 	); err != nil {
 		return
@@ -3714,7 +3715,7 @@ func (client *ContentDirectory1) Search(
 	return
 }
 
-// CreateObject
+// CreateObject implements a UPnP action of the same name.
 func (client *ContentDirectory1) CreateObject(
 	ctx context.Context,
 	ContainerID string,
@@ -3726,8 +3727,8 @@ func (client *ContentDirectory1) CreateObject(
 ) {
 	// Request structure.
 	request := &struct {
-		ContainerID string
-		Elements    string
+		ContainerID string `xml:"ContainerID"`
+		Elements    string `xml:"Elements"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -3745,12 +3746,12 @@ func (client *ContentDirectory1) CreateObject(
 
 	// Response structure.
 	response := &struct {
-		ObjectID string
-		Result   string
+		ObjectID string `xml:"ObjectID"`
+		Result   string `xml:"Result"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_1,
 		"CreateObject",
@@ -3776,7 +3777,7 @@ func (client *ContentDirectory1) CreateObject(
 	return
 }
 
-// DestroyObject
+// DestroyObject implements a UPnP action of the same name.
 func (client *ContentDirectory1) DestroyObject(
 	ctx context.Context,
 	ObjectID string,
@@ -3785,7 +3786,7 @@ func (client *ContentDirectory1) DestroyObject(
 ) {
 	// Request structure.
 	request := &struct {
-		ObjectID string
+		ObjectID string `xml:"ObjectID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -3800,7 +3801,7 @@ func (client *ContentDirectory1) DestroyObject(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_1,
 		"DestroyObject",
@@ -3816,7 +3817,7 @@ func (client *ContentDirectory1) DestroyObject(
 	return
 }
 
-// UpdateObject
+// UpdateObject implements a UPnP action of the same name.
 func (client *ContentDirectory1) UpdateObject(
 	ctx context.Context,
 	ObjectID string,
@@ -3827,9 +3828,9 @@ func (client *ContentDirectory1) UpdateObject(
 ) {
 	// Request structure.
 	request := &struct {
-		ObjectID        string
-		CurrentTagValue string
-		NewTagValue     string
+		ObjectID        string `xml:"ObjectID"`
+		CurrentTagValue string `xml:"CurrentTagValue"`
+		NewTagValue     string `xml:"NewTagValue"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -3854,7 +3855,7 @@ func (client *ContentDirectory1) UpdateObject(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_1,
 		"UpdateObject",
@@ -3870,7 +3871,7 @@ func (client *ContentDirectory1) UpdateObject(
 	return
 }
 
-// ImportResource
+// ImportResource implements a UPnP action of the same name.
 func (client *ContentDirectory1) ImportResource(
 	ctx context.Context,
 	SourceURI *url.URL,
@@ -3881,8 +3882,8 @@ func (client *ContentDirectory1) ImportResource(
 ) {
 	// Request structure.
 	request := &struct {
-		SourceURI      string
-		DestinationURI string
+		SourceURI      string `xml:"SourceURI"`
+		DestinationURI string `xml:"DestinationURI"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -3900,11 +3901,11 @@ func (client *ContentDirectory1) ImportResource(
 
 	// Response structure.
 	response := &struct {
-		TransferID string
+		TransferID string `xml:"TransferID"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_1,
 		"ImportResource",
@@ -3915,7 +3916,7 @@ func (client *ContentDirectory1) ImportResource(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if TransferID, err = soap.UnmarshalUi4(
+	if TransferID, err = soap.UnmarshalUI4(
 		response.TransferID,
 	); err != nil {
 		return
@@ -3925,7 +3926,7 @@ func (client *ContentDirectory1) ImportResource(
 	return
 }
 
-// ExportResource
+// ExportResource implements a UPnP action of the same name.
 func (client *ContentDirectory1) ExportResource(
 	ctx context.Context,
 	SourceURI *url.URL,
@@ -3936,8 +3937,8 @@ func (client *ContentDirectory1) ExportResource(
 ) {
 	// Request structure.
 	request := &struct {
-		SourceURI      string
-		DestinationURI string
+		SourceURI      string `xml:"SourceURI"`
+		DestinationURI string `xml:"DestinationURI"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -3955,11 +3956,11 @@ func (client *ContentDirectory1) ExportResource(
 
 	// Response structure.
 	response := &struct {
-		TransferID string
+		TransferID string `xml:"TransferID"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_1,
 		"ExportResource",
@@ -3970,7 +3971,7 @@ func (client *ContentDirectory1) ExportResource(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if TransferID, err = soap.UnmarshalUi4(
+	if TransferID, err = soap.UnmarshalUI4(
 		response.TransferID,
 	); err != nil {
 		return
@@ -3980,7 +3981,7 @@ func (client *ContentDirectory1) ExportResource(
 	return
 }
 
-// StopTransferResource
+// StopTransferResource implements a UPnP action of the same name.
 func (client *ContentDirectory1) StopTransferResource(
 	ctx context.Context,
 	TransferID uint32,
@@ -3989,11 +3990,11 @@ func (client *ContentDirectory1) StopTransferResource(
 ) {
 	// Request structure.
 	request := &struct {
-		TransferID string
+		TransferID string `xml:"TransferID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.TransferID, err = soap.MarshalUi4(
+	if request.TransferID, err = soap.MarshalUI4(
 		TransferID,
 	); err != nil {
 		return
@@ -4004,7 +4005,7 @@ func (client *ContentDirectory1) StopTransferResource(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_1,
 		"StopTransferResource",
@@ -4020,7 +4021,7 @@ func (client *ContentDirectory1) StopTransferResource(
 	return
 }
 
-// GetTransferProgress
+// GetTransferProgress implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -4036,11 +4037,11 @@ func (client *ContentDirectory1) GetTransferProgress(
 ) {
 	// Request structure.
 	request := &struct {
-		TransferID string
+		TransferID string `xml:"TransferID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.TransferID, err = soap.MarshalUi4(
+	if request.TransferID, err = soap.MarshalUI4(
 		TransferID,
 	); err != nil {
 		return
@@ -4049,13 +4050,13 @@ func (client *ContentDirectory1) GetTransferProgress(
 
 	// Response structure.
 	response := &struct {
-		TransferStatus string
-		TransferLength string
-		TransferTotal  string
+		TransferStatus string `xml:"TransferStatus"`
+		TransferLength string `xml:"TransferLength"`
+		TransferTotal  string `xml:"TransferTotal"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_1,
 		"GetTransferProgress",
@@ -4086,7 +4087,7 @@ func (client *ContentDirectory1) GetTransferProgress(
 	return
 }
 
-// DeleteResource
+// DeleteResource implements a UPnP action of the same name.
 func (client *ContentDirectory1) DeleteResource(
 	ctx context.Context,
 	ResourceURI *url.URL,
@@ -4095,7 +4096,7 @@ func (client *ContentDirectory1) DeleteResource(
 ) {
 	// Request structure.
 	request := &struct {
-		ResourceURI string
+		ResourceURI string `xml:"ResourceURI"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -4110,7 +4111,7 @@ func (client *ContentDirectory1) DeleteResource(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_1,
 		"DeleteResource",
@@ -4126,7 +4127,7 @@ func (client *ContentDirectory1) DeleteResource(
 	return
 }
 
-// CreateReference
+// CreateReference implements a UPnP action of the same name.
 func (client *ContentDirectory1) CreateReference(
 	ctx context.Context,
 	ContainerID string,
@@ -4137,8 +4138,8 @@ func (client *ContentDirectory1) CreateReference(
 ) {
 	// Request structure.
 	request := &struct {
-		ContainerID string
-		ObjectID    string
+		ContainerID string `xml:"ContainerID"`
+		ObjectID    string `xml:"ObjectID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -4156,11 +4157,11 @@ func (client *ContentDirectory1) CreateReference(
 
 	// Response structure.
 	response := &struct {
-		NewID string
+		NewID string `xml:"NewID"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_1,
 		"CreateReference",
@@ -4280,7 +4281,7 @@ func newContentDirectory2ClientsFromGenericClients(
 	return clients
 }
 
-// GetSearchCapabilities
+// GetSearchCapabilities implements a UPnP action of the same name.
 func (client *ContentDirectory2) GetSearchCapabilities(
 	ctx context.Context,
 ) (
@@ -4295,11 +4296,11 @@ func (client *ContentDirectory2) GetSearchCapabilities(
 
 	// Response structure.
 	response := &struct {
-		SearchCaps string
+		SearchCaps string `xml:"SearchCaps"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_2,
 		"GetSearchCapabilities",
@@ -4320,7 +4321,7 @@ func (client *ContentDirectory2) GetSearchCapabilities(
 	return
 }
 
-// GetSortCapabilities
+// GetSortCapabilities implements a UPnP action of the same name.
 func (client *ContentDirectory2) GetSortCapabilities(
 	ctx context.Context,
 ) (
@@ -4335,11 +4336,11 @@ func (client *ContentDirectory2) GetSortCapabilities(
 
 	// Response structure.
 	response := &struct {
-		SortCaps string
+		SortCaps string `xml:"SortCaps"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_2,
 		"GetSortCapabilities",
@@ -4360,7 +4361,7 @@ func (client *ContentDirectory2) GetSortCapabilities(
 	return
 }
 
-// GetSortExtensionCapabilities
+// GetSortExtensionCapabilities implements a UPnP action of the same name.
 func (client *ContentDirectory2) GetSortExtensionCapabilities(
 	ctx context.Context,
 ) (
@@ -4375,11 +4376,11 @@ func (client *ContentDirectory2) GetSortExtensionCapabilities(
 
 	// Response structure.
 	response := &struct {
-		SortExtensionCaps string
+		SortExtensionCaps string `xml:"SortExtensionCaps"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_2,
 		"GetSortExtensionCapabilities",
@@ -4400,7 +4401,7 @@ func (client *ContentDirectory2) GetSortExtensionCapabilities(
 	return
 }
 
-// GetFeatureList
+// GetFeatureList implements a UPnP action of the same name.
 func (client *ContentDirectory2) GetFeatureList(
 	ctx context.Context,
 ) (
@@ -4415,11 +4416,11 @@ func (client *ContentDirectory2) GetFeatureList(
 
 	// Response structure.
 	response := &struct {
-		FeatureList string
+		FeatureList string `xml:"FeatureList"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_2,
 		"GetFeatureList",
@@ -4440,7 +4441,7 @@ func (client *ContentDirectory2) GetFeatureList(
 	return
 }
 
-// GetSystemUpdateID
+// GetSystemUpdateID implements a UPnP action of the same name.
 func (client *ContentDirectory2) GetSystemUpdateID(
 	ctx context.Context,
 ) (
@@ -4455,11 +4456,11 @@ func (client *ContentDirectory2) GetSystemUpdateID(
 
 	// Response structure.
 	response := &struct {
-		Id string
+		Id string `xml:"Id"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_2,
 		"GetSystemUpdateID",
@@ -4470,7 +4471,7 @@ func (client *ContentDirectory2) GetSystemUpdateID(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if Id, err = soap.UnmarshalUi4(
+	if Id, err = soap.UnmarshalUI4(
 		response.Id,
 	); err != nil {
 		return
@@ -4480,7 +4481,7 @@ func (client *ContentDirectory2) GetSystemUpdateID(
 	return
 }
 
-// Browse
+// Browse implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -4502,12 +4503,12 @@ func (client *ContentDirectory2) Browse(
 ) {
 	// Request structure.
 	request := &struct {
-		ObjectID       string
-		BrowseFlag     string
-		Filter         string
-		StartingIndex  string
-		RequestedCount string
-		SortCriteria   string
+		ObjectID       string `xml:"ObjectID"`
+		BrowseFlag     string `xml:"BrowseFlag"`
+		Filter         string `xml:"Filter"`
+		StartingIndex  string `xml:"StartingIndex"`
+		RequestedCount string `xml:"RequestedCount"`
+		SortCriteria   string `xml:"SortCriteria"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -4526,12 +4527,12 @@ func (client *ContentDirectory2) Browse(
 	); err != nil {
 		return
 	}
-	if request.StartingIndex, err = soap.MarshalUi4(
+	if request.StartingIndex, err = soap.MarshalUI4(
 		StartingIndex,
 	); err != nil {
 		return
 	}
-	if request.RequestedCount, err = soap.MarshalUi4(
+	if request.RequestedCount, err = soap.MarshalUI4(
 		RequestedCount,
 	); err != nil {
 		return
@@ -4545,14 +4546,14 @@ func (client *ContentDirectory2) Browse(
 
 	// Response structure.
 	response := &struct {
-		Result         string
-		NumberReturned string
-		TotalMatches   string
-		UpdateID       string
+		Result         string `xml:"Result"`
+		NumberReturned string `xml:"NumberReturned"`
+		TotalMatches   string `xml:"TotalMatches"`
+		UpdateID       string `xml:"UpdateID"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_2,
 		"Browse",
@@ -4568,17 +4569,17 @@ func (client *ContentDirectory2) Browse(
 	); err != nil {
 		return
 	}
-	if NumberReturned, err = soap.UnmarshalUi4(
+	if NumberReturned, err = soap.UnmarshalUI4(
 		response.NumberReturned,
 	); err != nil {
 		return
 	}
-	if TotalMatches, err = soap.UnmarshalUi4(
+	if TotalMatches, err = soap.UnmarshalUI4(
 		response.TotalMatches,
 	); err != nil {
 		return
 	}
-	if UpdateID, err = soap.UnmarshalUi4(
+	if UpdateID, err = soap.UnmarshalUI4(
 		response.UpdateID,
 	); err != nil {
 		return
@@ -4588,7 +4589,7 @@ func (client *ContentDirectory2) Browse(
 	return
 }
 
-// Search
+// Search implements a UPnP action of the same name.
 func (client *ContentDirectory2) Search(
 	ctx context.Context,
 	ContainerID string,
@@ -4606,12 +4607,12 @@ func (client *ContentDirectory2) Search(
 ) {
 	// Request structure.
 	request := &struct {
-		ContainerID    string
-		SearchCriteria string
-		Filter         string
-		StartingIndex  string
-		RequestedCount string
-		SortCriteria   string
+		ContainerID    string `xml:"ContainerID"`
+		SearchCriteria string `xml:"SearchCriteria"`
+		Filter         string `xml:"Filter"`
+		StartingIndex  string `xml:"StartingIndex"`
+		RequestedCount string `xml:"RequestedCount"`
+		SortCriteria   string `xml:"SortCriteria"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -4630,12 +4631,12 @@ func (client *ContentDirectory2) Search(
 	); err != nil {
 		return
 	}
-	if request.StartingIndex, err = soap.MarshalUi4(
+	if request.StartingIndex, err = soap.MarshalUI4(
 		StartingIndex,
 	); err != nil {
 		return
 	}
-	if request.RequestedCount, err = soap.MarshalUi4(
+	if request.RequestedCount, err = soap.MarshalUI4(
 		RequestedCount,
 	); err != nil {
 		return
@@ -4649,14 +4650,14 @@ func (client *ContentDirectory2) Search(
 
 	// Response structure.
 	response := &struct {
-		Result         string
-		NumberReturned string
-		TotalMatches   string
-		UpdateID       string
+		Result         string `xml:"Result"`
+		NumberReturned string `xml:"NumberReturned"`
+		TotalMatches   string `xml:"TotalMatches"`
+		UpdateID       string `xml:"UpdateID"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_2,
 		"Search",
@@ -4672,17 +4673,17 @@ func (client *ContentDirectory2) Search(
 	); err != nil {
 		return
 	}
-	if NumberReturned, err = soap.UnmarshalUi4(
+	if NumberReturned, err = soap.UnmarshalUI4(
 		response.NumberReturned,
 	); err != nil {
 		return
 	}
-	if TotalMatches, err = soap.UnmarshalUi4(
+	if TotalMatches, err = soap.UnmarshalUI4(
 		response.TotalMatches,
 	); err != nil {
 		return
 	}
-	if UpdateID, err = soap.UnmarshalUi4(
+	if UpdateID, err = soap.UnmarshalUI4(
 		response.UpdateID,
 	); err != nil {
 		return
@@ -4692,7 +4693,7 @@ func (client *ContentDirectory2) Search(
 	return
 }
 
-// CreateObject
+// CreateObject implements a UPnP action of the same name.
 func (client *ContentDirectory2) CreateObject(
 	ctx context.Context,
 	ContainerID string,
@@ -4704,8 +4705,8 @@ func (client *ContentDirectory2) CreateObject(
 ) {
 	// Request structure.
 	request := &struct {
-		ContainerID string
-		Elements    string
+		ContainerID string `xml:"ContainerID"`
+		Elements    string `xml:"Elements"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -4723,12 +4724,12 @@ func (client *ContentDirectory2) CreateObject(
 
 	// Response structure.
 	response := &struct {
-		ObjectID string
-		Result   string
+		ObjectID string `xml:"ObjectID"`
+		Result   string `xml:"Result"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_2,
 		"CreateObject",
@@ -4754,7 +4755,7 @@ func (client *ContentDirectory2) CreateObject(
 	return
 }
 
-// DestroyObject
+// DestroyObject implements a UPnP action of the same name.
 func (client *ContentDirectory2) DestroyObject(
 	ctx context.Context,
 	ObjectID string,
@@ -4763,7 +4764,7 @@ func (client *ContentDirectory2) DestroyObject(
 ) {
 	// Request structure.
 	request := &struct {
-		ObjectID string
+		ObjectID string `xml:"ObjectID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -4778,7 +4779,7 @@ func (client *ContentDirectory2) DestroyObject(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_2,
 		"DestroyObject",
@@ -4794,7 +4795,7 @@ func (client *ContentDirectory2) DestroyObject(
 	return
 }
 
-// UpdateObject
+// UpdateObject implements a UPnP action of the same name.
 func (client *ContentDirectory2) UpdateObject(
 	ctx context.Context,
 	ObjectID string,
@@ -4805,9 +4806,9 @@ func (client *ContentDirectory2) UpdateObject(
 ) {
 	// Request structure.
 	request := &struct {
-		ObjectID        string
-		CurrentTagValue string
-		NewTagValue     string
+		ObjectID        string `xml:"ObjectID"`
+		CurrentTagValue string `xml:"CurrentTagValue"`
+		NewTagValue     string `xml:"NewTagValue"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -4832,7 +4833,7 @@ func (client *ContentDirectory2) UpdateObject(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_2,
 		"UpdateObject",
@@ -4848,7 +4849,7 @@ func (client *ContentDirectory2) UpdateObject(
 	return
 }
 
-// MoveObject
+// MoveObject implements a UPnP action of the same name.
 func (client *ContentDirectory2) MoveObject(
 	ctx context.Context,
 	ObjectID string,
@@ -4859,8 +4860,8 @@ func (client *ContentDirectory2) MoveObject(
 ) {
 	// Request structure.
 	request := &struct {
-		ObjectID    string
-		NewParentID string
+		ObjectID    string `xml:"ObjectID"`
+		NewParentID string `xml:"NewParentID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -4878,11 +4879,11 @@ func (client *ContentDirectory2) MoveObject(
 
 	// Response structure.
 	response := &struct {
-		NewObjectID string
+		NewObjectID string `xml:"NewObjectID"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_2,
 		"MoveObject",
@@ -4903,7 +4904,7 @@ func (client *ContentDirectory2) MoveObject(
 	return
 }
 
-// ImportResource
+// ImportResource implements a UPnP action of the same name.
 func (client *ContentDirectory2) ImportResource(
 	ctx context.Context,
 	SourceURI *url.URL,
@@ -4914,8 +4915,8 @@ func (client *ContentDirectory2) ImportResource(
 ) {
 	// Request structure.
 	request := &struct {
-		SourceURI      string
-		DestinationURI string
+		SourceURI      string `xml:"SourceURI"`
+		DestinationURI string `xml:"DestinationURI"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -4933,11 +4934,11 @@ func (client *ContentDirectory2) ImportResource(
 
 	// Response structure.
 	response := &struct {
-		TransferID string
+		TransferID string `xml:"TransferID"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_2,
 		"ImportResource",
@@ -4948,7 +4949,7 @@ func (client *ContentDirectory2) ImportResource(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if TransferID, err = soap.UnmarshalUi4(
+	if TransferID, err = soap.UnmarshalUI4(
 		response.TransferID,
 	); err != nil {
 		return
@@ -4958,7 +4959,7 @@ func (client *ContentDirectory2) ImportResource(
 	return
 }
 
-// ExportResource
+// ExportResource implements a UPnP action of the same name.
 func (client *ContentDirectory2) ExportResource(
 	ctx context.Context,
 	SourceURI *url.URL,
@@ -4969,8 +4970,8 @@ func (client *ContentDirectory2) ExportResource(
 ) {
 	// Request structure.
 	request := &struct {
-		SourceURI      string
-		DestinationURI string
+		SourceURI      string `xml:"SourceURI"`
+		DestinationURI string `xml:"DestinationURI"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -4988,11 +4989,11 @@ func (client *ContentDirectory2) ExportResource(
 
 	// Response structure.
 	response := &struct {
-		TransferID string
+		TransferID string `xml:"TransferID"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_2,
 		"ExportResource",
@@ -5003,7 +5004,7 @@ func (client *ContentDirectory2) ExportResource(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if TransferID, err = soap.UnmarshalUi4(
+	if TransferID, err = soap.UnmarshalUI4(
 		response.TransferID,
 	); err != nil {
 		return
@@ -5013,7 +5014,7 @@ func (client *ContentDirectory2) ExportResource(
 	return
 }
 
-// DeleteResource
+// DeleteResource implements a UPnP action of the same name.
 func (client *ContentDirectory2) DeleteResource(
 	ctx context.Context,
 	ResourceURI *url.URL,
@@ -5022,7 +5023,7 @@ func (client *ContentDirectory2) DeleteResource(
 ) {
 	// Request structure.
 	request := &struct {
-		ResourceURI string
+		ResourceURI string `xml:"ResourceURI"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -5037,7 +5038,7 @@ func (client *ContentDirectory2) DeleteResource(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_2,
 		"DeleteResource",
@@ -5053,7 +5054,7 @@ func (client *ContentDirectory2) DeleteResource(
 	return
 }
 
-// StopTransferResource
+// StopTransferResource implements a UPnP action of the same name.
 func (client *ContentDirectory2) StopTransferResource(
 	ctx context.Context,
 	TransferID uint32,
@@ -5062,11 +5063,11 @@ func (client *ContentDirectory2) StopTransferResource(
 ) {
 	// Request structure.
 	request := &struct {
-		TransferID string
+		TransferID string `xml:"TransferID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.TransferID, err = soap.MarshalUi4(
+	if request.TransferID, err = soap.MarshalUI4(
 		TransferID,
 	); err != nil {
 		return
@@ -5077,7 +5078,7 @@ func (client *ContentDirectory2) StopTransferResource(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_2,
 		"StopTransferResource",
@@ -5093,7 +5094,7 @@ func (client *ContentDirectory2) StopTransferResource(
 	return
 }
 
-// GetTransferProgress
+// GetTransferProgress implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -5109,11 +5110,11 @@ func (client *ContentDirectory2) GetTransferProgress(
 ) {
 	// Request structure.
 	request := &struct {
-		TransferID string
+		TransferID string `xml:"TransferID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.TransferID, err = soap.MarshalUi4(
+	if request.TransferID, err = soap.MarshalUI4(
 		TransferID,
 	); err != nil {
 		return
@@ -5122,13 +5123,13 @@ func (client *ContentDirectory2) GetTransferProgress(
 
 	// Response structure.
 	response := &struct {
-		TransferStatus string
-		TransferLength string
-		TransferTotal  string
+		TransferStatus string `xml:"TransferStatus"`
+		TransferLength string `xml:"TransferLength"`
+		TransferTotal  string `xml:"TransferTotal"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_2,
 		"GetTransferProgress",
@@ -5159,7 +5160,7 @@ func (client *ContentDirectory2) GetTransferProgress(
 	return
 }
 
-// CreateReference
+// CreateReference implements a UPnP action of the same name.
 func (client *ContentDirectory2) CreateReference(
 	ctx context.Context,
 	ContainerID string,
@@ -5170,8 +5171,8 @@ func (client *ContentDirectory2) CreateReference(
 ) {
 	// Request structure.
 	request := &struct {
-		ContainerID string
-		ObjectID    string
+		ContainerID string `xml:"ContainerID"`
+		ObjectID    string `xml:"ObjectID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -5189,11 +5190,11 @@ func (client *ContentDirectory2) CreateReference(
 
 	// Response structure.
 	response := &struct {
-		NewID string
+		NewID string `xml:"NewID"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_2,
 		"CreateReference",
@@ -5313,7 +5314,7 @@ func newContentDirectory3ClientsFromGenericClients(
 	return clients
 }
 
-// GetSearchCapabilities
+// GetSearchCapabilities implements a UPnP action of the same name.
 func (client *ContentDirectory3) GetSearchCapabilities(
 	ctx context.Context,
 ) (
@@ -5328,11 +5329,11 @@ func (client *ContentDirectory3) GetSearchCapabilities(
 
 	// Response structure.
 	response := &struct {
-		SearchCaps string
+		SearchCaps string `xml:"SearchCaps"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_3,
 		"GetSearchCapabilities",
@@ -5353,7 +5354,7 @@ func (client *ContentDirectory3) GetSearchCapabilities(
 	return
 }
 
-// GetSortCapabilities
+// GetSortCapabilities implements a UPnP action of the same name.
 func (client *ContentDirectory3) GetSortCapabilities(
 	ctx context.Context,
 ) (
@@ -5368,11 +5369,11 @@ func (client *ContentDirectory3) GetSortCapabilities(
 
 	// Response structure.
 	response := &struct {
-		SortCaps string
+		SortCaps string `xml:"SortCaps"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_3,
 		"GetSortCapabilities",
@@ -5393,7 +5394,7 @@ func (client *ContentDirectory3) GetSortCapabilities(
 	return
 }
 
-// GetSortExtensionCapabilities
+// GetSortExtensionCapabilities implements a UPnP action of the same name.
 func (client *ContentDirectory3) GetSortExtensionCapabilities(
 	ctx context.Context,
 ) (
@@ -5408,11 +5409,11 @@ func (client *ContentDirectory3) GetSortExtensionCapabilities(
 
 	// Response structure.
 	response := &struct {
-		SortExtensionCaps string
+		SortExtensionCaps string `xml:"SortExtensionCaps"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_3,
 		"GetSortExtensionCapabilities",
@@ -5433,7 +5434,7 @@ func (client *ContentDirectory3) GetSortExtensionCapabilities(
 	return
 }
 
-// GetFeatureList
+// GetFeatureList implements a UPnP action of the same name.
 func (client *ContentDirectory3) GetFeatureList(
 	ctx context.Context,
 ) (
@@ -5448,11 +5449,11 @@ func (client *ContentDirectory3) GetFeatureList(
 
 	// Response structure.
 	response := &struct {
-		FeatureList string
+		FeatureList string `xml:"FeatureList"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_3,
 		"GetFeatureList",
@@ -5473,7 +5474,7 @@ func (client *ContentDirectory3) GetFeatureList(
 	return
 }
 
-// GetSystemUpdateID
+// GetSystemUpdateID implements a UPnP action of the same name.
 func (client *ContentDirectory3) GetSystemUpdateID(
 	ctx context.Context,
 ) (
@@ -5488,11 +5489,11 @@ func (client *ContentDirectory3) GetSystemUpdateID(
 
 	// Response structure.
 	response := &struct {
-		Id string
+		Id string `xml:"Id"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_3,
 		"GetSystemUpdateID",
@@ -5503,7 +5504,7 @@ func (client *ContentDirectory3) GetSystemUpdateID(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if Id, err = soap.UnmarshalUi4(
+	if Id, err = soap.UnmarshalUI4(
 		response.Id,
 	); err != nil {
 		return
@@ -5513,7 +5514,7 @@ func (client *ContentDirectory3) GetSystemUpdateID(
 	return
 }
 
-// GetServiceResetToken
+// GetServiceResetToken implements a UPnP action of the same name.
 func (client *ContentDirectory3) GetServiceResetToken(
 	ctx context.Context,
 ) (
@@ -5528,11 +5529,11 @@ func (client *ContentDirectory3) GetServiceResetToken(
 
 	// Response structure.
 	response := &struct {
-		ResetToken string
+		ResetToken string `xml:"ResetToken"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_3,
 		"GetServiceResetToken",
@@ -5553,7 +5554,7 @@ func (client *ContentDirectory3) GetServiceResetToken(
 	return
 }
 
-// Browse
+// Browse implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -5575,12 +5576,12 @@ func (client *ContentDirectory3) Browse(
 ) {
 	// Request structure.
 	request := &struct {
-		ObjectID       string
-		BrowseFlag     string
-		Filter         string
-		StartingIndex  string
-		RequestedCount string
-		SortCriteria   string
+		ObjectID       string `xml:"ObjectID"`
+		BrowseFlag     string `xml:"BrowseFlag"`
+		Filter         string `xml:"Filter"`
+		StartingIndex  string `xml:"StartingIndex"`
+		RequestedCount string `xml:"RequestedCount"`
+		SortCriteria   string `xml:"SortCriteria"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -5599,12 +5600,12 @@ func (client *ContentDirectory3) Browse(
 	); err != nil {
 		return
 	}
-	if request.StartingIndex, err = soap.MarshalUi4(
+	if request.StartingIndex, err = soap.MarshalUI4(
 		StartingIndex,
 	); err != nil {
 		return
 	}
-	if request.RequestedCount, err = soap.MarshalUi4(
+	if request.RequestedCount, err = soap.MarshalUI4(
 		RequestedCount,
 	); err != nil {
 		return
@@ -5618,14 +5619,14 @@ func (client *ContentDirectory3) Browse(
 
 	// Response structure.
 	response := &struct {
-		Result         string
-		NumberReturned string
-		TotalMatches   string
-		UpdateID       string
+		Result         string `xml:"Result"`
+		NumberReturned string `xml:"NumberReturned"`
+		TotalMatches   string `xml:"TotalMatches"`
+		UpdateID       string `xml:"UpdateID"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_3,
 		"Browse",
@@ -5641,17 +5642,17 @@ func (client *ContentDirectory3) Browse(
 	); err != nil {
 		return
 	}
-	if NumberReturned, err = soap.UnmarshalUi4(
+	if NumberReturned, err = soap.UnmarshalUI4(
 		response.NumberReturned,
 	); err != nil {
 		return
 	}
-	if TotalMatches, err = soap.UnmarshalUi4(
+	if TotalMatches, err = soap.UnmarshalUI4(
 		response.TotalMatches,
 	); err != nil {
 		return
 	}
-	if UpdateID, err = soap.UnmarshalUi4(
+	if UpdateID, err = soap.UnmarshalUI4(
 		response.UpdateID,
 	); err != nil {
 		return
@@ -5661,7 +5662,7 @@ func (client *ContentDirectory3) Browse(
 	return
 }
 
-// Search
+// Search implements a UPnP action of the same name.
 func (client *ContentDirectory3) Search(
 	ctx context.Context,
 	ContainerID string,
@@ -5679,12 +5680,12 @@ func (client *ContentDirectory3) Search(
 ) {
 	// Request structure.
 	request := &struct {
-		ContainerID    string
-		SearchCriteria string
-		Filter         string
-		StartingIndex  string
-		RequestedCount string
-		SortCriteria   string
+		ContainerID    string `xml:"ContainerID"`
+		SearchCriteria string `xml:"SearchCriteria"`
+		Filter         string `xml:"Filter"`
+		StartingIndex  string `xml:"StartingIndex"`
+		RequestedCount string `xml:"RequestedCount"`
+		SortCriteria   string `xml:"SortCriteria"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -5703,12 +5704,12 @@ func (client *ContentDirectory3) Search(
 	); err != nil {
 		return
 	}
-	if request.StartingIndex, err = soap.MarshalUi4(
+	if request.StartingIndex, err = soap.MarshalUI4(
 		StartingIndex,
 	); err != nil {
 		return
 	}
-	if request.RequestedCount, err = soap.MarshalUi4(
+	if request.RequestedCount, err = soap.MarshalUI4(
 		RequestedCount,
 	); err != nil {
 		return
@@ -5722,14 +5723,14 @@ func (client *ContentDirectory3) Search(
 
 	// Response structure.
 	response := &struct {
-		Result         string
-		NumberReturned string
-		TotalMatches   string
-		UpdateID       string
+		Result         string `xml:"Result"`
+		NumberReturned string `xml:"NumberReturned"`
+		TotalMatches   string `xml:"TotalMatches"`
+		UpdateID       string `xml:"UpdateID"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_3,
 		"Search",
@@ -5745,17 +5746,17 @@ func (client *ContentDirectory3) Search(
 	); err != nil {
 		return
 	}
-	if NumberReturned, err = soap.UnmarshalUi4(
+	if NumberReturned, err = soap.UnmarshalUI4(
 		response.NumberReturned,
 	); err != nil {
 		return
 	}
-	if TotalMatches, err = soap.UnmarshalUi4(
+	if TotalMatches, err = soap.UnmarshalUI4(
 		response.TotalMatches,
 	); err != nil {
 		return
 	}
-	if UpdateID, err = soap.UnmarshalUi4(
+	if UpdateID, err = soap.UnmarshalUI4(
 		response.UpdateID,
 	); err != nil {
 		return
@@ -5765,7 +5766,7 @@ func (client *ContentDirectory3) Search(
 	return
 }
 
-// CreateObject
+// CreateObject implements a UPnP action of the same name.
 func (client *ContentDirectory3) CreateObject(
 	ctx context.Context,
 	ContainerID string,
@@ -5777,8 +5778,8 @@ func (client *ContentDirectory3) CreateObject(
 ) {
 	// Request structure.
 	request := &struct {
-		ContainerID string
-		Elements    string
+		ContainerID string `xml:"ContainerID"`
+		Elements    string `xml:"Elements"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -5796,12 +5797,12 @@ func (client *ContentDirectory3) CreateObject(
 
 	// Response structure.
 	response := &struct {
-		ObjectID string
-		Result   string
+		ObjectID string `xml:"ObjectID"`
+		Result   string `xml:"Result"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_3,
 		"CreateObject",
@@ -5827,7 +5828,7 @@ func (client *ContentDirectory3) CreateObject(
 	return
 }
 
-// DestroyObject
+// DestroyObject implements a UPnP action of the same name.
 func (client *ContentDirectory3) DestroyObject(
 	ctx context.Context,
 	ObjectID string,
@@ -5836,7 +5837,7 @@ func (client *ContentDirectory3) DestroyObject(
 ) {
 	// Request structure.
 	request := &struct {
-		ObjectID string
+		ObjectID string `xml:"ObjectID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -5851,7 +5852,7 @@ func (client *ContentDirectory3) DestroyObject(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_3,
 		"DestroyObject",
@@ -5867,7 +5868,7 @@ func (client *ContentDirectory3) DestroyObject(
 	return
 }
 
-// UpdateObject
+// UpdateObject implements a UPnP action of the same name.
 func (client *ContentDirectory3) UpdateObject(
 	ctx context.Context,
 	ObjectID string,
@@ -5878,9 +5879,9 @@ func (client *ContentDirectory3) UpdateObject(
 ) {
 	// Request structure.
 	request := &struct {
-		ObjectID        string
-		CurrentTagValue string
-		NewTagValue     string
+		ObjectID        string `xml:"ObjectID"`
+		CurrentTagValue string `xml:"CurrentTagValue"`
+		NewTagValue     string `xml:"NewTagValue"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -5905,7 +5906,7 @@ func (client *ContentDirectory3) UpdateObject(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_3,
 		"UpdateObject",
@@ -5921,7 +5922,7 @@ func (client *ContentDirectory3) UpdateObject(
 	return
 }
 
-// MoveObject
+// MoveObject implements a UPnP action of the same name.
 func (client *ContentDirectory3) MoveObject(
 	ctx context.Context,
 	ObjectID string,
@@ -5932,8 +5933,8 @@ func (client *ContentDirectory3) MoveObject(
 ) {
 	// Request structure.
 	request := &struct {
-		ObjectID    string
-		NewParentID string
+		ObjectID    string `xml:"ObjectID"`
+		NewParentID string `xml:"NewParentID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -5951,11 +5952,11 @@ func (client *ContentDirectory3) MoveObject(
 
 	// Response structure.
 	response := &struct {
-		NewObjectID string
+		NewObjectID string `xml:"NewObjectID"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_3,
 		"MoveObject",
@@ -5976,7 +5977,7 @@ func (client *ContentDirectory3) MoveObject(
 	return
 }
 
-// ImportResource
+// ImportResource implements a UPnP action of the same name.
 func (client *ContentDirectory3) ImportResource(
 	ctx context.Context,
 	SourceURI *url.URL,
@@ -5987,8 +5988,8 @@ func (client *ContentDirectory3) ImportResource(
 ) {
 	// Request structure.
 	request := &struct {
-		SourceURI      string
-		DestinationURI string
+		SourceURI      string `xml:"SourceURI"`
+		DestinationURI string `xml:"DestinationURI"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -6006,11 +6007,11 @@ func (client *ContentDirectory3) ImportResource(
 
 	// Response structure.
 	response := &struct {
-		TransferID string
+		TransferID string `xml:"TransferID"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_3,
 		"ImportResource",
@@ -6021,7 +6022,7 @@ func (client *ContentDirectory3) ImportResource(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if TransferID, err = soap.UnmarshalUi4(
+	if TransferID, err = soap.UnmarshalUI4(
 		response.TransferID,
 	); err != nil {
 		return
@@ -6031,7 +6032,7 @@ func (client *ContentDirectory3) ImportResource(
 	return
 }
 
-// ExportResource
+// ExportResource implements a UPnP action of the same name.
 func (client *ContentDirectory3) ExportResource(
 	ctx context.Context,
 	SourceURI *url.URL,
@@ -6042,8 +6043,8 @@ func (client *ContentDirectory3) ExportResource(
 ) {
 	// Request structure.
 	request := &struct {
-		SourceURI      string
-		DestinationURI string
+		SourceURI      string `xml:"SourceURI"`
+		DestinationURI string `xml:"DestinationURI"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -6061,11 +6062,11 @@ func (client *ContentDirectory3) ExportResource(
 
 	// Response structure.
 	response := &struct {
-		TransferID string
+		TransferID string `xml:"TransferID"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_3,
 		"ExportResource",
@@ -6076,7 +6077,7 @@ func (client *ContentDirectory3) ExportResource(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if TransferID, err = soap.UnmarshalUi4(
+	if TransferID, err = soap.UnmarshalUI4(
 		response.TransferID,
 	); err != nil {
 		return
@@ -6086,7 +6087,7 @@ func (client *ContentDirectory3) ExportResource(
 	return
 }
 
-// DeleteResource
+// DeleteResource implements a UPnP action of the same name.
 func (client *ContentDirectory3) DeleteResource(
 	ctx context.Context,
 	ResourceURI *url.URL,
@@ -6095,7 +6096,7 @@ func (client *ContentDirectory3) DeleteResource(
 ) {
 	// Request structure.
 	request := &struct {
-		ResourceURI string
+		ResourceURI string `xml:"ResourceURI"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -6110,7 +6111,7 @@ func (client *ContentDirectory3) DeleteResource(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_3,
 		"DeleteResource",
@@ -6126,7 +6127,7 @@ func (client *ContentDirectory3) DeleteResource(
 	return
 }
 
-// StopTransferResource
+// StopTransferResource implements a UPnP action of the same name.
 func (client *ContentDirectory3) StopTransferResource(
 	ctx context.Context,
 	TransferID uint32,
@@ -6135,11 +6136,11 @@ func (client *ContentDirectory3) StopTransferResource(
 ) {
 	// Request structure.
 	request := &struct {
-		TransferID string
+		TransferID string `xml:"TransferID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.TransferID, err = soap.MarshalUi4(
+	if request.TransferID, err = soap.MarshalUI4(
 		TransferID,
 	); err != nil {
 		return
@@ -6150,7 +6151,7 @@ func (client *ContentDirectory3) StopTransferResource(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_3,
 		"StopTransferResource",
@@ -6166,7 +6167,7 @@ func (client *ContentDirectory3) StopTransferResource(
 	return
 }
 
-// GetTransferProgress
+// GetTransferProgress implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -6182,11 +6183,11 @@ func (client *ContentDirectory3) GetTransferProgress(
 ) {
 	// Request structure.
 	request := &struct {
-		TransferID string
+		TransferID string `xml:"TransferID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.TransferID, err = soap.MarshalUi4(
+	if request.TransferID, err = soap.MarshalUI4(
 		TransferID,
 	); err != nil {
 		return
@@ -6195,13 +6196,13 @@ func (client *ContentDirectory3) GetTransferProgress(
 
 	// Response structure.
 	response := &struct {
-		TransferStatus string
-		TransferLength string
-		TransferTotal  string
+		TransferStatus string `xml:"TransferStatus"`
+		TransferLength string `xml:"TransferLength"`
+		TransferTotal  string `xml:"TransferTotal"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_3,
 		"GetTransferProgress",
@@ -6232,7 +6233,7 @@ func (client *ContentDirectory3) GetTransferProgress(
 	return
 }
 
-// CreateReference
+// CreateReference implements a UPnP action of the same name.
 func (client *ContentDirectory3) CreateReference(
 	ctx context.Context,
 	ContainerID string,
@@ -6243,8 +6244,8 @@ func (client *ContentDirectory3) CreateReference(
 ) {
 	// Request structure.
 	request := &struct {
-		ContainerID string
-		ObjectID    string
+		ContainerID string `xml:"ContainerID"`
+		ObjectID    string `xml:"ObjectID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -6262,11 +6263,11 @@ func (client *ContentDirectory3) CreateReference(
 
 	// Response structure.
 	response := &struct {
-		NewID string
+		NewID string `xml:"NewID"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_3,
 		"CreateReference",
@@ -6287,7 +6288,7 @@ func (client *ContentDirectory3) CreateReference(
 	return
 }
 
-// FreeFormQuery
+// FreeFormQuery implements a UPnP action of the same name.
 func (client *ContentDirectory3) FreeFormQuery(
 	ctx context.Context,
 	ContainerID string,
@@ -6300,9 +6301,9 @@ func (client *ContentDirectory3) FreeFormQuery(
 ) {
 	// Request structure.
 	request := &struct {
-		ContainerID  string
-		CDSView      string
-		QueryRequest string
+		ContainerID  string `xml:"ContainerID"`
+		CDSView      string `xml:"CDSView"`
+		QueryRequest string `xml:"QueryRequest"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -6311,7 +6312,7 @@ func (client *ContentDirectory3) FreeFormQuery(
 	); err != nil {
 		return
 	}
-	if request.CDSView, err = soap.MarshalUi4(
+	if request.CDSView, err = soap.MarshalUI4(
 		CDSView,
 	); err != nil {
 		return
@@ -6325,12 +6326,12 @@ func (client *ContentDirectory3) FreeFormQuery(
 
 	// Response structure.
 	response := &struct {
-		QueryResult string
-		UpdateID    string
+		QueryResult string `xml:"QueryResult"`
+		UpdateID    string `xml:"UpdateID"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_3,
 		"FreeFormQuery",
@@ -6346,7 +6347,7 @@ func (client *ContentDirectory3) FreeFormQuery(
 	); err != nil {
 		return
 	}
-	if UpdateID, err = soap.UnmarshalUi4(
+	if UpdateID, err = soap.UnmarshalUI4(
 		response.UpdateID,
 	); err != nil {
 		return
@@ -6356,7 +6357,7 @@ func (client *ContentDirectory3) FreeFormQuery(
 	return
 }
 
-// GetFreeFormQueryCapabilities
+// GetFreeFormQueryCapabilities implements a UPnP action of the same name.
 func (client *ContentDirectory3) GetFreeFormQueryCapabilities(
 	ctx context.Context,
 ) (
@@ -6371,11 +6372,11 @@ func (client *ContentDirectory3) GetFreeFormQueryCapabilities(
 
 	// Response structure.
 	response := &struct {
-		FFQCapabilities string
+		FFQCapabilities string `xml:"FFQCapabilities"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ContentDirectory_3,
 		"GetFreeFormQueryCapabilities",
@@ -6495,7 +6496,7 @@ func newRenderingControl1ClientsFromGenericClients(
 	return clients
 }
 
-// ListPresets
+// ListPresets implements a UPnP action of the same name.
 func (client *RenderingControl1) ListPresets(
 	ctx context.Context,
 	InstanceID uint32,
@@ -6505,11 +6506,11 @@ func (client *RenderingControl1) ListPresets(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -6518,11 +6519,11 @@ func (client *RenderingControl1) ListPresets(
 
 	// Response structure.
 	response := &struct {
-		CurrentPresetNameList string
+		CurrentPresetNameList string `xml:"CurrentPresetNameList"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_1,
 		"ListPresets",
@@ -6543,7 +6544,7 @@ func (client *RenderingControl1) ListPresets(
 	return
 }
 
-// SelectPreset
+// SelectPreset implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -6557,12 +6558,12 @@ func (client *RenderingControl1) SelectPreset(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-		PresetName string
+		InstanceID string `xml:"InstanceID"`
+		PresetName string `xml:"PresetName"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -6578,7 +6579,7 @@ func (client *RenderingControl1) SelectPreset(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_1,
 		"SelectPreset",
@@ -6594,7 +6595,7 @@ func (client *RenderingControl1) SelectPreset(
 	return
 }
 
-// GetBrightness
+// GetBrightness implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -6608,11 +6609,11 @@ func (client *RenderingControl1) GetBrightness(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -6621,11 +6622,11 @@ func (client *RenderingControl1) GetBrightness(
 
 	// Response structure.
 	response := &struct {
-		CurrentBrightness string
+		CurrentBrightness string `xml:"CurrentBrightness"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_1,
 		"GetBrightness",
@@ -6636,7 +6637,7 @@ func (client *RenderingControl1) GetBrightness(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if CurrentBrightness, err = soap.UnmarshalUi2(
+	if CurrentBrightness, err = soap.UnmarshalUI2(
 		response.CurrentBrightness,
 	); err != nil {
 		return
@@ -6646,7 +6647,7 @@ func (client *RenderingControl1) GetBrightness(
 	return
 }
 
-// SetBrightness
+// SetBrightness implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -6660,17 +6661,17 @@ func (client *RenderingControl1) SetBrightness(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID        string
-		DesiredBrightness string
+		InstanceID        string `xml:"InstanceID"`
+		DesiredBrightness string `xml:"DesiredBrightness"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
 	}
-	if request.DesiredBrightness, err = soap.MarshalUi2(
+	if request.DesiredBrightness, err = soap.MarshalUI2(
 		DesiredBrightness,
 	); err != nil {
 		return
@@ -6681,7 +6682,7 @@ func (client *RenderingControl1) SetBrightness(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_1,
 		"SetBrightness",
@@ -6697,7 +6698,7 @@ func (client *RenderingControl1) SetBrightness(
 	return
 }
 
-// GetContrast
+// GetContrast implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -6711,11 +6712,11 @@ func (client *RenderingControl1) GetContrast(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -6724,11 +6725,11 @@ func (client *RenderingControl1) GetContrast(
 
 	// Response structure.
 	response := &struct {
-		CurrentContrast string
+		CurrentContrast string `xml:"CurrentContrast"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_1,
 		"GetContrast",
@@ -6739,7 +6740,7 @@ func (client *RenderingControl1) GetContrast(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if CurrentContrast, err = soap.UnmarshalUi2(
+	if CurrentContrast, err = soap.UnmarshalUI2(
 		response.CurrentContrast,
 	); err != nil {
 		return
@@ -6749,7 +6750,7 @@ func (client *RenderingControl1) GetContrast(
 	return
 }
 
-// SetContrast
+// SetContrast implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -6763,17 +6764,17 @@ func (client *RenderingControl1) SetContrast(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID      string
-		DesiredContrast string
+		InstanceID      string `xml:"InstanceID"`
+		DesiredContrast string `xml:"DesiredContrast"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
 	}
-	if request.DesiredContrast, err = soap.MarshalUi2(
+	if request.DesiredContrast, err = soap.MarshalUI2(
 		DesiredContrast,
 	); err != nil {
 		return
@@ -6784,7 +6785,7 @@ func (client *RenderingControl1) SetContrast(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_1,
 		"SetContrast",
@@ -6800,7 +6801,7 @@ func (client *RenderingControl1) SetContrast(
 	return
 }
 
-// GetSharpness
+// GetSharpness implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -6814,11 +6815,11 @@ func (client *RenderingControl1) GetSharpness(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -6827,11 +6828,11 @@ func (client *RenderingControl1) GetSharpness(
 
 	// Response structure.
 	response := &struct {
-		CurrentSharpness string
+		CurrentSharpness string `xml:"CurrentSharpness"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_1,
 		"GetSharpness",
@@ -6842,7 +6843,7 @@ func (client *RenderingControl1) GetSharpness(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if CurrentSharpness, err = soap.UnmarshalUi2(
+	if CurrentSharpness, err = soap.UnmarshalUI2(
 		response.CurrentSharpness,
 	); err != nil {
 		return
@@ -6852,7 +6853,7 @@ func (client *RenderingControl1) GetSharpness(
 	return
 }
 
-// SetSharpness
+// SetSharpness implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -6866,17 +6867,17 @@ func (client *RenderingControl1) SetSharpness(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID       string
-		DesiredSharpness string
+		InstanceID       string `xml:"InstanceID"`
+		DesiredSharpness string `xml:"DesiredSharpness"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
 	}
-	if request.DesiredSharpness, err = soap.MarshalUi2(
+	if request.DesiredSharpness, err = soap.MarshalUI2(
 		DesiredSharpness,
 	); err != nil {
 		return
@@ -6887,7 +6888,7 @@ func (client *RenderingControl1) SetSharpness(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_1,
 		"SetSharpness",
@@ -6903,7 +6904,7 @@ func (client *RenderingControl1) SetSharpness(
 	return
 }
 
-// GetRedVideoGain
+// GetRedVideoGain implements a UPnP action of the same name.
 func (client *RenderingControl1) GetRedVideoGain(
 	ctx context.Context,
 	InstanceID uint32,
@@ -6913,11 +6914,11 @@ func (client *RenderingControl1) GetRedVideoGain(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -6926,11 +6927,11 @@ func (client *RenderingControl1) GetRedVideoGain(
 
 	// Response structure.
 	response := &struct {
-		CurrentRedVideoGain string
+		CurrentRedVideoGain string `xml:"CurrentRedVideoGain"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_1,
 		"GetRedVideoGain",
@@ -6941,7 +6942,7 @@ func (client *RenderingControl1) GetRedVideoGain(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if CurrentRedVideoGain, err = soap.UnmarshalUi2(
+	if CurrentRedVideoGain, err = soap.UnmarshalUI2(
 		response.CurrentRedVideoGain,
 	); err != nil {
 		return
@@ -6951,7 +6952,7 @@ func (client *RenderingControl1) GetRedVideoGain(
 	return
 }
 
-// SetRedVideoGain
+// SetRedVideoGain implements a UPnP action of the same name.
 func (client *RenderingControl1) SetRedVideoGain(
 	ctx context.Context,
 	InstanceID uint32,
@@ -6961,17 +6962,17 @@ func (client *RenderingControl1) SetRedVideoGain(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID          string
-		DesiredRedVideoGain string
+		InstanceID          string `xml:"InstanceID"`
+		DesiredRedVideoGain string `xml:"DesiredRedVideoGain"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
 	}
-	if request.DesiredRedVideoGain, err = soap.MarshalUi2(
+	if request.DesiredRedVideoGain, err = soap.MarshalUI2(
 		DesiredRedVideoGain,
 	); err != nil {
 		return
@@ -6982,7 +6983,7 @@ func (client *RenderingControl1) SetRedVideoGain(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_1,
 		"SetRedVideoGain",
@@ -6998,7 +6999,7 @@ func (client *RenderingControl1) SetRedVideoGain(
 	return
 }
 
-// GetGreenVideoGain
+// GetGreenVideoGain implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -7012,11 +7013,11 @@ func (client *RenderingControl1) GetGreenVideoGain(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -7025,11 +7026,11 @@ func (client *RenderingControl1) GetGreenVideoGain(
 
 	// Response structure.
 	response := &struct {
-		CurrentGreenVideoGain string
+		CurrentGreenVideoGain string `xml:"CurrentGreenVideoGain"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_1,
 		"GetGreenVideoGain",
@@ -7040,7 +7041,7 @@ func (client *RenderingControl1) GetGreenVideoGain(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if CurrentGreenVideoGain, err = soap.UnmarshalUi2(
+	if CurrentGreenVideoGain, err = soap.UnmarshalUI2(
 		response.CurrentGreenVideoGain,
 	); err != nil {
 		return
@@ -7050,7 +7051,7 @@ func (client *RenderingControl1) GetGreenVideoGain(
 	return
 }
 
-// SetGreenVideoGain
+// SetGreenVideoGain implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -7064,17 +7065,17 @@ func (client *RenderingControl1) SetGreenVideoGain(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID            string
-		DesiredGreenVideoGain string
+		InstanceID            string `xml:"InstanceID"`
+		DesiredGreenVideoGain string `xml:"DesiredGreenVideoGain"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
 	}
-	if request.DesiredGreenVideoGain, err = soap.MarshalUi2(
+	if request.DesiredGreenVideoGain, err = soap.MarshalUI2(
 		DesiredGreenVideoGain,
 	); err != nil {
 		return
@@ -7085,7 +7086,7 @@ func (client *RenderingControl1) SetGreenVideoGain(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_1,
 		"SetGreenVideoGain",
@@ -7101,7 +7102,7 @@ func (client *RenderingControl1) SetGreenVideoGain(
 	return
 }
 
-// GetBlueVideoGain
+// GetBlueVideoGain implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -7115,11 +7116,11 @@ func (client *RenderingControl1) GetBlueVideoGain(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -7128,11 +7129,11 @@ func (client *RenderingControl1) GetBlueVideoGain(
 
 	// Response structure.
 	response := &struct {
-		CurrentBlueVideoGain string
+		CurrentBlueVideoGain string `xml:"CurrentBlueVideoGain"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_1,
 		"GetBlueVideoGain",
@@ -7143,7 +7144,7 @@ func (client *RenderingControl1) GetBlueVideoGain(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if CurrentBlueVideoGain, err = soap.UnmarshalUi2(
+	if CurrentBlueVideoGain, err = soap.UnmarshalUI2(
 		response.CurrentBlueVideoGain,
 	); err != nil {
 		return
@@ -7153,7 +7154,7 @@ func (client *RenderingControl1) GetBlueVideoGain(
 	return
 }
 
-// SetBlueVideoGain
+// SetBlueVideoGain implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -7167,17 +7168,17 @@ func (client *RenderingControl1) SetBlueVideoGain(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID           string
-		DesiredBlueVideoGain string
+		InstanceID           string `xml:"InstanceID"`
+		DesiredBlueVideoGain string `xml:"DesiredBlueVideoGain"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
 	}
-	if request.DesiredBlueVideoGain, err = soap.MarshalUi2(
+	if request.DesiredBlueVideoGain, err = soap.MarshalUI2(
 		DesiredBlueVideoGain,
 	); err != nil {
 		return
@@ -7188,7 +7189,7 @@ func (client *RenderingControl1) SetBlueVideoGain(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_1,
 		"SetBlueVideoGain",
@@ -7204,7 +7205,7 @@ func (client *RenderingControl1) SetBlueVideoGain(
 	return
 }
 
-// GetRedVideoBlackLevel
+// GetRedVideoBlackLevel implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -7218,11 +7219,11 @@ func (client *RenderingControl1) GetRedVideoBlackLevel(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -7231,11 +7232,11 @@ func (client *RenderingControl1) GetRedVideoBlackLevel(
 
 	// Response structure.
 	response := &struct {
-		CurrentRedVideoBlackLevel string
+		CurrentRedVideoBlackLevel string `xml:"CurrentRedVideoBlackLevel"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_1,
 		"GetRedVideoBlackLevel",
@@ -7246,7 +7247,7 @@ func (client *RenderingControl1) GetRedVideoBlackLevel(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if CurrentRedVideoBlackLevel, err = soap.UnmarshalUi2(
+	if CurrentRedVideoBlackLevel, err = soap.UnmarshalUI2(
 		response.CurrentRedVideoBlackLevel,
 	); err != nil {
 		return
@@ -7256,7 +7257,7 @@ func (client *RenderingControl1) GetRedVideoBlackLevel(
 	return
 }
 
-// SetRedVideoBlackLevel
+// SetRedVideoBlackLevel implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -7270,17 +7271,17 @@ func (client *RenderingControl1) SetRedVideoBlackLevel(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID                string
-		DesiredRedVideoBlackLevel string
+		InstanceID                string `xml:"InstanceID"`
+		DesiredRedVideoBlackLevel string `xml:"DesiredRedVideoBlackLevel"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
 	}
-	if request.DesiredRedVideoBlackLevel, err = soap.MarshalUi2(
+	if request.DesiredRedVideoBlackLevel, err = soap.MarshalUI2(
 		DesiredRedVideoBlackLevel,
 	); err != nil {
 		return
@@ -7291,7 +7292,7 @@ func (client *RenderingControl1) SetRedVideoBlackLevel(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_1,
 		"SetRedVideoBlackLevel",
@@ -7307,7 +7308,7 @@ func (client *RenderingControl1) SetRedVideoBlackLevel(
 	return
 }
 
-// GetGreenVideoBlackLevel
+// GetGreenVideoBlackLevel implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -7321,11 +7322,11 @@ func (client *RenderingControl1) GetGreenVideoBlackLevel(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -7334,11 +7335,11 @@ func (client *RenderingControl1) GetGreenVideoBlackLevel(
 
 	// Response structure.
 	response := &struct {
-		CurrentGreenVideoBlackLevel string
+		CurrentGreenVideoBlackLevel string `xml:"CurrentGreenVideoBlackLevel"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_1,
 		"GetGreenVideoBlackLevel",
@@ -7349,7 +7350,7 @@ func (client *RenderingControl1) GetGreenVideoBlackLevel(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if CurrentGreenVideoBlackLevel, err = soap.UnmarshalUi2(
+	if CurrentGreenVideoBlackLevel, err = soap.UnmarshalUI2(
 		response.CurrentGreenVideoBlackLevel,
 	); err != nil {
 		return
@@ -7359,7 +7360,7 @@ func (client *RenderingControl1) GetGreenVideoBlackLevel(
 	return
 }
 
-// SetGreenVideoBlackLevel
+// SetGreenVideoBlackLevel implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -7373,17 +7374,17 @@ func (client *RenderingControl1) SetGreenVideoBlackLevel(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID                  string
-		DesiredGreenVideoBlackLevel string
+		InstanceID                  string `xml:"InstanceID"`
+		DesiredGreenVideoBlackLevel string `xml:"DesiredGreenVideoBlackLevel"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
 	}
-	if request.DesiredGreenVideoBlackLevel, err = soap.MarshalUi2(
+	if request.DesiredGreenVideoBlackLevel, err = soap.MarshalUI2(
 		DesiredGreenVideoBlackLevel,
 	); err != nil {
 		return
@@ -7394,7 +7395,7 @@ func (client *RenderingControl1) SetGreenVideoBlackLevel(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_1,
 		"SetGreenVideoBlackLevel",
@@ -7410,7 +7411,7 @@ func (client *RenderingControl1) SetGreenVideoBlackLevel(
 	return
 }
 
-// GetBlueVideoBlackLevel
+// GetBlueVideoBlackLevel implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -7424,11 +7425,11 @@ func (client *RenderingControl1) GetBlueVideoBlackLevel(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -7437,11 +7438,11 @@ func (client *RenderingControl1) GetBlueVideoBlackLevel(
 
 	// Response structure.
 	response := &struct {
-		CurrentBlueVideoBlackLevel string
+		CurrentBlueVideoBlackLevel string `xml:"CurrentBlueVideoBlackLevel"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_1,
 		"GetBlueVideoBlackLevel",
@@ -7452,7 +7453,7 @@ func (client *RenderingControl1) GetBlueVideoBlackLevel(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if CurrentBlueVideoBlackLevel, err = soap.UnmarshalUi2(
+	if CurrentBlueVideoBlackLevel, err = soap.UnmarshalUI2(
 		response.CurrentBlueVideoBlackLevel,
 	); err != nil {
 		return
@@ -7462,7 +7463,7 @@ func (client *RenderingControl1) GetBlueVideoBlackLevel(
 	return
 }
 
-// SetBlueVideoBlackLevel
+// SetBlueVideoBlackLevel implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -7476,17 +7477,17 @@ func (client *RenderingControl1) SetBlueVideoBlackLevel(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID                 string
-		DesiredBlueVideoBlackLevel string
+		InstanceID                 string `xml:"InstanceID"`
+		DesiredBlueVideoBlackLevel string `xml:"DesiredBlueVideoBlackLevel"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
 	}
-	if request.DesiredBlueVideoBlackLevel, err = soap.MarshalUi2(
+	if request.DesiredBlueVideoBlackLevel, err = soap.MarshalUI2(
 		DesiredBlueVideoBlackLevel,
 	); err != nil {
 		return
@@ -7497,7 +7498,7 @@ func (client *RenderingControl1) SetBlueVideoBlackLevel(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_1,
 		"SetBlueVideoBlackLevel",
@@ -7513,7 +7514,7 @@ func (client *RenderingControl1) SetBlueVideoBlackLevel(
 	return
 }
 
-// GetColorTemperature
+// GetColorTemperature implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -7527,11 +7528,11 @@ func (client *RenderingControl1) GetColorTemperature(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -7540,11 +7541,11 @@ func (client *RenderingControl1) GetColorTemperature(
 
 	// Response structure.
 	response := &struct {
-		CurrentColorTemperature string
+		CurrentColorTemperature string `xml:"CurrentColorTemperature"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_1,
 		"GetColorTemperature",
@@ -7555,7 +7556,7 @@ func (client *RenderingControl1) GetColorTemperature(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if CurrentColorTemperature, err = soap.UnmarshalUi2(
+	if CurrentColorTemperature, err = soap.UnmarshalUI2(
 		response.CurrentColorTemperature,
 	); err != nil {
 		return
@@ -7565,7 +7566,7 @@ func (client *RenderingControl1) GetColorTemperature(
 	return
 }
 
-// SetColorTemperature
+// SetColorTemperature implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -7579,17 +7580,17 @@ func (client *RenderingControl1) SetColorTemperature(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID              string
-		DesiredColorTemperature string
+		InstanceID              string `xml:"InstanceID"`
+		DesiredColorTemperature string `xml:"DesiredColorTemperature"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
 	}
-	if request.DesiredColorTemperature, err = soap.MarshalUi2(
+	if request.DesiredColorTemperature, err = soap.MarshalUI2(
 		DesiredColorTemperature,
 	); err != nil {
 		return
@@ -7600,7 +7601,7 @@ func (client *RenderingControl1) SetColorTemperature(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_1,
 		"SetColorTemperature",
@@ -7616,7 +7617,7 @@ func (client *RenderingControl1) SetColorTemperature(
 	return
 }
 
-// GetHorizontalKeystone
+// GetHorizontalKeystone implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -7630,11 +7631,11 @@ func (client *RenderingControl1) GetHorizontalKeystone(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -7643,11 +7644,11 @@ func (client *RenderingControl1) GetHorizontalKeystone(
 
 	// Response structure.
 	response := &struct {
-		CurrentHorizontalKeystone string
+		CurrentHorizontalKeystone string `xml:"CurrentHorizontalKeystone"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_1,
 		"GetHorizontalKeystone",
@@ -7668,7 +7669,7 @@ func (client *RenderingControl1) GetHorizontalKeystone(
 	return
 }
 
-// SetHorizontalKeystone
+// SetHorizontalKeystone implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -7682,12 +7683,12 @@ func (client *RenderingControl1) SetHorizontalKeystone(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID                string
-		DesiredHorizontalKeystone string
+		InstanceID                string `xml:"InstanceID"`
+		DesiredHorizontalKeystone string `xml:"DesiredHorizontalKeystone"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -7703,7 +7704,7 @@ func (client *RenderingControl1) SetHorizontalKeystone(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_1,
 		"SetHorizontalKeystone",
@@ -7719,7 +7720,7 @@ func (client *RenderingControl1) SetHorizontalKeystone(
 	return
 }
 
-// GetVerticalKeystone
+// GetVerticalKeystone implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -7733,11 +7734,11 @@ func (client *RenderingControl1) GetVerticalKeystone(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -7746,11 +7747,11 @@ func (client *RenderingControl1) GetVerticalKeystone(
 
 	// Response structure.
 	response := &struct {
-		CurrentVerticalKeystone string
+		CurrentVerticalKeystone string `xml:"CurrentVerticalKeystone"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_1,
 		"GetVerticalKeystone",
@@ -7771,7 +7772,7 @@ func (client *RenderingControl1) GetVerticalKeystone(
 	return
 }
 
-// SetVerticalKeystone
+// SetVerticalKeystone implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -7785,12 +7786,12 @@ func (client *RenderingControl1) SetVerticalKeystone(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID              string
-		DesiredVerticalKeystone string
+		InstanceID              string `xml:"InstanceID"`
+		DesiredVerticalKeystone string `xml:"DesiredVerticalKeystone"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -7806,7 +7807,7 @@ func (client *RenderingControl1) SetVerticalKeystone(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_1,
 		"SetVerticalKeystone",
@@ -7822,7 +7823,7 @@ func (client *RenderingControl1) SetVerticalKeystone(
 	return
 }
 
-// GetMute
+// GetMute implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -7837,12 +7838,12 @@ func (client *RenderingControl1) GetMute(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-		Channel    string
+		InstanceID string `xml:"InstanceID"`
+		Channel    string `xml:"Channel"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -7856,11 +7857,11 @@ func (client *RenderingControl1) GetMute(
 
 	// Response structure.
 	response := &struct {
-		CurrentMute string
+		CurrentMute string `xml:"CurrentMute"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_1,
 		"GetMute",
@@ -7881,7 +7882,7 @@ func (client *RenderingControl1) GetMute(
 	return
 }
 
-// SetMute
+// SetMute implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -7896,13 +7897,13 @@ func (client *RenderingControl1) SetMute(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID  string
-		Channel     string
-		DesiredMute string
+		InstanceID  string `xml:"InstanceID"`
+		Channel     string `xml:"Channel"`
+		DesiredMute string `xml:"DesiredMute"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -7923,7 +7924,7 @@ func (client *RenderingControl1) SetMute(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_1,
 		"SetMute",
@@ -7939,7 +7940,7 @@ func (client *RenderingControl1) SetMute(
 	return
 }
 
-// GetVolume
+// GetVolume implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -7958,12 +7959,12 @@ func (client *RenderingControl1) GetVolume(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-		Channel    string
+		InstanceID string `xml:"InstanceID"`
+		Channel    string `xml:"Channel"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -7977,11 +7978,11 @@ func (client *RenderingControl1) GetVolume(
 
 	// Response structure.
 	response := &struct {
-		CurrentVolume string
+		CurrentVolume string `xml:"CurrentVolume"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_1,
 		"GetVolume",
@@ -7992,7 +7993,7 @@ func (client *RenderingControl1) GetVolume(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if CurrentVolume, err = soap.UnmarshalUi2(
+	if CurrentVolume, err = soap.UnmarshalUI2(
 		response.CurrentVolume,
 	); err != nil {
 		return
@@ -8002,7 +8003,7 @@ func (client *RenderingControl1) GetVolume(
 	return
 }
 
-// SetVolume
+// SetVolume implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -8019,13 +8020,13 @@ func (client *RenderingControl1) SetVolume(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID    string
-		Channel       string
-		DesiredVolume string
+		InstanceID    string `xml:"InstanceID"`
+		Channel       string `xml:"Channel"`
+		DesiredVolume string `xml:"DesiredVolume"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -8035,7 +8036,7 @@ func (client *RenderingControl1) SetVolume(
 	); err != nil {
 		return
 	}
-	if request.DesiredVolume, err = soap.MarshalUi2(
+	if request.DesiredVolume, err = soap.MarshalUI2(
 		DesiredVolume,
 	); err != nil {
 		return
@@ -8046,7 +8047,7 @@ func (client *RenderingControl1) SetVolume(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_1,
 		"SetVolume",
@@ -8062,7 +8063,7 @@ func (client *RenderingControl1) SetVolume(
 	return
 }
 
-// GetVolumeDB
+// GetVolumeDB implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -8077,12 +8078,12 @@ func (client *RenderingControl1) GetVolumeDB(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-		Channel    string
+		InstanceID string `xml:"InstanceID"`
+		Channel    string `xml:"Channel"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -8096,11 +8097,11 @@ func (client *RenderingControl1) GetVolumeDB(
 
 	// Response structure.
 	response := &struct {
-		CurrentVolume string
+		CurrentVolume string `xml:"CurrentVolume"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_1,
 		"GetVolumeDB",
@@ -8121,7 +8122,7 @@ func (client *RenderingControl1) GetVolumeDB(
 	return
 }
 
-// SetVolumeDB
+// SetVolumeDB implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -8136,13 +8137,13 @@ func (client *RenderingControl1) SetVolumeDB(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID    string
-		Channel       string
-		DesiredVolume string
+		InstanceID    string `xml:"InstanceID"`
+		Channel       string `xml:"Channel"`
+		DesiredVolume string `xml:"DesiredVolume"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -8163,7 +8164,7 @@ func (client *RenderingControl1) SetVolumeDB(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_1,
 		"SetVolumeDB",
@@ -8179,7 +8180,7 @@ func (client *RenderingControl1) SetVolumeDB(
 	return
 }
 
-// GetVolumeDBRange
+// GetVolumeDBRange implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -8195,12 +8196,12 @@ func (client *RenderingControl1) GetVolumeDBRange(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-		Channel    string
+		InstanceID string `xml:"InstanceID"`
+		Channel    string `xml:"Channel"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -8214,12 +8215,12 @@ func (client *RenderingControl1) GetVolumeDBRange(
 
 	// Response structure.
 	response := &struct {
-		MinValue string
-		MaxValue string
+		MinValue string `xml:"MinValue"`
+		MaxValue string `xml:"MaxValue"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_1,
 		"GetVolumeDBRange",
@@ -8245,7 +8246,7 @@ func (client *RenderingControl1) GetVolumeDBRange(
 	return
 }
 
-// GetLoudness
+// GetLoudness implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -8260,12 +8261,12 @@ func (client *RenderingControl1) GetLoudness(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-		Channel    string
+		InstanceID string `xml:"InstanceID"`
+		Channel    string `xml:"Channel"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -8279,11 +8280,11 @@ func (client *RenderingControl1) GetLoudness(
 
 	// Response structure.
 	response := &struct {
-		CurrentLoudness string
+		CurrentLoudness string `xml:"CurrentLoudness"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_1,
 		"GetLoudness",
@@ -8304,7 +8305,7 @@ func (client *RenderingControl1) GetLoudness(
 	return
 }
 
-// SetLoudness
+// SetLoudness implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -8319,13 +8320,13 @@ func (client *RenderingControl1) SetLoudness(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID      string
-		Channel         string
-		DesiredLoudness string
+		InstanceID      string `xml:"InstanceID"`
+		Channel         string `xml:"Channel"`
+		DesiredLoudness string `xml:"DesiredLoudness"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -8346,7 +8347,7 @@ func (client *RenderingControl1) SetLoudness(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_1,
 		"SetLoudness",
@@ -8461,7 +8462,7 @@ func newRenderingControl2ClientsFromGenericClients(
 	return clients
 }
 
-// ListPresets
+// ListPresets implements a UPnP action of the same name.
 func (client *RenderingControl2) ListPresets(
 	ctx context.Context,
 	InstanceID uint32,
@@ -8471,11 +8472,11 @@ func (client *RenderingControl2) ListPresets(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -8484,11 +8485,11 @@ func (client *RenderingControl2) ListPresets(
 
 	// Response structure.
 	response := &struct {
-		CurrentPresetNameList string
+		CurrentPresetNameList string `xml:"CurrentPresetNameList"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_2,
 		"ListPresets",
@@ -8509,7 +8510,7 @@ func (client *RenderingControl2) ListPresets(
 	return
 }
 
-// SelectPreset
+// SelectPreset implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -8523,12 +8524,12 @@ func (client *RenderingControl2) SelectPreset(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-		PresetName string
+		InstanceID string `xml:"InstanceID"`
+		PresetName string `xml:"PresetName"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -8544,7 +8545,7 @@ func (client *RenderingControl2) SelectPreset(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_2,
 		"SelectPreset",
@@ -8560,7 +8561,7 @@ func (client *RenderingControl2) SelectPreset(
 	return
 }
 
-// GetBrightness
+// GetBrightness implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -8574,11 +8575,11 @@ func (client *RenderingControl2) GetBrightness(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -8587,11 +8588,11 @@ func (client *RenderingControl2) GetBrightness(
 
 	// Response structure.
 	response := &struct {
-		CurrentBrightness string
+		CurrentBrightness string `xml:"CurrentBrightness"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_2,
 		"GetBrightness",
@@ -8602,7 +8603,7 @@ func (client *RenderingControl2) GetBrightness(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if CurrentBrightness, err = soap.UnmarshalUi2(
+	if CurrentBrightness, err = soap.UnmarshalUI2(
 		response.CurrentBrightness,
 	); err != nil {
 		return
@@ -8612,7 +8613,7 @@ func (client *RenderingControl2) GetBrightness(
 	return
 }
 
-// SetBrightness
+// SetBrightness implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -8626,17 +8627,17 @@ func (client *RenderingControl2) SetBrightness(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID        string
-		DesiredBrightness string
+		InstanceID        string `xml:"InstanceID"`
+		DesiredBrightness string `xml:"DesiredBrightness"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
 	}
-	if request.DesiredBrightness, err = soap.MarshalUi2(
+	if request.DesiredBrightness, err = soap.MarshalUI2(
 		DesiredBrightness,
 	); err != nil {
 		return
@@ -8647,7 +8648,7 @@ func (client *RenderingControl2) SetBrightness(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_2,
 		"SetBrightness",
@@ -8663,7 +8664,7 @@ func (client *RenderingControl2) SetBrightness(
 	return
 }
 
-// GetContrast
+// GetContrast implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -8677,11 +8678,11 @@ func (client *RenderingControl2) GetContrast(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -8690,11 +8691,11 @@ func (client *RenderingControl2) GetContrast(
 
 	// Response structure.
 	response := &struct {
-		CurrentContrast string
+		CurrentContrast string `xml:"CurrentContrast"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_2,
 		"GetContrast",
@@ -8705,7 +8706,7 @@ func (client *RenderingControl2) GetContrast(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if CurrentContrast, err = soap.UnmarshalUi2(
+	if CurrentContrast, err = soap.UnmarshalUI2(
 		response.CurrentContrast,
 	); err != nil {
 		return
@@ -8715,7 +8716,7 @@ func (client *RenderingControl2) GetContrast(
 	return
 }
 
-// SetContrast
+// SetContrast implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -8729,17 +8730,17 @@ func (client *RenderingControl2) SetContrast(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID      string
-		DesiredContrast string
+		InstanceID      string `xml:"InstanceID"`
+		DesiredContrast string `xml:"DesiredContrast"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
 	}
-	if request.DesiredContrast, err = soap.MarshalUi2(
+	if request.DesiredContrast, err = soap.MarshalUI2(
 		DesiredContrast,
 	); err != nil {
 		return
@@ -8750,7 +8751,7 @@ func (client *RenderingControl2) SetContrast(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_2,
 		"SetContrast",
@@ -8766,7 +8767,7 @@ func (client *RenderingControl2) SetContrast(
 	return
 }
 
-// GetSharpness
+// GetSharpness implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -8780,11 +8781,11 @@ func (client *RenderingControl2) GetSharpness(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -8793,11 +8794,11 @@ func (client *RenderingControl2) GetSharpness(
 
 	// Response structure.
 	response := &struct {
-		CurrentSharpness string
+		CurrentSharpness string `xml:"CurrentSharpness"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_2,
 		"GetSharpness",
@@ -8808,7 +8809,7 @@ func (client *RenderingControl2) GetSharpness(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if CurrentSharpness, err = soap.UnmarshalUi2(
+	if CurrentSharpness, err = soap.UnmarshalUI2(
 		response.CurrentSharpness,
 	); err != nil {
 		return
@@ -8818,7 +8819,7 @@ func (client *RenderingControl2) GetSharpness(
 	return
 }
 
-// SetSharpness
+// SetSharpness implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -8832,17 +8833,17 @@ func (client *RenderingControl2) SetSharpness(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID       string
-		DesiredSharpness string
+		InstanceID       string `xml:"InstanceID"`
+		DesiredSharpness string `xml:"DesiredSharpness"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
 	}
-	if request.DesiredSharpness, err = soap.MarshalUi2(
+	if request.DesiredSharpness, err = soap.MarshalUI2(
 		DesiredSharpness,
 	); err != nil {
 		return
@@ -8853,7 +8854,7 @@ func (client *RenderingControl2) SetSharpness(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_2,
 		"SetSharpness",
@@ -8869,7 +8870,7 @@ func (client *RenderingControl2) SetSharpness(
 	return
 }
 
-// GetRedVideoGain
+// GetRedVideoGain implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -8883,11 +8884,11 @@ func (client *RenderingControl2) GetRedVideoGain(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -8896,11 +8897,11 @@ func (client *RenderingControl2) GetRedVideoGain(
 
 	// Response structure.
 	response := &struct {
-		CurrentRedVideoGain string
+		CurrentRedVideoGain string `xml:"CurrentRedVideoGain"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_2,
 		"GetRedVideoGain",
@@ -8911,7 +8912,7 @@ func (client *RenderingControl2) GetRedVideoGain(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if CurrentRedVideoGain, err = soap.UnmarshalUi2(
+	if CurrentRedVideoGain, err = soap.UnmarshalUI2(
 		response.CurrentRedVideoGain,
 	); err != nil {
 		return
@@ -8921,7 +8922,7 @@ func (client *RenderingControl2) GetRedVideoGain(
 	return
 }
 
-// SetRedVideoGain
+// SetRedVideoGain implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -8935,17 +8936,17 @@ func (client *RenderingControl2) SetRedVideoGain(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID          string
-		DesiredRedVideoGain string
+		InstanceID          string `xml:"InstanceID"`
+		DesiredRedVideoGain string `xml:"DesiredRedVideoGain"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
 	}
-	if request.DesiredRedVideoGain, err = soap.MarshalUi2(
+	if request.DesiredRedVideoGain, err = soap.MarshalUI2(
 		DesiredRedVideoGain,
 	); err != nil {
 		return
@@ -8956,7 +8957,7 @@ func (client *RenderingControl2) SetRedVideoGain(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_2,
 		"SetRedVideoGain",
@@ -8972,7 +8973,7 @@ func (client *RenderingControl2) SetRedVideoGain(
 	return
 }
 
-// GetGreenVideoGain
+// GetGreenVideoGain implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -8986,11 +8987,11 @@ func (client *RenderingControl2) GetGreenVideoGain(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -8999,11 +9000,11 @@ func (client *RenderingControl2) GetGreenVideoGain(
 
 	// Response structure.
 	response := &struct {
-		CurrentGreenVideoGain string
+		CurrentGreenVideoGain string `xml:"CurrentGreenVideoGain"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_2,
 		"GetGreenVideoGain",
@@ -9014,7 +9015,7 @@ func (client *RenderingControl2) GetGreenVideoGain(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if CurrentGreenVideoGain, err = soap.UnmarshalUi2(
+	if CurrentGreenVideoGain, err = soap.UnmarshalUI2(
 		response.CurrentGreenVideoGain,
 	); err != nil {
 		return
@@ -9024,7 +9025,7 @@ func (client *RenderingControl2) GetGreenVideoGain(
 	return
 }
 
-// SetGreenVideoGain
+// SetGreenVideoGain implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -9038,17 +9039,17 @@ func (client *RenderingControl2) SetGreenVideoGain(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID            string
-		DesiredGreenVideoGain string
+		InstanceID            string `xml:"InstanceID"`
+		DesiredGreenVideoGain string `xml:"DesiredGreenVideoGain"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
 	}
-	if request.DesiredGreenVideoGain, err = soap.MarshalUi2(
+	if request.DesiredGreenVideoGain, err = soap.MarshalUI2(
 		DesiredGreenVideoGain,
 	); err != nil {
 		return
@@ -9059,7 +9060,7 @@ func (client *RenderingControl2) SetGreenVideoGain(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_2,
 		"SetGreenVideoGain",
@@ -9075,7 +9076,7 @@ func (client *RenderingControl2) SetGreenVideoGain(
 	return
 }
 
-// GetBlueVideoGain
+// GetBlueVideoGain implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -9089,11 +9090,11 @@ func (client *RenderingControl2) GetBlueVideoGain(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -9102,11 +9103,11 @@ func (client *RenderingControl2) GetBlueVideoGain(
 
 	// Response structure.
 	response := &struct {
-		CurrentBlueVideoGain string
+		CurrentBlueVideoGain string `xml:"CurrentBlueVideoGain"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_2,
 		"GetBlueVideoGain",
@@ -9117,7 +9118,7 @@ func (client *RenderingControl2) GetBlueVideoGain(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if CurrentBlueVideoGain, err = soap.UnmarshalUi2(
+	if CurrentBlueVideoGain, err = soap.UnmarshalUI2(
 		response.CurrentBlueVideoGain,
 	); err != nil {
 		return
@@ -9127,7 +9128,7 @@ func (client *RenderingControl2) GetBlueVideoGain(
 	return
 }
 
-// SetBlueVideoGain
+// SetBlueVideoGain implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -9141,17 +9142,17 @@ func (client *RenderingControl2) SetBlueVideoGain(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID           string
-		DesiredBlueVideoGain string
+		InstanceID           string `xml:"InstanceID"`
+		DesiredBlueVideoGain string `xml:"DesiredBlueVideoGain"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
 	}
-	if request.DesiredBlueVideoGain, err = soap.MarshalUi2(
+	if request.DesiredBlueVideoGain, err = soap.MarshalUI2(
 		DesiredBlueVideoGain,
 	); err != nil {
 		return
@@ -9162,7 +9163,7 @@ func (client *RenderingControl2) SetBlueVideoGain(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_2,
 		"SetBlueVideoGain",
@@ -9178,7 +9179,7 @@ func (client *RenderingControl2) SetBlueVideoGain(
 	return
 }
 
-// GetRedVideoBlackLevel
+// GetRedVideoBlackLevel implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -9192,11 +9193,11 @@ func (client *RenderingControl2) GetRedVideoBlackLevel(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -9205,11 +9206,11 @@ func (client *RenderingControl2) GetRedVideoBlackLevel(
 
 	// Response structure.
 	response := &struct {
-		CurrentRedVideoBlackLevel string
+		CurrentRedVideoBlackLevel string `xml:"CurrentRedVideoBlackLevel"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_2,
 		"GetRedVideoBlackLevel",
@@ -9220,7 +9221,7 @@ func (client *RenderingControl2) GetRedVideoBlackLevel(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if CurrentRedVideoBlackLevel, err = soap.UnmarshalUi2(
+	if CurrentRedVideoBlackLevel, err = soap.UnmarshalUI2(
 		response.CurrentRedVideoBlackLevel,
 	); err != nil {
 		return
@@ -9230,7 +9231,7 @@ func (client *RenderingControl2) GetRedVideoBlackLevel(
 	return
 }
 
-// SetRedVideoBlackLevel
+// SetRedVideoBlackLevel implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -9244,17 +9245,17 @@ func (client *RenderingControl2) SetRedVideoBlackLevel(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID                string
-		DesiredRedVideoBlackLevel string
+		InstanceID                string `xml:"InstanceID"`
+		DesiredRedVideoBlackLevel string `xml:"DesiredRedVideoBlackLevel"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
 	}
-	if request.DesiredRedVideoBlackLevel, err = soap.MarshalUi2(
+	if request.DesiredRedVideoBlackLevel, err = soap.MarshalUI2(
 		DesiredRedVideoBlackLevel,
 	); err != nil {
 		return
@@ -9265,7 +9266,7 @@ func (client *RenderingControl2) SetRedVideoBlackLevel(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_2,
 		"SetRedVideoBlackLevel",
@@ -9281,7 +9282,7 @@ func (client *RenderingControl2) SetRedVideoBlackLevel(
 	return
 }
 
-// GetGreenVideoBlackLevel
+// GetGreenVideoBlackLevel implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -9295,11 +9296,11 @@ func (client *RenderingControl2) GetGreenVideoBlackLevel(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -9308,11 +9309,11 @@ func (client *RenderingControl2) GetGreenVideoBlackLevel(
 
 	// Response structure.
 	response := &struct {
-		CurrentGreenVideoBlackLevel string
+		CurrentGreenVideoBlackLevel string `xml:"CurrentGreenVideoBlackLevel"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_2,
 		"GetGreenVideoBlackLevel",
@@ -9323,7 +9324,7 @@ func (client *RenderingControl2) GetGreenVideoBlackLevel(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if CurrentGreenVideoBlackLevel, err = soap.UnmarshalUi2(
+	if CurrentGreenVideoBlackLevel, err = soap.UnmarshalUI2(
 		response.CurrentGreenVideoBlackLevel,
 	); err != nil {
 		return
@@ -9333,7 +9334,7 @@ func (client *RenderingControl2) GetGreenVideoBlackLevel(
 	return
 }
 
-// SetGreenVideoBlackLevel
+// SetGreenVideoBlackLevel implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -9347,17 +9348,17 @@ func (client *RenderingControl2) SetGreenVideoBlackLevel(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID                  string
-		DesiredGreenVideoBlackLevel string
+		InstanceID                  string `xml:"InstanceID"`
+		DesiredGreenVideoBlackLevel string `xml:"DesiredGreenVideoBlackLevel"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
 	}
-	if request.DesiredGreenVideoBlackLevel, err = soap.MarshalUi2(
+	if request.DesiredGreenVideoBlackLevel, err = soap.MarshalUI2(
 		DesiredGreenVideoBlackLevel,
 	); err != nil {
 		return
@@ -9368,7 +9369,7 @@ func (client *RenderingControl2) SetGreenVideoBlackLevel(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_2,
 		"SetGreenVideoBlackLevel",
@@ -9384,7 +9385,7 @@ func (client *RenderingControl2) SetGreenVideoBlackLevel(
 	return
 }
 
-// GetBlueVideoBlackLevel
+// GetBlueVideoBlackLevel implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -9398,11 +9399,11 @@ func (client *RenderingControl2) GetBlueVideoBlackLevel(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -9411,11 +9412,11 @@ func (client *RenderingControl2) GetBlueVideoBlackLevel(
 
 	// Response structure.
 	response := &struct {
-		CurrentBlueVideoBlackLevel string
+		CurrentBlueVideoBlackLevel string `xml:"CurrentBlueVideoBlackLevel"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_2,
 		"GetBlueVideoBlackLevel",
@@ -9426,7 +9427,7 @@ func (client *RenderingControl2) GetBlueVideoBlackLevel(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if CurrentBlueVideoBlackLevel, err = soap.UnmarshalUi2(
+	if CurrentBlueVideoBlackLevel, err = soap.UnmarshalUI2(
 		response.CurrentBlueVideoBlackLevel,
 	); err != nil {
 		return
@@ -9436,7 +9437,7 @@ func (client *RenderingControl2) GetBlueVideoBlackLevel(
 	return
 }
 
-// SetBlueVideoBlackLevel
+// SetBlueVideoBlackLevel implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -9450,17 +9451,17 @@ func (client *RenderingControl2) SetBlueVideoBlackLevel(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID                 string
-		DesiredBlueVideoBlackLevel string
+		InstanceID                 string `xml:"InstanceID"`
+		DesiredBlueVideoBlackLevel string `xml:"DesiredBlueVideoBlackLevel"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
 	}
-	if request.DesiredBlueVideoBlackLevel, err = soap.MarshalUi2(
+	if request.DesiredBlueVideoBlackLevel, err = soap.MarshalUI2(
 		DesiredBlueVideoBlackLevel,
 	); err != nil {
 		return
@@ -9471,7 +9472,7 @@ func (client *RenderingControl2) SetBlueVideoBlackLevel(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_2,
 		"SetBlueVideoBlackLevel",
@@ -9487,7 +9488,7 @@ func (client *RenderingControl2) SetBlueVideoBlackLevel(
 	return
 }
 
-// GetColorTemperature
+// GetColorTemperature implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -9501,11 +9502,11 @@ func (client *RenderingControl2) GetColorTemperature(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -9514,11 +9515,11 @@ func (client *RenderingControl2) GetColorTemperature(
 
 	// Response structure.
 	response := &struct {
-		CurrentColorTemperature string
+		CurrentColorTemperature string `xml:"CurrentColorTemperature"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_2,
 		"GetColorTemperature",
@@ -9529,7 +9530,7 @@ func (client *RenderingControl2) GetColorTemperature(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if CurrentColorTemperature, err = soap.UnmarshalUi2(
+	if CurrentColorTemperature, err = soap.UnmarshalUI2(
 		response.CurrentColorTemperature,
 	); err != nil {
 		return
@@ -9539,7 +9540,7 @@ func (client *RenderingControl2) GetColorTemperature(
 	return
 }
 
-// SetColorTemperature
+// SetColorTemperature implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -9553,17 +9554,17 @@ func (client *RenderingControl2) SetColorTemperature(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID              string
-		DesiredColorTemperature string
+		InstanceID              string `xml:"InstanceID"`
+		DesiredColorTemperature string `xml:"DesiredColorTemperature"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
 	}
-	if request.DesiredColorTemperature, err = soap.MarshalUi2(
+	if request.DesiredColorTemperature, err = soap.MarshalUI2(
 		DesiredColorTemperature,
 	); err != nil {
 		return
@@ -9574,7 +9575,7 @@ func (client *RenderingControl2) SetColorTemperature(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_2,
 		"SetColorTemperature",
@@ -9590,7 +9591,7 @@ func (client *RenderingControl2) SetColorTemperature(
 	return
 }
 
-// GetHorizontalKeystone
+// GetHorizontalKeystone implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -9604,11 +9605,11 @@ func (client *RenderingControl2) GetHorizontalKeystone(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -9617,11 +9618,11 @@ func (client *RenderingControl2) GetHorizontalKeystone(
 
 	// Response structure.
 	response := &struct {
-		CurrentHorizontalKeystone string
+		CurrentHorizontalKeystone string `xml:"CurrentHorizontalKeystone"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_2,
 		"GetHorizontalKeystone",
@@ -9642,7 +9643,7 @@ func (client *RenderingControl2) GetHorizontalKeystone(
 	return
 }
 
-// SetHorizontalKeystone
+// SetHorizontalKeystone implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -9656,12 +9657,12 @@ func (client *RenderingControl2) SetHorizontalKeystone(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID                string
-		DesiredHorizontalKeystone string
+		InstanceID                string `xml:"InstanceID"`
+		DesiredHorizontalKeystone string `xml:"DesiredHorizontalKeystone"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -9677,7 +9678,7 @@ func (client *RenderingControl2) SetHorizontalKeystone(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_2,
 		"SetHorizontalKeystone",
@@ -9693,7 +9694,7 @@ func (client *RenderingControl2) SetHorizontalKeystone(
 	return
 }
 
-// GetVerticalKeystone
+// GetVerticalKeystone implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -9707,11 +9708,11 @@ func (client *RenderingControl2) GetVerticalKeystone(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
+		InstanceID string `xml:"InstanceID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -9720,11 +9721,11 @@ func (client *RenderingControl2) GetVerticalKeystone(
 
 	// Response structure.
 	response := &struct {
-		CurrentVerticalKeystone string
+		CurrentVerticalKeystone string `xml:"CurrentVerticalKeystone"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_2,
 		"GetVerticalKeystone",
@@ -9745,7 +9746,7 @@ func (client *RenderingControl2) GetVerticalKeystone(
 	return
 }
 
-// SetVerticalKeystone
+// SetVerticalKeystone implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -9759,12 +9760,12 @@ func (client *RenderingControl2) SetVerticalKeystone(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID              string
-		DesiredVerticalKeystone string
+		InstanceID              string `xml:"InstanceID"`
+		DesiredVerticalKeystone string `xml:"DesiredVerticalKeystone"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -9780,7 +9781,7 @@ func (client *RenderingControl2) SetVerticalKeystone(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_2,
 		"SetVerticalKeystone",
@@ -9796,7 +9797,7 @@ func (client *RenderingControl2) SetVerticalKeystone(
 	return
 }
 
-// GetMute
+// GetMute implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -9811,12 +9812,12 @@ func (client *RenderingControl2) GetMute(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-		Channel    string
+		InstanceID string `xml:"InstanceID"`
+		Channel    string `xml:"Channel"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -9830,11 +9831,11 @@ func (client *RenderingControl2) GetMute(
 
 	// Response structure.
 	response := &struct {
-		CurrentMute string
+		CurrentMute string `xml:"CurrentMute"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_2,
 		"GetMute",
@@ -9855,7 +9856,7 @@ func (client *RenderingControl2) GetMute(
 	return
 }
 
-// SetMute
+// SetMute implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -9870,13 +9871,13 @@ func (client *RenderingControl2) SetMute(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID  string
-		Channel     string
-		DesiredMute string
+		InstanceID  string `xml:"InstanceID"`
+		Channel     string `xml:"Channel"`
+		DesiredMute string `xml:"DesiredMute"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -9897,7 +9898,7 @@ func (client *RenderingControl2) SetMute(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_2,
 		"SetMute",
@@ -9913,7 +9914,7 @@ func (client *RenderingControl2) SetMute(
 	return
 }
 
-// GetVolume
+// GetVolume implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -9932,12 +9933,12 @@ func (client *RenderingControl2) GetVolume(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-		Channel    string
+		InstanceID string `xml:"InstanceID"`
+		Channel    string `xml:"Channel"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -9951,11 +9952,11 @@ func (client *RenderingControl2) GetVolume(
 
 	// Response structure.
 	response := &struct {
-		CurrentVolume string
+		CurrentVolume string `xml:"CurrentVolume"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_2,
 		"GetVolume",
@@ -9966,7 +9967,7 @@ func (client *RenderingControl2) GetVolume(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if CurrentVolume, err = soap.UnmarshalUi2(
+	if CurrentVolume, err = soap.UnmarshalUI2(
 		response.CurrentVolume,
 	); err != nil {
 		return
@@ -9976,7 +9977,7 @@ func (client *RenderingControl2) GetVolume(
 	return
 }
 
-// SetVolume
+// SetVolume implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -9993,13 +9994,13 @@ func (client *RenderingControl2) SetVolume(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID    string
-		Channel       string
-		DesiredVolume string
+		InstanceID    string `xml:"InstanceID"`
+		Channel       string `xml:"Channel"`
+		DesiredVolume string `xml:"DesiredVolume"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -10009,7 +10010,7 @@ func (client *RenderingControl2) SetVolume(
 	); err != nil {
 		return
 	}
-	if request.DesiredVolume, err = soap.MarshalUi2(
+	if request.DesiredVolume, err = soap.MarshalUI2(
 		DesiredVolume,
 	); err != nil {
 		return
@@ -10020,7 +10021,7 @@ func (client *RenderingControl2) SetVolume(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_2,
 		"SetVolume",
@@ -10036,7 +10037,7 @@ func (client *RenderingControl2) SetVolume(
 	return
 }
 
-// GetVolumeDB
+// GetVolumeDB implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -10051,12 +10052,12 @@ func (client *RenderingControl2) GetVolumeDB(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-		Channel    string
+		InstanceID string `xml:"InstanceID"`
+		Channel    string `xml:"Channel"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -10070,11 +10071,11 @@ func (client *RenderingControl2) GetVolumeDB(
 
 	// Response structure.
 	response := &struct {
-		CurrentVolume string
+		CurrentVolume string `xml:"CurrentVolume"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_2,
 		"GetVolumeDB",
@@ -10095,7 +10096,7 @@ func (client *RenderingControl2) GetVolumeDB(
 	return
 }
 
-// SetVolumeDB
+// SetVolumeDB implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -10110,13 +10111,13 @@ func (client *RenderingControl2) SetVolumeDB(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID    string
-		Channel       string
-		DesiredVolume string
+		InstanceID    string `xml:"InstanceID"`
+		Channel       string `xml:"Channel"`
+		DesiredVolume string `xml:"DesiredVolume"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -10137,7 +10138,7 @@ func (client *RenderingControl2) SetVolumeDB(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_2,
 		"SetVolumeDB",
@@ -10153,7 +10154,7 @@ func (client *RenderingControl2) SetVolumeDB(
 	return
 }
 
-// GetVolumeDBRange
+// GetVolumeDBRange implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -10169,12 +10170,12 @@ func (client *RenderingControl2) GetVolumeDBRange(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-		Channel    string
+		InstanceID string `xml:"InstanceID"`
+		Channel    string `xml:"Channel"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -10188,12 +10189,12 @@ func (client *RenderingControl2) GetVolumeDBRange(
 
 	// Response structure.
 	response := &struct {
-		MinValue string
-		MaxValue string
+		MinValue string `xml:"MinValue"`
+		MaxValue string `xml:"MaxValue"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_2,
 		"GetVolumeDBRange",
@@ -10219,7 +10220,7 @@ func (client *RenderingControl2) GetVolumeDBRange(
 	return
 }
 
-// GetLoudness
+// GetLoudness implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -10234,12 +10235,12 @@ func (client *RenderingControl2) GetLoudness(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID string
-		Channel    string
+		InstanceID string `xml:"InstanceID"`
+		Channel    string `xml:"Channel"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -10253,11 +10254,11 @@ func (client *RenderingControl2) GetLoudness(
 
 	// Response structure.
 	response := &struct {
-		CurrentLoudness string
+		CurrentLoudness string `xml:"CurrentLoudness"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_2,
 		"GetLoudness",
@@ -10278,7 +10279,7 @@ func (client *RenderingControl2) GetLoudness(
 	return
 }
 
-// SetLoudness
+// SetLoudness implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -10293,13 +10294,13 @@ func (client *RenderingControl2) SetLoudness(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID      string
-		Channel         string
-		DesiredLoudness string
+		InstanceID      string `xml:"InstanceID"`
+		Channel         string `xml:"Channel"`
+		DesiredLoudness string `xml:"DesiredLoudness"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -10320,7 +10321,7 @@ func (client *RenderingControl2) SetLoudness(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_2,
 		"SetLoudness",
@@ -10336,7 +10337,7 @@ func (client *RenderingControl2) SetLoudness(
 	return
 }
 
-// GetStateVariables
+// GetStateVariables implements a UPnP action of the same name.
 func (client *RenderingControl2) GetStateVariables(
 	ctx context.Context,
 	InstanceID uint32,
@@ -10347,12 +10348,12 @@ func (client *RenderingControl2) GetStateVariables(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID        string
-		StateVariableList string
+		InstanceID        string `xml:"InstanceID"`
+		StateVariableList string `xml:"StateVariableList"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -10366,11 +10367,11 @@ func (client *RenderingControl2) GetStateVariables(
 
 	// Response structure.
 	response := &struct {
-		StateVariableValuePairs string
+		StateVariableValuePairs string `xml:"StateVariableValuePairs"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_2,
 		"GetStateVariables",
@@ -10391,7 +10392,7 @@ func (client *RenderingControl2) GetStateVariables(
 	return
 }
 
-// SetStateVariables
+// SetStateVariables implements a UPnP action of the same name.
 func (client *RenderingControl2) SetStateVariables(
 	ctx context.Context,
 	InstanceID uint32,
@@ -10405,15 +10406,15 @@ func (client *RenderingControl2) SetStateVariables(
 ) {
 	// Request structure.
 	request := &struct {
-		InstanceID              string
-		RenderingControlUDN     string
-		ServiceType             string
-		ServiceId               string
-		StateVariableValuePairs string
+		InstanceID              string `xml:"InstanceID"`
+		RenderingControlUDN     string `xml:"RenderingControlUDN"`
+		ServiceType             string `xml:"ServiceType"`
+		ServiceId               string `xml:"ServiceId"`
+		StateVariableValuePairs string `xml:"StateVariableValuePairs"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.InstanceID, err = soap.MarshalUi4(
+	if request.InstanceID, err = soap.MarshalUI4(
 		InstanceID,
 	); err != nil {
 		return
@@ -10442,11 +10443,11 @@ func (client *RenderingControl2) SetStateVariables(
 
 	// Response structure.
 	response := &struct {
-		StateVariableList string
+		StateVariableList string `xml:"StateVariableList"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_RenderingControl_2,
 		"SetStateVariables",
@@ -10566,7 +10567,7 @@ func newScheduledRecording1ClientsFromGenericClients(
 	return clients
 }
 
-// GetSortCapabilities
+// GetSortCapabilities implements a UPnP action of the same name.
 func (client *ScheduledRecording1) GetSortCapabilities(
 	ctx context.Context,
 ) (
@@ -10582,12 +10583,12 @@ func (client *ScheduledRecording1) GetSortCapabilities(
 
 	// Response structure.
 	response := &struct {
-		SortCaps     string
-		SortLevelCap string
+		SortCaps     string `xml:"SortCaps"`
+		SortLevelCap string `xml:"SortLevelCap"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ScheduledRecording_1,
 		"GetSortCapabilities",
@@ -10603,7 +10604,7 @@ func (client *ScheduledRecording1) GetSortCapabilities(
 	); err != nil {
 		return
 	}
-	if SortLevelCap, err = soap.UnmarshalUi4(
+	if SortLevelCap, err = soap.UnmarshalUI4(
 		response.SortLevelCap,
 	); err != nil {
 		return
@@ -10613,7 +10614,7 @@ func (client *ScheduledRecording1) GetSortCapabilities(
 	return
 }
 
-// GetPropertyList
+// GetPropertyList implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -10627,7 +10628,7 @@ func (client *ScheduledRecording1) GetPropertyList(
 ) {
 	// Request structure.
 	request := &struct {
-		DataTypeID string
+		DataTypeID string `xml:"DataTypeID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -10640,11 +10641,11 @@ func (client *ScheduledRecording1) GetPropertyList(
 
 	// Response structure.
 	response := &struct {
-		PropertyList string
+		PropertyList string `xml:"PropertyList"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ScheduledRecording_1,
 		"GetPropertyList",
@@ -10665,7 +10666,7 @@ func (client *ScheduledRecording1) GetPropertyList(
 	return
 }
 
-// GetAllowedValues
+// GetAllowedValues implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -10680,8 +10681,8 @@ func (client *ScheduledRecording1) GetAllowedValues(
 ) {
 	// Request structure.
 	request := &struct {
-		DataTypeID string
-		Filter     string
+		DataTypeID string `xml:"DataTypeID"`
+		Filter     string `xml:"Filter"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -10699,11 +10700,11 @@ func (client *ScheduledRecording1) GetAllowedValues(
 
 	// Response structure.
 	response := &struct {
-		PropertyInfo string
+		PropertyInfo string `xml:"PropertyInfo"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ScheduledRecording_1,
 		"GetAllowedValues",
@@ -10724,7 +10725,7 @@ func (client *ScheduledRecording1) GetAllowedValues(
 	return
 }
 
-// GetStateUpdateID
+// GetStateUpdateID implements a UPnP action of the same name.
 func (client *ScheduledRecording1) GetStateUpdateID(
 	ctx context.Context,
 ) (
@@ -10739,11 +10740,11 @@ func (client *ScheduledRecording1) GetStateUpdateID(
 
 	// Response structure.
 	response := &struct {
-		Id string
+		Id string `xml:"Id"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ScheduledRecording_1,
 		"GetStateUpdateID",
@@ -10754,7 +10755,7 @@ func (client *ScheduledRecording1) GetStateUpdateID(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if Id, err = soap.UnmarshalUi4(
+	if Id, err = soap.UnmarshalUI4(
 		response.Id,
 	); err != nil {
 		return
@@ -10764,7 +10765,7 @@ func (client *ScheduledRecording1) GetStateUpdateID(
 	return
 }
 
-// BrowseRecordSchedules
+// BrowseRecordSchedules implements a UPnP action of the same name.
 func (client *ScheduledRecording1) BrowseRecordSchedules(
 	ctx context.Context,
 	Filter string,
@@ -10780,10 +10781,10 @@ func (client *ScheduledRecording1) BrowseRecordSchedules(
 ) {
 	// Request structure.
 	request := &struct {
-		Filter         string
-		StartingIndex  string
-		RequestedCount string
-		SortCriteria   string
+		Filter         string `xml:"Filter"`
+		StartingIndex  string `xml:"StartingIndex"`
+		RequestedCount string `xml:"RequestedCount"`
+		SortCriteria   string `xml:"SortCriteria"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -10792,12 +10793,12 @@ func (client *ScheduledRecording1) BrowseRecordSchedules(
 	); err != nil {
 		return
 	}
-	if request.StartingIndex, err = soap.MarshalUi4(
+	if request.StartingIndex, err = soap.MarshalUI4(
 		StartingIndex,
 	); err != nil {
 		return
 	}
-	if request.RequestedCount, err = soap.MarshalUi4(
+	if request.RequestedCount, err = soap.MarshalUI4(
 		RequestedCount,
 	); err != nil {
 		return
@@ -10811,14 +10812,14 @@ func (client *ScheduledRecording1) BrowseRecordSchedules(
 
 	// Response structure.
 	response := &struct {
-		Result         string
-		NumberReturned string
-		TotalMatches   string
-		UpdateID       string
+		Result         string `xml:"Result"`
+		NumberReturned string `xml:"NumberReturned"`
+		TotalMatches   string `xml:"TotalMatches"`
+		UpdateID       string `xml:"UpdateID"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ScheduledRecording_1,
 		"BrowseRecordSchedules",
@@ -10834,17 +10835,17 @@ func (client *ScheduledRecording1) BrowseRecordSchedules(
 	); err != nil {
 		return
 	}
-	if NumberReturned, err = soap.UnmarshalUi4(
+	if NumberReturned, err = soap.UnmarshalUI4(
 		response.NumberReturned,
 	); err != nil {
 		return
 	}
-	if TotalMatches, err = soap.UnmarshalUi4(
+	if TotalMatches, err = soap.UnmarshalUI4(
 		response.TotalMatches,
 	); err != nil {
 		return
 	}
-	if UpdateID, err = soap.UnmarshalUi4(
+	if UpdateID, err = soap.UnmarshalUI4(
 		response.UpdateID,
 	); err != nil {
 		return
@@ -10854,7 +10855,7 @@ func (client *ScheduledRecording1) BrowseRecordSchedules(
 	return
 }
 
-// BrowseRecordTasks
+// BrowseRecordTasks implements a UPnP action of the same name.
 func (client *ScheduledRecording1) BrowseRecordTasks(
 	ctx context.Context,
 	RecordScheduleID string,
@@ -10871,11 +10872,11 @@ func (client *ScheduledRecording1) BrowseRecordTasks(
 ) {
 	// Request structure.
 	request := &struct {
-		RecordScheduleID string
-		Filter           string
-		StartingIndex    string
-		RequestedCount   string
-		SortCriteria     string
+		RecordScheduleID string `xml:"RecordScheduleID"`
+		Filter           string `xml:"Filter"`
+		StartingIndex    string `xml:"StartingIndex"`
+		RequestedCount   string `xml:"RequestedCount"`
+		SortCriteria     string `xml:"SortCriteria"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -10889,12 +10890,12 @@ func (client *ScheduledRecording1) BrowseRecordTasks(
 	); err != nil {
 		return
 	}
-	if request.StartingIndex, err = soap.MarshalUi4(
+	if request.StartingIndex, err = soap.MarshalUI4(
 		StartingIndex,
 	); err != nil {
 		return
 	}
-	if request.RequestedCount, err = soap.MarshalUi4(
+	if request.RequestedCount, err = soap.MarshalUI4(
 		RequestedCount,
 	); err != nil {
 		return
@@ -10908,14 +10909,14 @@ func (client *ScheduledRecording1) BrowseRecordTasks(
 
 	// Response structure.
 	response := &struct {
-		Result         string
-		NumberReturned string
-		TotalMatches   string
-		UpdateID       string
+		Result         string `xml:"Result"`
+		NumberReturned string `xml:"NumberReturned"`
+		TotalMatches   string `xml:"TotalMatches"`
+		UpdateID       string `xml:"UpdateID"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ScheduledRecording_1,
 		"BrowseRecordTasks",
@@ -10931,17 +10932,17 @@ func (client *ScheduledRecording1) BrowseRecordTasks(
 	); err != nil {
 		return
 	}
-	if NumberReturned, err = soap.UnmarshalUi4(
+	if NumberReturned, err = soap.UnmarshalUI4(
 		response.NumberReturned,
 	); err != nil {
 		return
 	}
-	if TotalMatches, err = soap.UnmarshalUi4(
+	if TotalMatches, err = soap.UnmarshalUI4(
 		response.TotalMatches,
 	); err != nil {
 		return
 	}
-	if UpdateID, err = soap.UnmarshalUi4(
+	if UpdateID, err = soap.UnmarshalUI4(
 		response.UpdateID,
 	); err != nil {
 		return
@@ -10951,7 +10952,7 @@ func (client *ScheduledRecording1) BrowseRecordTasks(
 	return
 }
 
-// CreateRecordSchedule
+// CreateRecordSchedule implements a UPnP action of the same name.
 func (client *ScheduledRecording1) CreateRecordSchedule(
 	ctx context.Context,
 	Elements string,
@@ -10963,7 +10964,7 @@ func (client *ScheduledRecording1) CreateRecordSchedule(
 ) {
 	// Request structure.
 	request := &struct {
-		Elements string
+		Elements string `xml:"Elements"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -10976,13 +10977,13 @@ func (client *ScheduledRecording1) CreateRecordSchedule(
 
 	// Response structure.
 	response := &struct {
-		RecordScheduleID string
-		Result           string
-		UpdateID         string
+		RecordScheduleID string `xml:"RecordScheduleID"`
+		Result           string `xml:"Result"`
+		UpdateID         string `xml:"UpdateID"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ScheduledRecording_1,
 		"CreateRecordSchedule",
@@ -11003,7 +11004,7 @@ func (client *ScheduledRecording1) CreateRecordSchedule(
 	); err != nil {
 		return
 	}
-	if UpdateID, err = soap.UnmarshalUi4(
+	if UpdateID, err = soap.UnmarshalUI4(
 		response.UpdateID,
 	); err != nil {
 		return
@@ -11013,7 +11014,7 @@ func (client *ScheduledRecording1) CreateRecordSchedule(
 	return
 }
 
-// DeleteRecordSchedule
+// DeleteRecordSchedule implements a UPnP action of the same name.
 func (client *ScheduledRecording1) DeleteRecordSchedule(
 	ctx context.Context,
 	RecordScheduleID string,
@@ -11022,7 +11023,7 @@ func (client *ScheduledRecording1) DeleteRecordSchedule(
 ) {
 	// Request structure.
 	request := &struct {
-		RecordScheduleID string
+		RecordScheduleID string `xml:"RecordScheduleID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -11037,7 +11038,7 @@ func (client *ScheduledRecording1) DeleteRecordSchedule(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ScheduledRecording_1,
 		"DeleteRecordSchedule",
@@ -11053,7 +11054,7 @@ func (client *ScheduledRecording1) DeleteRecordSchedule(
 	return
 }
 
-// GetRecordSchedule
+// GetRecordSchedule implements a UPnP action of the same name.
 func (client *ScheduledRecording1) GetRecordSchedule(
 	ctx context.Context,
 	RecordScheduleID string,
@@ -11065,8 +11066,8 @@ func (client *ScheduledRecording1) GetRecordSchedule(
 ) {
 	// Request structure.
 	request := &struct {
-		RecordScheduleID string
-		Filter           string
+		RecordScheduleID string `xml:"RecordScheduleID"`
+		Filter           string `xml:"Filter"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -11084,12 +11085,12 @@ func (client *ScheduledRecording1) GetRecordSchedule(
 
 	// Response structure.
 	response := &struct {
-		Result   string
-		UpdateID string
+		Result   string `xml:"Result"`
+		UpdateID string `xml:"UpdateID"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ScheduledRecording_1,
 		"GetRecordSchedule",
@@ -11105,7 +11106,7 @@ func (client *ScheduledRecording1) GetRecordSchedule(
 	); err != nil {
 		return
 	}
-	if UpdateID, err = soap.UnmarshalUi4(
+	if UpdateID, err = soap.UnmarshalUI4(
 		response.UpdateID,
 	); err != nil {
 		return
@@ -11115,7 +11116,7 @@ func (client *ScheduledRecording1) GetRecordSchedule(
 	return
 }
 
-// EnableRecordSchedule
+// EnableRecordSchedule implements a UPnP action of the same name.
 func (client *ScheduledRecording1) EnableRecordSchedule(
 	ctx context.Context,
 	RecordScheduleID string,
@@ -11124,7 +11125,7 @@ func (client *ScheduledRecording1) EnableRecordSchedule(
 ) {
 	// Request structure.
 	request := &struct {
-		RecordScheduleID string
+		RecordScheduleID string `xml:"RecordScheduleID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -11139,7 +11140,7 @@ func (client *ScheduledRecording1) EnableRecordSchedule(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ScheduledRecording_1,
 		"EnableRecordSchedule",
@@ -11155,7 +11156,7 @@ func (client *ScheduledRecording1) EnableRecordSchedule(
 	return
 }
 
-// DisableRecordSchedule
+// DisableRecordSchedule implements a UPnP action of the same name.
 func (client *ScheduledRecording1) DisableRecordSchedule(
 	ctx context.Context,
 	RecordScheduleID string,
@@ -11164,7 +11165,7 @@ func (client *ScheduledRecording1) DisableRecordSchedule(
 ) {
 	// Request structure.
 	request := &struct {
-		RecordScheduleID string
+		RecordScheduleID string `xml:"RecordScheduleID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -11179,7 +11180,7 @@ func (client *ScheduledRecording1) DisableRecordSchedule(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ScheduledRecording_1,
 		"DisableRecordSchedule",
@@ -11195,7 +11196,7 @@ func (client *ScheduledRecording1) DisableRecordSchedule(
 	return
 }
 
-// DeleteRecordTask
+// DeleteRecordTask implements a UPnP action of the same name.
 func (client *ScheduledRecording1) DeleteRecordTask(
 	ctx context.Context,
 	RecordTaskID string,
@@ -11204,7 +11205,7 @@ func (client *ScheduledRecording1) DeleteRecordTask(
 ) {
 	// Request structure.
 	request := &struct {
-		RecordTaskID string
+		RecordTaskID string `xml:"RecordTaskID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -11219,7 +11220,7 @@ func (client *ScheduledRecording1) DeleteRecordTask(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ScheduledRecording_1,
 		"DeleteRecordTask",
@@ -11235,7 +11236,7 @@ func (client *ScheduledRecording1) DeleteRecordTask(
 	return
 }
 
-// GetRecordTask
+// GetRecordTask implements a UPnP action of the same name.
 func (client *ScheduledRecording1) GetRecordTask(
 	ctx context.Context,
 	RecordTaskID string,
@@ -11247,8 +11248,8 @@ func (client *ScheduledRecording1) GetRecordTask(
 ) {
 	// Request structure.
 	request := &struct {
-		RecordTaskID string
-		Filter       string
+		RecordTaskID string `xml:"RecordTaskID"`
+		Filter       string `xml:"Filter"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -11266,12 +11267,12 @@ func (client *ScheduledRecording1) GetRecordTask(
 
 	// Response structure.
 	response := &struct {
-		Result   string
-		UpdateID string
+		Result   string `xml:"Result"`
+		UpdateID string `xml:"UpdateID"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ScheduledRecording_1,
 		"GetRecordTask",
@@ -11287,7 +11288,7 @@ func (client *ScheduledRecording1) GetRecordTask(
 	); err != nil {
 		return
 	}
-	if UpdateID, err = soap.UnmarshalUi4(
+	if UpdateID, err = soap.UnmarshalUI4(
 		response.UpdateID,
 	); err != nil {
 		return
@@ -11297,7 +11298,7 @@ func (client *ScheduledRecording1) GetRecordTask(
 	return
 }
 
-// EnableRecordTask
+// EnableRecordTask implements a UPnP action of the same name.
 func (client *ScheduledRecording1) EnableRecordTask(
 	ctx context.Context,
 	RecordTaskID string,
@@ -11306,7 +11307,7 @@ func (client *ScheduledRecording1) EnableRecordTask(
 ) {
 	// Request structure.
 	request := &struct {
-		RecordTaskID string
+		RecordTaskID string `xml:"RecordTaskID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -11321,7 +11322,7 @@ func (client *ScheduledRecording1) EnableRecordTask(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ScheduledRecording_1,
 		"EnableRecordTask",
@@ -11337,7 +11338,7 @@ func (client *ScheduledRecording1) EnableRecordTask(
 	return
 }
 
-// DisableRecordTask
+// DisableRecordTask implements a UPnP action of the same name.
 func (client *ScheduledRecording1) DisableRecordTask(
 	ctx context.Context,
 	RecordTaskID string,
@@ -11346,7 +11347,7 @@ func (client *ScheduledRecording1) DisableRecordTask(
 ) {
 	// Request structure.
 	request := &struct {
-		RecordTaskID string
+		RecordTaskID string `xml:"RecordTaskID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -11361,7 +11362,7 @@ func (client *ScheduledRecording1) DisableRecordTask(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ScheduledRecording_1,
 		"DisableRecordTask",
@@ -11377,7 +11378,7 @@ func (client *ScheduledRecording1) DisableRecordTask(
 	return
 }
 
-// ResetRecordTask
+// ResetRecordTask implements a UPnP action of the same name.
 func (client *ScheduledRecording1) ResetRecordTask(
 	ctx context.Context,
 	RecordTaskID string,
@@ -11386,7 +11387,7 @@ func (client *ScheduledRecording1) ResetRecordTask(
 ) {
 	// Request structure.
 	request := &struct {
-		RecordTaskID string
+		RecordTaskID string `xml:"RecordTaskID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -11401,7 +11402,7 @@ func (client *ScheduledRecording1) ResetRecordTask(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ScheduledRecording_1,
 		"ResetRecordTask",
@@ -11417,7 +11418,7 @@ func (client *ScheduledRecording1) ResetRecordTask(
 	return
 }
 
-// GetRecordScheduleConflicts
+// GetRecordScheduleConflicts implements a UPnP action of the same name.
 func (client *ScheduledRecording1) GetRecordScheduleConflicts(
 	ctx context.Context,
 	RecordScheduleID string,
@@ -11428,7 +11429,7 @@ func (client *ScheduledRecording1) GetRecordScheduleConflicts(
 ) {
 	// Request structure.
 	request := &struct {
-		RecordScheduleID string
+		RecordScheduleID string `xml:"RecordScheduleID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -11441,12 +11442,12 @@ func (client *ScheduledRecording1) GetRecordScheduleConflicts(
 
 	// Response structure.
 	response := &struct {
-		RecordScheduleConflictIDList string
-		UpdateID                     string
+		RecordScheduleConflictIDList string `xml:"RecordScheduleConflictIDList"`
+		UpdateID                     string `xml:"UpdateID"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ScheduledRecording_1,
 		"GetRecordScheduleConflicts",
@@ -11462,7 +11463,7 @@ func (client *ScheduledRecording1) GetRecordScheduleConflicts(
 	); err != nil {
 		return
 	}
-	if UpdateID, err = soap.UnmarshalUi4(
+	if UpdateID, err = soap.UnmarshalUI4(
 		response.UpdateID,
 	); err != nil {
 		return
@@ -11472,7 +11473,7 @@ func (client *ScheduledRecording1) GetRecordScheduleConflicts(
 	return
 }
 
-// GetRecordTaskConflicts
+// GetRecordTaskConflicts implements a UPnP action of the same name.
 func (client *ScheduledRecording1) GetRecordTaskConflicts(
 	ctx context.Context,
 	RecordTaskID string,
@@ -11483,7 +11484,7 @@ func (client *ScheduledRecording1) GetRecordTaskConflicts(
 ) {
 	// Request structure.
 	request := &struct {
-		RecordTaskID string
+		RecordTaskID string `xml:"RecordTaskID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -11496,12 +11497,12 @@ func (client *ScheduledRecording1) GetRecordTaskConflicts(
 
 	// Response structure.
 	response := &struct {
-		RecordTaskConflictIDList string
-		UpdateID                 string
+		RecordTaskConflictIDList string `xml:"RecordTaskConflictIDList"`
+		UpdateID                 string `xml:"UpdateID"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ScheduledRecording_1,
 		"GetRecordTaskConflicts",
@@ -11517,7 +11518,7 @@ func (client *ScheduledRecording1) GetRecordTaskConflicts(
 	); err != nil {
 		return
 	}
-	if UpdateID, err = soap.UnmarshalUi4(
+	if UpdateID, err = soap.UnmarshalUI4(
 		response.UpdateID,
 	); err != nil {
 		return
@@ -11626,7 +11627,7 @@ func newScheduledRecording2ClientsFromGenericClients(
 	return clients
 }
 
-// GetSortCapabilities
+// GetSortCapabilities implements a UPnP action of the same name.
 func (client *ScheduledRecording2) GetSortCapabilities(
 	ctx context.Context,
 ) (
@@ -11642,12 +11643,12 @@ func (client *ScheduledRecording2) GetSortCapabilities(
 
 	// Response structure.
 	response := &struct {
-		SortCaps     string
-		SortLevelCap string
+		SortCaps     string `xml:"SortCaps"`
+		SortLevelCap string `xml:"SortLevelCap"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ScheduledRecording_2,
 		"GetSortCapabilities",
@@ -11663,7 +11664,7 @@ func (client *ScheduledRecording2) GetSortCapabilities(
 	); err != nil {
 		return
 	}
-	if SortLevelCap, err = soap.UnmarshalUi4(
+	if SortLevelCap, err = soap.UnmarshalUI4(
 		response.SortLevelCap,
 	); err != nil {
 		return
@@ -11673,7 +11674,7 @@ func (client *ScheduledRecording2) GetSortCapabilities(
 	return
 }
 
-// GetPropertyList
+// GetPropertyList implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -11687,7 +11688,7 @@ func (client *ScheduledRecording2) GetPropertyList(
 ) {
 	// Request structure.
 	request := &struct {
-		DataTypeID string
+		DataTypeID string `xml:"DataTypeID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -11700,11 +11701,11 @@ func (client *ScheduledRecording2) GetPropertyList(
 
 	// Response structure.
 	response := &struct {
-		PropertyList string
+		PropertyList string `xml:"PropertyList"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ScheduledRecording_2,
 		"GetPropertyList",
@@ -11725,7 +11726,7 @@ func (client *ScheduledRecording2) GetPropertyList(
 	return
 }
 
-// GetAllowedValues
+// GetAllowedValues implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -11740,8 +11741,8 @@ func (client *ScheduledRecording2) GetAllowedValues(
 ) {
 	// Request structure.
 	request := &struct {
-		DataTypeID string
-		Filter     string
+		DataTypeID string `xml:"DataTypeID"`
+		Filter     string `xml:"Filter"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -11759,11 +11760,11 @@ func (client *ScheduledRecording2) GetAllowedValues(
 
 	// Response structure.
 	response := &struct {
-		PropertyInfo string
+		PropertyInfo string `xml:"PropertyInfo"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ScheduledRecording_2,
 		"GetAllowedValues",
@@ -11784,7 +11785,7 @@ func (client *ScheduledRecording2) GetAllowedValues(
 	return
 }
 
-// GetStateUpdateID
+// GetStateUpdateID implements a UPnP action of the same name.
 func (client *ScheduledRecording2) GetStateUpdateID(
 	ctx context.Context,
 ) (
@@ -11799,11 +11800,11 @@ func (client *ScheduledRecording2) GetStateUpdateID(
 
 	// Response structure.
 	response := &struct {
-		Id string
+		Id string `xml:"Id"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ScheduledRecording_2,
 		"GetStateUpdateID",
@@ -11814,7 +11815,7 @@ func (client *ScheduledRecording2) GetStateUpdateID(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if Id, err = soap.UnmarshalUi4(
+	if Id, err = soap.UnmarshalUI4(
 		response.Id,
 	); err != nil {
 		return
@@ -11824,7 +11825,7 @@ func (client *ScheduledRecording2) GetStateUpdateID(
 	return
 }
 
-// BrowseRecordSchedules
+// BrowseRecordSchedules implements a UPnP action of the same name.
 func (client *ScheduledRecording2) BrowseRecordSchedules(
 	ctx context.Context,
 	Filter string,
@@ -11840,10 +11841,10 @@ func (client *ScheduledRecording2) BrowseRecordSchedules(
 ) {
 	// Request structure.
 	request := &struct {
-		Filter         string
-		StartingIndex  string
-		RequestedCount string
-		SortCriteria   string
+		Filter         string `xml:"Filter"`
+		StartingIndex  string `xml:"StartingIndex"`
+		RequestedCount string `xml:"RequestedCount"`
+		SortCriteria   string `xml:"SortCriteria"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -11852,12 +11853,12 @@ func (client *ScheduledRecording2) BrowseRecordSchedules(
 	); err != nil {
 		return
 	}
-	if request.StartingIndex, err = soap.MarshalUi4(
+	if request.StartingIndex, err = soap.MarshalUI4(
 		StartingIndex,
 	); err != nil {
 		return
 	}
-	if request.RequestedCount, err = soap.MarshalUi4(
+	if request.RequestedCount, err = soap.MarshalUI4(
 		RequestedCount,
 	); err != nil {
 		return
@@ -11871,14 +11872,14 @@ func (client *ScheduledRecording2) BrowseRecordSchedules(
 
 	// Response structure.
 	response := &struct {
-		Result         string
-		NumberReturned string
-		TotalMatches   string
-		UpdateID       string
+		Result         string `xml:"Result"`
+		NumberReturned string `xml:"NumberReturned"`
+		TotalMatches   string `xml:"TotalMatches"`
+		UpdateID       string `xml:"UpdateID"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ScheduledRecording_2,
 		"BrowseRecordSchedules",
@@ -11894,17 +11895,17 @@ func (client *ScheduledRecording2) BrowseRecordSchedules(
 	); err != nil {
 		return
 	}
-	if NumberReturned, err = soap.UnmarshalUi4(
+	if NumberReturned, err = soap.UnmarshalUI4(
 		response.NumberReturned,
 	); err != nil {
 		return
 	}
-	if TotalMatches, err = soap.UnmarshalUi4(
+	if TotalMatches, err = soap.UnmarshalUI4(
 		response.TotalMatches,
 	); err != nil {
 		return
 	}
-	if UpdateID, err = soap.UnmarshalUi4(
+	if UpdateID, err = soap.UnmarshalUI4(
 		response.UpdateID,
 	); err != nil {
 		return
@@ -11914,7 +11915,7 @@ func (client *ScheduledRecording2) BrowseRecordSchedules(
 	return
 }
 
-// BrowseRecordTasks
+// BrowseRecordTasks implements a UPnP action of the same name.
 func (client *ScheduledRecording2) BrowseRecordTasks(
 	ctx context.Context,
 	RecordScheduleID string,
@@ -11931,11 +11932,11 @@ func (client *ScheduledRecording2) BrowseRecordTasks(
 ) {
 	// Request structure.
 	request := &struct {
-		RecordScheduleID string
-		Filter           string
-		StartingIndex    string
-		RequestedCount   string
-		SortCriteria     string
+		RecordScheduleID string `xml:"RecordScheduleID"`
+		Filter           string `xml:"Filter"`
+		StartingIndex    string `xml:"StartingIndex"`
+		RequestedCount   string `xml:"RequestedCount"`
+		SortCriteria     string `xml:"SortCriteria"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -11949,12 +11950,12 @@ func (client *ScheduledRecording2) BrowseRecordTasks(
 	); err != nil {
 		return
 	}
-	if request.StartingIndex, err = soap.MarshalUi4(
+	if request.StartingIndex, err = soap.MarshalUI4(
 		StartingIndex,
 	); err != nil {
 		return
 	}
-	if request.RequestedCount, err = soap.MarshalUi4(
+	if request.RequestedCount, err = soap.MarshalUI4(
 		RequestedCount,
 	); err != nil {
 		return
@@ -11968,14 +11969,14 @@ func (client *ScheduledRecording2) BrowseRecordTasks(
 
 	// Response structure.
 	response := &struct {
-		Result         string
-		NumberReturned string
-		TotalMatches   string
-		UpdateID       string
+		Result         string `xml:"Result"`
+		NumberReturned string `xml:"NumberReturned"`
+		TotalMatches   string `xml:"TotalMatches"`
+		UpdateID       string `xml:"UpdateID"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ScheduledRecording_2,
 		"BrowseRecordTasks",
@@ -11991,17 +11992,17 @@ func (client *ScheduledRecording2) BrowseRecordTasks(
 	); err != nil {
 		return
 	}
-	if NumberReturned, err = soap.UnmarshalUi4(
+	if NumberReturned, err = soap.UnmarshalUI4(
 		response.NumberReturned,
 	); err != nil {
 		return
 	}
-	if TotalMatches, err = soap.UnmarshalUi4(
+	if TotalMatches, err = soap.UnmarshalUI4(
 		response.TotalMatches,
 	); err != nil {
 		return
 	}
-	if UpdateID, err = soap.UnmarshalUi4(
+	if UpdateID, err = soap.UnmarshalUI4(
 		response.UpdateID,
 	); err != nil {
 		return
@@ -12011,7 +12012,7 @@ func (client *ScheduledRecording2) BrowseRecordTasks(
 	return
 }
 
-// CreateRecordSchedule
+// CreateRecordSchedule implements a UPnP action of the same name.
 func (client *ScheduledRecording2) CreateRecordSchedule(
 	ctx context.Context,
 	Elements string,
@@ -12023,7 +12024,7 @@ func (client *ScheduledRecording2) CreateRecordSchedule(
 ) {
 	// Request structure.
 	request := &struct {
-		Elements string
+		Elements string `xml:"Elements"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -12036,13 +12037,13 @@ func (client *ScheduledRecording2) CreateRecordSchedule(
 
 	// Response structure.
 	response := &struct {
-		RecordScheduleID string
-		Result           string
-		UpdateID         string
+		RecordScheduleID string `xml:"RecordScheduleID"`
+		Result           string `xml:"Result"`
+		UpdateID         string `xml:"UpdateID"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ScheduledRecording_2,
 		"CreateRecordSchedule",
@@ -12063,7 +12064,7 @@ func (client *ScheduledRecording2) CreateRecordSchedule(
 	); err != nil {
 		return
 	}
-	if UpdateID, err = soap.UnmarshalUi4(
+	if UpdateID, err = soap.UnmarshalUI4(
 		response.UpdateID,
 	); err != nil {
 		return
@@ -12073,7 +12074,7 @@ func (client *ScheduledRecording2) CreateRecordSchedule(
 	return
 }
 
-// DeleteRecordSchedule
+// DeleteRecordSchedule implements a UPnP action of the same name.
 func (client *ScheduledRecording2) DeleteRecordSchedule(
 	ctx context.Context,
 	RecordScheduleID string,
@@ -12082,7 +12083,7 @@ func (client *ScheduledRecording2) DeleteRecordSchedule(
 ) {
 	// Request structure.
 	request := &struct {
-		RecordScheduleID string
+		RecordScheduleID string `xml:"RecordScheduleID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -12097,7 +12098,7 @@ func (client *ScheduledRecording2) DeleteRecordSchedule(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ScheduledRecording_2,
 		"DeleteRecordSchedule",
@@ -12113,7 +12114,7 @@ func (client *ScheduledRecording2) DeleteRecordSchedule(
 	return
 }
 
-// GetRecordSchedule
+// GetRecordSchedule implements a UPnP action of the same name.
 func (client *ScheduledRecording2) GetRecordSchedule(
 	ctx context.Context,
 	RecordScheduleID string,
@@ -12125,8 +12126,8 @@ func (client *ScheduledRecording2) GetRecordSchedule(
 ) {
 	// Request structure.
 	request := &struct {
-		RecordScheduleID string
-		Filter           string
+		RecordScheduleID string `xml:"RecordScheduleID"`
+		Filter           string `xml:"Filter"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -12144,12 +12145,12 @@ func (client *ScheduledRecording2) GetRecordSchedule(
 
 	// Response structure.
 	response := &struct {
-		Result   string
-		UpdateID string
+		Result   string `xml:"Result"`
+		UpdateID string `xml:"UpdateID"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ScheduledRecording_2,
 		"GetRecordSchedule",
@@ -12165,7 +12166,7 @@ func (client *ScheduledRecording2) GetRecordSchedule(
 	); err != nil {
 		return
 	}
-	if UpdateID, err = soap.UnmarshalUi4(
+	if UpdateID, err = soap.UnmarshalUI4(
 		response.UpdateID,
 	); err != nil {
 		return
@@ -12175,7 +12176,7 @@ func (client *ScheduledRecording2) GetRecordSchedule(
 	return
 }
 
-// EnableRecordSchedule
+// EnableRecordSchedule implements a UPnP action of the same name.
 func (client *ScheduledRecording2) EnableRecordSchedule(
 	ctx context.Context,
 	RecordScheduleID string,
@@ -12184,7 +12185,7 @@ func (client *ScheduledRecording2) EnableRecordSchedule(
 ) {
 	// Request structure.
 	request := &struct {
-		RecordScheduleID string
+		RecordScheduleID string `xml:"RecordScheduleID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -12199,7 +12200,7 @@ func (client *ScheduledRecording2) EnableRecordSchedule(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ScheduledRecording_2,
 		"EnableRecordSchedule",
@@ -12215,7 +12216,7 @@ func (client *ScheduledRecording2) EnableRecordSchedule(
 	return
 }
 
-// DisableRecordSchedule
+// DisableRecordSchedule implements a UPnP action of the same name.
 func (client *ScheduledRecording2) DisableRecordSchedule(
 	ctx context.Context,
 	RecordScheduleID string,
@@ -12224,7 +12225,7 @@ func (client *ScheduledRecording2) DisableRecordSchedule(
 ) {
 	// Request structure.
 	request := &struct {
-		RecordScheduleID string
+		RecordScheduleID string `xml:"RecordScheduleID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -12239,7 +12240,7 @@ func (client *ScheduledRecording2) DisableRecordSchedule(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ScheduledRecording_2,
 		"DisableRecordSchedule",
@@ -12255,7 +12256,7 @@ func (client *ScheduledRecording2) DisableRecordSchedule(
 	return
 }
 
-// DeleteRecordTask
+// DeleteRecordTask implements a UPnP action of the same name.
 func (client *ScheduledRecording2) DeleteRecordTask(
 	ctx context.Context,
 	RecordTaskID string,
@@ -12264,7 +12265,7 @@ func (client *ScheduledRecording2) DeleteRecordTask(
 ) {
 	// Request structure.
 	request := &struct {
-		RecordTaskID string
+		RecordTaskID string `xml:"RecordTaskID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -12279,7 +12280,7 @@ func (client *ScheduledRecording2) DeleteRecordTask(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ScheduledRecording_2,
 		"DeleteRecordTask",
@@ -12295,7 +12296,7 @@ func (client *ScheduledRecording2) DeleteRecordTask(
 	return
 }
 
-// GetRecordTask
+// GetRecordTask implements a UPnP action of the same name.
 func (client *ScheduledRecording2) GetRecordTask(
 	ctx context.Context,
 	RecordTaskID string,
@@ -12307,8 +12308,8 @@ func (client *ScheduledRecording2) GetRecordTask(
 ) {
 	// Request structure.
 	request := &struct {
-		RecordTaskID string
-		Filter       string
+		RecordTaskID string `xml:"RecordTaskID"`
+		Filter       string `xml:"Filter"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -12326,12 +12327,12 @@ func (client *ScheduledRecording2) GetRecordTask(
 
 	// Response structure.
 	response := &struct {
-		Result   string
-		UpdateID string
+		Result   string `xml:"Result"`
+		UpdateID string `xml:"UpdateID"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ScheduledRecording_2,
 		"GetRecordTask",
@@ -12347,7 +12348,7 @@ func (client *ScheduledRecording2) GetRecordTask(
 	); err != nil {
 		return
 	}
-	if UpdateID, err = soap.UnmarshalUi4(
+	if UpdateID, err = soap.UnmarshalUI4(
 		response.UpdateID,
 	); err != nil {
 		return
@@ -12357,7 +12358,7 @@ func (client *ScheduledRecording2) GetRecordTask(
 	return
 }
 
-// EnableRecordTask
+// EnableRecordTask implements a UPnP action of the same name.
 func (client *ScheduledRecording2) EnableRecordTask(
 	ctx context.Context,
 	RecordTaskID string,
@@ -12366,7 +12367,7 @@ func (client *ScheduledRecording2) EnableRecordTask(
 ) {
 	// Request structure.
 	request := &struct {
-		RecordTaskID string
+		RecordTaskID string `xml:"RecordTaskID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -12381,7 +12382,7 @@ func (client *ScheduledRecording2) EnableRecordTask(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ScheduledRecording_2,
 		"EnableRecordTask",
@@ -12397,7 +12398,7 @@ func (client *ScheduledRecording2) EnableRecordTask(
 	return
 }
 
-// DisableRecordTask
+// DisableRecordTask implements a UPnP action of the same name.
 func (client *ScheduledRecording2) DisableRecordTask(
 	ctx context.Context,
 	RecordTaskID string,
@@ -12406,7 +12407,7 @@ func (client *ScheduledRecording2) DisableRecordTask(
 ) {
 	// Request structure.
 	request := &struct {
-		RecordTaskID string
+		RecordTaskID string `xml:"RecordTaskID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -12421,7 +12422,7 @@ func (client *ScheduledRecording2) DisableRecordTask(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ScheduledRecording_2,
 		"DisableRecordTask",
@@ -12437,7 +12438,7 @@ func (client *ScheduledRecording2) DisableRecordTask(
 	return
 }
 
-// ResetRecordTask
+// ResetRecordTask implements a UPnP action of the same name.
 func (client *ScheduledRecording2) ResetRecordTask(
 	ctx context.Context,
 	RecordTaskID string,
@@ -12446,7 +12447,7 @@ func (client *ScheduledRecording2) ResetRecordTask(
 ) {
 	// Request structure.
 	request := &struct {
-		RecordTaskID string
+		RecordTaskID string `xml:"RecordTaskID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -12461,7 +12462,7 @@ func (client *ScheduledRecording2) ResetRecordTask(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ScheduledRecording_2,
 		"ResetRecordTask",
@@ -12477,7 +12478,7 @@ func (client *ScheduledRecording2) ResetRecordTask(
 	return
 }
 
-// GetRecordScheduleConflicts
+// GetRecordScheduleConflicts implements a UPnP action of the same name.
 func (client *ScheduledRecording2) GetRecordScheduleConflicts(
 	ctx context.Context,
 	RecordScheduleID string,
@@ -12488,7 +12489,7 @@ func (client *ScheduledRecording2) GetRecordScheduleConflicts(
 ) {
 	// Request structure.
 	request := &struct {
-		RecordScheduleID string
+		RecordScheduleID string `xml:"RecordScheduleID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -12501,12 +12502,12 @@ func (client *ScheduledRecording2) GetRecordScheduleConflicts(
 
 	// Response structure.
 	response := &struct {
-		RecordScheduleConflictIDList string
-		UpdateID                     string
+		RecordScheduleConflictIDList string `xml:"RecordScheduleConflictIDList"`
+		UpdateID                     string `xml:"UpdateID"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ScheduledRecording_2,
 		"GetRecordScheduleConflicts",
@@ -12522,7 +12523,7 @@ func (client *ScheduledRecording2) GetRecordScheduleConflicts(
 	); err != nil {
 		return
 	}
-	if UpdateID, err = soap.UnmarshalUi4(
+	if UpdateID, err = soap.UnmarshalUI4(
 		response.UpdateID,
 	); err != nil {
 		return
@@ -12532,7 +12533,7 @@ func (client *ScheduledRecording2) GetRecordScheduleConflicts(
 	return
 }
 
-// GetRecordTaskConflicts
+// GetRecordTaskConflicts implements a UPnP action of the same name.
 func (client *ScheduledRecording2) GetRecordTaskConflicts(
 	ctx context.Context,
 	RecordTaskID string,
@@ -12543,7 +12544,7 @@ func (client *ScheduledRecording2) GetRecordTaskConflicts(
 ) {
 	// Request structure.
 	request := &struct {
-		RecordTaskID string
+		RecordTaskID string `xml:"RecordTaskID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -12556,12 +12557,12 @@ func (client *ScheduledRecording2) GetRecordTaskConflicts(
 
 	// Response structure.
 	response := &struct {
-		RecordTaskConflictIDList string
-		UpdateID                 string
+		RecordTaskConflictIDList string `xml:"RecordTaskConflictIDList"`
+		UpdateID                 string `xml:"UpdateID"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_ScheduledRecording_2,
 		"GetRecordTaskConflicts",
@@ -12577,7 +12578,7 @@ func (client *ScheduledRecording2) GetRecordTaskConflicts(
 	); err != nil {
 		return
 	}
-	if UpdateID, err = soap.UnmarshalUi4(
+	if UpdateID, err = soap.UnmarshalUI4(
 		response.UpdateID,
 	); err != nil {
 		return

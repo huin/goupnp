@@ -9,6 +9,7 @@ import (
 	"github.com/huin/goupnp/v2/dcps/internetgateway1"
 	"github.com/huin/goupnp/v2/dcps/internetgateway2"
 	"github.com/huin/goupnp/v2/discover"
+	"github.com/huin/goupnp/v2/metadata"
 )
 
 // Use discovered WANPPPConnection1 services to find external IP addresses.
@@ -124,7 +125,7 @@ func Example_ReuseDiscoveredDevice() {
 		len(locations),
 	)
 	for _, location := range locations {
-		if _, err := discover.DeviceByURL(ctx, location); err != nil {
+		if _, err := metadata.RequestRootDevice(ctx, location); err != nil {
 			fmt.Fprintf(
 				os.Stderr,
 				"  Failed to reacquire device at %s: %v\n",

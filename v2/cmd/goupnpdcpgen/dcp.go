@@ -12,23 +12,23 @@ import (
 	"github.com/huin/goutil/codegen"
 )
 
-// DCP collects together information about a UPnP Device Control Protocol.
-type DCP struct {
-	Metadata     DCPMetadata
-	DeviceTypes  map[string]*URNParts
-	ServiceTypes map[string]*URNParts
-	Services     []SCPDWithURN
+// dcp collects together information about a UPnP Device Control Protocol.
+type dcp struct {
+	Metadata     dcpMetadata
+	DeviceTypes  map[string]*urnParts
+	ServiceTypes map[string]*urnParts
+	Services     []scpdWithURN
 }
 
-func newDCP(metadata DCPMetadata) *DCP {
-	return &DCP{
+func newDCP(metadata dcpMetadata) *dcp {
+	return &dcp{
 		Metadata:     metadata,
-		DeviceTypes:  make(map[string]*URNParts),
-		ServiceTypes: make(map[string]*URNParts),
+		DeviceTypes:  make(map[string]*urnParts),
+		ServiceTypes: make(map[string]*urnParts),
 	}
 }
 
-func (dcp *DCP) processZipFile(filename string) error {
+func (dcp *dcp) processZipFile(filename string) error {
 	archive, err := zip.OpenReader(filename)
 	if err != nil {
 		return err
@@ -47,9 +47,9 @@ func (dcp *DCP) processZipFile(filename string) error {
 	return nil
 }
 
-func (dcp *DCP) processDeviceFile(file *zip.File) error {
+func (dcp *dcp) processDeviceFile(file *zip.File) error {
 	var device metadata.Device
-	if err := unmarshalXmlFile(file, &device); err != nil {
+	if err := unmarshalXMLFile(file, &device); err != nil {
 		return err
 	}
 	var mainErr error
@@ -73,7 +73,7 @@ func (dcp *DCP) processDeviceFile(file *zip.File) error {
 	return mainErr
 }
 
-func (dcp *DCP) writeCode(outFile string, useGofmt bool) error {
+func (dcp *dcp) writeCode(outFile string, useGofmt bool) error {
 	packageFile, err := os.Create(outFile)
 	if err != nil {
 		return err
@@ -92,9 +92,9 @@ func (dcp *DCP) writeCode(outFile string, useGofmt bool) error {
 	return output.Close()
 }
 
-func (dcp *DCP) processSCPDFile(file *zip.File) error {
+func (dcp *dcp) processSCPDFile(file *zip.File) error {
 	scpd := new(metadata.SCPD)
-	if err := unmarshalXmlFile(file, scpd); err != nil {
+	if err := unmarshalXMLFile(file, scpd); err != nil {
 		return err
 	}
 	scpd.Clean()
@@ -102,19 +102,19 @@ func (dcp *DCP) processSCPDFile(file *zip.File) error {
 	if err != nil {
 		return err
 	}
-	dcp.Services = append(dcp.Services, SCPDWithURN{
+	dcp.Services = append(dcp.Services, scpdWithURN{
 		URNParts: urnParts,
 		SCPD:     scpd,
 	})
 	return nil
 }
 
-type SCPDWithURN struct {
-	*URNParts
-	SCPD *metadata.SCPD
+type scpdWithURN struct {
+	URNParts *urnParts
+	SCPD     *metadata.SCPD
 }
 
-func (s *SCPDWithURN) WrapArguments(
+func (s *scpdWithURN) WrapArguments(
 	args []*metadata.Argument,
 ) (argumentWrapperList, error) {
 	wrappedArgs := make(argumentWrapperList, len(args))
@@ -128,7 +128,7 @@ func (s *SCPDWithURN) WrapArguments(
 	return wrappedArgs, nil
 }
 
-func (s *SCPDWithURN) wrapArgument(
+func (s *scpdWithURN) wrapArgument(
 	arg *metadata.Argument,
 ) (*argumentWrapper, error) {
 	relVar := s.SCPD.GetStateVariable(arg.RelatedStateVariable)
@@ -215,18 +215,18 @@ func (args argumentWrapperList) HasDoc() bool {
 	return false
 }
 
-type URNParts struct {
+type urnParts struct {
 	URN     string
 	Name    string
 	Version string
 }
 
-func (u *URNParts) Const() string {
+func (u *urnParts) Const() string {
 	return fmt.Sprintf("URN_%s_%s", u.Name, u.Version)
 }
 
 // extractURNParts extracts the name and version from a URN string.
-func extractURNParts(urn, expectedPrefix string) (*URNParts, error) {
+func extractURNParts(urn, expectedPrefix string) (*urnParts, error) {
 	if !strings.HasPrefix(urn, expectedPrefix) {
 		return nil, errkind.New(
 			errkind.BadData, "%q does not have expected prefix %q",
@@ -240,5 +240,5 @@ func extractURNParts(urn, expectedPrefix string) (*URNParts, error) {
 		)
 	}
 	name, version := parts[0], parts[1]
-	return &URNParts{urn, name, version}, nil
+	return &urnParts{urn, name, version}, nil
 }

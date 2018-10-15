@@ -23,11 +23,15 @@ var (
 )
 
 const (
+	// EventAlive indicates that a device is newly alive.
 	EventAlive = EventType(iota)
+	// EventUpdate indicates an update to a device's information.
 	EventUpdate
+	// EventByeBye indicates a device is going away.
 	EventByeBye
 )
 
+// EventType indicates the type of announcement to a discovered device.
 type EventType int8
 
 func (et EventType) String() string {
@@ -43,6 +47,7 @@ func (et EventType) String() string {
 	}
 }
 
+// Update contains information about a discovered device's changed state.
 type Update struct {
 	// The USN of the service.
 	USN string
@@ -56,6 +61,7 @@ type Update struct {
 	Entry *Entry
 }
 
+// Entry contains discovered data about a discovered UPnP device.
 type Entry struct {
 	// The address that the entry data was actually received from.
 	RemoteAddr string
@@ -195,6 +201,7 @@ type Registry struct {
 	listeners     map[chan<- Update]struct{}
 }
 
+// NewRegistry creates a new registry.
 func NewRegistry() *Registry {
 	return &Registry{
 		byUSN:     make(map[string]*Entry),
@@ -215,12 +222,14 @@ func NewServerAndRegistry() (*httpu.Server, *Registry) {
 	return srv, reg
 }
 
+// AddListener adds a listener to receive updates about discovered devices.
 func (reg *Registry) AddListener(c chan<- Update) {
 	reg.listenersLock.Lock()
 	defer reg.listenersLock.Unlock()
 	reg.listeners[c] = struct{}{}
 }
 
+// RemoveListener removes a previously registered listener.
 func (reg *Registry) RemoveListener(c chan<- Update) {
 	reg.listenersLock.Lock()
 	defer reg.listenersLock.Unlock()

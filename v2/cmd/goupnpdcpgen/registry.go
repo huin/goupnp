@@ -1,34 +1,34 @@
 package main
 
-// DCP contains extra metadata to use when generating DCP source files.
-type DCPMetadata struct {
-	// What to name the Go DCP package.
+// dcp contains extra metadata to use when generating dcp source files.
+type dcpMetadata struct {
+	// What to name the Go dcp package.
 	Name string
-	// Official name for the DCP.
+	// Official name for the dcp.
 	OfficialName string
-	// Optional - URL for further documentation about the DCP.
+	// Optional - URL for further documentation about the dcp.
 	DocURL string
 	// Where to download the XML spec from.
 	XMLSpecURL string
-	// Any special-case functions to run against the DCP before writing it out.
-	Hacks []DCPHackFn
+	// Any special-case functions to run against the dcp before writing it out.
+	Hacks []dcpHackFn
 }
 
-var dcpMetadata = []DCPMetadata{
+var dcpMetadataRegistry = []dcpMetadata{
 	{
 		Name:         "internetgateway1",
 		OfficialName: "Internet Gateway Device v1",
 		DocURL:       "http://upnp.org/specs/gw/UPnP-gw-InternetGatewayDevice-v1-Device.pdf",
 		XMLSpecURL:   "http://upnp.org/specs/gw/UPnP-gw-IGD-TestFiles-20010921.zip",
-		Hacks:        []DCPHackFn{totalBytesHack},
+		Hacks:        []dcpHackFn{totalBytesHack},
 	},
 	{
 		Name:         "internetgateway2",
 		OfficialName: "Internet Gateway Device v2",
 		DocURL:       "http://upnp.org/specs/gw/UPnP-gw-InternetGatewayDevice-v2-Device.pdf",
 		XMLSpecURL:   "http://upnp.org/specs/gw/UPnP-gw-IGD-Testfiles-20110224.zip",
-		Hacks: []DCPHackFn{
-			func(dcp *DCP) error {
+		Hacks: []dcpHackFn{
+			func(dcp *dcp) error {
 				missingURN := "urn:schemas-upnp-org:service:WANIPv6FirewallControl:1"
 				if _, ok := dcp.ServiceTypes[missingURN]; ok {
 					return nil
@@ -50,9 +50,9 @@ var dcpMetadata = []DCPMetadata{
 	},
 }
 
-func totalBytesHack(dcp *DCP) error {
+func totalBytesHack(dcp *dcp) error {
 	for _, service := range dcp.Services {
-		if service.URN == "urn:schemas-upnp-org:service:WANCommonInterfaceConfig:1" {
+		if service.URNParts.URN == "urn:schemas-upnp-org:service:WANCommonInterfaceConfig:1" {
 			variables := service.SCPD.StateVariables
 			for key, variable := range variables {
 				varName := variable.Name
@@ -71,4 +71,4 @@ func totalBytesHack(dcp *DCP) error {
 	return nil
 }
 
-type DCPHackFn func(*DCP) error
+type dcpHackFn func(*dcp) error

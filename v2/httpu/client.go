@@ -184,6 +184,7 @@ func (rs *requestSettings) applyOptions(options []RequestOption) {
 	}
 }
 
+// RequestOption is for types that tune HTTPU requests.
 type RequestOption func(*requestSettings)
 
 // NumSends controls how many redundant requests to send.

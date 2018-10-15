@@ -21,90 +21,110 @@ var (
 	localLoc = time.Local
 )
 
-func MarshalUi1(v uint8) (string, error) {
+// MarshalUI1 marshals a SOAP ui1 type.
+func MarshalUI1(v uint8) (string, error) {
 	return strconv.FormatUint(uint64(v), 10), nil
 }
 
-func UnmarshalUi1(s string) (uint8, error) {
+// UnmarshalUI1 unmarshals a SOAP ui1 type.
+func UnmarshalUI1(s string) (uint8, error) {
 	v, err := strconv.ParseUint(s, 10, 8)
 	return uint8(v), err
 }
 
-func MarshalUi2(v uint16) (string, error) {
+// MarshalUI2 marshals a SOAP ui2 type.
+func MarshalUI2(v uint16) (string, error) {
 	return strconv.FormatUint(uint64(v), 10), nil
 }
 
-func UnmarshalUi2(s string) (uint16, error) {
+// UnmarshalUI2 unmarshals a SOAP ui2 type.
+func UnmarshalUI2(s string) (uint16, error) {
 	v, err := strconv.ParseUint(s, 10, 16)
 	return uint16(v), err
 }
 
-func MarshalUi4(v uint32) (string, error) {
+// MarshalUI4 marshals a SOAP ui4 type.
+func MarshalUI4(v uint32) (string, error) {
 	return strconv.FormatUint(uint64(v), 10), nil
 }
 
-func UnmarshalUi4(s string) (uint32, error) {
+// UnmarshalUI4 unmarshals a SOAP int type.
+func UnmarshalUI4(s string) (uint32, error) {
 	v, err := strconv.ParseUint(s, 10, 32)
 	return uint32(v), err
 }
 
-func MarshalUi8(v uint64) (string, error) {
+// MarshalUI8 marshals a SOAP ui8 type.
+func MarshalUI8(v uint64) (string, error) {
 	return strconv.FormatUint(v, 10), nil
 }
 
-func UnmarshalUi8(s string) (uint64, error) {
+// UnmarshalUI8 unmarshals a SOAP int type.
+func UnmarshalUI8(s string) (uint64, error) {
 	v, err := strconv.ParseUint(s, 10, 64)
 	return uint64(v), err
 }
 
+// MarshalI1 marshals a SOAP int type.
 func MarshalI1(v int8) (string, error) {
 	return strconv.FormatInt(int64(v), 10), nil
 }
 
+// UnmarshalI1 unmarshals a SOAP i1 type.
 func UnmarshalI1(s string) (int8, error) {
 	v, err := strconv.ParseInt(s, 10, 8)
 	return int8(v), err
 }
 
+// MarshalI2 marshals a SOAP int type.
 func MarshalI2(v int16) (string, error) {
 	return strconv.FormatInt(int64(v), 10), nil
 }
 
+// UnmarshalI2 unmarshals a SOAP i2 type.
 func UnmarshalI2(s string) (int16, error) {
 	v, err := strconv.ParseInt(s, 10, 16)
 	return int16(v), err
 }
 
+// MarshalI4 marshals a SOAP i4 type.
 func MarshalI4(v int32) (string, error) {
 	return strconv.FormatInt(int64(v), 10), nil
 }
 
+// UnmarshalI4 unmarshals a SOAP i4 type.
 func UnmarshalI4(s string) (int32, error) {
 	v, err := strconv.ParseInt(s, 10, 32)
 	return int32(v), err
 }
 
+// MarshalInt marshals a SOAP int type.
 func MarshalInt(v int64) (string, error) {
 	return strconv.FormatInt(v, 10), nil
 }
 
+// UnmarshalInt unmarshals a SOAP int type.
 func UnmarshalInt(s string) (int64, error) {
 	return strconv.ParseInt(s, 10, 64)
 }
 
+// MarshalR4 marshals a SOAP r4 type.
 func MarshalR4(v float32) (string, error) {
 	return strconv.FormatFloat(float64(v), 'G', -1, 32), nil
 }
 
+// UnmarshalR4 unmarshals a SOAP r4 type.
 func UnmarshalR4(s string) (float32, error) {
 	v, err := strconv.ParseFloat(s, 32)
 	return float32(v), err
 }
 
+// MarshalR8 marshals a SOAP r8 type.
 func MarshalR8(v float64) (string, error) {
 	return strconv.FormatFloat(v, 'G', -1, 64), nil
 }
 
+// UnmarshalR8 unmarshals a SOAP r8 type.
 func UnmarshalR8(s string) (float64, error) {
 	v, err := strconv.ParseFloat(s, 64)
 	return float64(v), err
@@ -164,10 +184,12 @@ func UnmarshalChar(s string) (rune, error) {
 	return r, nil
 }
 
+// MarshalString marshals a SOAP string.
 func MarshalString(v string) (string, error) {
 	return v, nil
 }
 
+// UnmarshalString unmarshals a SOAP string.
 func UnmarshalString(v string) (string, error) {
 	return v, nil
 }
@@ -512,7 +534,7 @@ func UnmarshalDateTimeTz(s string) (result time.Time, err error) {
 	}
 
 	var hour, minute, second int
-	var location *time.Location = localLoc
+	location := localLoc
 	if len(timeStr) != 0 {
 		hour, minute, second, err = parseTimeParts(timeStr)
 		if err != nil {

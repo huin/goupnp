@@ -1,4 +1,4 @@
-// package ssdp implements a client for the Simple Service Discovery Protocol,
+// Package ssdp implements a client for the Simple Service Discovery Protocol,
 // typically used to discover available UPnP devices on the network.
 //
 // See also: https://en.wikipedia.org/wiki/Simple_Service_Discovery_Protocol
@@ -124,6 +124,7 @@ func (ss *searchSettings) applyOptions(options []SearchOption) {
 	}
 }
 
+// SearchOption is for types that tune searches for devices.
 type SearchOption func(*searchSettings)
 
 // NumSends controls how many redundant requests to send.

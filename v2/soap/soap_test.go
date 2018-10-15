@@ -48,7 +48,7 @@ func TestActionInputs(t *testing.T) {
 			`)),
 		},
 	}
-	client := SOAPClient{
+	client := Client{
 		EndpointURL: *url,
 		HTTPClient: http.Client{
 			Transport: rt,

@@ -10,6 +10,7 @@ import (
 )
 
 const (
+	// SCPDXMLNamespace is the XML namespace for SCPD.
 	SCPDXMLNamespace = "urn:schemas-upnp-org:service-1-0"
 )
 
@@ -32,7 +33,7 @@ type SCPD struct {
 // for the service.
 func RequestSCPD(ctx context.Context, loc *url.URL) (*SCPD, error) {
 	s := new(SCPD)
-	if err := requestXml(ctx, loc, SCPDXMLNamespace, s); err != nil {
+	if err := requestXML(ctx, loc, SCPDXMLNamespace, s); err != nil {
 		return nil, errkind.URLContext.Wrap(err, loc.String())
 	}
 	return s, nil
@@ -51,6 +52,8 @@ func (scpd *SCPD) Clean() {
 	}
 }
 
+// GetStateVariable returns a state variable of the given name, or nil if not
+// found.
 func (scpd *SCPD) GetStateVariable(variable string) *StateVariable {
 	for i := range scpd.StateVariables {
 		v := &scpd.StateVariables[i]
@@ -61,6 +64,7 @@ func (scpd *SCPD) GetStateVariable(variable string) *StateVariable {
 	return nil
 }
 
+// GetAction returns a action of the given name, or nil if not found.
 func (scpd *SCPD) GetAction(action string) *Action {
 	for i := range scpd.Actions {
 		a := &scpd.Actions[i]
@@ -71,6 +75,7 @@ func (scpd *SCPD) GetAction(action string) *Action {
 	return nil
 }
 
+// Action describes a UPnP SOAP action.
 type Action struct {
 	Name      string     `xml:"name"`
 	Arguments []Argument `xml:"argumentList>argument"`
@@ -83,6 +88,7 @@ func (action *Action) clean() {
 	}
 }
 
+// InputArguments returns the set of input arguments.
 func (action *Action) InputArguments() []*Argument {
 	var result []*Argument
 	for i := range action.Arguments {
@@ -94,6 +100,7 @@ func (action *Action) InputArguments() []*Argument {
 	return result
 }
 
+// OutputArguments returns the set of output arguments.
 func (action *Action) OutputArguments() []*Argument {
 	var result []*Argument
 	for i := range action.Arguments {
@@ -105,6 +112,7 @@ func (action *Action) OutputArguments() []*Argument {
 	return result
 }
 
+// Argument describes a UPnP action argument.
 type Argument struct {
 	Name                 string `xml:"name"`
 	Direction            string `xml:"direction"`            // in|out
@@ -119,14 +127,17 @@ func (arg *Argument) clean() {
 	cleanWhitespace(&arg.Retval)
 }
 
+// IsInput returns true iff the argument is an input argument.
 func (arg *Argument) IsInput() bool {
 	return arg.Direction == "in"
 }
 
+// IsOutput returns true iff the argument is an output argument.
 func (arg *Argument) IsOutput() bool {
 	return arg.Direction == "out"
 }
 
+// StateVariable describes a UPnP state variable.
 type StateVariable struct {
 	Name              string             `xml:"name"`
 	SendEvents        string             `xml:"sendEvents,attr"` // yes|no
@@ -151,6 +162,7 @@ func (v *StateVariable) clean() {
 	}
 }
 
+// AllowedValueRange indicates the minimum and maximum values for a variable.
 type AllowedValueRange struct {
 	Minimum string `xml:"minimum"`
 	Maximum string `xml:"maximum"`
@@ -163,6 +175,7 @@ func (r *AllowedValueRange) clean() {
 	cleanWhitespace(&r.Step)
 }
 
+// DataType indicates the SOAP data type for a variable.
 type DataType struct {
 	Name string `xml:",chardata"`
 	Type string `xml:"type,attr"`

@@ -16,7 +16,7 @@ import (
 // ServiceClient with NewServiceClientByURL if the service is still present;
 // bypassing the discovery process.
 type ServiceClient struct {
-	SOAPClient *soap.SOAPClient
+	Client     *soap.Client
 	RootDevice *metadata.RootDevice
 	Location   *url.URL
 	Service    *metadata.Service
@@ -72,8 +72,8 @@ func NewServiceClientsByURL(
 	return NewServiceClientsFromRootDevice(rootDevice, loc, searchTarget)
 }
 
-// NewServiceClientsFromDevice creates client(s) for the given service URN, in a
-// given root device. The loc parameter is simply assigned to the Location
+// NewServiceClientsFromRootDevice creates client(s) for the given service URN,
+// in a given root device. The loc parameter is simply assigned to the Location
 // attribute of the returned ServiceClient(s).
 func NewServiceClientsFromRootDevice(
 	rootDevice *metadata.RootDevice,
@@ -93,7 +93,7 @@ func NewServiceClientsFromRootDevice(
 	clients := make([]ServiceClient, 0, len(srvs))
 	for _, srv := range srvs {
 		clients = append(clients, ServiceClient{
-			SOAPClient: soap.NewSOAPClient(srv.ControlURL.URL),
+			Client:     soap.NewClient(srv.ControlURL.URL),
 			RootDevice: rootDevice,
 			Location:   loc,
 			Service:    srv,

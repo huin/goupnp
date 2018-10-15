@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	DefaultMaxMessageBytes = 2048
+	defaultMaxMessageBytes = 2048
 )
 
 var (
@@ -29,6 +29,7 @@ type Handler interface {
 // HandlerFunc is a function-to-Handler adapter.
 type HandlerFunc func(r *http.Request)
 
+// ServeMessage implements Handler.
 func (f HandlerFunc) ServeMessage(r *http.Request) {
 	f(r)
 }
@@ -44,7 +45,7 @@ type Server struct {
 	Interface *net.Interface
 	// Handler to invoke.
 	Handler Handler
-	// Maximum number of bytes to read from a packet, DefaultMaxMessageBytes if
+	// Maximum number of bytes to read from a packet, defaultMaxMessageBytes if
 	// 0.
 	MaxMessageBytes int
 }
@@ -78,7 +79,7 @@ func (srv *Server) ListenAndServe() error {
 
 // Serve messages received on the given packet listener to the srv.Handler.
 func (srv *Server) Serve(l net.PacketConn) error {
-	maxMessageBytes := DefaultMaxMessageBytes
+	maxMessageBytes := defaultMaxMessageBytes
 	if srv.MaxMessageBytes != 0 {
 		maxMessageBytes = srv.MaxMessageBytes
 	}
@@ -112,7 +113,7 @@ func (srv *Server) Serve(l net.PacketConn) error {
 func Serve(l net.PacketConn, handler Handler) error {
 	srv := Server{
 		Handler:         handler,
-		MaxMessageBytes: DefaultMaxMessageBytes,
+		MaxMessageBytes: defaultMaxMessageBytes,
 	}
 	return srv.Serve(l)
 }

@@ -44,7 +44,7 @@ func run(dcpName, specsDir string, useGofmt bool) error {
 		return errors.NewKind("create specs directory").Wrap(err)
 	}
 
-	for _, d := range dcpMetadata {
+	for _, d := range dcpMetadataRegistry {
 		if d.Name != dcpName {
 			continue
 		}

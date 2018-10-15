@@ -1,4 +1,5 @@
-// Client for UPnP Device Control Protocol Internet Gateway Device v2.
+// Package internetgateway2 is a client for UPnP Device Control Protocol
+// Internet Gateway Device v2.
 //
 // This DCP is documented in detail at: http://upnp.org/specs/gw/UPnP-gw-InternetGatewayDevice-v2-Device.pdf
 //
@@ -147,7 +148,7 @@ func newDeviceProtection1ClientsFromGenericClients(
 	return clients
 }
 
-// SendSetupMessage
+// SendSetupMessage implements a UPnP action of the same name.
 func (client *DeviceProtection1) SendSetupMessage(
 	ctx context.Context,
 	ProtocolType string,
@@ -158,8 +159,8 @@ func (client *DeviceProtection1) SendSetupMessage(
 ) {
 	// Request structure.
 	request := &struct {
-		ProtocolType string
-		InMessage    string
+		ProtocolType string `xml:"ProtocolType"`
+		InMessage    string `xml:"InMessage"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -177,11 +178,11 @@ func (client *DeviceProtection1) SendSetupMessage(
 
 	// Response structure.
 	response := &struct {
-		OutMessage string
+		OutMessage string `xml:"OutMessage"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_DeviceProtection_1,
 		"SendSetupMessage",
@@ -202,7 +203,7 @@ func (client *DeviceProtection1) SendSetupMessage(
 	return
 }
 
-// GetSupportedProtocols
+// GetSupportedProtocols implements a UPnP action of the same name.
 func (client *DeviceProtection1) GetSupportedProtocols(
 	ctx context.Context,
 ) (
@@ -217,11 +218,11 @@ func (client *DeviceProtection1) GetSupportedProtocols(
 
 	// Response structure.
 	response := &struct {
-		ProtocolList string
+		ProtocolList string `xml:"ProtocolList"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_DeviceProtection_1,
 		"GetSupportedProtocols",
@@ -242,7 +243,7 @@ func (client *DeviceProtection1) GetSupportedProtocols(
 	return
 }
 
-// GetAssignedRoles
+// GetAssignedRoles implements a UPnP action of the same name.
 func (client *DeviceProtection1) GetAssignedRoles(
 	ctx context.Context,
 ) (
@@ -257,11 +258,11 @@ func (client *DeviceProtection1) GetAssignedRoles(
 
 	// Response structure.
 	response := &struct {
-		RoleList string
+		RoleList string `xml:"RoleList"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_DeviceProtection_1,
 		"GetAssignedRoles",
@@ -282,7 +283,7 @@ func (client *DeviceProtection1) GetAssignedRoles(
 	return
 }
 
-// GetRolesForAction
+// GetRolesForAction implements a UPnP action of the same name.
 func (client *DeviceProtection1) GetRolesForAction(
 	ctx context.Context,
 	DeviceUDN string,
@@ -295,9 +296,9 @@ func (client *DeviceProtection1) GetRolesForAction(
 ) {
 	// Request structure.
 	request := &struct {
-		DeviceUDN  string
-		ServiceId  string
-		ActionName string
+		DeviceUDN  string `xml:"DeviceUDN"`
+		ServiceId  string `xml:"ServiceId"`
+		ActionName string `xml:"ActionName"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -320,12 +321,12 @@ func (client *DeviceProtection1) GetRolesForAction(
 
 	// Response structure.
 	response := &struct {
-		RoleList           string
-		RestrictedRoleList string
+		RoleList           string `xml:"RoleList"`
+		RestrictedRoleList string `xml:"RestrictedRoleList"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_DeviceProtection_1,
 		"GetRolesForAction",
@@ -351,7 +352,7 @@ func (client *DeviceProtection1) GetRolesForAction(
 	return
 }
 
-// GetUserLoginChallenge
+// GetUserLoginChallenge implements a UPnP action of the same name.
 func (client *DeviceProtection1) GetUserLoginChallenge(
 	ctx context.Context,
 	ProtocolType string,
@@ -363,8 +364,8 @@ func (client *DeviceProtection1) GetUserLoginChallenge(
 ) {
 	// Request structure.
 	request := &struct {
-		ProtocolType string
-		Name         string
+		ProtocolType string `xml:"ProtocolType"`
+		Name         string `xml:"Name"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -382,12 +383,12 @@ func (client *DeviceProtection1) GetUserLoginChallenge(
 
 	// Response structure.
 	response := &struct {
-		Salt      string
-		Challenge string
+		Salt      string `xml:"Salt"`
+		Challenge string `xml:"Challenge"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_DeviceProtection_1,
 		"GetUserLoginChallenge",
@@ -413,7 +414,7 @@ func (client *DeviceProtection1) GetUserLoginChallenge(
 	return
 }
 
-// UserLogin
+// UserLogin implements a UPnP action of the same name.
 func (client *DeviceProtection1) UserLogin(
 	ctx context.Context,
 	ProtocolType string,
@@ -424,9 +425,9 @@ func (client *DeviceProtection1) UserLogin(
 ) {
 	// Request structure.
 	request := &struct {
-		ProtocolType  string
-		Challenge     string
-		Authenticator string
+		ProtocolType  string `xml:"ProtocolType"`
+		Challenge     string `xml:"Challenge"`
+		Authenticator string `xml:"Authenticator"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -451,7 +452,7 @@ func (client *DeviceProtection1) UserLogin(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_DeviceProtection_1,
 		"UserLogin",
@@ -467,7 +468,7 @@ func (client *DeviceProtection1) UserLogin(
 	return
 }
 
-// UserLogout
+// UserLogout implements a UPnP action of the same name.
 func (client *DeviceProtection1) UserLogout(
 	ctx context.Context,
 ) (
@@ -483,7 +484,7 @@ func (client *DeviceProtection1) UserLogout(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_DeviceProtection_1,
 		"UserLogout",
@@ -499,7 +500,7 @@ func (client *DeviceProtection1) UserLogout(
 	return
 }
 
-// GetACLData
+// GetACLData implements a UPnP action of the same name.
 func (client *DeviceProtection1) GetACLData(
 	ctx context.Context,
 ) (
@@ -514,11 +515,11 @@ func (client *DeviceProtection1) GetACLData(
 
 	// Response structure.
 	response := &struct {
-		ACL string
+		ACL string `xml:"ACL"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_DeviceProtection_1,
 		"GetACLData",
@@ -539,7 +540,7 @@ func (client *DeviceProtection1) GetACLData(
 	return
 }
 
-// AddIdentityList
+// AddIdentityList implements a UPnP action of the same name.
 func (client *DeviceProtection1) AddIdentityList(
 	ctx context.Context,
 	IdentityList string,
@@ -549,7 +550,7 @@ func (client *DeviceProtection1) AddIdentityList(
 ) {
 	// Request structure.
 	request := &struct {
-		IdentityList string
+		IdentityList string `xml:"IdentityList"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -562,11 +563,11 @@ func (client *DeviceProtection1) AddIdentityList(
 
 	// Response structure.
 	response := &struct {
-		IdentityListResult string
+		IdentityListResult string `xml:"IdentityListResult"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_DeviceProtection_1,
 		"AddIdentityList",
@@ -587,7 +588,7 @@ func (client *DeviceProtection1) AddIdentityList(
 	return
 }
 
-// RemoveIdentity
+// RemoveIdentity implements a UPnP action of the same name.
 func (client *DeviceProtection1) RemoveIdentity(
 	ctx context.Context,
 	Identity string,
@@ -596,7 +597,7 @@ func (client *DeviceProtection1) RemoveIdentity(
 ) {
 	// Request structure.
 	request := &struct {
-		Identity string
+		Identity string `xml:"Identity"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -611,7 +612,7 @@ func (client *DeviceProtection1) RemoveIdentity(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_DeviceProtection_1,
 		"RemoveIdentity",
@@ -627,7 +628,7 @@ func (client *DeviceProtection1) RemoveIdentity(
 	return
 }
 
-// SetUserLoginPassword
+// SetUserLoginPassword implements a UPnP action of the same name.
 func (client *DeviceProtection1) SetUserLoginPassword(
 	ctx context.Context,
 	ProtocolType string,
@@ -639,10 +640,10 @@ func (client *DeviceProtection1) SetUserLoginPassword(
 ) {
 	// Request structure.
 	request := &struct {
-		ProtocolType string
-		Name         string
-		Stored       string
-		Salt         string
+		ProtocolType string `xml:"ProtocolType"`
+		Name         string `xml:"Name"`
+		Stored       string `xml:"Stored"`
+		Salt         string `xml:"Salt"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -672,7 +673,7 @@ func (client *DeviceProtection1) SetUserLoginPassword(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_DeviceProtection_1,
 		"SetUserLoginPassword",
@@ -688,7 +689,7 @@ func (client *DeviceProtection1) SetUserLoginPassword(
 	return
 }
 
-// AddRolesForIdentity
+// AddRolesForIdentity implements a UPnP action of the same name.
 func (client *DeviceProtection1) AddRolesForIdentity(
 	ctx context.Context,
 	Identity string,
@@ -698,8 +699,8 @@ func (client *DeviceProtection1) AddRolesForIdentity(
 ) {
 	// Request structure.
 	request := &struct {
-		Identity string
-		RoleList string
+		Identity string `xml:"Identity"`
+		RoleList string `xml:"RoleList"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -719,7 +720,7 @@ func (client *DeviceProtection1) AddRolesForIdentity(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_DeviceProtection_1,
 		"AddRolesForIdentity",
@@ -735,7 +736,7 @@ func (client *DeviceProtection1) AddRolesForIdentity(
 	return
 }
 
-// RemoveRolesForIdentity
+// RemoveRolesForIdentity implements a UPnP action of the same name.
 func (client *DeviceProtection1) RemoveRolesForIdentity(
 	ctx context.Context,
 	Identity string,
@@ -745,8 +746,8 @@ func (client *DeviceProtection1) RemoveRolesForIdentity(
 ) {
 	// Request structure.
 	request := &struct {
-		Identity string
-		RoleList string
+		Identity string `xml:"Identity"`
+		RoleList string `xml:"RoleList"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -766,7 +767,7 @@ func (client *DeviceProtection1) RemoveRolesForIdentity(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_DeviceProtection_1,
 		"RemoveRolesForIdentity",
@@ -881,7 +882,7 @@ func newLANHostConfigManagement1ClientsFromGenericClients(
 	return clients
 }
 
-// SetDHCPServerConfigurable
+// SetDHCPServerConfigurable implements a UPnP action of the same name.
 func (client *LANHostConfigManagement1) SetDHCPServerConfigurable(
 	ctx context.Context,
 	NewDHCPServerConfigurable bool,
@@ -890,7 +891,7 @@ func (client *LANHostConfigManagement1) SetDHCPServerConfigurable(
 ) {
 	// Request structure.
 	request := &struct {
-		NewDHCPServerConfigurable string
+		NewDHCPServerConfigurable string `xml:"NewDHCPServerConfigurable"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -905,7 +906,7 @@ func (client *LANHostConfigManagement1) SetDHCPServerConfigurable(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_LANHostConfigManagement_1,
 		"SetDHCPServerConfigurable",
@@ -921,7 +922,7 @@ func (client *LANHostConfigManagement1) SetDHCPServerConfigurable(
 	return
 }
 
-// GetDHCPServerConfigurable
+// GetDHCPServerConfigurable implements a UPnP action of the same name.
 func (client *LANHostConfigManagement1) GetDHCPServerConfigurable(
 	ctx context.Context,
 ) (
@@ -936,11 +937,11 @@ func (client *LANHostConfigManagement1) GetDHCPServerConfigurable(
 
 	// Response structure.
 	response := &struct {
-		NewDHCPServerConfigurable string
+		NewDHCPServerConfigurable string `xml:"NewDHCPServerConfigurable"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_LANHostConfigManagement_1,
 		"GetDHCPServerConfigurable",
@@ -961,7 +962,7 @@ func (client *LANHostConfigManagement1) GetDHCPServerConfigurable(
 	return
 }
 
-// SetDHCPRelay
+// SetDHCPRelay implements a UPnP action of the same name.
 func (client *LANHostConfigManagement1) SetDHCPRelay(
 	ctx context.Context,
 	NewDHCPRelay bool,
@@ -970,7 +971,7 @@ func (client *LANHostConfigManagement1) SetDHCPRelay(
 ) {
 	// Request structure.
 	request := &struct {
-		NewDHCPRelay string
+		NewDHCPRelay string `xml:"NewDHCPRelay"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -985,7 +986,7 @@ func (client *LANHostConfigManagement1) SetDHCPRelay(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_LANHostConfigManagement_1,
 		"SetDHCPRelay",
@@ -1001,7 +1002,7 @@ func (client *LANHostConfigManagement1) SetDHCPRelay(
 	return
 }
 
-// GetDHCPRelay
+// GetDHCPRelay implements a UPnP action of the same name.
 func (client *LANHostConfigManagement1) GetDHCPRelay(
 	ctx context.Context,
 ) (
@@ -1016,11 +1017,11 @@ func (client *LANHostConfigManagement1) GetDHCPRelay(
 
 	// Response structure.
 	response := &struct {
-		NewDHCPRelay string
+		NewDHCPRelay string `xml:"NewDHCPRelay"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_LANHostConfigManagement_1,
 		"GetDHCPRelay",
@@ -1041,7 +1042,7 @@ func (client *LANHostConfigManagement1) GetDHCPRelay(
 	return
 }
 
-// SetSubnetMask
+// SetSubnetMask implements a UPnP action of the same name.
 func (client *LANHostConfigManagement1) SetSubnetMask(
 	ctx context.Context,
 	NewSubnetMask string,
@@ -1050,7 +1051,7 @@ func (client *LANHostConfigManagement1) SetSubnetMask(
 ) {
 	// Request structure.
 	request := &struct {
-		NewSubnetMask string
+		NewSubnetMask string `xml:"NewSubnetMask"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -1065,7 +1066,7 @@ func (client *LANHostConfigManagement1) SetSubnetMask(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_LANHostConfigManagement_1,
 		"SetSubnetMask",
@@ -1081,7 +1082,7 @@ func (client *LANHostConfigManagement1) SetSubnetMask(
 	return
 }
 
-// GetSubnetMask
+// GetSubnetMask implements a UPnP action of the same name.
 func (client *LANHostConfigManagement1) GetSubnetMask(
 	ctx context.Context,
 ) (
@@ -1096,11 +1097,11 @@ func (client *LANHostConfigManagement1) GetSubnetMask(
 
 	// Response structure.
 	response := &struct {
-		NewSubnetMask string
+		NewSubnetMask string `xml:"NewSubnetMask"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_LANHostConfigManagement_1,
 		"GetSubnetMask",
@@ -1121,7 +1122,7 @@ func (client *LANHostConfigManagement1) GetSubnetMask(
 	return
 }
 
-// SetIPRouter
+// SetIPRouter implements a UPnP action of the same name.
 func (client *LANHostConfigManagement1) SetIPRouter(
 	ctx context.Context,
 	NewIPRouters string,
@@ -1130,7 +1131,7 @@ func (client *LANHostConfigManagement1) SetIPRouter(
 ) {
 	// Request structure.
 	request := &struct {
-		NewIPRouters string
+		NewIPRouters string `xml:"NewIPRouters"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -1145,7 +1146,7 @@ func (client *LANHostConfigManagement1) SetIPRouter(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_LANHostConfigManagement_1,
 		"SetIPRouter",
@@ -1161,7 +1162,7 @@ func (client *LANHostConfigManagement1) SetIPRouter(
 	return
 }
 
-// DeleteIPRouter
+// DeleteIPRouter implements a UPnP action of the same name.
 func (client *LANHostConfigManagement1) DeleteIPRouter(
 	ctx context.Context,
 	NewIPRouters string,
@@ -1170,7 +1171,7 @@ func (client *LANHostConfigManagement1) DeleteIPRouter(
 ) {
 	// Request structure.
 	request := &struct {
-		NewIPRouters string
+		NewIPRouters string `xml:"NewIPRouters"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -1185,7 +1186,7 @@ func (client *LANHostConfigManagement1) DeleteIPRouter(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_LANHostConfigManagement_1,
 		"DeleteIPRouter",
@@ -1201,7 +1202,7 @@ func (client *LANHostConfigManagement1) DeleteIPRouter(
 	return
 }
 
-// GetIPRoutersList
+// GetIPRoutersList implements a UPnP action of the same name.
 func (client *LANHostConfigManagement1) GetIPRoutersList(
 	ctx context.Context,
 ) (
@@ -1216,11 +1217,11 @@ func (client *LANHostConfigManagement1) GetIPRoutersList(
 
 	// Response structure.
 	response := &struct {
-		NewIPRouters string
+		NewIPRouters string `xml:"NewIPRouters"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_LANHostConfigManagement_1,
 		"GetIPRoutersList",
@@ -1241,7 +1242,7 @@ func (client *LANHostConfigManagement1) GetIPRoutersList(
 	return
 }
 
-// SetDomainName
+// SetDomainName implements a UPnP action of the same name.
 func (client *LANHostConfigManagement1) SetDomainName(
 	ctx context.Context,
 	NewDomainName string,
@@ -1250,7 +1251,7 @@ func (client *LANHostConfigManagement1) SetDomainName(
 ) {
 	// Request structure.
 	request := &struct {
-		NewDomainName string
+		NewDomainName string `xml:"NewDomainName"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -1265,7 +1266,7 @@ func (client *LANHostConfigManagement1) SetDomainName(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_LANHostConfigManagement_1,
 		"SetDomainName",
@@ -1281,7 +1282,7 @@ func (client *LANHostConfigManagement1) SetDomainName(
 	return
 }
 
-// GetDomainName
+// GetDomainName implements a UPnP action of the same name.
 func (client *LANHostConfigManagement1) GetDomainName(
 	ctx context.Context,
 ) (
@@ -1296,11 +1297,11 @@ func (client *LANHostConfigManagement1) GetDomainName(
 
 	// Response structure.
 	response := &struct {
-		NewDomainName string
+		NewDomainName string `xml:"NewDomainName"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_LANHostConfigManagement_1,
 		"GetDomainName",
@@ -1321,7 +1322,7 @@ func (client *LANHostConfigManagement1) GetDomainName(
 	return
 }
 
-// SetAddressRange
+// SetAddressRange implements a UPnP action of the same name.
 func (client *LANHostConfigManagement1) SetAddressRange(
 	ctx context.Context,
 	NewMinAddress string,
@@ -1331,8 +1332,8 @@ func (client *LANHostConfigManagement1) SetAddressRange(
 ) {
 	// Request structure.
 	request := &struct {
-		NewMinAddress string
-		NewMaxAddress string
+		NewMinAddress string `xml:"NewMinAddress"`
+		NewMaxAddress string `xml:"NewMaxAddress"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -1352,7 +1353,7 @@ func (client *LANHostConfigManagement1) SetAddressRange(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_LANHostConfigManagement_1,
 		"SetAddressRange",
@@ -1368,7 +1369,7 @@ func (client *LANHostConfigManagement1) SetAddressRange(
 	return
 }
 
-// GetAddressRange
+// GetAddressRange implements a UPnP action of the same name.
 func (client *LANHostConfigManagement1) GetAddressRange(
 	ctx context.Context,
 ) (
@@ -1384,12 +1385,12 @@ func (client *LANHostConfigManagement1) GetAddressRange(
 
 	// Response structure.
 	response := &struct {
-		NewMinAddress string
-		NewMaxAddress string
+		NewMinAddress string `xml:"NewMinAddress"`
+		NewMaxAddress string `xml:"NewMaxAddress"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_LANHostConfigManagement_1,
 		"GetAddressRange",
@@ -1415,7 +1416,7 @@ func (client *LANHostConfigManagement1) GetAddressRange(
 	return
 }
 
-// SetReservedAddress
+// SetReservedAddress implements a UPnP action of the same name.
 func (client *LANHostConfigManagement1) SetReservedAddress(
 	ctx context.Context,
 	NewReservedAddresses string,
@@ -1424,7 +1425,7 @@ func (client *LANHostConfigManagement1) SetReservedAddress(
 ) {
 	// Request structure.
 	request := &struct {
-		NewReservedAddresses string
+		NewReservedAddresses string `xml:"NewReservedAddresses"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -1439,7 +1440,7 @@ func (client *LANHostConfigManagement1) SetReservedAddress(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_LANHostConfigManagement_1,
 		"SetReservedAddress",
@@ -1455,7 +1456,7 @@ func (client *LANHostConfigManagement1) SetReservedAddress(
 	return
 }
 
-// DeleteReservedAddress
+// DeleteReservedAddress implements a UPnP action of the same name.
 func (client *LANHostConfigManagement1) DeleteReservedAddress(
 	ctx context.Context,
 	NewReservedAddresses string,
@@ -1464,7 +1465,7 @@ func (client *LANHostConfigManagement1) DeleteReservedAddress(
 ) {
 	// Request structure.
 	request := &struct {
-		NewReservedAddresses string
+		NewReservedAddresses string `xml:"NewReservedAddresses"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -1479,7 +1480,7 @@ func (client *LANHostConfigManagement1) DeleteReservedAddress(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_LANHostConfigManagement_1,
 		"DeleteReservedAddress",
@@ -1495,7 +1496,7 @@ func (client *LANHostConfigManagement1) DeleteReservedAddress(
 	return
 }
 
-// GetReservedAddresses
+// GetReservedAddresses implements a UPnP action of the same name.
 func (client *LANHostConfigManagement1) GetReservedAddresses(
 	ctx context.Context,
 ) (
@@ -1510,11 +1511,11 @@ func (client *LANHostConfigManagement1) GetReservedAddresses(
 
 	// Response structure.
 	response := &struct {
-		NewReservedAddresses string
+		NewReservedAddresses string `xml:"NewReservedAddresses"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_LANHostConfigManagement_1,
 		"GetReservedAddresses",
@@ -1535,7 +1536,7 @@ func (client *LANHostConfigManagement1) GetReservedAddresses(
 	return
 }
 
-// SetDNSServer
+// SetDNSServer implements a UPnP action of the same name.
 func (client *LANHostConfigManagement1) SetDNSServer(
 	ctx context.Context,
 	NewDNSServers string,
@@ -1544,7 +1545,7 @@ func (client *LANHostConfigManagement1) SetDNSServer(
 ) {
 	// Request structure.
 	request := &struct {
-		NewDNSServers string
+		NewDNSServers string `xml:"NewDNSServers"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -1559,7 +1560,7 @@ func (client *LANHostConfigManagement1) SetDNSServer(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_LANHostConfigManagement_1,
 		"SetDNSServer",
@@ -1575,7 +1576,7 @@ func (client *LANHostConfigManagement1) SetDNSServer(
 	return
 }
 
-// DeleteDNSServer
+// DeleteDNSServer implements a UPnP action of the same name.
 func (client *LANHostConfigManagement1) DeleteDNSServer(
 	ctx context.Context,
 	NewDNSServers string,
@@ -1584,7 +1585,7 @@ func (client *LANHostConfigManagement1) DeleteDNSServer(
 ) {
 	// Request structure.
 	request := &struct {
-		NewDNSServers string
+		NewDNSServers string `xml:"NewDNSServers"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -1599,7 +1600,7 @@ func (client *LANHostConfigManagement1) DeleteDNSServer(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_LANHostConfigManagement_1,
 		"DeleteDNSServer",
@@ -1615,7 +1616,7 @@ func (client *LANHostConfigManagement1) DeleteDNSServer(
 	return
 }
 
-// GetDNSServers
+// GetDNSServers implements a UPnP action of the same name.
 func (client *LANHostConfigManagement1) GetDNSServers(
 	ctx context.Context,
 ) (
@@ -1630,11 +1631,11 @@ func (client *LANHostConfigManagement1) GetDNSServers(
 
 	// Response structure.
 	response := &struct {
-		NewDNSServers string
+		NewDNSServers string `xml:"NewDNSServers"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_LANHostConfigManagement_1,
 		"GetDNSServers",
@@ -1754,7 +1755,7 @@ func newLayer3Forwarding1ClientsFromGenericClients(
 	return clients
 }
 
-// SetDefaultConnectionService
+// SetDefaultConnectionService implements a UPnP action of the same name.
 func (client *Layer3Forwarding1) SetDefaultConnectionService(
 	ctx context.Context,
 	NewDefaultConnectionService string,
@@ -1763,7 +1764,7 @@ func (client *Layer3Forwarding1) SetDefaultConnectionService(
 ) {
 	// Request structure.
 	request := &struct {
-		NewDefaultConnectionService string
+		NewDefaultConnectionService string `xml:"NewDefaultConnectionService"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -1778,7 +1779,7 @@ func (client *Layer3Forwarding1) SetDefaultConnectionService(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_Layer3Forwarding_1,
 		"SetDefaultConnectionService",
@@ -1794,7 +1795,7 @@ func (client *Layer3Forwarding1) SetDefaultConnectionService(
 	return
 }
 
-// GetDefaultConnectionService
+// GetDefaultConnectionService implements a UPnP action of the same name.
 func (client *Layer3Forwarding1) GetDefaultConnectionService(
 	ctx context.Context,
 ) (
@@ -1809,11 +1810,11 @@ func (client *Layer3Forwarding1) GetDefaultConnectionService(
 
 	// Response structure.
 	response := &struct {
-		NewDefaultConnectionService string
+		NewDefaultConnectionService string `xml:"NewDefaultConnectionService"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_Layer3Forwarding_1,
 		"GetDefaultConnectionService",
@@ -1933,7 +1934,7 @@ func newWANCableLinkConfig1ClientsFromGenericClients(
 	return clients
 }
 
-// GetCableLinkConfigInfo
+// GetCableLinkConfigInfo implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -1955,12 +1956,12 @@ func (client *WANCableLinkConfig1) GetCableLinkConfigInfo(
 
 	// Response structure.
 	response := &struct {
-		NewCableLinkConfigState string
-		NewLinkType             string
+		NewCableLinkConfigState string `xml:"NewCableLinkConfigState"`
+		NewLinkType             string `xml:"NewLinkType"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANCableLinkConfig_1,
 		"GetCableLinkConfigInfo",
@@ -1986,7 +1987,7 @@ func (client *WANCableLinkConfig1) GetCableLinkConfigInfo(
 	return
 }
 
-// GetDownstreamFrequency
+// GetDownstreamFrequency implements a UPnP action of the same name.
 func (client *WANCableLinkConfig1) GetDownstreamFrequency(
 	ctx context.Context,
 ) (
@@ -2001,11 +2002,11 @@ func (client *WANCableLinkConfig1) GetDownstreamFrequency(
 
 	// Response structure.
 	response := &struct {
-		NewDownstreamFrequency string
+		NewDownstreamFrequency string `xml:"NewDownstreamFrequency"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANCableLinkConfig_1,
 		"GetDownstreamFrequency",
@@ -2016,7 +2017,7 @@ func (client *WANCableLinkConfig1) GetDownstreamFrequency(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if NewDownstreamFrequency, err = soap.UnmarshalUi4(
+	if NewDownstreamFrequency, err = soap.UnmarshalUI4(
 		response.NewDownstreamFrequency,
 	); err != nil {
 		return
@@ -2026,7 +2027,7 @@ func (client *WANCableLinkConfig1) GetDownstreamFrequency(
 	return
 }
 
-// GetDownstreamModulation
+// GetDownstreamModulation implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -2045,11 +2046,11 @@ func (client *WANCableLinkConfig1) GetDownstreamModulation(
 
 	// Response structure.
 	response := &struct {
-		NewDownstreamModulation string
+		NewDownstreamModulation string `xml:"NewDownstreamModulation"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANCableLinkConfig_1,
 		"GetDownstreamModulation",
@@ -2070,7 +2071,7 @@ func (client *WANCableLinkConfig1) GetDownstreamModulation(
 	return
 }
 
-// GetUpstreamFrequency
+// GetUpstreamFrequency implements a UPnP action of the same name.
 func (client *WANCableLinkConfig1) GetUpstreamFrequency(
 	ctx context.Context,
 ) (
@@ -2085,11 +2086,11 @@ func (client *WANCableLinkConfig1) GetUpstreamFrequency(
 
 	// Response structure.
 	response := &struct {
-		NewUpstreamFrequency string
+		NewUpstreamFrequency string `xml:"NewUpstreamFrequency"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANCableLinkConfig_1,
 		"GetUpstreamFrequency",
@@ -2100,7 +2101,7 @@ func (client *WANCableLinkConfig1) GetUpstreamFrequency(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if NewUpstreamFrequency, err = soap.UnmarshalUi4(
+	if NewUpstreamFrequency, err = soap.UnmarshalUI4(
 		response.NewUpstreamFrequency,
 	); err != nil {
 		return
@@ -2110,7 +2111,7 @@ func (client *WANCableLinkConfig1) GetUpstreamFrequency(
 	return
 }
 
-// GetUpstreamModulation
+// GetUpstreamModulation implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -2129,11 +2130,11 @@ func (client *WANCableLinkConfig1) GetUpstreamModulation(
 
 	// Response structure.
 	response := &struct {
-		NewUpstreamModulation string
+		NewUpstreamModulation string `xml:"NewUpstreamModulation"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANCableLinkConfig_1,
 		"GetUpstreamModulation",
@@ -2154,7 +2155,7 @@ func (client *WANCableLinkConfig1) GetUpstreamModulation(
 	return
 }
 
-// GetUpstreamChannelID
+// GetUpstreamChannelID implements a UPnP action of the same name.
 func (client *WANCableLinkConfig1) GetUpstreamChannelID(
 	ctx context.Context,
 ) (
@@ -2169,11 +2170,11 @@ func (client *WANCableLinkConfig1) GetUpstreamChannelID(
 
 	// Response structure.
 	response := &struct {
-		NewUpstreamChannelID string
+		NewUpstreamChannelID string `xml:"NewUpstreamChannelID"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANCableLinkConfig_1,
 		"GetUpstreamChannelID",
@@ -2184,7 +2185,7 @@ func (client *WANCableLinkConfig1) GetUpstreamChannelID(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if NewUpstreamChannelID, err = soap.UnmarshalUi4(
+	if NewUpstreamChannelID, err = soap.UnmarshalUI4(
 		response.NewUpstreamChannelID,
 	); err != nil {
 		return
@@ -2194,7 +2195,7 @@ func (client *WANCableLinkConfig1) GetUpstreamChannelID(
 	return
 }
 
-// GetUpstreamPowerLevel
+// GetUpstreamPowerLevel implements a UPnP action of the same name.
 func (client *WANCableLinkConfig1) GetUpstreamPowerLevel(
 	ctx context.Context,
 ) (
@@ -2209,11 +2210,11 @@ func (client *WANCableLinkConfig1) GetUpstreamPowerLevel(
 
 	// Response structure.
 	response := &struct {
-		NewUpstreamPowerLevel string
+		NewUpstreamPowerLevel string `xml:"NewUpstreamPowerLevel"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANCableLinkConfig_1,
 		"GetUpstreamPowerLevel",
@@ -2224,7 +2225,7 @@ func (client *WANCableLinkConfig1) GetUpstreamPowerLevel(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if NewUpstreamPowerLevel, err = soap.UnmarshalUi4(
+	if NewUpstreamPowerLevel, err = soap.UnmarshalUI4(
 		response.NewUpstreamPowerLevel,
 	); err != nil {
 		return
@@ -2234,7 +2235,7 @@ func (client *WANCableLinkConfig1) GetUpstreamPowerLevel(
 	return
 }
 
-// GetBPIEncryptionEnabled
+// GetBPIEncryptionEnabled implements a UPnP action of the same name.
 func (client *WANCableLinkConfig1) GetBPIEncryptionEnabled(
 	ctx context.Context,
 ) (
@@ -2249,11 +2250,11 @@ func (client *WANCableLinkConfig1) GetBPIEncryptionEnabled(
 
 	// Response structure.
 	response := &struct {
-		NewBPIEncryptionEnabled string
+		NewBPIEncryptionEnabled string `xml:"NewBPIEncryptionEnabled"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANCableLinkConfig_1,
 		"GetBPIEncryptionEnabled",
@@ -2274,7 +2275,7 @@ func (client *WANCableLinkConfig1) GetBPIEncryptionEnabled(
 	return
 }
 
-// GetConfigFile
+// GetConfigFile implements a UPnP action of the same name.
 func (client *WANCableLinkConfig1) GetConfigFile(
 	ctx context.Context,
 ) (
@@ -2289,11 +2290,11 @@ func (client *WANCableLinkConfig1) GetConfigFile(
 
 	// Response structure.
 	response := &struct {
-		NewConfigFile string
+		NewConfigFile string `xml:"NewConfigFile"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANCableLinkConfig_1,
 		"GetConfigFile",
@@ -2314,7 +2315,7 @@ func (client *WANCableLinkConfig1) GetConfigFile(
 	return
 }
 
-// GetTFTPServer
+// GetTFTPServer implements a UPnP action of the same name.
 func (client *WANCableLinkConfig1) GetTFTPServer(
 	ctx context.Context,
 ) (
@@ -2329,11 +2330,11 @@ func (client *WANCableLinkConfig1) GetTFTPServer(
 
 	// Response structure.
 	response := &struct {
-		NewTFTPServer string
+		NewTFTPServer string `xml:"NewTFTPServer"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANCableLinkConfig_1,
 		"GetTFTPServer",
@@ -2453,7 +2454,7 @@ func newWANCommonInterfaceConfig1ClientsFromGenericClients(
 	return clients
 }
 
-// SetEnabledForInternet
+// SetEnabledForInternet implements a UPnP action of the same name.
 func (client *WANCommonInterfaceConfig1) SetEnabledForInternet(
 	ctx context.Context,
 	NewEnabledForInternet bool,
@@ -2462,7 +2463,7 @@ func (client *WANCommonInterfaceConfig1) SetEnabledForInternet(
 ) {
 	// Request structure.
 	request := &struct {
-		NewEnabledForInternet string
+		NewEnabledForInternet string `xml:"NewEnabledForInternet"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -2477,7 +2478,7 @@ func (client *WANCommonInterfaceConfig1) SetEnabledForInternet(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANCommonInterfaceConfig_1,
 		"SetEnabledForInternet",
@@ -2493,7 +2494,7 @@ func (client *WANCommonInterfaceConfig1) SetEnabledForInternet(
 	return
 }
 
-// GetEnabledForInternet
+// GetEnabledForInternet implements a UPnP action of the same name.
 func (client *WANCommonInterfaceConfig1) GetEnabledForInternet(
 	ctx context.Context,
 ) (
@@ -2508,11 +2509,11 @@ func (client *WANCommonInterfaceConfig1) GetEnabledForInternet(
 
 	// Response structure.
 	response := &struct {
-		NewEnabledForInternet string
+		NewEnabledForInternet string `xml:"NewEnabledForInternet"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANCommonInterfaceConfig_1,
 		"GetEnabledForInternet",
@@ -2533,7 +2534,7 @@ func (client *WANCommonInterfaceConfig1) GetEnabledForInternet(
 	return
 }
 
-// GetCommonLinkProperties
+// GetCommonLinkProperties implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -2557,14 +2558,14 @@ func (client *WANCommonInterfaceConfig1) GetCommonLinkProperties(
 
 	// Response structure.
 	response := &struct {
-		NewWANAccessType              string
-		NewLayer1UpstreamMaxBitRate   string
-		NewLayer1DownstreamMaxBitRate string
-		NewPhysicalLinkStatus         string
+		NewWANAccessType              string `xml:"NewWANAccessType"`
+		NewLayer1UpstreamMaxBitRate   string `xml:"NewLayer1UpstreamMaxBitRate"`
+		NewLayer1DownstreamMaxBitRate string `xml:"NewLayer1DownstreamMaxBitRate"`
+		NewPhysicalLinkStatus         string `xml:"NewPhysicalLinkStatus"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANCommonInterfaceConfig_1,
 		"GetCommonLinkProperties",
@@ -2580,12 +2581,12 @@ func (client *WANCommonInterfaceConfig1) GetCommonLinkProperties(
 	); err != nil {
 		return
 	}
-	if NewLayer1UpstreamMaxBitRate, err = soap.UnmarshalUi4(
+	if NewLayer1UpstreamMaxBitRate, err = soap.UnmarshalUI4(
 		response.NewLayer1UpstreamMaxBitRate,
 	); err != nil {
 		return
 	}
-	if NewLayer1DownstreamMaxBitRate, err = soap.UnmarshalUi4(
+	if NewLayer1DownstreamMaxBitRate, err = soap.UnmarshalUI4(
 		response.NewLayer1DownstreamMaxBitRate,
 	); err != nil {
 		return
@@ -2600,7 +2601,7 @@ func (client *WANCommonInterfaceConfig1) GetCommonLinkProperties(
 	return
 }
 
-// GetWANAccessProvider
+// GetWANAccessProvider implements a UPnP action of the same name.
 func (client *WANCommonInterfaceConfig1) GetWANAccessProvider(
 	ctx context.Context,
 ) (
@@ -2615,11 +2616,11 @@ func (client *WANCommonInterfaceConfig1) GetWANAccessProvider(
 
 	// Response structure.
 	response := &struct {
-		NewWANAccessProvider string
+		NewWANAccessProvider string `xml:"NewWANAccessProvider"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANCommonInterfaceConfig_1,
 		"GetWANAccessProvider",
@@ -2640,7 +2641,7 @@ func (client *WANCommonInterfaceConfig1) GetWANAccessProvider(
 	return
 }
 
-// GetMaximumActiveConnections
+// GetMaximumActiveConnections implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -2659,11 +2660,11 @@ func (client *WANCommonInterfaceConfig1) GetMaximumActiveConnections(
 
 	// Response structure.
 	response := &struct {
-		NewMaximumActiveConnections string
+		NewMaximumActiveConnections string `xml:"NewMaximumActiveConnections"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANCommonInterfaceConfig_1,
 		"GetMaximumActiveConnections",
@@ -2674,7 +2675,7 @@ func (client *WANCommonInterfaceConfig1) GetMaximumActiveConnections(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if NewMaximumActiveConnections, err = soap.UnmarshalUi2(
+	if NewMaximumActiveConnections, err = soap.UnmarshalUI2(
 		response.NewMaximumActiveConnections,
 	); err != nil {
 		return
@@ -2684,7 +2685,7 @@ func (client *WANCommonInterfaceConfig1) GetMaximumActiveConnections(
 	return
 }
 
-// GetTotalBytesSent
+// GetTotalBytesSent implements a UPnP action of the same name.
 func (client *WANCommonInterfaceConfig1) GetTotalBytesSent(
 	ctx context.Context,
 ) (
@@ -2699,11 +2700,11 @@ func (client *WANCommonInterfaceConfig1) GetTotalBytesSent(
 
 	// Response structure.
 	response := &struct {
-		NewTotalBytesSent string
+		NewTotalBytesSent string `xml:"NewTotalBytesSent"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANCommonInterfaceConfig_1,
 		"GetTotalBytesSent",
@@ -2714,7 +2715,7 @@ func (client *WANCommonInterfaceConfig1) GetTotalBytesSent(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if NewTotalBytesSent, err = soap.UnmarshalUi8(
+	if NewTotalBytesSent, err = soap.UnmarshalUI8(
 		response.NewTotalBytesSent,
 	); err != nil {
 		return
@@ -2724,7 +2725,7 @@ func (client *WANCommonInterfaceConfig1) GetTotalBytesSent(
 	return
 }
 
-// GetTotalBytesReceived
+// GetTotalBytesReceived implements a UPnP action of the same name.
 func (client *WANCommonInterfaceConfig1) GetTotalBytesReceived(
 	ctx context.Context,
 ) (
@@ -2739,11 +2740,11 @@ func (client *WANCommonInterfaceConfig1) GetTotalBytesReceived(
 
 	// Response structure.
 	response := &struct {
-		NewTotalBytesReceived string
+		NewTotalBytesReceived string `xml:"NewTotalBytesReceived"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANCommonInterfaceConfig_1,
 		"GetTotalBytesReceived",
@@ -2754,7 +2755,7 @@ func (client *WANCommonInterfaceConfig1) GetTotalBytesReceived(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if NewTotalBytesReceived, err = soap.UnmarshalUi8(
+	if NewTotalBytesReceived, err = soap.UnmarshalUI8(
 		response.NewTotalBytesReceived,
 	); err != nil {
 		return
@@ -2764,7 +2765,7 @@ func (client *WANCommonInterfaceConfig1) GetTotalBytesReceived(
 	return
 }
 
-// GetTotalPacketsSent
+// GetTotalPacketsSent implements a UPnP action of the same name.
 func (client *WANCommonInterfaceConfig1) GetTotalPacketsSent(
 	ctx context.Context,
 ) (
@@ -2779,11 +2780,11 @@ func (client *WANCommonInterfaceConfig1) GetTotalPacketsSent(
 
 	// Response structure.
 	response := &struct {
-		NewTotalPacketsSent string
+		NewTotalPacketsSent string `xml:"NewTotalPacketsSent"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANCommonInterfaceConfig_1,
 		"GetTotalPacketsSent",
@@ -2794,7 +2795,7 @@ func (client *WANCommonInterfaceConfig1) GetTotalPacketsSent(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if NewTotalPacketsSent, err = soap.UnmarshalUi4(
+	if NewTotalPacketsSent, err = soap.UnmarshalUI4(
 		response.NewTotalPacketsSent,
 	); err != nil {
 		return
@@ -2804,7 +2805,7 @@ func (client *WANCommonInterfaceConfig1) GetTotalPacketsSent(
 	return
 }
 
-// GetTotalPacketsReceived
+// GetTotalPacketsReceived implements a UPnP action of the same name.
 func (client *WANCommonInterfaceConfig1) GetTotalPacketsReceived(
 	ctx context.Context,
 ) (
@@ -2819,11 +2820,11 @@ func (client *WANCommonInterfaceConfig1) GetTotalPacketsReceived(
 
 	// Response structure.
 	response := &struct {
-		NewTotalPacketsReceived string
+		NewTotalPacketsReceived string `xml:"NewTotalPacketsReceived"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANCommonInterfaceConfig_1,
 		"GetTotalPacketsReceived",
@@ -2834,7 +2835,7 @@ func (client *WANCommonInterfaceConfig1) GetTotalPacketsReceived(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if NewTotalPacketsReceived, err = soap.UnmarshalUi4(
+	if NewTotalPacketsReceived, err = soap.UnmarshalUI4(
 		response.NewTotalPacketsReceived,
 	); err != nil {
 		return
@@ -2844,7 +2845,7 @@ func (client *WANCommonInterfaceConfig1) GetTotalPacketsReceived(
 	return
 }
 
-// GetActiveConnection
+// GetActiveConnection implements a UPnP action of the same name.
 func (client *WANCommonInterfaceConfig1) GetActiveConnection(
 	ctx context.Context,
 	NewActiveConnectionIndex uint16,
@@ -2855,11 +2856,11 @@ func (client *WANCommonInterfaceConfig1) GetActiveConnection(
 ) {
 	// Request structure.
 	request := &struct {
-		NewActiveConnectionIndex string
+		NewActiveConnectionIndex string `xml:"NewActiveConnectionIndex"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.NewActiveConnectionIndex, err = soap.MarshalUi2(
+	if request.NewActiveConnectionIndex, err = soap.MarshalUI2(
 		NewActiveConnectionIndex,
 	); err != nil {
 		return
@@ -2868,12 +2869,12 @@ func (client *WANCommonInterfaceConfig1) GetActiveConnection(
 
 	// Response structure.
 	response := &struct {
-		NewActiveConnDeviceContainer string
-		NewActiveConnectionServiceID string
+		NewActiveConnDeviceContainer string `xml:"NewActiveConnDeviceContainer"`
+		NewActiveConnectionServiceID string `xml:"NewActiveConnectionServiceID"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANCommonInterfaceConfig_1,
 		"GetActiveConnection",
@@ -2998,7 +2999,7 @@ func newWANDSLLinkConfig1ClientsFromGenericClients(
 	return clients
 }
 
-// SetDSLLinkType
+// SetDSLLinkType implements a UPnP action of the same name.
 func (client *WANDSLLinkConfig1) SetDSLLinkType(
 	ctx context.Context,
 	NewLinkType string,
@@ -3007,7 +3008,7 @@ func (client *WANDSLLinkConfig1) SetDSLLinkType(
 ) {
 	// Request structure.
 	request := &struct {
-		NewLinkType string
+		NewLinkType string `xml:"NewLinkType"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -3022,7 +3023,7 @@ func (client *WANDSLLinkConfig1) SetDSLLinkType(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANDSLLinkConfig_1,
 		"SetDSLLinkType",
@@ -3038,7 +3039,7 @@ func (client *WANDSLLinkConfig1) SetDSLLinkType(
 	return
 }
 
-// GetDSLLinkInfo
+// GetDSLLinkInfo implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -3058,12 +3059,12 @@ func (client *WANDSLLinkConfig1) GetDSLLinkInfo(
 
 	// Response structure.
 	response := &struct {
-		NewLinkType   string
-		NewLinkStatus string
+		NewLinkType   string `xml:"NewLinkType"`
+		NewLinkStatus string `xml:"NewLinkStatus"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANDSLLinkConfig_1,
 		"GetDSLLinkInfo",
@@ -3089,7 +3090,7 @@ func (client *WANDSLLinkConfig1) GetDSLLinkInfo(
 	return
 }
 
-// GetAutoConfig
+// GetAutoConfig implements a UPnP action of the same name.
 func (client *WANDSLLinkConfig1) GetAutoConfig(
 	ctx context.Context,
 ) (
@@ -3104,11 +3105,11 @@ func (client *WANDSLLinkConfig1) GetAutoConfig(
 
 	// Response structure.
 	response := &struct {
-		NewAutoConfig string
+		NewAutoConfig string `xml:"NewAutoConfig"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANDSLLinkConfig_1,
 		"GetAutoConfig",
@@ -3129,7 +3130,7 @@ func (client *WANDSLLinkConfig1) GetAutoConfig(
 	return
 }
 
-// GetModulationType
+// GetModulationType implements a UPnP action of the same name.
 func (client *WANDSLLinkConfig1) GetModulationType(
 	ctx context.Context,
 ) (
@@ -3144,11 +3145,11 @@ func (client *WANDSLLinkConfig1) GetModulationType(
 
 	// Response structure.
 	response := &struct {
-		NewModulationType string
+		NewModulationType string `xml:"NewModulationType"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANDSLLinkConfig_1,
 		"GetModulationType",
@@ -3169,7 +3170,7 @@ func (client *WANDSLLinkConfig1) GetModulationType(
 	return
 }
 
-// SetDestinationAddress
+// SetDestinationAddress implements a UPnP action of the same name.
 func (client *WANDSLLinkConfig1) SetDestinationAddress(
 	ctx context.Context,
 	NewDestinationAddress string,
@@ -3178,7 +3179,7 @@ func (client *WANDSLLinkConfig1) SetDestinationAddress(
 ) {
 	// Request structure.
 	request := &struct {
-		NewDestinationAddress string
+		NewDestinationAddress string `xml:"NewDestinationAddress"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -3193,7 +3194,7 @@ func (client *WANDSLLinkConfig1) SetDestinationAddress(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANDSLLinkConfig_1,
 		"SetDestinationAddress",
@@ -3209,7 +3210,7 @@ func (client *WANDSLLinkConfig1) SetDestinationAddress(
 	return
 }
 
-// GetDestinationAddress
+// GetDestinationAddress implements a UPnP action of the same name.
 func (client *WANDSLLinkConfig1) GetDestinationAddress(
 	ctx context.Context,
 ) (
@@ -3224,11 +3225,11 @@ func (client *WANDSLLinkConfig1) GetDestinationAddress(
 
 	// Response structure.
 	response := &struct {
-		NewDestinationAddress string
+		NewDestinationAddress string `xml:"NewDestinationAddress"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANDSLLinkConfig_1,
 		"GetDestinationAddress",
@@ -3249,7 +3250,7 @@ func (client *WANDSLLinkConfig1) GetDestinationAddress(
 	return
 }
 
-// SetATMEncapsulation
+// SetATMEncapsulation implements a UPnP action of the same name.
 func (client *WANDSLLinkConfig1) SetATMEncapsulation(
 	ctx context.Context,
 	NewATMEncapsulation string,
@@ -3258,7 +3259,7 @@ func (client *WANDSLLinkConfig1) SetATMEncapsulation(
 ) {
 	// Request structure.
 	request := &struct {
-		NewATMEncapsulation string
+		NewATMEncapsulation string `xml:"NewATMEncapsulation"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -3273,7 +3274,7 @@ func (client *WANDSLLinkConfig1) SetATMEncapsulation(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANDSLLinkConfig_1,
 		"SetATMEncapsulation",
@@ -3289,7 +3290,7 @@ func (client *WANDSLLinkConfig1) SetATMEncapsulation(
 	return
 }
 
-// GetATMEncapsulation
+// GetATMEncapsulation implements a UPnP action of the same name.
 func (client *WANDSLLinkConfig1) GetATMEncapsulation(
 	ctx context.Context,
 ) (
@@ -3304,11 +3305,11 @@ func (client *WANDSLLinkConfig1) GetATMEncapsulation(
 
 	// Response structure.
 	response := &struct {
-		NewATMEncapsulation string
+		NewATMEncapsulation string `xml:"NewATMEncapsulation"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANDSLLinkConfig_1,
 		"GetATMEncapsulation",
@@ -3329,7 +3330,7 @@ func (client *WANDSLLinkConfig1) GetATMEncapsulation(
 	return
 }
 
-// SetFCSPreserved
+// SetFCSPreserved implements a UPnP action of the same name.
 func (client *WANDSLLinkConfig1) SetFCSPreserved(
 	ctx context.Context,
 	NewFCSPreserved bool,
@@ -3338,7 +3339,7 @@ func (client *WANDSLLinkConfig1) SetFCSPreserved(
 ) {
 	// Request structure.
 	request := &struct {
-		NewFCSPreserved string
+		NewFCSPreserved string `xml:"NewFCSPreserved"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -3353,7 +3354,7 @@ func (client *WANDSLLinkConfig1) SetFCSPreserved(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANDSLLinkConfig_1,
 		"SetFCSPreserved",
@@ -3369,7 +3370,7 @@ func (client *WANDSLLinkConfig1) SetFCSPreserved(
 	return
 }
 
-// GetFCSPreserved
+// GetFCSPreserved implements a UPnP action of the same name.
 func (client *WANDSLLinkConfig1) GetFCSPreserved(
 	ctx context.Context,
 ) (
@@ -3384,11 +3385,11 @@ func (client *WANDSLLinkConfig1) GetFCSPreserved(
 
 	// Response structure.
 	response := &struct {
-		NewFCSPreserved string
+		NewFCSPreserved string `xml:"NewFCSPreserved"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANDSLLinkConfig_1,
 		"GetFCSPreserved",
@@ -3508,7 +3509,7 @@ func newWANEthernetLinkConfig1ClientsFromGenericClients(
 	return clients
 }
 
-// GetEthernetLinkStatus
+// GetEthernetLinkStatus implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -3527,11 +3528,11 @@ func (client *WANEthernetLinkConfig1) GetEthernetLinkStatus(
 
 	// Response structure.
 	response := &struct {
-		NewEthernetLinkStatus string
+		NewEthernetLinkStatus string `xml:"NewEthernetLinkStatus"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANEthernetLinkConfig_1,
 		"GetEthernetLinkStatus",
@@ -3651,7 +3652,7 @@ func newWANIPConnection1ClientsFromGenericClients(
 	return clients
 }
 
-// SetConnectionType
+// SetConnectionType implements a UPnP action of the same name.
 func (client *WANIPConnection1) SetConnectionType(
 	ctx context.Context,
 	NewConnectionType string,
@@ -3660,7 +3661,7 @@ func (client *WANIPConnection1) SetConnectionType(
 ) {
 	// Request structure.
 	request := &struct {
-		NewConnectionType string
+		NewConnectionType string `xml:"NewConnectionType"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -3675,7 +3676,7 @@ func (client *WANIPConnection1) SetConnectionType(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPConnection_1,
 		"SetConnectionType",
@@ -3691,7 +3692,7 @@ func (client *WANIPConnection1) SetConnectionType(
 	return
 }
 
-// GetConnectionTypeInfo
+// GetConnectionTypeInfo implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -3711,12 +3712,12 @@ func (client *WANIPConnection1) GetConnectionTypeInfo(
 
 	// Response structure.
 	response := &struct {
-		NewConnectionType          string
-		NewPossibleConnectionTypes string
+		NewConnectionType          string `xml:"NewConnectionType"`
+		NewPossibleConnectionTypes string `xml:"NewPossibleConnectionTypes"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPConnection_1,
 		"GetConnectionTypeInfo",
@@ -3742,7 +3743,7 @@ func (client *WANIPConnection1) GetConnectionTypeInfo(
 	return
 }
 
-// RequestConnection
+// RequestConnection implements a UPnP action of the same name.
 func (client *WANIPConnection1) RequestConnection(
 	ctx context.Context,
 ) (
@@ -3758,7 +3759,7 @@ func (client *WANIPConnection1) RequestConnection(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPConnection_1,
 		"RequestConnection",
@@ -3774,7 +3775,7 @@ func (client *WANIPConnection1) RequestConnection(
 	return
 }
 
-// RequestTermination
+// RequestTermination implements a UPnP action of the same name.
 func (client *WANIPConnection1) RequestTermination(
 	ctx context.Context,
 ) (
@@ -3790,7 +3791,7 @@ func (client *WANIPConnection1) RequestTermination(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPConnection_1,
 		"RequestTermination",
@@ -3806,7 +3807,7 @@ func (client *WANIPConnection1) RequestTermination(
 	return
 }
 
-// ForceTermination
+// ForceTermination implements a UPnP action of the same name.
 func (client *WANIPConnection1) ForceTermination(
 	ctx context.Context,
 ) (
@@ -3822,7 +3823,7 @@ func (client *WANIPConnection1) ForceTermination(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPConnection_1,
 		"ForceTermination",
@@ -3838,7 +3839,7 @@ func (client *WANIPConnection1) ForceTermination(
 	return
 }
 
-// SetAutoDisconnectTime
+// SetAutoDisconnectTime implements a UPnP action of the same name.
 func (client *WANIPConnection1) SetAutoDisconnectTime(
 	ctx context.Context,
 	NewAutoDisconnectTime uint32,
@@ -3847,11 +3848,11 @@ func (client *WANIPConnection1) SetAutoDisconnectTime(
 ) {
 	// Request structure.
 	request := &struct {
-		NewAutoDisconnectTime string
+		NewAutoDisconnectTime string `xml:"NewAutoDisconnectTime"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.NewAutoDisconnectTime, err = soap.MarshalUi4(
+	if request.NewAutoDisconnectTime, err = soap.MarshalUI4(
 		NewAutoDisconnectTime,
 	); err != nil {
 		return
@@ -3862,7 +3863,7 @@ func (client *WANIPConnection1) SetAutoDisconnectTime(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPConnection_1,
 		"SetAutoDisconnectTime",
@@ -3878,7 +3879,7 @@ func (client *WANIPConnection1) SetAutoDisconnectTime(
 	return
 }
 
-// SetIdleDisconnectTime
+// SetIdleDisconnectTime implements a UPnP action of the same name.
 func (client *WANIPConnection1) SetIdleDisconnectTime(
 	ctx context.Context,
 	NewIdleDisconnectTime uint32,
@@ -3887,11 +3888,11 @@ func (client *WANIPConnection1) SetIdleDisconnectTime(
 ) {
 	// Request structure.
 	request := &struct {
-		NewIdleDisconnectTime string
+		NewIdleDisconnectTime string `xml:"NewIdleDisconnectTime"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.NewIdleDisconnectTime, err = soap.MarshalUi4(
+	if request.NewIdleDisconnectTime, err = soap.MarshalUI4(
 		NewIdleDisconnectTime,
 	); err != nil {
 		return
@@ -3902,7 +3903,7 @@ func (client *WANIPConnection1) SetIdleDisconnectTime(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPConnection_1,
 		"SetIdleDisconnectTime",
@@ -3918,7 +3919,7 @@ func (client *WANIPConnection1) SetIdleDisconnectTime(
 	return
 }
 
-// SetWarnDisconnectDelay
+// SetWarnDisconnectDelay implements a UPnP action of the same name.
 func (client *WANIPConnection1) SetWarnDisconnectDelay(
 	ctx context.Context,
 	NewWarnDisconnectDelay uint32,
@@ -3927,11 +3928,11 @@ func (client *WANIPConnection1) SetWarnDisconnectDelay(
 ) {
 	// Request structure.
 	request := &struct {
-		NewWarnDisconnectDelay string
+		NewWarnDisconnectDelay string `xml:"NewWarnDisconnectDelay"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.NewWarnDisconnectDelay, err = soap.MarshalUi4(
+	if request.NewWarnDisconnectDelay, err = soap.MarshalUI4(
 		NewWarnDisconnectDelay,
 	); err != nil {
 		return
@@ -3942,7 +3943,7 @@ func (client *WANIPConnection1) SetWarnDisconnectDelay(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPConnection_1,
 		"SetWarnDisconnectDelay",
@@ -3958,7 +3959,7 @@ func (client *WANIPConnection1) SetWarnDisconnectDelay(
 	return
 }
 
-// GetStatusInfo
+// GetStatusInfo implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -3981,13 +3982,13 @@ func (client *WANIPConnection1) GetStatusInfo(
 
 	// Response structure.
 	response := &struct {
-		NewConnectionStatus    string
-		NewLastConnectionError string
-		NewUptime              string
+		NewConnectionStatus    string `xml:"NewConnectionStatus"`
+		NewLastConnectionError string `xml:"NewLastConnectionError"`
+		NewUptime              string `xml:"NewUptime"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPConnection_1,
 		"GetStatusInfo",
@@ -4008,7 +4009,7 @@ func (client *WANIPConnection1) GetStatusInfo(
 	); err != nil {
 		return
 	}
-	if NewUptime, err = soap.UnmarshalUi4(
+	if NewUptime, err = soap.UnmarshalUI4(
 		response.NewUptime,
 	); err != nil {
 		return
@@ -4018,7 +4019,7 @@ func (client *WANIPConnection1) GetStatusInfo(
 	return
 }
 
-// GetAutoDisconnectTime
+// GetAutoDisconnectTime implements a UPnP action of the same name.
 func (client *WANIPConnection1) GetAutoDisconnectTime(
 	ctx context.Context,
 ) (
@@ -4033,11 +4034,11 @@ func (client *WANIPConnection1) GetAutoDisconnectTime(
 
 	// Response structure.
 	response := &struct {
-		NewAutoDisconnectTime string
+		NewAutoDisconnectTime string `xml:"NewAutoDisconnectTime"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPConnection_1,
 		"GetAutoDisconnectTime",
@@ -4048,7 +4049,7 @@ func (client *WANIPConnection1) GetAutoDisconnectTime(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if NewAutoDisconnectTime, err = soap.UnmarshalUi4(
+	if NewAutoDisconnectTime, err = soap.UnmarshalUI4(
 		response.NewAutoDisconnectTime,
 	); err != nil {
 		return
@@ -4058,7 +4059,7 @@ func (client *WANIPConnection1) GetAutoDisconnectTime(
 	return
 }
 
-// GetIdleDisconnectTime
+// GetIdleDisconnectTime implements a UPnP action of the same name.
 func (client *WANIPConnection1) GetIdleDisconnectTime(
 	ctx context.Context,
 ) (
@@ -4073,11 +4074,11 @@ func (client *WANIPConnection1) GetIdleDisconnectTime(
 
 	// Response structure.
 	response := &struct {
-		NewIdleDisconnectTime string
+		NewIdleDisconnectTime string `xml:"NewIdleDisconnectTime"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPConnection_1,
 		"GetIdleDisconnectTime",
@@ -4088,7 +4089,7 @@ func (client *WANIPConnection1) GetIdleDisconnectTime(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if NewIdleDisconnectTime, err = soap.UnmarshalUi4(
+	if NewIdleDisconnectTime, err = soap.UnmarshalUI4(
 		response.NewIdleDisconnectTime,
 	); err != nil {
 		return
@@ -4098,7 +4099,7 @@ func (client *WANIPConnection1) GetIdleDisconnectTime(
 	return
 }
 
-// GetWarnDisconnectDelay
+// GetWarnDisconnectDelay implements a UPnP action of the same name.
 func (client *WANIPConnection1) GetWarnDisconnectDelay(
 	ctx context.Context,
 ) (
@@ -4113,11 +4114,11 @@ func (client *WANIPConnection1) GetWarnDisconnectDelay(
 
 	// Response structure.
 	response := &struct {
-		NewWarnDisconnectDelay string
+		NewWarnDisconnectDelay string `xml:"NewWarnDisconnectDelay"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPConnection_1,
 		"GetWarnDisconnectDelay",
@@ -4128,7 +4129,7 @@ func (client *WANIPConnection1) GetWarnDisconnectDelay(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if NewWarnDisconnectDelay, err = soap.UnmarshalUi4(
+	if NewWarnDisconnectDelay, err = soap.UnmarshalUI4(
 		response.NewWarnDisconnectDelay,
 	); err != nil {
 		return
@@ -4138,7 +4139,7 @@ func (client *WANIPConnection1) GetWarnDisconnectDelay(
 	return
 }
 
-// GetNATRSIPStatus
+// GetNATRSIPStatus implements a UPnP action of the same name.
 func (client *WANIPConnection1) GetNATRSIPStatus(
 	ctx context.Context,
 ) (
@@ -4154,12 +4155,12 @@ func (client *WANIPConnection1) GetNATRSIPStatus(
 
 	// Response structure.
 	response := &struct {
-		NewRSIPAvailable string
-		NewNATEnabled    string
+		NewRSIPAvailable string `xml:"NewRSIPAvailable"`
+		NewNATEnabled    string `xml:"NewNATEnabled"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPConnection_1,
 		"GetNATRSIPStatus",
@@ -4185,7 +4186,7 @@ func (client *WANIPConnection1) GetNATRSIPStatus(
 	return
 }
 
-// GetGenericPortMappingEntry
+// GetGenericPortMappingEntry implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -4206,11 +4207,11 @@ func (client *WANIPConnection1) GetGenericPortMappingEntry(
 ) {
 	// Request structure.
 	request := &struct {
-		NewPortMappingIndex string
+		NewPortMappingIndex string `xml:"NewPortMappingIndex"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.NewPortMappingIndex, err = soap.MarshalUi2(
+	if request.NewPortMappingIndex, err = soap.MarshalUI2(
 		NewPortMappingIndex,
 	); err != nil {
 		return
@@ -4219,18 +4220,18 @@ func (client *WANIPConnection1) GetGenericPortMappingEntry(
 
 	// Response structure.
 	response := &struct {
-		NewRemoteHost             string
-		NewExternalPort           string
-		NewProtocol               string
-		NewInternalPort           string
-		NewInternalClient         string
-		NewEnabled                string
-		NewPortMappingDescription string
-		NewLeaseDuration          string
+		NewRemoteHost             string `xml:"NewRemoteHost"`
+		NewExternalPort           string `xml:"NewExternalPort"`
+		NewProtocol               string `xml:"NewProtocol"`
+		NewInternalPort           string `xml:"NewInternalPort"`
+		NewInternalClient         string `xml:"NewInternalClient"`
+		NewEnabled                string `xml:"NewEnabled"`
+		NewPortMappingDescription string `xml:"NewPortMappingDescription"`
+		NewLeaseDuration          string `xml:"NewLeaseDuration"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPConnection_1,
 		"GetGenericPortMappingEntry",
@@ -4246,7 +4247,7 @@ func (client *WANIPConnection1) GetGenericPortMappingEntry(
 	); err != nil {
 		return
 	}
-	if NewExternalPort, err = soap.UnmarshalUi2(
+	if NewExternalPort, err = soap.UnmarshalUI2(
 		response.NewExternalPort,
 	); err != nil {
 		return
@@ -4256,7 +4257,7 @@ func (client *WANIPConnection1) GetGenericPortMappingEntry(
 	); err != nil {
 		return
 	}
-	if NewInternalPort, err = soap.UnmarshalUi2(
+	if NewInternalPort, err = soap.UnmarshalUI2(
 		response.NewInternalPort,
 	); err != nil {
 		return
@@ -4276,7 +4277,7 @@ func (client *WANIPConnection1) GetGenericPortMappingEntry(
 	); err != nil {
 		return
 	}
-	if NewLeaseDuration, err = soap.UnmarshalUi4(
+	if NewLeaseDuration, err = soap.UnmarshalUI4(
 		response.NewLeaseDuration,
 	); err != nil {
 		return
@@ -4286,7 +4287,7 @@ func (client *WANIPConnection1) GetGenericPortMappingEntry(
 	return
 }
 
-// GetSpecificPortMappingEntry
+// GetSpecificPortMappingEntry implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -4306,9 +4307,9 @@ func (client *WANIPConnection1) GetSpecificPortMappingEntry(
 ) {
 	// Request structure.
 	request := &struct {
-		NewRemoteHost   string
-		NewExternalPort string
-		NewProtocol     string
+		NewRemoteHost   string `xml:"NewRemoteHost"`
+		NewExternalPort string `xml:"NewExternalPort"`
+		NewProtocol     string `xml:"NewProtocol"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -4317,7 +4318,7 @@ func (client *WANIPConnection1) GetSpecificPortMappingEntry(
 	); err != nil {
 		return
 	}
-	if request.NewExternalPort, err = soap.MarshalUi2(
+	if request.NewExternalPort, err = soap.MarshalUI2(
 		NewExternalPort,
 	); err != nil {
 		return
@@ -4331,15 +4332,15 @@ func (client *WANIPConnection1) GetSpecificPortMappingEntry(
 
 	// Response structure.
 	response := &struct {
-		NewInternalPort           string
-		NewInternalClient         string
-		NewEnabled                string
-		NewPortMappingDescription string
-		NewLeaseDuration          string
+		NewInternalPort           string `xml:"NewInternalPort"`
+		NewInternalClient         string `xml:"NewInternalClient"`
+		NewEnabled                string `xml:"NewEnabled"`
+		NewPortMappingDescription string `xml:"NewPortMappingDescription"`
+		NewLeaseDuration          string `xml:"NewLeaseDuration"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPConnection_1,
 		"GetSpecificPortMappingEntry",
@@ -4350,7 +4351,7 @@ func (client *WANIPConnection1) GetSpecificPortMappingEntry(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if NewInternalPort, err = soap.UnmarshalUi2(
+	if NewInternalPort, err = soap.UnmarshalUI2(
 		response.NewInternalPort,
 	); err != nil {
 		return
@@ -4370,7 +4371,7 @@ func (client *WANIPConnection1) GetSpecificPortMappingEntry(
 	); err != nil {
 		return
 	}
-	if NewLeaseDuration, err = soap.UnmarshalUi4(
+	if NewLeaseDuration, err = soap.UnmarshalUI4(
 		response.NewLeaseDuration,
 	); err != nil {
 		return
@@ -4380,7 +4381,7 @@ func (client *WANIPConnection1) GetSpecificPortMappingEntry(
 	return
 }
 
-// AddPortMapping
+// AddPortMapping implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -4400,14 +4401,14 @@ func (client *WANIPConnection1) AddPortMapping(
 ) {
 	// Request structure.
 	request := &struct {
-		NewRemoteHost             string
-		NewExternalPort           string
-		NewProtocol               string
-		NewInternalPort           string
-		NewInternalClient         string
-		NewEnabled                string
-		NewPortMappingDescription string
-		NewLeaseDuration          string
+		NewRemoteHost             string `xml:"NewRemoteHost"`
+		NewExternalPort           string `xml:"NewExternalPort"`
+		NewProtocol               string `xml:"NewProtocol"`
+		NewInternalPort           string `xml:"NewInternalPort"`
+		NewInternalClient         string `xml:"NewInternalClient"`
+		NewEnabled                string `xml:"NewEnabled"`
+		NewPortMappingDescription string `xml:"NewPortMappingDescription"`
+		NewLeaseDuration          string `xml:"NewLeaseDuration"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -4416,7 +4417,7 @@ func (client *WANIPConnection1) AddPortMapping(
 	); err != nil {
 		return
 	}
-	if request.NewExternalPort, err = soap.MarshalUi2(
+	if request.NewExternalPort, err = soap.MarshalUI2(
 		NewExternalPort,
 	); err != nil {
 		return
@@ -4426,7 +4427,7 @@ func (client *WANIPConnection1) AddPortMapping(
 	); err != nil {
 		return
 	}
-	if request.NewInternalPort, err = soap.MarshalUi2(
+	if request.NewInternalPort, err = soap.MarshalUI2(
 		NewInternalPort,
 	); err != nil {
 		return
@@ -4446,7 +4447,7 @@ func (client *WANIPConnection1) AddPortMapping(
 	); err != nil {
 		return
 	}
-	if request.NewLeaseDuration, err = soap.MarshalUi4(
+	if request.NewLeaseDuration, err = soap.MarshalUI4(
 		NewLeaseDuration,
 	); err != nil {
 		return
@@ -4457,7 +4458,7 @@ func (client *WANIPConnection1) AddPortMapping(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPConnection_1,
 		"AddPortMapping",
@@ -4473,7 +4474,7 @@ func (client *WANIPConnection1) AddPortMapping(
 	return
 }
 
-// DeletePortMapping
+// DeletePortMapping implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -4488,9 +4489,9 @@ func (client *WANIPConnection1) DeletePortMapping(
 ) {
 	// Request structure.
 	request := &struct {
-		NewRemoteHost   string
-		NewExternalPort string
-		NewProtocol     string
+		NewRemoteHost   string `xml:"NewRemoteHost"`
+		NewExternalPort string `xml:"NewExternalPort"`
+		NewProtocol     string `xml:"NewProtocol"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -4499,7 +4500,7 @@ func (client *WANIPConnection1) DeletePortMapping(
 	); err != nil {
 		return
 	}
-	if request.NewExternalPort, err = soap.MarshalUi2(
+	if request.NewExternalPort, err = soap.MarshalUI2(
 		NewExternalPort,
 	); err != nil {
 		return
@@ -4515,7 +4516,7 @@ func (client *WANIPConnection1) DeletePortMapping(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPConnection_1,
 		"DeletePortMapping",
@@ -4531,7 +4532,7 @@ func (client *WANIPConnection1) DeletePortMapping(
 	return
 }
 
-// GetExternalIPAddress
+// GetExternalIPAddress implements a UPnP action of the same name.
 func (client *WANIPConnection1) GetExternalIPAddress(
 	ctx context.Context,
 ) (
@@ -4546,11 +4547,11 @@ func (client *WANIPConnection1) GetExternalIPAddress(
 
 	// Response structure.
 	response := &struct {
-		NewExternalIPAddress string
+		NewExternalIPAddress string `xml:"NewExternalIPAddress"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPConnection_1,
 		"GetExternalIPAddress",
@@ -4670,7 +4671,7 @@ func newWANIPConnection2ClientsFromGenericClients(
 	return clients
 }
 
-// SetConnectionType
+// SetConnectionType implements a UPnP action of the same name.
 func (client *WANIPConnection2) SetConnectionType(
 	ctx context.Context,
 	NewConnectionType string,
@@ -4679,7 +4680,7 @@ func (client *WANIPConnection2) SetConnectionType(
 ) {
 	// Request structure.
 	request := &struct {
-		NewConnectionType string
+		NewConnectionType string `xml:"NewConnectionType"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -4694,7 +4695,7 @@ func (client *WANIPConnection2) SetConnectionType(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPConnection_2,
 		"SetConnectionType",
@@ -4710,7 +4711,7 @@ func (client *WANIPConnection2) SetConnectionType(
 	return
 }
 
-// GetConnectionTypeInfo
+// GetConnectionTypeInfo implements a UPnP action of the same name.
 func (client *WANIPConnection2) GetConnectionTypeInfo(
 	ctx context.Context,
 ) (
@@ -4726,12 +4727,12 @@ func (client *WANIPConnection2) GetConnectionTypeInfo(
 
 	// Response structure.
 	response := &struct {
-		NewConnectionType          string
-		NewPossibleConnectionTypes string
+		NewConnectionType          string `xml:"NewConnectionType"`
+		NewPossibleConnectionTypes string `xml:"NewPossibleConnectionTypes"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPConnection_2,
 		"GetConnectionTypeInfo",
@@ -4757,7 +4758,7 @@ func (client *WANIPConnection2) GetConnectionTypeInfo(
 	return
 }
 
-// RequestConnection
+// RequestConnection implements a UPnP action of the same name.
 func (client *WANIPConnection2) RequestConnection(
 	ctx context.Context,
 ) (
@@ -4773,7 +4774,7 @@ func (client *WANIPConnection2) RequestConnection(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPConnection_2,
 		"RequestConnection",
@@ -4789,7 +4790,7 @@ func (client *WANIPConnection2) RequestConnection(
 	return
 }
 
-// RequestTermination
+// RequestTermination implements a UPnP action of the same name.
 func (client *WANIPConnection2) RequestTermination(
 	ctx context.Context,
 ) (
@@ -4805,7 +4806,7 @@ func (client *WANIPConnection2) RequestTermination(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPConnection_2,
 		"RequestTermination",
@@ -4821,7 +4822,7 @@ func (client *WANIPConnection2) RequestTermination(
 	return
 }
 
-// ForceTermination
+// ForceTermination implements a UPnP action of the same name.
 func (client *WANIPConnection2) ForceTermination(
 	ctx context.Context,
 ) (
@@ -4837,7 +4838,7 @@ func (client *WANIPConnection2) ForceTermination(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPConnection_2,
 		"ForceTermination",
@@ -4853,7 +4854,7 @@ func (client *WANIPConnection2) ForceTermination(
 	return
 }
 
-// SetAutoDisconnectTime
+// SetAutoDisconnectTime implements a UPnP action of the same name.
 func (client *WANIPConnection2) SetAutoDisconnectTime(
 	ctx context.Context,
 	NewAutoDisconnectTime uint32,
@@ -4862,11 +4863,11 @@ func (client *WANIPConnection2) SetAutoDisconnectTime(
 ) {
 	// Request structure.
 	request := &struct {
-		NewAutoDisconnectTime string
+		NewAutoDisconnectTime string `xml:"NewAutoDisconnectTime"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.NewAutoDisconnectTime, err = soap.MarshalUi4(
+	if request.NewAutoDisconnectTime, err = soap.MarshalUI4(
 		NewAutoDisconnectTime,
 	); err != nil {
 		return
@@ -4877,7 +4878,7 @@ func (client *WANIPConnection2) SetAutoDisconnectTime(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPConnection_2,
 		"SetAutoDisconnectTime",
@@ -4893,7 +4894,7 @@ func (client *WANIPConnection2) SetAutoDisconnectTime(
 	return
 }
 
-// SetIdleDisconnectTime
+// SetIdleDisconnectTime implements a UPnP action of the same name.
 func (client *WANIPConnection2) SetIdleDisconnectTime(
 	ctx context.Context,
 	NewIdleDisconnectTime uint32,
@@ -4902,11 +4903,11 @@ func (client *WANIPConnection2) SetIdleDisconnectTime(
 ) {
 	// Request structure.
 	request := &struct {
-		NewIdleDisconnectTime string
+		NewIdleDisconnectTime string `xml:"NewIdleDisconnectTime"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.NewIdleDisconnectTime, err = soap.MarshalUi4(
+	if request.NewIdleDisconnectTime, err = soap.MarshalUI4(
 		NewIdleDisconnectTime,
 	); err != nil {
 		return
@@ -4917,7 +4918,7 @@ func (client *WANIPConnection2) SetIdleDisconnectTime(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPConnection_2,
 		"SetIdleDisconnectTime",
@@ -4933,7 +4934,7 @@ func (client *WANIPConnection2) SetIdleDisconnectTime(
 	return
 }
 
-// SetWarnDisconnectDelay
+// SetWarnDisconnectDelay implements a UPnP action of the same name.
 func (client *WANIPConnection2) SetWarnDisconnectDelay(
 	ctx context.Context,
 	NewWarnDisconnectDelay uint32,
@@ -4942,11 +4943,11 @@ func (client *WANIPConnection2) SetWarnDisconnectDelay(
 ) {
 	// Request structure.
 	request := &struct {
-		NewWarnDisconnectDelay string
+		NewWarnDisconnectDelay string `xml:"NewWarnDisconnectDelay"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.NewWarnDisconnectDelay, err = soap.MarshalUi4(
+	if request.NewWarnDisconnectDelay, err = soap.MarshalUI4(
 		NewWarnDisconnectDelay,
 	); err != nil {
 		return
@@ -4957,7 +4958,7 @@ func (client *WANIPConnection2) SetWarnDisconnectDelay(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPConnection_2,
 		"SetWarnDisconnectDelay",
@@ -4973,7 +4974,7 @@ func (client *WANIPConnection2) SetWarnDisconnectDelay(
 	return
 }
 
-// GetStatusInfo
+// GetStatusInfo implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -4996,13 +4997,13 @@ func (client *WANIPConnection2) GetStatusInfo(
 
 	// Response structure.
 	response := &struct {
-		NewConnectionStatus    string
-		NewLastConnectionError string
-		NewUptime              string
+		NewConnectionStatus    string `xml:"NewConnectionStatus"`
+		NewLastConnectionError string `xml:"NewLastConnectionError"`
+		NewUptime              string `xml:"NewUptime"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPConnection_2,
 		"GetStatusInfo",
@@ -5023,7 +5024,7 @@ func (client *WANIPConnection2) GetStatusInfo(
 	); err != nil {
 		return
 	}
-	if NewUptime, err = soap.UnmarshalUi4(
+	if NewUptime, err = soap.UnmarshalUI4(
 		response.NewUptime,
 	); err != nil {
 		return
@@ -5033,7 +5034,7 @@ func (client *WANIPConnection2) GetStatusInfo(
 	return
 }
 
-// GetAutoDisconnectTime
+// GetAutoDisconnectTime implements a UPnP action of the same name.
 func (client *WANIPConnection2) GetAutoDisconnectTime(
 	ctx context.Context,
 ) (
@@ -5048,11 +5049,11 @@ func (client *WANIPConnection2) GetAutoDisconnectTime(
 
 	// Response structure.
 	response := &struct {
-		NewAutoDisconnectTime string
+		NewAutoDisconnectTime string `xml:"NewAutoDisconnectTime"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPConnection_2,
 		"GetAutoDisconnectTime",
@@ -5063,7 +5064,7 @@ func (client *WANIPConnection2) GetAutoDisconnectTime(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if NewAutoDisconnectTime, err = soap.UnmarshalUi4(
+	if NewAutoDisconnectTime, err = soap.UnmarshalUI4(
 		response.NewAutoDisconnectTime,
 	); err != nil {
 		return
@@ -5073,7 +5074,7 @@ func (client *WANIPConnection2) GetAutoDisconnectTime(
 	return
 }
 
-// GetIdleDisconnectTime
+// GetIdleDisconnectTime implements a UPnP action of the same name.
 func (client *WANIPConnection2) GetIdleDisconnectTime(
 	ctx context.Context,
 ) (
@@ -5088,11 +5089,11 @@ func (client *WANIPConnection2) GetIdleDisconnectTime(
 
 	// Response structure.
 	response := &struct {
-		NewIdleDisconnectTime string
+		NewIdleDisconnectTime string `xml:"NewIdleDisconnectTime"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPConnection_2,
 		"GetIdleDisconnectTime",
@@ -5103,7 +5104,7 @@ func (client *WANIPConnection2) GetIdleDisconnectTime(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if NewIdleDisconnectTime, err = soap.UnmarshalUi4(
+	if NewIdleDisconnectTime, err = soap.UnmarshalUI4(
 		response.NewIdleDisconnectTime,
 	); err != nil {
 		return
@@ -5113,7 +5114,7 @@ func (client *WANIPConnection2) GetIdleDisconnectTime(
 	return
 }
 
-// GetWarnDisconnectDelay
+// GetWarnDisconnectDelay implements a UPnP action of the same name.
 func (client *WANIPConnection2) GetWarnDisconnectDelay(
 	ctx context.Context,
 ) (
@@ -5128,11 +5129,11 @@ func (client *WANIPConnection2) GetWarnDisconnectDelay(
 
 	// Response structure.
 	response := &struct {
-		NewWarnDisconnectDelay string
+		NewWarnDisconnectDelay string `xml:"NewWarnDisconnectDelay"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPConnection_2,
 		"GetWarnDisconnectDelay",
@@ -5143,7 +5144,7 @@ func (client *WANIPConnection2) GetWarnDisconnectDelay(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if NewWarnDisconnectDelay, err = soap.UnmarshalUi4(
+	if NewWarnDisconnectDelay, err = soap.UnmarshalUI4(
 		response.NewWarnDisconnectDelay,
 	); err != nil {
 		return
@@ -5153,7 +5154,7 @@ func (client *WANIPConnection2) GetWarnDisconnectDelay(
 	return
 }
 
-// GetNATRSIPStatus
+// GetNATRSIPStatus implements a UPnP action of the same name.
 func (client *WANIPConnection2) GetNATRSIPStatus(
 	ctx context.Context,
 ) (
@@ -5169,12 +5170,12 @@ func (client *WANIPConnection2) GetNATRSIPStatus(
 
 	// Response structure.
 	response := &struct {
-		NewRSIPAvailable string
-		NewNATEnabled    string
+		NewRSIPAvailable string `xml:"NewRSIPAvailable"`
+		NewNATEnabled    string `xml:"NewNATEnabled"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPConnection_2,
 		"GetNATRSIPStatus",
@@ -5200,7 +5201,7 @@ func (client *WANIPConnection2) GetNATRSIPStatus(
 	return
 }
 
-// GetGenericPortMappingEntry
+// GetGenericPortMappingEntry implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -5221,11 +5222,11 @@ func (client *WANIPConnection2) GetGenericPortMappingEntry(
 ) {
 	// Request structure.
 	request := &struct {
-		NewPortMappingIndex string
+		NewPortMappingIndex string `xml:"NewPortMappingIndex"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.NewPortMappingIndex, err = soap.MarshalUi2(
+	if request.NewPortMappingIndex, err = soap.MarshalUI2(
 		NewPortMappingIndex,
 	); err != nil {
 		return
@@ -5234,18 +5235,18 @@ func (client *WANIPConnection2) GetGenericPortMappingEntry(
 
 	// Response structure.
 	response := &struct {
-		NewRemoteHost             string
-		NewExternalPort           string
-		NewProtocol               string
-		NewInternalPort           string
-		NewInternalClient         string
-		NewEnabled                string
-		NewPortMappingDescription string
-		NewLeaseDuration          string
+		NewRemoteHost             string `xml:"NewRemoteHost"`
+		NewExternalPort           string `xml:"NewExternalPort"`
+		NewProtocol               string `xml:"NewProtocol"`
+		NewInternalPort           string `xml:"NewInternalPort"`
+		NewInternalClient         string `xml:"NewInternalClient"`
+		NewEnabled                string `xml:"NewEnabled"`
+		NewPortMappingDescription string `xml:"NewPortMappingDescription"`
+		NewLeaseDuration          string `xml:"NewLeaseDuration"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPConnection_2,
 		"GetGenericPortMappingEntry",
@@ -5261,7 +5262,7 @@ func (client *WANIPConnection2) GetGenericPortMappingEntry(
 	); err != nil {
 		return
 	}
-	if NewExternalPort, err = soap.UnmarshalUi2(
+	if NewExternalPort, err = soap.UnmarshalUI2(
 		response.NewExternalPort,
 	); err != nil {
 		return
@@ -5271,7 +5272,7 @@ func (client *WANIPConnection2) GetGenericPortMappingEntry(
 	); err != nil {
 		return
 	}
-	if NewInternalPort, err = soap.UnmarshalUi2(
+	if NewInternalPort, err = soap.UnmarshalUI2(
 		response.NewInternalPort,
 	); err != nil {
 		return
@@ -5291,7 +5292,7 @@ func (client *WANIPConnection2) GetGenericPortMappingEntry(
 	); err != nil {
 		return
 	}
-	if NewLeaseDuration, err = soap.UnmarshalUi4(
+	if NewLeaseDuration, err = soap.UnmarshalUI4(
 		response.NewLeaseDuration,
 	); err != nil {
 		return
@@ -5301,7 +5302,7 @@ func (client *WANIPConnection2) GetGenericPortMappingEntry(
 	return
 }
 
-// GetSpecificPortMappingEntry
+// GetSpecificPortMappingEntry implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -5321,9 +5322,9 @@ func (client *WANIPConnection2) GetSpecificPortMappingEntry(
 ) {
 	// Request structure.
 	request := &struct {
-		NewRemoteHost   string
-		NewExternalPort string
-		NewProtocol     string
+		NewRemoteHost   string `xml:"NewRemoteHost"`
+		NewExternalPort string `xml:"NewExternalPort"`
+		NewProtocol     string `xml:"NewProtocol"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -5332,7 +5333,7 @@ func (client *WANIPConnection2) GetSpecificPortMappingEntry(
 	); err != nil {
 		return
 	}
-	if request.NewExternalPort, err = soap.MarshalUi2(
+	if request.NewExternalPort, err = soap.MarshalUI2(
 		NewExternalPort,
 	); err != nil {
 		return
@@ -5346,15 +5347,15 @@ func (client *WANIPConnection2) GetSpecificPortMappingEntry(
 
 	// Response structure.
 	response := &struct {
-		NewInternalPort           string
-		NewInternalClient         string
-		NewEnabled                string
-		NewPortMappingDescription string
-		NewLeaseDuration          string
+		NewInternalPort           string `xml:"NewInternalPort"`
+		NewInternalClient         string `xml:"NewInternalClient"`
+		NewEnabled                string `xml:"NewEnabled"`
+		NewPortMappingDescription string `xml:"NewPortMappingDescription"`
+		NewLeaseDuration          string `xml:"NewLeaseDuration"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPConnection_2,
 		"GetSpecificPortMappingEntry",
@@ -5365,7 +5366,7 @@ func (client *WANIPConnection2) GetSpecificPortMappingEntry(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if NewInternalPort, err = soap.UnmarshalUi2(
+	if NewInternalPort, err = soap.UnmarshalUI2(
 		response.NewInternalPort,
 	); err != nil {
 		return
@@ -5385,7 +5386,7 @@ func (client *WANIPConnection2) GetSpecificPortMappingEntry(
 	); err != nil {
 		return
 	}
-	if NewLeaseDuration, err = soap.UnmarshalUi4(
+	if NewLeaseDuration, err = soap.UnmarshalUI4(
 		response.NewLeaseDuration,
 	); err != nil {
 		return
@@ -5395,7 +5396,7 @@ func (client *WANIPConnection2) GetSpecificPortMappingEntry(
 	return
 }
 
-// AddPortMapping
+// AddPortMapping implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -5415,14 +5416,14 @@ func (client *WANIPConnection2) AddPortMapping(
 ) {
 	// Request structure.
 	request := &struct {
-		NewRemoteHost             string
-		NewExternalPort           string
-		NewProtocol               string
-		NewInternalPort           string
-		NewInternalClient         string
-		NewEnabled                string
-		NewPortMappingDescription string
-		NewLeaseDuration          string
+		NewRemoteHost             string `xml:"NewRemoteHost"`
+		NewExternalPort           string `xml:"NewExternalPort"`
+		NewProtocol               string `xml:"NewProtocol"`
+		NewInternalPort           string `xml:"NewInternalPort"`
+		NewInternalClient         string `xml:"NewInternalClient"`
+		NewEnabled                string `xml:"NewEnabled"`
+		NewPortMappingDescription string `xml:"NewPortMappingDescription"`
+		NewLeaseDuration          string `xml:"NewLeaseDuration"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -5431,7 +5432,7 @@ func (client *WANIPConnection2) AddPortMapping(
 	); err != nil {
 		return
 	}
-	if request.NewExternalPort, err = soap.MarshalUi2(
+	if request.NewExternalPort, err = soap.MarshalUI2(
 		NewExternalPort,
 	); err != nil {
 		return
@@ -5441,7 +5442,7 @@ func (client *WANIPConnection2) AddPortMapping(
 	); err != nil {
 		return
 	}
-	if request.NewInternalPort, err = soap.MarshalUi2(
+	if request.NewInternalPort, err = soap.MarshalUI2(
 		NewInternalPort,
 	); err != nil {
 		return
@@ -5461,7 +5462,7 @@ func (client *WANIPConnection2) AddPortMapping(
 	); err != nil {
 		return
 	}
-	if request.NewLeaseDuration, err = soap.MarshalUi4(
+	if request.NewLeaseDuration, err = soap.MarshalUI4(
 		NewLeaseDuration,
 	); err != nil {
 		return
@@ -5472,7 +5473,7 @@ func (client *WANIPConnection2) AddPortMapping(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPConnection_2,
 		"AddPortMapping",
@@ -5488,7 +5489,7 @@ func (client *WANIPConnection2) AddPortMapping(
 	return
 }
 
-// DeletePortMapping
+// DeletePortMapping implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -5503,9 +5504,9 @@ func (client *WANIPConnection2) DeletePortMapping(
 ) {
 	// Request structure.
 	request := &struct {
-		NewRemoteHost   string
-		NewExternalPort string
-		NewProtocol     string
+		NewRemoteHost   string `xml:"NewRemoteHost"`
+		NewExternalPort string `xml:"NewExternalPort"`
+		NewProtocol     string `xml:"NewProtocol"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -5514,7 +5515,7 @@ func (client *WANIPConnection2) DeletePortMapping(
 	); err != nil {
 		return
 	}
-	if request.NewExternalPort, err = soap.MarshalUi2(
+	if request.NewExternalPort, err = soap.MarshalUI2(
 		NewExternalPort,
 	); err != nil {
 		return
@@ -5530,7 +5531,7 @@ func (client *WANIPConnection2) DeletePortMapping(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPConnection_2,
 		"DeletePortMapping",
@@ -5546,7 +5547,7 @@ func (client *WANIPConnection2) DeletePortMapping(
 	return
 }
 
-// DeletePortMappingRange
+// DeletePortMappingRange implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -5562,19 +5563,19 @@ func (client *WANIPConnection2) DeletePortMappingRange(
 ) {
 	// Request structure.
 	request := &struct {
-		NewStartPort string
-		NewEndPort   string
-		NewProtocol  string
-		NewManage    string
+		NewStartPort string `xml:"NewStartPort"`
+		NewEndPort   string `xml:"NewEndPort"`
+		NewProtocol  string `xml:"NewProtocol"`
+		NewManage    string `xml:"NewManage"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.NewStartPort, err = soap.MarshalUi2(
+	if request.NewStartPort, err = soap.MarshalUI2(
 		NewStartPort,
 	); err != nil {
 		return
 	}
-	if request.NewEndPort, err = soap.MarshalUi2(
+	if request.NewEndPort, err = soap.MarshalUI2(
 		NewEndPort,
 	); err != nil {
 		return
@@ -5595,7 +5596,7 @@ func (client *WANIPConnection2) DeletePortMappingRange(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPConnection_2,
 		"DeletePortMappingRange",
@@ -5611,7 +5612,7 @@ func (client *WANIPConnection2) DeletePortMappingRange(
 	return
 }
 
-// GetExternalIPAddress
+// GetExternalIPAddress implements a UPnP action of the same name.
 func (client *WANIPConnection2) GetExternalIPAddress(
 	ctx context.Context,
 ) (
@@ -5626,11 +5627,11 @@ func (client *WANIPConnection2) GetExternalIPAddress(
 
 	// Response structure.
 	response := &struct {
-		NewExternalIPAddress string
+		NewExternalIPAddress string `xml:"NewExternalIPAddress"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPConnection_2,
 		"GetExternalIPAddress",
@@ -5651,7 +5652,7 @@ func (client *WANIPConnection2) GetExternalIPAddress(
 	return
 }
 
-// GetListOfPortMappings
+// GetListOfPortMappings implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -5669,20 +5670,20 @@ func (client *WANIPConnection2) GetListOfPortMappings(
 ) {
 	// Request structure.
 	request := &struct {
-		NewStartPort     string
-		NewEndPort       string
-		NewProtocol      string
-		NewManage        string
-		NewNumberOfPorts string
+		NewStartPort     string `xml:"NewStartPort"`
+		NewEndPort       string `xml:"NewEndPort"`
+		NewProtocol      string `xml:"NewProtocol"`
+		NewManage        string `xml:"NewManage"`
+		NewNumberOfPorts string `xml:"NewNumberOfPorts"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.NewStartPort, err = soap.MarshalUi2(
+	if request.NewStartPort, err = soap.MarshalUI2(
 		NewStartPort,
 	); err != nil {
 		return
 	}
-	if request.NewEndPort, err = soap.MarshalUi2(
+	if request.NewEndPort, err = soap.MarshalUI2(
 		NewEndPort,
 	); err != nil {
 		return
@@ -5697,7 +5698,7 @@ func (client *WANIPConnection2) GetListOfPortMappings(
 	); err != nil {
 		return
 	}
-	if request.NewNumberOfPorts, err = soap.MarshalUi2(
+	if request.NewNumberOfPorts, err = soap.MarshalUI2(
 		NewNumberOfPorts,
 	); err != nil {
 		return
@@ -5706,11 +5707,11 @@ func (client *WANIPConnection2) GetListOfPortMappings(
 
 	// Response structure.
 	response := &struct {
-		NewPortListing string
+		NewPortListing string `xml:"NewPortListing"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPConnection_2,
 		"GetListOfPortMappings",
@@ -5731,7 +5732,7 @@ func (client *WANIPConnection2) GetListOfPortMappings(
 	return
 }
 
-// AddAnyPortMapping
+// AddAnyPortMapping implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -5752,14 +5753,14 @@ func (client *WANIPConnection2) AddAnyPortMapping(
 ) {
 	// Request structure.
 	request := &struct {
-		NewRemoteHost             string
-		NewExternalPort           string
-		NewProtocol               string
-		NewInternalPort           string
-		NewInternalClient         string
-		NewEnabled                string
-		NewPortMappingDescription string
-		NewLeaseDuration          string
+		NewRemoteHost             string `xml:"NewRemoteHost"`
+		NewExternalPort           string `xml:"NewExternalPort"`
+		NewProtocol               string `xml:"NewProtocol"`
+		NewInternalPort           string `xml:"NewInternalPort"`
+		NewInternalClient         string `xml:"NewInternalClient"`
+		NewEnabled                string `xml:"NewEnabled"`
+		NewPortMappingDescription string `xml:"NewPortMappingDescription"`
+		NewLeaseDuration          string `xml:"NewLeaseDuration"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -5768,7 +5769,7 @@ func (client *WANIPConnection2) AddAnyPortMapping(
 	); err != nil {
 		return
 	}
-	if request.NewExternalPort, err = soap.MarshalUi2(
+	if request.NewExternalPort, err = soap.MarshalUI2(
 		NewExternalPort,
 	); err != nil {
 		return
@@ -5778,7 +5779,7 @@ func (client *WANIPConnection2) AddAnyPortMapping(
 	); err != nil {
 		return
 	}
-	if request.NewInternalPort, err = soap.MarshalUi2(
+	if request.NewInternalPort, err = soap.MarshalUI2(
 		NewInternalPort,
 	); err != nil {
 		return
@@ -5798,7 +5799,7 @@ func (client *WANIPConnection2) AddAnyPortMapping(
 	); err != nil {
 		return
 	}
-	if request.NewLeaseDuration, err = soap.MarshalUi4(
+	if request.NewLeaseDuration, err = soap.MarshalUI4(
 		NewLeaseDuration,
 	); err != nil {
 		return
@@ -5807,11 +5808,11 @@ func (client *WANIPConnection2) AddAnyPortMapping(
 
 	// Response structure.
 	response := &struct {
-		NewReservedPort string
+		NewReservedPort string `xml:"NewReservedPort"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPConnection_2,
 		"AddAnyPortMapping",
@@ -5822,7 +5823,7 @@ func (client *WANIPConnection2) AddAnyPortMapping(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if NewReservedPort, err = soap.UnmarshalUi2(
+	if NewReservedPort, err = soap.UnmarshalUI2(
 		response.NewReservedPort,
 	); err != nil {
 		return
@@ -5931,7 +5932,7 @@ func newWANIPv6FirewallControl1ClientsFromGenericClients(
 	return clients
 }
 
-// GetFirewallStatus
+// GetFirewallStatus implements a UPnP action of the same name.
 func (client *WANIPv6FirewallControl1) GetFirewallStatus(
 	ctx context.Context,
 ) (
@@ -5947,12 +5948,12 @@ func (client *WANIPv6FirewallControl1) GetFirewallStatus(
 
 	// Response structure.
 	response := &struct {
-		FirewallEnabled       string
-		InboundPinholeAllowed string
+		FirewallEnabled       string `xml:"FirewallEnabled"`
+		InboundPinholeAllowed string `xml:"InboundPinholeAllowed"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPv6FirewallControl_1,
 		"GetFirewallStatus",
@@ -5978,7 +5979,7 @@ func (client *WANIPv6FirewallControl1) GetFirewallStatus(
 	return
 }
 
-// GetOutboundPinholeTimeout
+// GetOutboundPinholeTimeout implements a UPnP action of the same name.
 func (client *WANIPv6FirewallControl1) GetOutboundPinholeTimeout(
 	ctx context.Context,
 	RemoteHost string,
@@ -5992,11 +5993,11 @@ func (client *WANIPv6FirewallControl1) GetOutboundPinholeTimeout(
 ) {
 	// Request structure.
 	request := &struct {
-		RemoteHost     string
-		RemotePort     string
-		InternalClient string
-		InternalPort   string
-		Protocol       string
+		RemoteHost     string `xml:"RemoteHost"`
+		RemotePort     string `xml:"RemotePort"`
+		InternalClient string `xml:"InternalClient"`
+		InternalPort   string `xml:"InternalPort"`
+		Protocol       string `xml:"Protocol"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -6005,7 +6006,7 @@ func (client *WANIPv6FirewallControl1) GetOutboundPinholeTimeout(
 	); err != nil {
 		return
 	}
-	if request.RemotePort, err = soap.MarshalUi2(
+	if request.RemotePort, err = soap.MarshalUI2(
 		RemotePort,
 	); err != nil {
 		return
@@ -6015,12 +6016,12 @@ func (client *WANIPv6FirewallControl1) GetOutboundPinholeTimeout(
 	); err != nil {
 		return
 	}
-	if request.InternalPort, err = soap.MarshalUi2(
+	if request.InternalPort, err = soap.MarshalUI2(
 		InternalPort,
 	); err != nil {
 		return
 	}
-	if request.Protocol, err = soap.MarshalUi2(
+	if request.Protocol, err = soap.MarshalUI2(
 		Protocol,
 	); err != nil {
 		return
@@ -6029,11 +6030,11 @@ func (client *WANIPv6FirewallControl1) GetOutboundPinholeTimeout(
 
 	// Response structure.
 	response := &struct {
-		OutboundPinholeTimeout string
+		OutboundPinholeTimeout string `xml:"OutboundPinholeTimeout"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPv6FirewallControl_1,
 		"GetOutboundPinholeTimeout",
@@ -6044,7 +6045,7 @@ func (client *WANIPv6FirewallControl1) GetOutboundPinholeTimeout(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if OutboundPinholeTimeout, err = soap.UnmarshalUi4(
+	if OutboundPinholeTimeout, err = soap.UnmarshalUI4(
 		response.OutboundPinholeTimeout,
 	); err != nil {
 		return
@@ -6054,7 +6055,7 @@ func (client *WANIPv6FirewallControl1) GetOutboundPinholeTimeout(
 	return
 }
 
-// AddPinhole
+// AddPinhole implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -6073,12 +6074,12 @@ func (client *WANIPv6FirewallControl1) AddPinhole(
 ) {
 	// Request structure.
 	request := &struct {
-		RemoteHost     string
-		RemotePort     string
-		InternalClient string
-		InternalPort   string
-		Protocol       string
-		LeaseTime      string
+		RemoteHost     string `xml:"RemoteHost"`
+		RemotePort     string `xml:"RemotePort"`
+		InternalClient string `xml:"InternalClient"`
+		InternalPort   string `xml:"InternalPort"`
+		Protocol       string `xml:"Protocol"`
+		LeaseTime      string `xml:"LeaseTime"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -6087,7 +6088,7 @@ func (client *WANIPv6FirewallControl1) AddPinhole(
 	); err != nil {
 		return
 	}
-	if request.RemotePort, err = soap.MarshalUi2(
+	if request.RemotePort, err = soap.MarshalUI2(
 		RemotePort,
 	); err != nil {
 		return
@@ -6097,17 +6098,17 @@ func (client *WANIPv6FirewallControl1) AddPinhole(
 	); err != nil {
 		return
 	}
-	if request.InternalPort, err = soap.MarshalUi2(
+	if request.InternalPort, err = soap.MarshalUI2(
 		InternalPort,
 	); err != nil {
 		return
 	}
-	if request.Protocol, err = soap.MarshalUi2(
+	if request.Protocol, err = soap.MarshalUI2(
 		Protocol,
 	); err != nil {
 		return
 	}
-	if request.LeaseTime, err = soap.MarshalUi4(
+	if request.LeaseTime, err = soap.MarshalUI4(
 		LeaseTime,
 	); err != nil {
 		return
@@ -6116,11 +6117,11 @@ func (client *WANIPv6FirewallControl1) AddPinhole(
 
 	// Response structure.
 	response := &struct {
-		UniqueID string
+		UniqueID string `xml:"UniqueID"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPv6FirewallControl_1,
 		"AddPinhole",
@@ -6131,7 +6132,7 @@ func (client *WANIPv6FirewallControl1) AddPinhole(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if UniqueID, err = soap.UnmarshalUi2(
+	if UniqueID, err = soap.UnmarshalUI2(
 		response.UniqueID,
 	); err != nil {
 		return
@@ -6141,7 +6142,7 @@ func (client *WANIPv6FirewallControl1) AddPinhole(
 	return
 }
 
-// UpdatePinhole
+// UpdatePinhole implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -6155,17 +6156,17 @@ func (client *WANIPv6FirewallControl1) UpdatePinhole(
 ) {
 	// Request structure.
 	request := &struct {
-		UniqueID     string
-		NewLeaseTime string
+		UniqueID     string `xml:"UniqueID"`
+		NewLeaseTime string `xml:"NewLeaseTime"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.UniqueID, err = soap.MarshalUi2(
+	if request.UniqueID, err = soap.MarshalUI2(
 		UniqueID,
 	); err != nil {
 		return
 	}
-	if request.NewLeaseTime, err = soap.MarshalUi4(
+	if request.NewLeaseTime, err = soap.MarshalUI4(
 		NewLeaseTime,
 	); err != nil {
 		return
@@ -6176,7 +6177,7 @@ func (client *WANIPv6FirewallControl1) UpdatePinhole(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPv6FirewallControl_1,
 		"UpdatePinhole",
@@ -6192,7 +6193,7 @@ func (client *WANIPv6FirewallControl1) UpdatePinhole(
 	return
 }
 
-// DeletePinhole
+// DeletePinhole implements a UPnP action of the same name.
 func (client *WANIPv6FirewallControl1) DeletePinhole(
 	ctx context.Context,
 	UniqueID uint16,
@@ -6201,11 +6202,11 @@ func (client *WANIPv6FirewallControl1) DeletePinhole(
 ) {
 	// Request structure.
 	request := &struct {
-		UniqueID string
+		UniqueID string `xml:"UniqueID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.UniqueID, err = soap.MarshalUi2(
+	if request.UniqueID, err = soap.MarshalUI2(
 		UniqueID,
 	); err != nil {
 		return
@@ -6216,7 +6217,7 @@ func (client *WANIPv6FirewallControl1) DeletePinhole(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPv6FirewallControl_1,
 		"DeletePinhole",
@@ -6232,7 +6233,7 @@ func (client *WANIPv6FirewallControl1) DeletePinhole(
 	return
 }
 
-// GetPinholePackets
+// GetPinholePackets implements a UPnP action of the same name.
 func (client *WANIPv6FirewallControl1) GetPinholePackets(
 	ctx context.Context,
 	UniqueID uint16,
@@ -6242,11 +6243,11 @@ func (client *WANIPv6FirewallControl1) GetPinholePackets(
 ) {
 	// Request structure.
 	request := &struct {
-		UniqueID string
+		UniqueID string `xml:"UniqueID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.UniqueID, err = soap.MarshalUi2(
+	if request.UniqueID, err = soap.MarshalUI2(
 		UniqueID,
 	); err != nil {
 		return
@@ -6255,11 +6256,11 @@ func (client *WANIPv6FirewallControl1) GetPinholePackets(
 
 	// Response structure.
 	response := &struct {
-		PinholePackets string
+		PinholePackets string `xml:"PinholePackets"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPv6FirewallControl_1,
 		"GetPinholePackets",
@@ -6270,7 +6271,7 @@ func (client *WANIPv6FirewallControl1) GetPinholePackets(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if PinholePackets, err = soap.UnmarshalUi4(
+	if PinholePackets, err = soap.UnmarshalUI4(
 		response.PinholePackets,
 	); err != nil {
 		return
@@ -6280,7 +6281,7 @@ func (client *WANIPv6FirewallControl1) GetPinholePackets(
 	return
 }
 
-// CheckPinholeWorking
+// CheckPinholeWorking implements a UPnP action of the same name.
 func (client *WANIPv6FirewallControl1) CheckPinholeWorking(
 	ctx context.Context,
 	UniqueID uint16,
@@ -6290,11 +6291,11 @@ func (client *WANIPv6FirewallControl1) CheckPinholeWorking(
 ) {
 	// Request structure.
 	request := &struct {
-		UniqueID string
+		UniqueID string `xml:"UniqueID"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.UniqueID, err = soap.MarshalUi2(
+	if request.UniqueID, err = soap.MarshalUI2(
 		UniqueID,
 	); err != nil {
 		return
@@ -6303,11 +6304,11 @@ func (client *WANIPv6FirewallControl1) CheckPinholeWorking(
 
 	// Response structure.
 	response := &struct {
-		IsWorking string
+		IsWorking string `xml:"IsWorking"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANIPv6FirewallControl_1,
 		"CheckPinholeWorking",
@@ -6427,7 +6428,7 @@ func newWANPOTSLinkConfig1ClientsFromGenericClients(
 	return clients
 }
 
-// SetISPInfo
+// SetISPInfo implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -6442,9 +6443,9 @@ func (client *WANPOTSLinkConfig1) SetISPInfo(
 ) {
 	// Request structure.
 	request := &struct {
-		NewISPPhoneNumber string
-		NewISPInfo        string
-		NewLinkType       string
+		NewISPPhoneNumber string `xml:"NewISPPhoneNumber"`
+		NewISPInfo        string `xml:"NewISPInfo"`
+		NewLinkType       string `xml:"NewLinkType"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -6469,7 +6470,7 @@ func (client *WANPOTSLinkConfig1) SetISPInfo(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANPOTSLinkConfig_1,
 		"SetISPInfo",
@@ -6485,7 +6486,7 @@ func (client *WANPOTSLinkConfig1) SetISPInfo(
 	return
 }
 
-// SetCallRetryInfo
+// SetCallRetryInfo implements a UPnP action of the same name.
 func (client *WANPOTSLinkConfig1) SetCallRetryInfo(
 	ctx context.Context,
 	NewNumberOfRetries uint32,
@@ -6495,17 +6496,17 @@ func (client *WANPOTSLinkConfig1) SetCallRetryInfo(
 ) {
 	// Request structure.
 	request := &struct {
-		NewNumberOfRetries     string
-		NewDelayBetweenRetries string
+		NewNumberOfRetries     string `xml:"NewNumberOfRetries"`
+		NewDelayBetweenRetries string `xml:"NewDelayBetweenRetries"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.NewNumberOfRetries, err = soap.MarshalUi4(
+	if request.NewNumberOfRetries, err = soap.MarshalUI4(
 		NewNumberOfRetries,
 	); err != nil {
 		return
 	}
-	if request.NewDelayBetweenRetries, err = soap.MarshalUi4(
+	if request.NewDelayBetweenRetries, err = soap.MarshalUI4(
 		NewDelayBetweenRetries,
 	); err != nil {
 		return
@@ -6516,7 +6517,7 @@ func (client *WANPOTSLinkConfig1) SetCallRetryInfo(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANPOTSLinkConfig_1,
 		"SetCallRetryInfo",
@@ -6532,7 +6533,7 @@ func (client *WANPOTSLinkConfig1) SetCallRetryInfo(
 	return
 }
 
-// GetISPInfo
+// GetISPInfo implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -6553,13 +6554,13 @@ func (client *WANPOTSLinkConfig1) GetISPInfo(
 
 	// Response structure.
 	response := &struct {
-		NewISPPhoneNumber string
-		NewISPInfo        string
-		NewLinkType       string
+		NewISPPhoneNumber string `xml:"NewISPPhoneNumber"`
+		NewISPInfo        string `xml:"NewISPInfo"`
+		NewLinkType       string `xml:"NewLinkType"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANPOTSLinkConfig_1,
 		"GetISPInfo",
@@ -6590,7 +6591,7 @@ func (client *WANPOTSLinkConfig1) GetISPInfo(
 	return
 }
 
-// GetCallRetryInfo
+// GetCallRetryInfo implements a UPnP action of the same name.
 func (client *WANPOTSLinkConfig1) GetCallRetryInfo(
 	ctx context.Context,
 ) (
@@ -6606,12 +6607,12 @@ func (client *WANPOTSLinkConfig1) GetCallRetryInfo(
 
 	// Response structure.
 	response := &struct {
-		NewNumberOfRetries     string
-		NewDelayBetweenRetries string
+		NewNumberOfRetries     string `xml:"NewNumberOfRetries"`
+		NewDelayBetweenRetries string `xml:"NewDelayBetweenRetries"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANPOTSLinkConfig_1,
 		"GetCallRetryInfo",
@@ -6622,12 +6623,12 @@ func (client *WANPOTSLinkConfig1) GetCallRetryInfo(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if NewNumberOfRetries, err = soap.UnmarshalUi4(
+	if NewNumberOfRetries, err = soap.UnmarshalUI4(
 		response.NewNumberOfRetries,
 	); err != nil {
 		return
 	}
-	if NewDelayBetweenRetries, err = soap.UnmarshalUi4(
+	if NewDelayBetweenRetries, err = soap.UnmarshalUI4(
 		response.NewDelayBetweenRetries,
 	); err != nil {
 		return
@@ -6637,7 +6638,7 @@ func (client *WANPOTSLinkConfig1) GetCallRetryInfo(
 	return
 }
 
-// GetFclass
+// GetFclass implements a UPnP action of the same name.
 func (client *WANPOTSLinkConfig1) GetFclass(
 	ctx context.Context,
 ) (
@@ -6652,11 +6653,11 @@ func (client *WANPOTSLinkConfig1) GetFclass(
 
 	// Response structure.
 	response := &struct {
-		NewFclass string
+		NewFclass string `xml:"NewFclass"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANPOTSLinkConfig_1,
 		"GetFclass",
@@ -6677,7 +6678,7 @@ func (client *WANPOTSLinkConfig1) GetFclass(
 	return
 }
 
-// GetDataModulationSupported
+// GetDataModulationSupported implements a UPnP action of the same name.
 func (client *WANPOTSLinkConfig1) GetDataModulationSupported(
 	ctx context.Context,
 ) (
@@ -6692,11 +6693,11 @@ func (client *WANPOTSLinkConfig1) GetDataModulationSupported(
 
 	// Response structure.
 	response := &struct {
-		NewDataModulationSupported string
+		NewDataModulationSupported string `xml:"NewDataModulationSupported"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANPOTSLinkConfig_1,
 		"GetDataModulationSupported",
@@ -6717,7 +6718,7 @@ func (client *WANPOTSLinkConfig1) GetDataModulationSupported(
 	return
 }
 
-// GetDataProtocol
+// GetDataProtocol implements a UPnP action of the same name.
 func (client *WANPOTSLinkConfig1) GetDataProtocol(
 	ctx context.Context,
 ) (
@@ -6732,11 +6733,11 @@ func (client *WANPOTSLinkConfig1) GetDataProtocol(
 
 	// Response structure.
 	response := &struct {
-		NewDataProtocol string
+		NewDataProtocol string `xml:"NewDataProtocol"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANPOTSLinkConfig_1,
 		"GetDataProtocol",
@@ -6757,7 +6758,7 @@ func (client *WANPOTSLinkConfig1) GetDataProtocol(
 	return
 }
 
-// GetDataCompression
+// GetDataCompression implements a UPnP action of the same name.
 func (client *WANPOTSLinkConfig1) GetDataCompression(
 	ctx context.Context,
 ) (
@@ -6772,11 +6773,11 @@ func (client *WANPOTSLinkConfig1) GetDataCompression(
 
 	// Response structure.
 	response := &struct {
-		NewDataCompression string
+		NewDataCompression string `xml:"NewDataCompression"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANPOTSLinkConfig_1,
 		"GetDataCompression",
@@ -6797,7 +6798,7 @@ func (client *WANPOTSLinkConfig1) GetDataCompression(
 	return
 }
 
-// GetPlusVTRCommandSupported
+// GetPlusVTRCommandSupported implements a UPnP action of the same name.
 func (client *WANPOTSLinkConfig1) GetPlusVTRCommandSupported(
 	ctx context.Context,
 ) (
@@ -6812,11 +6813,11 @@ func (client *WANPOTSLinkConfig1) GetPlusVTRCommandSupported(
 
 	// Response structure.
 	response := &struct {
-		NewPlusVTRCommandSupported string
+		NewPlusVTRCommandSupported string `xml:"NewPlusVTRCommandSupported"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANPOTSLinkConfig_1,
 		"GetPlusVTRCommandSupported",
@@ -6936,7 +6937,7 @@ func newWANPPPConnection1ClientsFromGenericClients(
 	return clients
 }
 
-// SetConnectionType
+// SetConnectionType implements a UPnP action of the same name.
 func (client *WANPPPConnection1) SetConnectionType(
 	ctx context.Context,
 	NewConnectionType string,
@@ -6945,7 +6946,7 @@ func (client *WANPPPConnection1) SetConnectionType(
 ) {
 	// Request structure.
 	request := &struct {
-		NewConnectionType string
+		NewConnectionType string `xml:"NewConnectionType"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -6960,7 +6961,7 @@ func (client *WANPPPConnection1) SetConnectionType(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANPPPConnection_1,
 		"SetConnectionType",
@@ -6976,7 +6977,7 @@ func (client *WANPPPConnection1) SetConnectionType(
 	return
 }
 
-// GetConnectionTypeInfo
+// GetConnectionTypeInfo implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -6996,12 +6997,12 @@ func (client *WANPPPConnection1) GetConnectionTypeInfo(
 
 	// Response structure.
 	response := &struct {
-		NewConnectionType          string
-		NewPossibleConnectionTypes string
+		NewConnectionType          string `xml:"NewConnectionType"`
+		NewPossibleConnectionTypes string `xml:"NewPossibleConnectionTypes"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANPPPConnection_1,
 		"GetConnectionTypeInfo",
@@ -7027,7 +7028,7 @@ func (client *WANPPPConnection1) GetConnectionTypeInfo(
 	return
 }
 
-// ConfigureConnection
+// ConfigureConnection implements a UPnP action of the same name.
 func (client *WANPPPConnection1) ConfigureConnection(
 	ctx context.Context,
 	NewUserName string,
@@ -7037,8 +7038,8 @@ func (client *WANPPPConnection1) ConfigureConnection(
 ) {
 	// Request structure.
 	request := &struct {
-		NewUserName string
-		NewPassword string
+		NewUserName string `xml:"NewUserName"`
+		NewPassword string `xml:"NewPassword"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -7058,7 +7059,7 @@ func (client *WANPPPConnection1) ConfigureConnection(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANPPPConnection_1,
 		"ConfigureConnection",
@@ -7074,7 +7075,7 @@ func (client *WANPPPConnection1) ConfigureConnection(
 	return
 }
 
-// RequestConnection
+// RequestConnection implements a UPnP action of the same name.
 func (client *WANPPPConnection1) RequestConnection(
 	ctx context.Context,
 ) (
@@ -7090,7 +7091,7 @@ func (client *WANPPPConnection1) RequestConnection(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANPPPConnection_1,
 		"RequestConnection",
@@ -7106,7 +7107,7 @@ func (client *WANPPPConnection1) RequestConnection(
 	return
 }
 
-// RequestTermination
+// RequestTermination implements a UPnP action of the same name.
 func (client *WANPPPConnection1) RequestTermination(
 	ctx context.Context,
 ) (
@@ -7122,7 +7123,7 @@ func (client *WANPPPConnection1) RequestTermination(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANPPPConnection_1,
 		"RequestTermination",
@@ -7138,7 +7139,7 @@ func (client *WANPPPConnection1) RequestTermination(
 	return
 }
 
-// ForceTermination
+// ForceTermination implements a UPnP action of the same name.
 func (client *WANPPPConnection1) ForceTermination(
 	ctx context.Context,
 ) (
@@ -7154,7 +7155,7 @@ func (client *WANPPPConnection1) ForceTermination(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANPPPConnection_1,
 		"ForceTermination",
@@ -7170,7 +7171,7 @@ func (client *WANPPPConnection1) ForceTermination(
 	return
 }
 
-// SetAutoDisconnectTime
+// SetAutoDisconnectTime implements a UPnP action of the same name.
 func (client *WANPPPConnection1) SetAutoDisconnectTime(
 	ctx context.Context,
 	NewAutoDisconnectTime uint32,
@@ -7179,11 +7180,11 @@ func (client *WANPPPConnection1) SetAutoDisconnectTime(
 ) {
 	// Request structure.
 	request := &struct {
-		NewAutoDisconnectTime string
+		NewAutoDisconnectTime string `xml:"NewAutoDisconnectTime"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.NewAutoDisconnectTime, err = soap.MarshalUi4(
+	if request.NewAutoDisconnectTime, err = soap.MarshalUI4(
 		NewAutoDisconnectTime,
 	); err != nil {
 		return
@@ -7194,7 +7195,7 @@ func (client *WANPPPConnection1) SetAutoDisconnectTime(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANPPPConnection_1,
 		"SetAutoDisconnectTime",
@@ -7210,7 +7211,7 @@ func (client *WANPPPConnection1) SetAutoDisconnectTime(
 	return
 }
 
-// SetIdleDisconnectTime
+// SetIdleDisconnectTime implements a UPnP action of the same name.
 func (client *WANPPPConnection1) SetIdleDisconnectTime(
 	ctx context.Context,
 	NewIdleDisconnectTime uint32,
@@ -7219,11 +7220,11 @@ func (client *WANPPPConnection1) SetIdleDisconnectTime(
 ) {
 	// Request structure.
 	request := &struct {
-		NewIdleDisconnectTime string
+		NewIdleDisconnectTime string `xml:"NewIdleDisconnectTime"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.NewIdleDisconnectTime, err = soap.MarshalUi4(
+	if request.NewIdleDisconnectTime, err = soap.MarshalUI4(
 		NewIdleDisconnectTime,
 	); err != nil {
 		return
@@ -7234,7 +7235,7 @@ func (client *WANPPPConnection1) SetIdleDisconnectTime(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANPPPConnection_1,
 		"SetIdleDisconnectTime",
@@ -7250,7 +7251,7 @@ func (client *WANPPPConnection1) SetIdleDisconnectTime(
 	return
 }
 
-// SetWarnDisconnectDelay
+// SetWarnDisconnectDelay implements a UPnP action of the same name.
 func (client *WANPPPConnection1) SetWarnDisconnectDelay(
 	ctx context.Context,
 	NewWarnDisconnectDelay uint32,
@@ -7259,11 +7260,11 @@ func (client *WANPPPConnection1) SetWarnDisconnectDelay(
 ) {
 	// Request structure.
 	request := &struct {
-		NewWarnDisconnectDelay string
+		NewWarnDisconnectDelay string `xml:"NewWarnDisconnectDelay"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.NewWarnDisconnectDelay, err = soap.MarshalUi4(
+	if request.NewWarnDisconnectDelay, err = soap.MarshalUI4(
 		NewWarnDisconnectDelay,
 	); err != nil {
 		return
@@ -7274,7 +7275,7 @@ func (client *WANPPPConnection1) SetWarnDisconnectDelay(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANPPPConnection_1,
 		"SetWarnDisconnectDelay",
@@ -7290,7 +7291,7 @@ func (client *WANPPPConnection1) SetWarnDisconnectDelay(
 	return
 }
 
-// GetStatusInfo
+// GetStatusInfo implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -7313,13 +7314,13 @@ func (client *WANPPPConnection1) GetStatusInfo(
 
 	// Response structure.
 	response := &struct {
-		NewConnectionStatus    string
-		NewLastConnectionError string
-		NewUptime              string
+		NewConnectionStatus    string `xml:"NewConnectionStatus"`
+		NewLastConnectionError string `xml:"NewLastConnectionError"`
+		NewUptime              string `xml:"NewUptime"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANPPPConnection_1,
 		"GetStatusInfo",
@@ -7340,7 +7341,7 @@ func (client *WANPPPConnection1) GetStatusInfo(
 	); err != nil {
 		return
 	}
-	if NewUptime, err = soap.UnmarshalUi4(
+	if NewUptime, err = soap.UnmarshalUI4(
 		response.NewUptime,
 	); err != nil {
 		return
@@ -7350,7 +7351,7 @@ func (client *WANPPPConnection1) GetStatusInfo(
 	return
 }
 
-// GetLinkLayerMaxBitRates
+// GetLinkLayerMaxBitRates implements a UPnP action of the same name.
 func (client *WANPPPConnection1) GetLinkLayerMaxBitRates(
 	ctx context.Context,
 ) (
@@ -7366,12 +7367,12 @@ func (client *WANPPPConnection1) GetLinkLayerMaxBitRates(
 
 	// Response structure.
 	response := &struct {
-		NewUpstreamMaxBitRate   string
-		NewDownstreamMaxBitRate string
+		NewUpstreamMaxBitRate   string `xml:"NewUpstreamMaxBitRate"`
+		NewDownstreamMaxBitRate string `xml:"NewDownstreamMaxBitRate"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANPPPConnection_1,
 		"GetLinkLayerMaxBitRates",
@@ -7382,12 +7383,12 @@ func (client *WANPPPConnection1) GetLinkLayerMaxBitRates(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if NewUpstreamMaxBitRate, err = soap.UnmarshalUi4(
+	if NewUpstreamMaxBitRate, err = soap.UnmarshalUI4(
 		response.NewUpstreamMaxBitRate,
 	); err != nil {
 		return
 	}
-	if NewDownstreamMaxBitRate, err = soap.UnmarshalUi4(
+	if NewDownstreamMaxBitRate, err = soap.UnmarshalUI4(
 		response.NewDownstreamMaxBitRate,
 	); err != nil {
 		return
@@ -7397,7 +7398,7 @@ func (client *WANPPPConnection1) GetLinkLayerMaxBitRates(
 	return
 }
 
-// GetPPPEncryptionProtocol
+// GetPPPEncryptionProtocol implements a UPnP action of the same name.
 func (client *WANPPPConnection1) GetPPPEncryptionProtocol(
 	ctx context.Context,
 ) (
@@ -7412,11 +7413,11 @@ func (client *WANPPPConnection1) GetPPPEncryptionProtocol(
 
 	// Response structure.
 	response := &struct {
-		NewPPPEncryptionProtocol string
+		NewPPPEncryptionProtocol string `xml:"NewPPPEncryptionProtocol"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANPPPConnection_1,
 		"GetPPPEncryptionProtocol",
@@ -7437,7 +7438,7 @@ func (client *WANPPPConnection1) GetPPPEncryptionProtocol(
 	return
 }
 
-// GetPPPCompressionProtocol
+// GetPPPCompressionProtocol implements a UPnP action of the same name.
 func (client *WANPPPConnection1) GetPPPCompressionProtocol(
 	ctx context.Context,
 ) (
@@ -7452,11 +7453,11 @@ func (client *WANPPPConnection1) GetPPPCompressionProtocol(
 
 	// Response structure.
 	response := &struct {
-		NewPPPCompressionProtocol string
+		NewPPPCompressionProtocol string `xml:"NewPPPCompressionProtocol"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANPPPConnection_1,
 		"GetPPPCompressionProtocol",
@@ -7477,7 +7478,7 @@ func (client *WANPPPConnection1) GetPPPCompressionProtocol(
 	return
 }
 
-// GetPPPAuthenticationProtocol
+// GetPPPAuthenticationProtocol implements a UPnP action of the same name.
 func (client *WANPPPConnection1) GetPPPAuthenticationProtocol(
 	ctx context.Context,
 ) (
@@ -7492,11 +7493,11 @@ func (client *WANPPPConnection1) GetPPPAuthenticationProtocol(
 
 	// Response structure.
 	response := &struct {
-		NewPPPAuthenticationProtocol string
+		NewPPPAuthenticationProtocol string `xml:"NewPPPAuthenticationProtocol"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANPPPConnection_1,
 		"GetPPPAuthenticationProtocol",
@@ -7517,7 +7518,7 @@ func (client *WANPPPConnection1) GetPPPAuthenticationProtocol(
 	return
 }
 
-// GetUserName
+// GetUserName implements a UPnP action of the same name.
 func (client *WANPPPConnection1) GetUserName(
 	ctx context.Context,
 ) (
@@ -7532,11 +7533,11 @@ func (client *WANPPPConnection1) GetUserName(
 
 	// Response structure.
 	response := &struct {
-		NewUserName string
+		NewUserName string `xml:"NewUserName"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANPPPConnection_1,
 		"GetUserName",
@@ -7557,7 +7558,7 @@ func (client *WANPPPConnection1) GetUserName(
 	return
 }
 
-// GetPassword
+// GetPassword implements a UPnP action of the same name.
 func (client *WANPPPConnection1) GetPassword(
 	ctx context.Context,
 ) (
@@ -7572,11 +7573,11 @@ func (client *WANPPPConnection1) GetPassword(
 
 	// Response structure.
 	response := &struct {
-		NewPassword string
+		NewPassword string `xml:"NewPassword"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANPPPConnection_1,
 		"GetPassword",
@@ -7597,7 +7598,7 @@ func (client *WANPPPConnection1) GetPassword(
 	return
 }
 
-// GetAutoDisconnectTime
+// GetAutoDisconnectTime implements a UPnP action of the same name.
 func (client *WANPPPConnection1) GetAutoDisconnectTime(
 	ctx context.Context,
 ) (
@@ -7612,11 +7613,11 @@ func (client *WANPPPConnection1) GetAutoDisconnectTime(
 
 	// Response structure.
 	response := &struct {
-		NewAutoDisconnectTime string
+		NewAutoDisconnectTime string `xml:"NewAutoDisconnectTime"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANPPPConnection_1,
 		"GetAutoDisconnectTime",
@@ -7627,7 +7628,7 @@ func (client *WANPPPConnection1) GetAutoDisconnectTime(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if NewAutoDisconnectTime, err = soap.UnmarshalUi4(
+	if NewAutoDisconnectTime, err = soap.UnmarshalUI4(
 		response.NewAutoDisconnectTime,
 	); err != nil {
 		return
@@ -7637,7 +7638,7 @@ func (client *WANPPPConnection1) GetAutoDisconnectTime(
 	return
 }
 
-// GetIdleDisconnectTime
+// GetIdleDisconnectTime implements a UPnP action of the same name.
 func (client *WANPPPConnection1) GetIdleDisconnectTime(
 	ctx context.Context,
 ) (
@@ -7652,11 +7653,11 @@ func (client *WANPPPConnection1) GetIdleDisconnectTime(
 
 	// Response structure.
 	response := &struct {
-		NewIdleDisconnectTime string
+		NewIdleDisconnectTime string `xml:"NewIdleDisconnectTime"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANPPPConnection_1,
 		"GetIdleDisconnectTime",
@@ -7667,7 +7668,7 @@ func (client *WANPPPConnection1) GetIdleDisconnectTime(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if NewIdleDisconnectTime, err = soap.UnmarshalUi4(
+	if NewIdleDisconnectTime, err = soap.UnmarshalUI4(
 		response.NewIdleDisconnectTime,
 	); err != nil {
 		return
@@ -7677,7 +7678,7 @@ func (client *WANPPPConnection1) GetIdleDisconnectTime(
 	return
 }
 
-// GetWarnDisconnectDelay
+// GetWarnDisconnectDelay implements a UPnP action of the same name.
 func (client *WANPPPConnection1) GetWarnDisconnectDelay(
 	ctx context.Context,
 ) (
@@ -7692,11 +7693,11 @@ func (client *WANPPPConnection1) GetWarnDisconnectDelay(
 
 	// Response structure.
 	response := &struct {
-		NewWarnDisconnectDelay string
+		NewWarnDisconnectDelay string `xml:"NewWarnDisconnectDelay"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANPPPConnection_1,
 		"GetWarnDisconnectDelay",
@@ -7707,7 +7708,7 @@ func (client *WANPPPConnection1) GetWarnDisconnectDelay(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if NewWarnDisconnectDelay, err = soap.UnmarshalUi4(
+	if NewWarnDisconnectDelay, err = soap.UnmarshalUI4(
 		response.NewWarnDisconnectDelay,
 	); err != nil {
 		return
@@ -7717,7 +7718,7 @@ func (client *WANPPPConnection1) GetWarnDisconnectDelay(
 	return
 }
 
-// GetNATRSIPStatus
+// GetNATRSIPStatus implements a UPnP action of the same name.
 func (client *WANPPPConnection1) GetNATRSIPStatus(
 	ctx context.Context,
 ) (
@@ -7733,12 +7734,12 @@ func (client *WANPPPConnection1) GetNATRSIPStatus(
 
 	// Response structure.
 	response := &struct {
-		NewRSIPAvailable string
-		NewNATEnabled    string
+		NewRSIPAvailable string `xml:"NewRSIPAvailable"`
+		NewNATEnabled    string `xml:"NewNATEnabled"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANPPPConnection_1,
 		"GetNATRSIPStatus",
@@ -7764,7 +7765,7 @@ func (client *WANPPPConnection1) GetNATRSIPStatus(
 	return
 }
 
-// GetGenericPortMappingEntry
+// GetGenericPortMappingEntry implements a UPnP action of the same name.
 //
 // Return values:
 //
@@ -7785,11 +7786,11 @@ func (client *WANPPPConnection1) GetGenericPortMappingEntry(
 ) {
 	// Request structure.
 	request := &struct {
-		NewPortMappingIndex string
+		NewPortMappingIndex string `xml:"NewPortMappingIndex"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
-	if request.NewPortMappingIndex, err = soap.MarshalUi2(
+	if request.NewPortMappingIndex, err = soap.MarshalUI2(
 		NewPortMappingIndex,
 	); err != nil {
 		return
@@ -7798,18 +7799,18 @@ func (client *WANPPPConnection1) GetGenericPortMappingEntry(
 
 	// Response structure.
 	response := &struct {
-		NewRemoteHost             string
-		NewExternalPort           string
-		NewProtocol               string
-		NewInternalPort           string
-		NewInternalClient         string
-		NewEnabled                string
-		NewPortMappingDescription string
-		NewLeaseDuration          string
+		NewRemoteHost             string `xml:"NewRemoteHost"`
+		NewExternalPort           string `xml:"NewExternalPort"`
+		NewProtocol               string `xml:"NewProtocol"`
+		NewInternalPort           string `xml:"NewInternalPort"`
+		NewInternalClient         string `xml:"NewInternalClient"`
+		NewEnabled                string `xml:"NewEnabled"`
+		NewPortMappingDescription string `xml:"NewPortMappingDescription"`
+		NewLeaseDuration          string `xml:"NewLeaseDuration"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANPPPConnection_1,
 		"GetGenericPortMappingEntry",
@@ -7825,7 +7826,7 @@ func (client *WANPPPConnection1) GetGenericPortMappingEntry(
 	); err != nil {
 		return
 	}
-	if NewExternalPort, err = soap.UnmarshalUi2(
+	if NewExternalPort, err = soap.UnmarshalUI2(
 		response.NewExternalPort,
 	); err != nil {
 		return
@@ -7835,7 +7836,7 @@ func (client *WANPPPConnection1) GetGenericPortMappingEntry(
 	); err != nil {
 		return
 	}
-	if NewInternalPort, err = soap.UnmarshalUi2(
+	if NewInternalPort, err = soap.UnmarshalUI2(
 		response.NewInternalPort,
 	); err != nil {
 		return
@@ -7855,7 +7856,7 @@ func (client *WANPPPConnection1) GetGenericPortMappingEntry(
 	); err != nil {
 		return
 	}
-	if NewLeaseDuration, err = soap.UnmarshalUi4(
+	if NewLeaseDuration, err = soap.UnmarshalUI4(
 		response.NewLeaseDuration,
 	); err != nil {
 		return
@@ -7865,7 +7866,7 @@ func (client *WANPPPConnection1) GetGenericPortMappingEntry(
 	return
 }
 
-// GetSpecificPortMappingEntry
+// GetSpecificPortMappingEntry implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -7885,9 +7886,9 @@ func (client *WANPPPConnection1) GetSpecificPortMappingEntry(
 ) {
 	// Request structure.
 	request := &struct {
-		NewRemoteHost   string
-		NewExternalPort string
-		NewProtocol     string
+		NewRemoteHost   string `xml:"NewRemoteHost"`
+		NewExternalPort string `xml:"NewExternalPort"`
+		NewProtocol     string `xml:"NewProtocol"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -7896,7 +7897,7 @@ func (client *WANPPPConnection1) GetSpecificPortMappingEntry(
 	); err != nil {
 		return
 	}
-	if request.NewExternalPort, err = soap.MarshalUi2(
+	if request.NewExternalPort, err = soap.MarshalUI2(
 		NewExternalPort,
 	); err != nil {
 		return
@@ -7910,15 +7911,15 @@ func (client *WANPPPConnection1) GetSpecificPortMappingEntry(
 
 	// Response structure.
 	response := &struct {
-		NewInternalPort           string
-		NewInternalClient         string
-		NewEnabled                string
-		NewPortMappingDescription string
-		NewLeaseDuration          string
+		NewInternalPort           string `xml:"NewInternalPort"`
+		NewInternalClient         string `xml:"NewInternalClient"`
+		NewEnabled                string `xml:"NewEnabled"`
+		NewPortMappingDescription string `xml:"NewPortMappingDescription"`
+		NewLeaseDuration          string `xml:"NewLeaseDuration"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANPPPConnection_1,
 		"GetSpecificPortMappingEntry",
@@ -7929,7 +7930,7 @@ func (client *WANPPPConnection1) GetSpecificPortMappingEntry(
 	}
 
 	// BEGIN Unmarshal arguments from response struct.
-	if NewInternalPort, err = soap.UnmarshalUi2(
+	if NewInternalPort, err = soap.UnmarshalUI2(
 		response.NewInternalPort,
 	); err != nil {
 		return
@@ -7949,7 +7950,7 @@ func (client *WANPPPConnection1) GetSpecificPortMappingEntry(
 	); err != nil {
 		return
 	}
-	if NewLeaseDuration, err = soap.UnmarshalUi4(
+	if NewLeaseDuration, err = soap.UnmarshalUI4(
 		response.NewLeaseDuration,
 	); err != nil {
 		return
@@ -7959,7 +7960,7 @@ func (client *WANPPPConnection1) GetSpecificPortMappingEntry(
 	return
 }
 
-// AddPortMapping
+// AddPortMapping implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -7979,14 +7980,14 @@ func (client *WANPPPConnection1) AddPortMapping(
 ) {
 	// Request structure.
 	request := &struct {
-		NewRemoteHost             string
-		NewExternalPort           string
-		NewProtocol               string
-		NewInternalPort           string
-		NewInternalClient         string
-		NewEnabled                string
-		NewPortMappingDescription string
-		NewLeaseDuration          string
+		NewRemoteHost             string `xml:"NewRemoteHost"`
+		NewExternalPort           string `xml:"NewExternalPort"`
+		NewProtocol               string `xml:"NewProtocol"`
+		NewInternalPort           string `xml:"NewInternalPort"`
+		NewInternalClient         string `xml:"NewInternalClient"`
+		NewEnabled                string `xml:"NewEnabled"`
+		NewPortMappingDescription string `xml:"NewPortMappingDescription"`
+		NewLeaseDuration          string `xml:"NewLeaseDuration"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -7995,7 +7996,7 @@ func (client *WANPPPConnection1) AddPortMapping(
 	); err != nil {
 		return
 	}
-	if request.NewExternalPort, err = soap.MarshalUi2(
+	if request.NewExternalPort, err = soap.MarshalUI2(
 		NewExternalPort,
 	); err != nil {
 		return
@@ -8005,7 +8006,7 @@ func (client *WANPPPConnection1) AddPortMapping(
 	); err != nil {
 		return
 	}
-	if request.NewInternalPort, err = soap.MarshalUi2(
+	if request.NewInternalPort, err = soap.MarshalUI2(
 		NewInternalPort,
 	); err != nil {
 		return
@@ -8025,7 +8026,7 @@ func (client *WANPPPConnection1) AddPortMapping(
 	); err != nil {
 		return
 	}
-	if request.NewLeaseDuration, err = soap.MarshalUi4(
+	if request.NewLeaseDuration, err = soap.MarshalUI4(
 		NewLeaseDuration,
 	); err != nil {
 		return
@@ -8036,7 +8037,7 @@ func (client *WANPPPConnection1) AddPortMapping(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANPPPConnection_1,
 		"AddPortMapping",
@@ -8052,7 +8053,7 @@ func (client *WANPPPConnection1) AddPortMapping(
 	return
 }
 
-// DeletePortMapping
+// DeletePortMapping implements a UPnP action of the same name.
 //
 // Parameters:
 //
@@ -8067,9 +8068,9 @@ func (client *WANPPPConnection1) DeletePortMapping(
 ) {
 	// Request structure.
 	request := &struct {
-		NewRemoteHost   string
-		NewExternalPort string
-		NewProtocol     string
+		NewRemoteHost   string `xml:"NewRemoteHost"`
+		NewExternalPort string `xml:"NewExternalPort"`
+		NewProtocol     string `xml:"NewProtocol"`
 	}{}
 
 	// BEGIN Marshal arguments into request struct.
@@ -8078,7 +8079,7 @@ func (client *WANPPPConnection1) DeletePortMapping(
 	); err != nil {
 		return
 	}
-	if request.NewExternalPort, err = soap.MarshalUi2(
+	if request.NewExternalPort, err = soap.MarshalUI2(
 		NewExternalPort,
 	); err != nil {
 		return
@@ -8094,7 +8095,7 @@ func (client *WANPPPConnection1) DeletePortMapping(
 	response := interface{}(nil)
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANPPPConnection_1,
 		"DeletePortMapping",
@@ -8110,7 +8111,7 @@ func (client *WANPPPConnection1) DeletePortMapping(
 	return
 }
 
-// GetExternalIPAddress
+// GetExternalIPAddress implements a UPnP action of the same name.
 func (client *WANPPPConnection1) GetExternalIPAddress(
 	ctx context.Context,
 ) (
@@ -8125,11 +8126,11 @@ func (client *WANPPPConnection1) GetExternalIPAddress(
 
 	// Response structure.
 	response := &struct {
-		NewExternalIPAddress string
+		NewExternalIPAddress string `xml:"NewExternalIPAddress"`
 	}{}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		URN_WANPPPConnection_1,
 		"GetExternalIPAddress",

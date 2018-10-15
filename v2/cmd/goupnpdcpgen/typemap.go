@@ -8,10 +8,10 @@ type conv struct {
 // typeConvs maps from a SOAP type (e.g "fixed.14.4") to the function name
 // suffix inside the soap module (e.g "Fixed14_4") and the Go type.
 var typeConvs = map[string]conv{
-	"ui1":         {"Ui1", "uint8"},
-	"ui2":         {"Ui2", "uint16"},
-	"ui4":         {"Ui4", "uint32"},
-	"ui8":         {"Ui8", "uint64"},
+	"ui1":         {"UI1", "uint8"},
+	"ui2":         {"UI2", "uint16"},
+	"ui4":         {"UI4", "uint32"},
+	"ui8":         {"UI8", "uint64"},
 	"i1":          {"I1", "int8"},
 	"i2":          {"I2", "int16"},
 	"i4":          {"I4", "int32"},

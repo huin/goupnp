@@ -42,7 +42,7 @@ func New(kind *errors.Kind, format string, values ...interface{}) error {
 	return kind.New(fmt.Sprintf(format, values...))
 }
 
-// New creates an error of the given kind, wrapping the given error, with the
+// Wrap creates an error of the given kind, wrapping the given error, with the
 // given format and values.
 func Wrap(kind *errors.Kind, err error, format string, values ...interface{}) error {
 	return kind.Wrap(err, fmt.Sprintf(format, values...))

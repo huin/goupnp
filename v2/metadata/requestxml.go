@@ -11,7 +11,7 @@ import (
 	"golang.org/x/net/html/charset"
 )
 
-func requestXml(
+func requestXML(
 	ctx context.Context,
 	loc *url.URL,
 	defaultSpace string,

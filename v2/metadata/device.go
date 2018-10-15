@@ -11,6 +11,7 @@ import (
 )
 
 const (
+	// DeviceXMLNamespace is the XML namespace for UPnP device metadata.
 	DeviceXMLNamespace = "urn:schemas-upnp-org:device-1-0"
 )
 
@@ -28,7 +29,7 @@ type RootDevice struct {
 // RequestRootDevice retrieves RootDevice XML metadata from the given URL.
 func RequestRootDevice(ctx context.Context, loc *url.URL) (*RootDevice, error) {
 	root := new(RootDevice)
-	if err := requestXml(ctx, loc, DeviceXMLNamespace, root); err != nil {
+	if err := requestXML(ctx, loc, DeviceXMLNamespace, root); err != nil {
 		return nil, errkind.URLContext.Wrap(err, loc.String())
 	}
 	var urlBase *url.URL
@@ -41,15 +42,15 @@ func RequestRootDevice(ctx context.Context, loc *url.URL) (*RootDevice, error) {
 	} else {
 		urlBase = loc
 	}
-	root.SetURLBase(urlBase)
+	root.setURLBase(urlBase)
 	return root, nil
 }
 
-// SetURLBase sets the URLBase for the RootDevice and its underlying components.
-func (root *RootDevice) SetURLBase(urlBase *url.URL) {
+// setURLBase sets the URLBase for the RootDevice and its underlying components.
+func (root *RootDevice) setURLBase(urlBase *url.URL) {
 	root.URLBase = *urlBase
 	root.URLBaseStr = urlBase.String()
-	root.Device.SetURLBase(urlBase)
+	root.Device.setURLBase(urlBase)
 }
 
 // SpecVersion is part of a RootDevice or SCPD document, describes the version
@@ -110,19 +111,19 @@ func (device *Device) FindService(serviceType string) []*Service {
 	return services
 }
 
-// SetURLBase sets the URLBase for the Device and its underlying components.
-func (device *Device) SetURLBase(urlBase *url.URL) {
-	device.ManufacturerURL.SetURLBase(urlBase)
-	device.ModelURL.SetURLBase(urlBase)
-	device.PresentationURL.SetURLBase(urlBase)
+// setURLBase sets the URLBase for the Device and its underlying components.
+func (device *Device) setURLBase(urlBase *url.URL) {
+	device.ManufacturerURL.setURLBase(urlBase)
+	device.ModelURL.setURLBase(urlBase)
+	device.PresentationURL.setURLBase(urlBase)
 	for i := range device.Icons {
-		device.Icons[i].SetURLBase(urlBase)
+		device.Icons[i].setURLBase(urlBase)
 	}
 	for i := range device.Services {
-		device.Services[i].SetURLBase(urlBase)
+		device.Services[i].setURLBase(urlBase)
 	}
 	for i := range device.Devices {
-		device.Devices[i].SetURLBase(urlBase)
+		device.Devices[i].setURLBase(urlBase)
 	}
 }
 
@@ -140,9 +141,9 @@ type Icon struct {
 	URL      URLField `xml:"url"`
 }
 
-// SetURLBase sets the URLBase for the Icon.
-func (icon *Icon) SetURLBase(url *url.URL) {
-	icon.URL.SetURLBase(url)
+// setURLBase sets the URLBase for the Icon.
+func (icon *Icon) setURLBase(url *url.URL) {
+	icon.URL.setURLBase(url)
 }
 
 // URLField is a URL that is part of a device description.
@@ -152,14 +153,14 @@ type URLField struct {
 	Str string  `xml:",chardata"`
 }
 
-func (uf *URLField) SetURLBase(urlBase *url.URL) {
-	refUrl, err := url.Parse(uf.Str)
+func (uf *URLField) setURLBase(urlBase *url.URL) {
+	refURL, err := url.Parse(uf.Str)
 	if err != nil {
 		uf.URL = url.URL{}
 		uf.Ok = false
 		return
 	}
 
-	uf.URL = *urlBase.ResolveReference(refUrl)
+	uf.URL = *urlBase.ResolveReference(refURL)
 	uf.Ok = true
 }

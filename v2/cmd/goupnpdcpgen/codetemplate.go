@@ -6,7 +6,8 @@ import (
 
 var packageTmpl = template.Must(template.New("package").Parse(`
 {{- $name := .Metadata.Name}}
-// Client for UPnP Device Control Protocol {{.Metadata.OfficialName}}.
+// Package {{ $name }} is a client for UPnP Device Control Protocol
+// {{.Metadata.OfficialName}}.
 // {{if .Metadata.DocURL}}
 // This DCP is documented in detail at: {{.Metadata.DocURL}}{{end}}
 //
@@ -43,10 +44,10 @@ const ({{range .ServiceTypes}}
 
 {{range .Services}}
 {{$srv := .}}
-{{$srvIdent := printf "%s%s" .Name .Version}}
+{{$srvIdent := printf "%s%s" .URNParts.Name .URNParts.Version}}
 
 // {{$srvIdent}} is a client for UPnP SOAP service with URN
-// "{{.URN}}".
+// "{{.URNParts.URN}}".
 // See discover.ServiceClient, which contains RootDevice and Service attributes
 // which are provided for informational value.
 type {{$srvIdent}} struct {
@@ -69,7 +70,7 @@ func New{{$srvIdent}}Clients(
 	var genericClients []discover.ServiceClient
 	if genericClients, errors, err = discover.NewServiceClients(
 		ctx,
-		{{$srv.Const}},
+		{{$srv.URNParts.Const}},
 		searchOpts...,
 	); err != nil {
 		return
@@ -96,7 +97,7 @@ func New{{$srvIdent}}ClientsByURL(
 	genericClients, err := discover.NewServiceClientsByURL(
 		ctx,
 		loc,
-		{{$srv.Const}},
+		{{$srv.URNParts.Const}},
 	)
 	if err != nil {
 		return nil, err
@@ -124,7 +125,7 @@ func New{{$srvIdent}}ClientsFromRootDevice(
 	genericClients, err := discover.NewServiceClientsFromRootDevice(
 		rootDevice,
 		loc,
-		{{$srv.Const}},
+		{{$srv.URNParts.Const}},
 	)
 	if err != nil {
 		return nil, err
@@ -148,7 +149,7 @@ func new{{$srvIdent}}ClientsFromGenericClients(
 
 {{$winargs := $srv.WrapArguments .InputArguments}}
 {{$woutargs := $srv.WrapArguments .OutputArguments}}
-// {{.Name}}
+// {{.Name}} implements a UPnP action of the same name.
 {{- if $winargs.HasDoc}}
 //
 // Parameters:{{range $winargs}}{{if .HasDoc}}
@@ -187,7 +188,7 @@ func (client *{{$srvIdent}}) {{.Name}}(
 	{{- else }}{{"interface{}(nil)"}}{{end}}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction(
+	if err = client.Client.PerformAction(
 		ctx,
 		{{$srv.URNParts.Const}},
 		"{{.Name}}",
@@ -210,6 +211,6 @@ func (client *{{$srvIdent}}) {{.Name}}(
 {{end}}
 
 {{define "argstruct"}}struct {{"{"}}
-{{range .}}{{.Name}} string
+{{range .}}{{.Name}} string ` + "`xml:\"{{.Name}}\"`" + `
 {{end}}{{"}"}}{{end}}
 `))

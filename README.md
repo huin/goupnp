@@ -1,6 +1,19 @@
 goupnp is a [UPnP](https://en.wikipedia.org/wiki/Universal_Plug_and_Play)
 client library for the [Go programming language](https://golang.org/).
 
+For most uses, it is recommended to use the code-generated packages under
+`github.com/huin/goupnp/v2/dcps`. Example use is shown at
+http://godoc.org/github.com/huin/goupnp/v2/example
+
+A commonly used client is [`internetgateway1.WANPPPConnection1`](
+http://godoc.org/github.com/huin/goupnp/v2/dcps/internetgateway1#WANPPPConnection1).
+
+Currently only a couple of schemas have code generated for them from the
+example XML specifications. Not all methods will work on these clients, because
+the generated stubs contain the full set of specified methods from the XML
+specifications, and the discovered services will likely support a subset of
+those methods.
+
 ## Installation
 
 Run `go get -u github.com/huin/goupnp/v2`.

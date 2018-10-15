@@ -27,21 +27,22 @@ const (
 	soapSuffix = `</s:Body></s:Envelope>`
 )
 
-type SOAPClient struct {
+// Client is a SOAP client.
+type Client struct {
 	EndpointURL url.URL
 	HTTPClient  http.Client
 }
 
-func NewSOAPClient(endpointURL url.URL) *SOAPClient {
-	return &SOAPClient{
+// NewClient creates a SOAP client to talk to the given service endpoint.
+func NewClient(endpointURL url.URL) *Client {
+	return &Client{
 		EndpointURL: endpointURL,
 	}
 }
 
-// PerformSOAPAction makes a SOAP request, with the given action.
-// inAction and outAction must both be pointers to structs with string fields
-// only.
-func (client *SOAPClient) PerformAction(
+// PerformAction makes a SOAP request, with the given action. inAction and
+// outAction must both be pointers to structs with string fields only.
+func (client *Client) PerformAction(
 	ctx context.Context,
 	actionNamespace,
 	actionName string,
@@ -229,17 +230,17 @@ type soapEnvelope struct {
 }
 
 type soapBody struct {
-	Fault     *SOAPFaultError `xml:"Fault"`
-	RawAction []byte          `xml:",innerxml"`
+	Fault     *FaultError `xml:"Fault"`
+	RawAction []byte      `xml:",innerxml"`
 }
 
-// SOAPFaultError implements error, and contains SOAP fault information.
-type SOAPFaultError struct {
+// FaultError implements error, and contains SOAP fault information.
+type FaultError struct {
 	FaultCode   string `xml:"faultcode"`
 	FaultString string `xml:"faultstring"`
 	Detail      string `xml:"detail"`
 }
 
-func (err *SOAPFaultError) Error() string {
+func (err *FaultError) Error() string {
 	return fmt.Sprintf("SOAP fault: %s", err.FaultString)
 }
