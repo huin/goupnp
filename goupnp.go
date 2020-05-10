@@ -21,16 +21,28 @@ import (
 	"net/url"
 	"time"
 
-	"golang.org/x/net/html/charset"
-
-	"github.com/huin/goupnp/httpu"
 	"github.com/huin/goupnp/ssdp"
+	"golang.org/x/net/html/charset"
 )
 
 // ContextError is an error that wraps an error with some context information.
 type ContextError struct {
 	Context string
 	Err     error
+}
+
+func ctxError(err error, msg string) ContextError {
+	return ContextError{
+		Context: msg,
+		Err:     err,
+	}
+}
+
+func ctxErrorf(err error, msg string, args ...interface{}) ContextError {
+	return ContextError{
+		Context: fmt.Sprintf(msg, args...),
+		Err:     err,
+	}
 }
 
 func (err ContextError) Error() string {
@@ -58,12 +70,12 @@ type MaybeRootDevice struct {
 // while attempting to send the query. An error or RootDevice is returned for
 // each discovered RootDevice.
 func DiscoverDevices(searchTarget string) ([]MaybeRootDevice, error) {
-	httpu, err := httpu.NewHTTPUClient()
+	hc, hcCleanup, err := httpuClient()
 	if err != nil {
 		return nil, err
 	}
-	defer httpu.Close()
-	responses, err := ssdp.SSDPRawSearch(httpu, string(searchTarget), 2, 3)
+	defer hcCleanup()
+	responses, err := ssdp.SSDPRawSearch(hc, string(searchTarget), 2, 3)
 	if err != nil {
 		return nil, err
 	}
