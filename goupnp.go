@@ -39,6 +39,9 @@ func (err ContextError) Error() string {
 
 // MaybeRootDevice contains either a RootDevice or an error.
 type MaybeRootDevice struct {
+	// Identifier of the device.
+	USN string
+
 	// Set iff Err == nil.
 	Root *RootDevice
 
@@ -71,6 +74,7 @@ func DiscoverDevices(searchTarget string) ([]MaybeRootDevice, error) {
 	results := make([]MaybeRootDevice, len(responses))
 	for i, response := range responses {
 		maybe := &results[i]
+		maybe.USN = response.Header.Get("USN")
 		loc, err := response.Location()
 		if err != nil {
 			maybe.Err = ContextError{"unexpected bad location from search", err}
