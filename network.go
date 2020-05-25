@@ -67,6 +67,11 @@ func localIPv4MCastAddrs() ([]string, error) {
 				// Not IPv4.
 				continue
 			}
+			// Fix #33: consider NOT loopback IP addresses
+			if addr.IP.IsLoopback() {
+				// do not use local address
+				continue
+			}
 			addrs = append(addrs, addr.IP.String())
 		}
 	}
