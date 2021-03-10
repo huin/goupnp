@@ -48,7 +48,7 @@ func localIPv4MCastAddrs() ([]string, error) {
 	// Find the set of addresses to listen on.
 	var addrs []string
 	for _, iface := range ifaces {
-		if iface.Flags&net.FlagMulticast == 0 || iface.Flags&net.FlagLoopback != 0 {
+		if iface.Flags&net.FlagMulticast == 0 || iface.Flags&net.FlagLoopback != 0 || iface.Flags&net.FlagUp == 0 {
 			// Does not support multicast or is a loopback address.
 			continue
 		}
