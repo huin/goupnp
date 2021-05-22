@@ -54,7 +54,7 @@ func (client *SOAPClient) PerformAction(actionNamespace, actionName string, inAc
 		return fmt.Errorf("goupnp: error performing SOAP HTTP request: %v", err)
 	}
 	defer response.Body.Close()
-	if response.StatusCode != 200 {
+	if response.StatusCode != 200 && response.ContentLength == 0 {
 		return fmt.Errorf("goupnp: SOAP request got HTTP %s", response.Status)
 	}
 
@@ -66,6 +66,8 @@ func (client *SOAPClient) PerformAction(actionNamespace, actionName string, inAc
 
 	if responseEnv.Body.Fault != nil {
 		return responseEnv.Body.Fault
+	} else if response.StatusCode != 200 {
+		return fmt.Errorf("goupnp: SOAP request got HTTP %s", response.Status)
 	}
 
 	if outAction != nil {
