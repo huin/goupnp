@@ -17,12 +17,12 @@ package goupnp
 import (
 	"encoding/xml"
 	"fmt"
+	"io"
 	"net/http"
 	"net/url"
 	"time"
 
 	"github.com/huin/goupnp/ssdp"
-	"golang.org/x/net/html/charset"
 )
 
 // ContextError is an error that wraps an error with some context information.
@@ -123,6 +123,11 @@ func DeviceByURL(loc *url.URL) (*RootDevice, error) {
 	return root, nil
 }
 
+// CharsetReaderDefault specifies the charset reader used while decoding the output
+// from a UPnP server. It can be modified in an init function to allow for non-utf8 encodings,
+// but should not be changed after requesting clients.
+var CharsetReaderDefault func(charset string, input io.Reader) (io.Reader, error)
+
 func requestXml(url string, defaultSpace string, doc interface{}) error {
 	timeout := time.Duration(3 * time.Second)
 	client := http.Client{
@@ -141,7 +146,7 @@ func requestXml(url string, defaultSpace string, doc interface{}) error {
 
 	decoder := xml.NewDecoder(resp.Body)
 	decoder.DefaultSpace = defaultSpace
-	decoder.CharsetReader = charset.NewReaderLabel
+	decoder.CharsetReader = CharsetReaderDefault
 
 	return decoder.Decode(doc)
 }
