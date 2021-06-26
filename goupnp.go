@@ -51,7 +51,8 @@ func (err ContextError) Error() string {
 
 // MaybeRootDevice contains either a RootDevice or an error.
 type MaybeRootDevice struct {
-	// Identifier of the device.
+	// Identifier of the device. Note that this in combination with Location
+	// uniquely identifies a result from DiscoverDevices.
 	USN string
 
 	// Set iff Err == nil.
