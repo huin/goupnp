@@ -11,7 +11,7 @@ import (
 )
 
 // Use discovered WANPPPConnection1 services to find external IP addresses.
-func Example_WANPPPConnection1_GetExternalIPAddress() {
+func ExampleWANPPPConnection1_GetExternalIPAddress() {
 	clients, errors, err := internetgateway1.NewWANPPPConnection1Clients()
 	extIPClients := make([]GetExternalIPAddresser, len(clients))
 	for i, client := range clients {
@@ -22,7 +22,7 @@ func Example_WANPPPConnection1_GetExternalIPAddress() {
 }
 
 // Use discovered WANIPConnection services to find external IP addresses.
-func Example_WANIPConnection_GetExternalIPAddress() {
+func ExampleWANIPConnection1_GetExternalIPAddress() {
 	clients, errors, err := internetgateway1.NewWANIPConnection1Clients()
 	extIPClients := make([]GetExternalIPAddresser, len(clients))
 	for i, client := range clients {
@@ -63,7 +63,7 @@ func DisplayExternalIPResults(clients []GetExternalIPAddresser, errors []error, 
 	}
 }
 
-func Example_ReuseDiscoveredDevice() {
+func Example_reuseDiscoveredDevice() {
 	var allMaybeRootDevices []goupnp.MaybeRootDevice
 	for _, urn := range []string{internetgateway1.URN_WANPPPConnection_1, internetgateway1.URN_WANIPConnection_1} {
 		maybeRootDevices, err := goupnp.DiscoverDevices(internetgateway1.URN_WANPPPConnection_1)
@@ -95,7 +95,7 @@ func Example_ReuseDiscoveredDevice() {
 
 // Use discovered igd1.WANCommonInterfaceConfig1 services to discover byte
 // transfer counts.
-func Example_WANCommonInterfaceConfig1_GetBytesTransferred() {
+func ExampleWANCommonInterfaceConfig1_getBytesTransferred_internetgateway1() {
 	clients, errors, err := internetgateway1.NewWANCommonInterfaceConfig1Clients()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Error discovering service with UPnP:", err)
@@ -122,7 +122,7 @@ func Example_WANCommonInterfaceConfig1_GetBytesTransferred() {
 
 // Use discovered igd2.WANCommonInterfaceConfig1 services to discover byte
 // transfer counts.
-func Example_WANCommonInterfaceConfig2_GetBytesTransferred() {
+func ExampleWANCommonInterfaceConfig1_getBytesTransferred_internetgateway2() {
 	clients, errors, err := internetgateway2.NewWANCommonInterfaceConfig1Clients()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Error discovering service with UPnP:", err)

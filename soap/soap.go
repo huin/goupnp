@@ -129,7 +129,7 @@ func encodeRequestArgs(w *bytes.Buffer, inAction interface{}) error {
 		if value.Kind() != reflect.String {
 			return fmt.Errorf("goupnp: SOAP arg %q is not of type string, but of type %v", argName, value.Type())
 		}
-		elem := xml.StartElement{xml.Name{"", argName}, nil}
+		elem := xml.StartElement{Name: xml.Name{Space: "", Local: argName}, Attr: nil}
 		if err := enc.EncodeToken(elem); err != nil {
 			return fmt.Errorf("goupnp: error encoding start element for SOAP arg %q: %v", argName, err)
 		}
