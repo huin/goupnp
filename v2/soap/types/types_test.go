@@ -3,20 +3,9 @@ package types
 import (
 	"bytes"
 	"fmt"
-	"math"
 	"testing"
 	"time"
 )
-
-var dummyLoc = time.FixedZone("DummyTZ", 6*3600)
-
-func newFixed14_4Parts(intPart int64, fracPart int16) *Fixed14_4 {
-	v, err := Fixed14_4FromParts(intPart, fracPart)
-	if err != nil {
-		panic(err)
-	}
-	return &v
-}
 
 type isEqual func(got, want SOAPValue) bool
 
@@ -40,6 +29,12 @@ type unmarshalCase struct {
 }
 
 func Test(t *testing.T) {
+	// Fake out the local time for the implementation.
+	localLoc = time.FixedZone("Fake/Local", 6*3600)
+	defer func() {
+		localLoc = time.Local
+	}()
+
 	badNumbers := []string{"", " ", "abc"}
 
 	typeTestCases := []typeTestCase{
@@ -140,37 +135,20 @@ func Test(t *testing.T) {
 		},
 
 		{
-			makeValue: func() SOAPValue { return &Fixed14_4{} },
-			isEqual: func(got, want SOAPValue) bool {
-				return got.(*Fixed14_4).Fractional == want.(*Fixed14_4).Fractional
-			},
+			makeValue: func() SOAPValue { return new(FloatFixed14_4) },
+			isEqual:   func(got, want SOAPValue) bool { return *got.(*FloatFixed14_4) == *want.(*FloatFixed14_4) },
 			marshalTests: []marshalCase{
-				{newFixed14_4Parts(0, 0), "0.0000"},
-				{newFixed14_4Parts(1, 2), "1.0002"},
-				{newFixed14_4Parts(1, 20), "1.0020"},
-				{newFixed14_4Parts(1, 200), "1.0200"},
-				{newFixed14_4Parts(1, 2000), "1.2000"},
-				{newFixed14_4Parts(-1, -2), "-1.0002"},
-				{newFixed14_4Parts(1234, 5678), "1234.5678"},
-				{newFixed14_4Parts(-1234, -5678), "-1234.5678"},
-				{newFixed14_4Parts(9999_99999_99999, 9999), "99999999999999.9999"},
-				{newFixed14_4Parts(-9999_99999_99999, -9999), "-99999999999999.9999"},
+				{NewFloatFixed14_4(0), "0.0000"},
+				{NewFloatFixed14_4(1), "1.0000"},
+				{NewFloatFixed14_4(1.2346), "1.2346"},
+				{NewFloatFixed14_4(-1), "-1.0000"},
+				{NewFloatFixed14_4(-1.2346), "-1.2346"},
+				{NewFloatFixed14_4(1e13), "10000000000000.0000"},
+				{NewFloatFixed14_4(-1e13), "-10000000000000.0000"},
 			},
-			unmarshalErrs: append([]string{
-				"", ".", "0.00000000abc", "0.-5",
-			}, badNumbers...),
-			unmarshalTests: []unmarshalCase{
-				{"010", newFixed14_4Parts(10, 0)},
-				{"0", newFixed14_4Parts(0, 0)},
-				{"0.", newFixed14_4Parts(0, 0)},
-				{"0.000005", newFixed14_4Parts(0, 0)},
-				{"1.2", newFixed14_4Parts(1, 2000)},
-				{"1.20", newFixed14_4Parts(1, 2000)},
-				{"1.200", newFixed14_4Parts(1, 2000)},
-				{"1.02", newFixed14_4Parts(1, 200)},
-				{"1.020", newFixed14_4Parts(1, 200)},
-				{"1.002", newFixed14_4Parts(1, 20)},
-				{"1.00200005", newFixed14_4Parts(1, 20)},
+			marshalErrs: []SOAPValue{
+				NewFloatFixed14_4(1e14),
+				NewFloatFixed14_4(-1e14),
 			},
 		},
 
@@ -187,9 +165,23 @@ func Test(t *testing.T) {
 		},
 
 		{
+			makeValue: func() SOAPValue { return new(DateLocal) },
+			isEqual: func(got, want SOAPValue) bool {
+				return got.(*DateLocal).ToTime().Equal(want.(*DateLocal).ToTime())
+			},
+			marshalTests: []marshalCase{
+				{NewDateLocal(time.Date(2013, 10, 8, 0, 0, 0, 0, localLoc)), "2013-10-08"},
+			},
+			unmarshalTests: []unmarshalCase{
+				{"20131008", NewDateLocal(time.Date(2013, 10, 8, 0, 0, 0, 0, localLoc))},
+			},
+			unmarshalErrs: []string{"", "-1"},
+		},
+
+		{
 			makeValue: func() SOAPValue { return new(TimeOfDay) },
 			isEqual: func(got, want SOAPValue) bool {
-				return got.(*TimeOfDay).equal(*want.(*TimeOfDay))
+				return got.(*TimeOfDay).Equal(want.(*TimeOfDay))
 			},
 			marshalTests: []marshalCase{
 				{&TimeOfDay{}, "00:00:00"},
@@ -212,29 +204,36 @@ func Test(t *testing.T) {
 				"00:00:60",
 				// Unexpected timezone component:
 				"01:02:03Z",
+				"01:02:03+01",
 				"01:02:03+01:23",
-				"01:02:03+01:23",
+				"01:02:03+0123",
+				"01:02:03-01",
 				"01:02:03-01:23",
-				"01:02:03-01:23",
+				"01:02:03-0123",
 			},
 		},
 
 		{
 			makeValue: func() SOAPValue { return new(TimeOfDayTZ) },
 			isEqual: func(got, want SOAPValue) bool {
-				return got.(*TimeOfDayTZ).equal(*want.(*TimeOfDayTZ))
+				return got.(*TimeOfDayTZ).Equal(want.(*TimeOfDayTZ))
 			},
 			marshalTests: []marshalCase{
 				{&TimeOfDayTZ{}, "00:00:00"},
 				// ISO8601 special case
-				{&TimeOfDayTZ{TimeOfDay{24, 0, 0}, TZD{}}, "24:00:00"},
-				{&TimeOfDayTZ{TimeOfDay{1, 2, 3}, TZDOffset(0)}, "01:02:03Z"},
-				{&TimeOfDayTZ{TimeOfDay{1, 2, 3}, TZDOffset(3600 + 23*60)}, "01:02:03+01:23"},
-				{&TimeOfDayTZ{TimeOfDay{1, 2, 3}, TZDOffset(-(3600 + 23*60))}, "01:02:03-01:23"},
+				{&TimeOfDayTZ{TimeOfDay{24, 0, 0}, false, 0}, "24:00:00"},
+				{&TimeOfDayTZ{TimeOfDay{1, 2, 3}, true, 0}, "01:02:03Z"},
+				{&TimeOfDayTZ{TimeOfDay{1, 2, 3}, true, 3600 + 23*60}, "01:02:03+01:23"},
+				{&TimeOfDayTZ{TimeOfDay{1, 2, 3}, true, -(3600 + 23*60)}, "01:02:03-01:23"},
 			},
 			unmarshalTests: []unmarshalCase{
-				{"010203+01:23", &TimeOfDayTZ{TimeOfDay{1, 2, 3}, TZDOffset(3600 + 23*60)}},
-				{"010203-01:23", &TimeOfDayTZ{TimeOfDay{1, 2, 3}, TZDOffset(-(3600 + 23*60))}},
+				{"000000", &TimeOfDayTZ{}},
+				{"01Z", &TimeOfDayTZ{TimeOfDay{1, 0, 0}, true, 0}},
+				{"01+01", &TimeOfDayTZ{TimeOfDay{1, 0, 0}, true, 3600}},
+				{"01:02:03+01", &TimeOfDayTZ{TimeOfDay{1, 2, 3}, true, 3600}},
+				{"01:02:03+0123", &TimeOfDayTZ{TimeOfDay{1, 2, 3}, true, 3600 + 23*60}},
+				{"01:02:03-01", &TimeOfDayTZ{TimeOfDay{1, 2, 3}, true, -3600}},
+				{"01:02:03-0123", &TimeOfDayTZ{TimeOfDay{1, 2, 3}, true, -(3600 + 23*60)}},
 			},
 			unmarshalErrs: []string{
 				// Misformatted values:
@@ -249,54 +248,63 @@ func Test(t *testing.T) {
 		},
 
 		{
-			makeValue: func() SOAPValue { return new(Date) },
+			makeValue: func() SOAPValue { return new(DateLocal) },
 			isEqual: func(got, want SOAPValue) bool {
-				a, b := got.(*Date), want.(*Date)
-				return a.Year == b.Year && a.Month == b.Month && a.Day == b.Day
+				return got.(*DateLocal).ToTime().Equal(want.(*DateLocal).ToTime())
 			},
 			marshalTests: []marshalCase{
-				{&Date{2013, 10, 8}, "2013-10-08"},
+				{NewDateLocal(time.Date(2013, 10, 8, 0, 0, 0, 0, localLoc)), "2013-10-08"},
 			},
 			unmarshalTests: []unmarshalCase{
-				{"20131008", &Date{2013, 10, 8}},
+				{"20131008", NewDateLocal(time.Date(2013, 10, 8, 0, 0, 0, 0, localLoc))},
 			},
-			unmarshalErrs: []string{"", "-1"},
+			unmarshalErrs: []string{
+				// Unexpected time component.
+				"2013-10-08T10:30:50",
+				// Unexpected timezone component.
+				"2013-10-08+01",
+			},
 		},
 
 		{
-			makeValue: func() SOAPValue { return new(DateTime) },
+			makeValue: func() SOAPValue { return new(DateTimeLocal) },
 			isEqual: func(got, want SOAPValue) bool {
-				return got.(*DateTime).equal(*want.(*DateTime))
+				return got.(*DateTimeLocal).ToTime().Equal(want.(*DateTimeLocal).ToTime())
 			},
 			marshalTests: []marshalCase{
-				{DateTimeFromTime(time.Date(2013, 10, 8, 0, 0, 0, 0, dummyLoc)).ptr(), "2013-10-08T00:00:00"},
-				{DateTimeFromTime(time.Date(2013, 10, 8, 10, 30, 50, 0, dummyLoc)).ptr(), "2013-10-08T10:30:50"},
+				{NewDateTimeLocal(time.Date(2013, 10, 8, 0, 0, 0, 0, localLoc)), "2013-10-08T00:00:00"},
+				{NewDateTimeLocal(time.Date(2013, 10, 8, 10, 30, 50, 0, localLoc)), "2013-10-08T10:30:50"},
 			},
 			unmarshalTests: []unmarshalCase{
-				{"20131008", DateTimeFromTime(time.Date(2013, 10, 8, 0, 0, 0, 0, dummyLoc)).ptr()},
+				{"20131008", NewDateTimeLocal(time.Date(2013, 10, 8, 0, 0, 0, 0, localLoc))},
 			},
 			unmarshalErrs: []string{
 				// Unexpected timezone component.
-				"2013-10-08T10:30:50+01:00",
+				"2013-10-08T10:30:50+01",
 			},
 		},
 
 		{
-			makeValue: func() SOAPValue { return new(DateTimeTZ) },
+			makeValue: func() SOAPValue { return new(DateTimeTZLocal) },
 			isEqual: func(got, want SOAPValue) bool {
-				return got.(*DateTimeTZ).equal(*want.(*DateTimeTZ))
+				return got.(*DateTimeTZLocal).ToTime().Equal(want.(*DateTimeTZLocal).ToTime())
 			},
 			marshalTests: []marshalCase{
-				{DateTimeTZFromTime(time.Date(2013, 10, 8, 0, 0, 0, 0, dummyLoc)).ptr(), "2013-10-08T00:00:00+06:00"},
-				{DateTimeTZFromTime(time.Date(2013, 10, 8, 10, 30, 50, 0, dummyLoc)).ptr(), "2013-10-08T10:30:50+06:00"},
-				{DateTimeTZFromTime(time.Date(2013, 10, 8, 0, 0, 0, 0, time.UTC)).ptr(), "2013-10-08T00:00:00Z"},
-				{DateTimeTZFromTime(time.Date(2013, 10, 8, 10, 30, 50, 0, time.UTC)).ptr(), "2013-10-08T10:30:50Z"},
-				{DateTimeTZFromTime(time.Date(2013, 10, 8, 10, 30, 50, 0, time.FixedZone("+01:23", 3600+23*60))).ptr(), "2013-10-08T10:30:50+01:23"},
-				{DateTimeTZFromTime(time.Date(2013, 10, 8, 10, 30, 50, 0, time.FixedZone("-01:23", -(3600+23*60)))).ptr(), "2013-10-08T10:30:50-01:23"},
+				{NewDateTimeTZLocal(time.Date(2013, 10, 8, 0, 0, 0, 0, localLoc)), "2013-10-08T00:00:00+06:00"},
+				{NewDateTimeTZLocal(time.Date(2013, 10, 8, 10, 30, 50, 0, localLoc)), "2013-10-08T10:30:50+06:00"},
+				{NewDateTimeTZLocal(time.Date(2013, 10, 8, 0, 0, 0, 0, time.UTC)), "2013-10-08T00:00:00+00:00"},
+				{NewDateTimeTZLocal(time.Date(2013, 10, 8, 10, 30, 50, 0, time.UTC)), "2013-10-08T10:30:50+00:00"},
+				{NewDateTimeTZLocal(time.Date(2013, 10, 8, 10, 30, 50, 0, time.FixedZone("+01:23", 3600+23*60))), "2013-10-08T10:30:50+01:23"},
+				{NewDateTimeTZLocal(time.Date(2013, 10, 8, 10, 30, 50, 0, time.FixedZone("-01:23", -(3600+23*60)))), "2013-10-08T10:30:50-01:23"},
 			},
 			unmarshalTests: []unmarshalCase{
-				{"2013-10-08T10:30:50", &DateTimeTZ{Date{2013, 10, 8}, TimeOfDay{10, 30, 50}, TZD{}}},
-				{"2013-10-08T10:30:50+00:00", DateTimeTZFromTime(time.Date(2013, 10, 8, 10, 30, 50, 0, time.UTC)).ptr()},
+				{"20131008", NewDateTimeTZLocal(time.Date(2013, 10, 8, 0, 0, 0, 0, localLoc))},
+				{"2013-10-08T10:30:50", NewDateTimeTZLocal(time.Date(2013, 10, 8, 10, 30, 50, 0, localLoc))},
+				{"2013-10-08T10:30:50Z", NewDateTimeTZLocal(time.Date(2013, 10, 8, 10, 30, 50, 0, time.UTC))},
+				{"2013-10-08T10:30:50+01", NewDateTimeTZLocal(time.Date(2013, 10, 8, 10, 30, 50, 0, time.FixedZone("+01:00", 3600)))},
+				{"2013-10-08T10:30:50+0123", NewDateTimeTZLocal(time.Date(2013, 10, 8, 10, 30, 50, 0, time.FixedZone("+01:23", 3600+23*60)))},
+				{"2013-10-08T10:30:50-01", NewDateTimeTZLocal(time.Date(2013, 10, 8, 10, 30, 50, 0, time.FixedZone("-01:00", -3600)))},
+				{"2013-10-08T10:30:50-0123", NewDateTimeTZLocal(time.Date(2013, 10, 8, 10, 30, 50, 0, time.FixedZone("-01:23", -(3600+23*60))))},
 			},
 		},
 
@@ -372,11 +380,10 @@ func Test(t *testing.T) {
 			for i, mt := range tt.marshalTests {
 				mt := mt
 				t.Run(fmt.Sprintf("marshalTest#%d_%v", i, mt.input), func(t *testing.T) {
-					gotBytes, err := mt.input.MarshalText()
+					got, err := mt.input.Marshal()
 					if err != nil {
 						t.Errorf("got unexpected error: %v", err)
 					}
-					got := string(gotBytes)
 					if got != mt.want {
 						t.Errorf("got %q, want: %q", got, mt.want)
 					}
@@ -385,7 +392,7 @@ func Test(t *testing.T) {
 			for i, input := range tt.marshalErrs {
 				input := input
 				t.Run(fmt.Sprintf("marshalErr#%d_%v", i, input), func(t *testing.T) {
-					got, err := input.MarshalText()
+					got, err := input.Marshal()
 					if err == nil {
 						t.Errorf("got %q, want error", got)
 					}
@@ -395,8 +402,8 @@ func Test(t *testing.T) {
 				ut := ut
 				t.Run(fmt.Sprintf("unmarshalTest#%d_%q", i, ut.input), func(t *testing.T) {
 					got := tt.makeValue()
-					if err := got.UnmarshalText([]byte(ut.input)); err != nil {
-						t.Errorf("got unexpected error: %v", err)
+					if err := got.Unmarshal(ut.input); err != nil {
+						t.Errorf("got error, want success")
 					}
 					if !tt.isEqual(got, ut.want) {
 						t.Errorf("got %v, want %v", got, ut.want)
@@ -407,131 +414,11 @@ func Test(t *testing.T) {
 				input := input
 				t.Run(fmt.Sprintf("unmarshalErrs#%d_%q", i, input), func(t *testing.T) {
 					got := tt.makeValue()
-					if err := got.UnmarshalText([]byte(input)); err == nil {
+					if err := got.Unmarshal(input); err == nil {
 						t.Errorf("got %v, want error", got)
 					}
 				})
 			}
 		})
 	}
-}
-
-func TestFixed14_4(t *testing.T) {
-	t.Run("Parts", func(t *testing.T) {
-		tests := []struct {
-			intPart    int64
-			fracPart   int16
-			fractional int64
-		}{
-			{0, 0, 0},
-			{1, 2, 1_0002},
-			{-1, -2, -1_0002},
-			{1234, 5678, 1234_5678},
-			{-1234, -5678, -1234_5678},
-			{9999_99999_99999, 9999, 9999_99999_99999_9999},
-			{-9999_99999_99999, -9999, -9999_99999_99999_9999},
-		}
-		for _, test := range tests {
-			test := test
-			t.Run(fmt.Sprintf("FromParts(%d,%d)", test.intPart, test.fracPart), func(t *testing.T) {
-				got, err := Fixed14_4FromParts(test.intPart, test.fracPart)
-				if err != nil {
-					t.Errorf("got error %v, want success", err)
-				}
-				if got.Fractional != test.fractional {
-					t.Errorf("got %d, want %d", got.Fractional, test.fractional)
-				}
-			})
-			t.Run(fmt.Sprintf("%d.Parts()", test.fractional), func(t *testing.T) {
-				v, err := Fixed14_4FromFractional(test.fractional)
-				if err != nil {
-					t.Errorf("got error %v, want success", err)
-				}
-				gotIntPart, gotFracPart := v.Parts()
-				if gotIntPart != test.intPart {
-					t.Errorf("got %d, want %d", gotIntPart, test.intPart)
-				}
-				if gotFracPart != test.fracPart {
-					t.Errorf("got %d, want %d", gotFracPart, test.fracPart)
-				}
-			})
-		}
-	})
-	t.Run("Float", func(t *testing.T) {
-		tests := []struct {
-			flt float64
-			fix *Fixed14_4
-		}{
-			{0, newFixed14_4Parts(0, 0)},
-			{1234.5678, newFixed14_4Parts(1234, 5678)},
-			{-1234.5678, newFixed14_4Parts(-1234, -5678)},
-		}
-
-		for _, test := range tests {
-			t.Run(fmt.Sprintf("To/FromFloat(%v)", test.fix), func(t *testing.T) {
-				gotFix, err := Fixed14_4FromFloat(test.flt)
-				if err != nil {
-					t.Errorf("got error %v, want success", err)
-				}
-				if gotFix.Fractional != test.fix.Fractional {
-					t.Errorf("got %v, want %v", gotFix, test.fix)
-				}
-
-				gotFlt := test.fix.Float64()
-				if math.Abs(gotFlt-test.flt) > 1e-6 {
-					t.Errorf("got %f, want %f", gotFlt, test.flt)
-				}
-			})
-		}
-
-		errTests := []float64{
-			1e50,
-			-1e50,
-			1e14,
-			-1e14,
-			math.NaN(),
-			math.Inf(1),
-			math.Inf(-1),
-		}
-		for _, test := range errTests {
-			t.Run(fmt.Sprintf("ErrorFromFloat(%f)", test), func(t *testing.T) {
-				got, err := Fixed14_4FromFloat(test)
-				if err == nil {
-					t.Errorf("got success and %v, want error", got)
-				}
-			})
-		}
-	})
-}
-
-// methods only used in testing:
-
-func (v TimeOfDay) equal(o TimeOfDay) bool {
-	return v.Hour == o.Hour && v.Minute == o.Minute && v.Second == o.Second
-}
-
-func (v TimeOfDayTZ) equal(o TimeOfDayTZ) bool {
-	return v.TimeOfDay.equal(o.TimeOfDay) && v.TZ.equal(o.TZ)
-}
-
-func (d Date) equal(o Date) bool {
-	return d.Year == o.Year && d.Month == o.Month && d.Day == o.Day
-}
-
-func (dtz DateTime) ptr() *DateTime { return &dtz }
-
-func (dt DateTime) equal(o DateTime) bool {
-	return dt.Date.equal(o.Date) && dt.TimeOfDay.equal(o.TimeOfDay)
-}
-
-func (dtz DateTimeTZ) ptr() *DateTimeTZ { return &dtz }
-
-func (dtz DateTimeTZ) equal(o DateTimeTZ) bool {
-	return dtz.Date.equal(o.Date) &&
-		dtz.TimeOfDay.equal(o.TimeOfDay) &&
-		dtz.TZ.equal(o.TZ)
-}
-
-func (tzd TZD) equal(o TZD) bool {
-	return tzd.Offset == o.Offset && tzd.HasTZ == o.HasTZ
 }
