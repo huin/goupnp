@@ -191,20 +191,6 @@ func Test(t *testing.T) {
 		},
 
 		{
-			makeValue: func() SOAPValue { return new(DateLocal) },
-			isEqual: func(got, want SOAPValue) bool {
-				return got.(*DateLocal).ToTime().Equal(want.(*DateLocal).ToTime())
-			},
-			marshalTests: []marshalCase{
-				{NewDateLocal(time.Date(2013, 10, 8, 0, 0, 0, 0, localLoc)), "2013-10-08"},
-			},
-			unmarshalTests: []unmarshalCase{
-				{"20131008", NewDateLocal(time.Date(2013, 10, 8, 0, 0, 0, 0, localLoc))},
-			},
-			unmarshalErrs: []string{"", "-1"},
-		},
-
-		{
 			makeValue: func() SOAPValue { return new(TimeOfDay) },
 			isEqual: func(got, want SOAPValue) bool {
 				return got.(*TimeOfDay).Equal(want.(*TimeOfDay))
@@ -274,22 +260,18 @@ func Test(t *testing.T) {
 		},
 
 		{
-			makeValue: func() SOAPValue { return new(DateLocal) },
+			makeValue: func() SOAPValue { return new(Date) },
 			isEqual: func(got, want SOAPValue) bool {
-				return got.(*DateLocal).ToTime().Equal(want.(*DateLocal).ToTime())
+				a, b := got.(*Date), want.(*Date)
+				return a.Year == b.Year && a.Month == b.Month && a.Day == b.Day
 			},
 			marshalTests: []marshalCase{
-				{NewDateLocal(time.Date(2013, 10, 8, 0, 0, 0, 0, localLoc)), "2013-10-08"},
+				{&Date{2013, 10, 8}, "2013-10-08"},
 			},
 			unmarshalTests: []unmarshalCase{
-				{"20131008", NewDateLocal(time.Date(2013, 10, 8, 0, 0, 0, 0, localLoc))},
+				{"20131008", &Date{2013, 10, 8}},
 			},
-			unmarshalErrs: []string{
-				// Unexpected time component.
-				"2013-10-08T10:30:50",
-				// Unexpected timezone component.
-				"2013-10-08+01",
-			},
+			unmarshalErrs: []string{"", "-1"},
 		},
 
 		{
