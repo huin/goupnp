@@ -474,36 +474,6 @@ var dateRegexps = []*regexp.Regexp{
 	regexp.MustCompile(`^(\d{4})(?:(\d{2})(?:(\d{2}))?)?$`),
 }
 
-func parseDateParts(s string) (year, month, day int, err error) {
-	var parts []string
-	for _, re := range dateRegexps {
-		parts = re.FindStringSubmatch(s)
-		if parts != nil {
-			break
-		}
-	}
-	if parts == nil {
-		err = fmt.Errorf("soap date: value %q is not in a recognized ISO8601 date format", s)
-		return
-	}
-
-	year = parseInt(parts[1], &err)
-	month = 1
-	day = 1
-	if len(parts[2]) != 0 {
-		month = parseInt(parts[2], &err)
-		if len(parts[3]) != 0 {
-			day = parseInt(parts[3], &err)
-		}
-	}
-
-	if err != nil {
-		err = fmt.Errorf("soap date: %q: %v", s, err)
-	}
-
-	return
-}
-
 var timeRegexps = []*regexp.Regexp{
 	// hh[:mm[:ss]]
 	regexp.MustCompile(`^(\d{2})(?::(\d{2})(?::(\d{2}))?)?$`),
@@ -774,13 +744,32 @@ func (d *Date) Marshal() (string, error) {
 }
 
 func (d *Date) Unmarshal(s string) error {
-	year, month, day, err := parseDateParts(s)
-	if err != nil {
-		return err
+	var parts []string
+	for _, re := range dateRegexps {
+		parts = re.FindStringSubmatch(s)
+		if parts != nil {
+			break
+		}
 	}
-	d.Year = year
-	d.Month = time.Month(month)
-	d.Day = day
+	if parts == nil {
+		return fmt.Errorf("error parsing date: value %q is not in a recognized ISO8601 date format", s)
+	}
+
+	var err error
+	d.Year = parseInt(parts[1], &err)
+	d.Month = time.January
+	d.Day = 1
+	if len(parts[2]) != 0 {
+		d.Month = time.Month(parseInt(parts[2], &err))
+		if len(parts[3]) != 0 {
+			d.Day = parseInt(parts[3], &err)
+		}
+	}
+
+	if err != nil {
+		return fmt.Errorf("error parsing date %q: %v", s, err)
+	}
+
 	return nil
 }
 
@@ -816,8 +805,8 @@ func (v *DateTimeLocal) Unmarshal(s string) error {
 		return fmt.Errorf("soap datetime: unexpected timezone in %q", s)
 	}
 
-	year, month, day, err := parseDateParts(dateStr)
-	if err != nil {
+	var date Date
+	if err := date.Unmarshal(dateStr); err != nil {
 		return err
 	}
 
@@ -829,7 +818,7 @@ func (v *DateTimeLocal) Unmarshal(s string) error {
 		}
 	}
 
-	*v = DateTimeLocal(time.Date(year, time.Month(month), day,
+	*v = DateTimeLocal(time.Date(date.Year, time.Month(date.Month), date.Day,
 		int(tod.Hour), int(tod.Minute), int(tod.Second), 0,
 		localLoc))
 	return nil
@@ -864,8 +853,8 @@ func (v *DateTimeTZLocal) Unmarshal(s string) error {
 		return err
 	}
 
-	year, month, day, err := parseDateParts(dateStr)
-	if err != nil {
+	var date Date
+	if err := date.Unmarshal(dateStr); err != nil {
 		return err
 	}
 
@@ -890,7 +879,7 @@ func (v *DateTimeTZLocal) Unmarshal(s string) error {
 		}
 	}
 
-	*v = DateTimeTZLocal(time.Date(year, time.Month(month), day,
+	*v = DateTimeTZLocal(time.Date(date.Year, time.Month(date.Month), date.Day,
 		int(tod.Hour), int(tod.Minute), int(tod.Second), 0,
 		location))
 	return nil
