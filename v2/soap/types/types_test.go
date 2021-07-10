@@ -8,6 +8,8 @@ import (
 	"time"
 )
 
+var dummyLoc = time.FixedZone("DummyTZ", 6*3600)
+
 func newFixed14_4Parts(intPart int64, fracPart int16) *Fixed14_4 {
 	v, err := Fixed14_4FromParts(intPart, fracPart)
 	if err != nil {
@@ -38,12 +40,6 @@ type unmarshalCase struct {
 }
 
 func Test(t *testing.T) {
-	// Fake out the local time for the implementation.
-	localLoc = time.FixedZone("Fake/Local", 6*3600)
-	defer func() {
-		localLoc = time.Local
-	}()
-
 	badNumbers := []string{"", " ", "abc"}
 
 	typeTestCases := []typeTestCase{
@@ -193,7 +189,7 @@ func Test(t *testing.T) {
 		{
 			makeValue: func() SOAPValue { return new(TimeOfDay) },
 			isEqual: func(got, want SOAPValue) bool {
-				return got.(*TimeOfDay).Equal(want.(*TimeOfDay))
+				return got.(*TimeOfDay).equal(*want.(*TimeOfDay))
 			},
 			marshalTests: []marshalCase{
 				{&TimeOfDay{}, "00:00:00"},
@@ -216,36 +212,29 @@ func Test(t *testing.T) {
 				"00:00:60",
 				// Unexpected timezone component:
 				"01:02:03Z",
-				"01:02:03+01",
 				"01:02:03+01:23",
-				"01:02:03+0123",
-				"01:02:03-01",
+				"01:02:03+01:23",
 				"01:02:03-01:23",
-				"01:02:03-0123",
+				"01:02:03-01:23",
 			},
 		},
 
 		{
 			makeValue: func() SOAPValue { return new(TimeOfDayTZ) },
 			isEqual: func(got, want SOAPValue) bool {
-				return got.(*TimeOfDayTZ).Equal(want.(*TimeOfDayTZ))
+				return got.(*TimeOfDayTZ).equal(*want.(*TimeOfDayTZ))
 			},
 			marshalTests: []marshalCase{
 				{&TimeOfDayTZ{}, "00:00:00"},
 				// ISO8601 special case
-				{&TimeOfDayTZ{TimeOfDay{24, 0, 0}, false, 0}, "24:00:00"},
-				{&TimeOfDayTZ{TimeOfDay{1, 2, 3}, true, 0}, "01:02:03Z"},
-				{&TimeOfDayTZ{TimeOfDay{1, 2, 3}, true, 3600 + 23*60}, "01:02:03+01:23"},
-				{&TimeOfDayTZ{TimeOfDay{1, 2, 3}, true, -(3600 + 23*60)}, "01:02:03-01:23"},
+				{&TimeOfDayTZ{TimeOfDay{24, 0, 0}, TZD{}}, "24:00:00"},
+				{&TimeOfDayTZ{TimeOfDay{1, 2, 3}, TZDOffset(0)}, "01:02:03Z"},
+				{&TimeOfDayTZ{TimeOfDay{1, 2, 3}, TZDOffset(3600 + 23*60)}, "01:02:03+01:23"},
+				{&TimeOfDayTZ{TimeOfDay{1, 2, 3}, TZDOffset(-(3600 + 23*60))}, "01:02:03-01:23"},
 			},
 			unmarshalTests: []unmarshalCase{
-				{"000000", &TimeOfDayTZ{}},
-				{"01Z", &TimeOfDayTZ{TimeOfDay{1, 0, 0}, true, 0}},
-				{"01+01", &TimeOfDayTZ{TimeOfDay{1, 0, 0}, true, 3600}},
-				{"01:02:03+01", &TimeOfDayTZ{TimeOfDay{1, 2, 3}, true, 3600}},
-				{"01:02:03+0123", &TimeOfDayTZ{TimeOfDay{1, 2, 3}, true, 3600 + 23*60}},
-				{"01:02:03-01", &TimeOfDayTZ{TimeOfDay{1, 2, 3}, true, -3600}},
-				{"01:02:03-0123", &TimeOfDayTZ{TimeOfDay{1, 2, 3}, true, -(3600 + 23*60)}},
+				{"010203+01:23", &TimeOfDayTZ{TimeOfDay{1, 2, 3}, TZDOffset(3600 + 23*60)}},
+				{"010203-01:23", &TimeOfDayTZ{TimeOfDay{1, 2, 3}, TZDOffset(-(3600 + 23*60))}},
 			},
 			unmarshalErrs: []string{
 				// Misformatted values:
@@ -275,44 +264,39 @@ func Test(t *testing.T) {
 		},
 
 		{
-			makeValue: func() SOAPValue { return new(DateTimeLocal) },
+			makeValue: func() SOAPValue { return new(DateTime) },
 			isEqual: func(got, want SOAPValue) bool {
-				return got.(*DateTimeLocal).ToTime().Equal(want.(*DateTimeLocal).ToTime())
+				return got.(*DateTime).equal(*want.(*DateTime))
 			},
 			marshalTests: []marshalCase{
-				{NewDateTimeLocal(time.Date(2013, 10, 8, 0, 0, 0, 0, localLoc)), "2013-10-08T00:00:00"},
-				{NewDateTimeLocal(time.Date(2013, 10, 8, 10, 30, 50, 0, localLoc)), "2013-10-08T10:30:50"},
+				{DateTimeFromTime(time.Date(2013, 10, 8, 0, 0, 0, 0, dummyLoc)).ptr(), "2013-10-08T00:00:00"},
+				{DateTimeFromTime(time.Date(2013, 10, 8, 10, 30, 50, 0, dummyLoc)).ptr(), "2013-10-08T10:30:50"},
 			},
 			unmarshalTests: []unmarshalCase{
-				{"20131008", NewDateTimeLocal(time.Date(2013, 10, 8, 0, 0, 0, 0, localLoc))},
+				{"20131008", DateTimeFromTime(time.Date(2013, 10, 8, 0, 0, 0, 0, dummyLoc)).ptr()},
 			},
 			unmarshalErrs: []string{
 				// Unexpected timezone component.
-				"2013-10-08T10:30:50+01",
+				"2013-10-08T10:30:50+01:00",
 			},
 		},
 
 		{
-			makeValue: func() SOAPValue { return new(DateTimeTZLocal) },
+			makeValue: func() SOAPValue { return new(DateTimeTZ) },
 			isEqual: func(got, want SOAPValue) bool {
-				return got.(*DateTimeTZLocal).ToTime().Equal(want.(*DateTimeTZLocal).ToTime())
+				return got.(*DateTimeTZ).equal(*want.(*DateTimeTZ))
 			},
 			marshalTests: []marshalCase{
-				{NewDateTimeTZLocal(time.Date(2013, 10, 8, 0, 0, 0, 0, localLoc)), "2013-10-08T00:00:00+06:00"},
-				{NewDateTimeTZLocal(time.Date(2013, 10, 8, 10, 30, 50, 0, localLoc)), "2013-10-08T10:30:50+06:00"},
-				{NewDateTimeTZLocal(time.Date(2013, 10, 8, 0, 0, 0, 0, time.UTC)), "2013-10-08T00:00:00+00:00"},
-				{NewDateTimeTZLocal(time.Date(2013, 10, 8, 10, 30, 50, 0, time.UTC)), "2013-10-08T10:30:50+00:00"},
-				{NewDateTimeTZLocal(time.Date(2013, 10, 8, 10, 30, 50, 0, time.FixedZone("+01:23", 3600+23*60))), "2013-10-08T10:30:50+01:23"},
-				{NewDateTimeTZLocal(time.Date(2013, 10, 8, 10, 30, 50, 0, time.FixedZone("-01:23", -(3600+23*60)))), "2013-10-08T10:30:50-01:23"},
+				{DateTimeTZFromTime(time.Date(2013, 10, 8, 0, 0, 0, 0, dummyLoc)).ptr(), "2013-10-08T00:00:00+06:00"},
+				{DateTimeTZFromTime(time.Date(2013, 10, 8, 10, 30, 50, 0, dummyLoc)).ptr(), "2013-10-08T10:30:50+06:00"},
+				{DateTimeTZFromTime(time.Date(2013, 10, 8, 0, 0, 0, 0, time.UTC)).ptr(), "2013-10-08T00:00:00Z"},
+				{DateTimeTZFromTime(time.Date(2013, 10, 8, 10, 30, 50, 0, time.UTC)).ptr(), "2013-10-08T10:30:50Z"},
+				{DateTimeTZFromTime(time.Date(2013, 10, 8, 10, 30, 50, 0, time.FixedZone("+01:23", 3600+23*60))).ptr(), "2013-10-08T10:30:50+01:23"},
+				{DateTimeTZFromTime(time.Date(2013, 10, 8, 10, 30, 50, 0, time.FixedZone("-01:23", -(3600+23*60)))).ptr(), "2013-10-08T10:30:50-01:23"},
 			},
 			unmarshalTests: []unmarshalCase{
-				{"20131008", NewDateTimeTZLocal(time.Date(2013, 10, 8, 0, 0, 0, 0, localLoc))},
-				{"2013-10-08T10:30:50", NewDateTimeTZLocal(time.Date(2013, 10, 8, 10, 30, 50, 0, localLoc))},
-				{"2013-10-08T10:30:50Z", NewDateTimeTZLocal(time.Date(2013, 10, 8, 10, 30, 50, 0, time.UTC))},
-				{"2013-10-08T10:30:50+01", NewDateTimeTZLocal(time.Date(2013, 10, 8, 10, 30, 50, 0, time.FixedZone("+01:00", 3600)))},
-				{"2013-10-08T10:30:50+0123", NewDateTimeTZLocal(time.Date(2013, 10, 8, 10, 30, 50, 0, time.FixedZone("+01:23", 3600+23*60)))},
-				{"2013-10-08T10:30:50-01", NewDateTimeTZLocal(time.Date(2013, 10, 8, 10, 30, 50, 0, time.FixedZone("-01:00", -3600)))},
-				{"2013-10-08T10:30:50-0123", NewDateTimeTZLocal(time.Date(2013, 10, 8, 10, 30, 50, 0, time.FixedZone("-01:23", -(3600+23*60))))},
+				{"2013-10-08T10:30:50", &DateTimeTZ{Date{2013, 10, 8}, TimeOfDay{10, 30, 50}, TZD{}}},
+				{"2013-10-08T10:30:50+00:00", DateTimeTZFromTime(time.Date(2013, 10, 8, 10, 30, 50, 0, time.UTC)).ptr()},
 			},
 		},
 
@@ -411,7 +395,7 @@ func Test(t *testing.T) {
 				t.Run(fmt.Sprintf("unmarshalTest#%d_%q", i, ut.input), func(t *testing.T) {
 					got := tt.makeValue()
 					if err := got.Unmarshal(ut.input); err != nil {
-						t.Errorf("got error, want success")
+						t.Errorf("got unexpected error: %v", err)
 					}
 					if !tt.isEqual(got, ut.want) {
 						t.Errorf("got %v, want %v", got, ut.want)
@@ -517,4 +501,36 @@ func TestFixed14_4(t *testing.T) {
 			})
 		}
 	})
+}
+
+// methods only used in testing:
+
+func (v TimeOfDay) equal(o TimeOfDay) bool {
+	return v.Hour == o.Hour && v.Minute == o.Minute && v.Second == o.Second
+}
+
+func (v TimeOfDayTZ) equal(o TimeOfDayTZ) bool {
+	return v.TimeOfDay.equal(o.TimeOfDay) && v.TZ.equal(o.TZ)
+}
+
+func (d Date) equal(o Date) bool {
+	return d.Year == o.Year && d.Month == o.Month && d.Day == o.Day
+}
+
+func (dtz DateTime) ptr() *DateTime { return &dtz }
+
+func (dt DateTime) equal(o DateTime) bool {
+	return dt.Date.equal(o.Date) && dt.TimeOfDay.equal(o.TimeOfDay)
+}
+
+func (dtz DateTimeTZ) ptr() *DateTimeTZ { return &dtz }
+
+func (dtz DateTimeTZ) equal(o DateTimeTZ) bool {
+	return dtz.Date.equal(o.Date) &&
+		dtz.TimeOfDay.equal(o.TimeOfDay) &&
+		dtz.TZ.equal(o.TZ)
+}
+
+func (tzd TZD) equal(o TZD) bool {
+	return tzd.Offset == o.Offset && tzd.HasTZ == o.HasTZ
 }
