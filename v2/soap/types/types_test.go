@@ -3,9 +3,18 @@ package types
 import (
 	"bytes"
 	"fmt"
+	"math"
 	"testing"
 	"time"
 )
+
+func newFixed14_4Parts(intPart int64, fracPart int16) *Fixed14_4 {
+	v, err := Fixed14_4FromParts(intPart, fracPart)
+	if err != nil {
+		panic(err)
+	}
+	return &v
+}
 
 type isEqual func(got, want SOAPValue) bool
 
@@ -135,20 +144,37 @@ func Test(t *testing.T) {
 		},
 
 		{
-			makeValue: func() SOAPValue { return new(FloatFixed14_4) },
-			isEqual:   func(got, want SOAPValue) bool { return *got.(*FloatFixed14_4) == *want.(*FloatFixed14_4) },
-			marshalTests: []marshalCase{
-				{NewFloatFixed14_4(0), "0.0000"},
-				{NewFloatFixed14_4(1), "1.0000"},
-				{NewFloatFixed14_4(1.2346), "1.2346"},
-				{NewFloatFixed14_4(-1), "-1.0000"},
-				{NewFloatFixed14_4(-1.2346), "-1.2346"},
-				{NewFloatFixed14_4(1e13), "10000000000000.0000"},
-				{NewFloatFixed14_4(-1e13), "-10000000000000.0000"},
+			makeValue: func() SOAPValue { return &Fixed14_4{} },
+			isEqual: func(got, want SOAPValue) bool {
+				return got.(*Fixed14_4).Fractional == want.(*Fixed14_4).Fractional
 			},
-			marshalErrs: []SOAPValue{
-				NewFloatFixed14_4(1e14),
-				NewFloatFixed14_4(-1e14),
+			marshalTests: []marshalCase{
+				{newFixed14_4Parts(0, 0), "0.0000"},
+				{newFixed14_4Parts(1, 2), "1.0002"},
+				{newFixed14_4Parts(1, 20), "1.0020"},
+				{newFixed14_4Parts(1, 200), "1.0200"},
+				{newFixed14_4Parts(1, 2000), "1.2000"},
+				{newFixed14_4Parts(-1, -2), "-1.0002"},
+				{newFixed14_4Parts(1234, 5678), "1234.5678"},
+				{newFixed14_4Parts(-1234, -5678), "-1234.5678"},
+				{newFixed14_4Parts(9999_99999_99999, 9999), "99999999999999.9999"},
+				{newFixed14_4Parts(-9999_99999_99999, -9999), "-99999999999999.9999"},
+			},
+			unmarshalErrs: append([]string{
+				"", ".", "0.00000000abc", "0.-5",
+			}, badNumbers...),
+			unmarshalTests: []unmarshalCase{
+				{"010", newFixed14_4Parts(10, 0)},
+				{"0", newFixed14_4Parts(0, 0)},
+				{"0.", newFixed14_4Parts(0, 0)},
+				{"0.000005", newFixed14_4Parts(0, 0)},
+				{"1.2", newFixed14_4Parts(1, 2000)},
+				{"1.20", newFixed14_4Parts(1, 2000)},
+				{"1.200", newFixed14_4Parts(1, 2000)},
+				{"1.02", newFixed14_4Parts(1, 200)},
+				{"1.020", newFixed14_4Parts(1, 200)},
+				{"1.002", newFixed14_4Parts(1, 20)},
+				{"1.00200005", newFixed14_4Parts(1, 20)},
 			},
 		},
 
@@ -421,4 +447,92 @@ func Test(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestFixed14_4(t *testing.T) {
+	t.Run("Parts", func(t *testing.T) {
+		tests := []struct {
+			intPart    int64
+			fracPart   int16
+			fractional int64
+		}{
+			{0, 0, 0},
+			{1, 2, 1_0002},
+			{-1, -2, -1_0002},
+			{1234, 5678, 1234_5678},
+			{-1234, -5678, -1234_5678},
+			{9999_99999_99999, 9999, 9999_99999_99999_9999},
+			{-9999_99999_99999, -9999, -9999_99999_99999_9999},
+		}
+		for _, test := range tests {
+			test := test
+			t.Run(fmt.Sprintf("FromParts(%d,%d)", test.intPart, test.fracPart), func(t *testing.T) {
+				got, err := Fixed14_4FromParts(test.intPart, test.fracPart)
+				if err != nil {
+					t.Errorf("got error %v, want success", err)
+				}
+				if got.Fractional != test.fractional {
+					t.Errorf("got %d, want %d", got.Fractional, test.fractional)
+				}
+			})
+			t.Run(fmt.Sprintf("%d.Parts()", test.fractional), func(t *testing.T) {
+				v, err := Fixed14_4FromFractional(test.fractional)
+				if err != nil {
+					t.Errorf("got error %v, want success", err)
+				}
+				gotIntPart, gotFracPart := v.Parts()
+				if gotIntPart != test.intPart {
+					t.Errorf("got %d, want %d", gotIntPart, test.intPart)
+				}
+				if gotFracPart != test.fracPart {
+					t.Errorf("got %d, want %d", gotFracPart, test.fracPart)
+				}
+			})
+		}
+	})
+	t.Run("Float", func(t *testing.T) {
+		tests := []struct {
+			flt float64
+			fix *Fixed14_4
+		}{
+			{0, newFixed14_4Parts(0, 0)},
+			{1234.5678, newFixed14_4Parts(1234, 5678)},
+			{-1234.5678, newFixed14_4Parts(-1234, -5678)},
+		}
+
+		for _, test := range tests {
+			t.Run(fmt.Sprintf("To/FromFloat(%v)", test.fix), func(t *testing.T) {
+				gotFix, err := Fixed14_4FromFloat(test.flt)
+				if err != nil {
+					t.Errorf("got error %v, want success", err)
+				}
+				if gotFix.Fractional != test.fix.Fractional {
+					t.Errorf("got %v, want %v", gotFix, test.fix)
+				}
+
+				gotFlt := test.fix.Float64()
+				if math.Abs(gotFlt-test.flt) > 1e-6 {
+					t.Errorf("got %f, want %f", gotFlt, test.flt)
+				}
+			})
+		}
+
+		errTests := []float64{
+			1e50,
+			-1e50,
+			1e14,
+			-1e14,
+			math.NaN(),
+			math.Inf(1),
+			math.Inf(-1),
+		}
+		for _, test := range errTests {
+			t.Run(fmt.Sprintf("ErrorFromFloat(%f)", test), func(t *testing.T) {
+				got, err := Fixed14_4FromFloat(test)
+				if err == nil {
+					t.Errorf("got success and %v, want error", got)
+				}
+			})
+		}
+	})
 }
