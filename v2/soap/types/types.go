@@ -256,36 +256,155 @@ func (v *R8) Unmarshal(s string) error {
 	return err
 }
 
-// FloatFixed14_4 maps a float64 to the SOAP "fixed.14.4" type.
-type FloatFixed14_4 float64
+const Fixed14_4Denominator = 1e4
+const Fixed14_4MaxInteger = 1e14 - 1
+const Fixed14_4MaxFractional = 1e18 - 1
 
-var _ SOAPValue = new(FloatFixed14_4)
-
-func NewFloatFixed14_4(v float64) *FloatFixed14_4 {
-	v2 := FloatFixed14_4(v)
-	return &v2
+// Fixed14_4 represents a fixed point number with up to 14 decimal digits
+// before the decimal point (integer part), and up to 4 decimal digits
+// after the decimal point (fractional part).
+//
+// Corresponds to the SOAP "fixed.14.4" type.
+//
+// This is a struct to avoid accidentally using the value directly as an
+// integer.
+type Fixed14_4 struct {
+	// Fractional divided by 1e4 is the fixed point value. Take care setting
+	// this directly, it should only contain values in the range (-1e18, 1e18).
+	Fractional int64
 }
 
-func (v *FloatFixed14_4) String() string {
-	return strconv.FormatFloat(float64(*v), 'f', 4, 64)
+var _ SOAPValue = &Fixed14_4{}
+
+// Fixed14_4FromParts creates a Fixed14_4 from components.
+// Bounds:
+//   * Both intPart and fracPart must have the same sign.
+//   * -1e14 < intPart < 1e14
+//   * -1e4 < fracPart < 1e4
+func Fixed14_4FromParts(intPart int64, fracPart int16) (Fixed14_4, error) {
+	var v Fixed14_4
+	err := v.SetParts(intPart, fracPart)
+	return v, err
 }
 
-func (v *FloatFixed14_4) Marshal() (string, error) {
-	if *v >= 1e14 || *v <= -1e14 {
-		return "", fmt.Errorf("soap fixed14.4: value %v out of bounds", v)
+// SetFromParts sets the value based on the integer component and the fractional component.
+// Bounds:
+//   * Both intPart and fracPart must have the same sign.
+//   * -1e14 < intPart < 1e14
+//   * -1e4 < fracPart < 1e4
+func (v *Fixed14_4) SetParts(intPart int64, fracPart int16) error {
+	if (intPart < 0) != (fracPart < 0) {
+		return fmt.Errorf("want intPart and fracPart with same sign, got %d and %d",
+			intPart, fracPart)
 	}
+	if intPart < -Fixed14_4MaxInteger || intPart > Fixed14_4MaxInteger {
+		return fmt.Errorf("want intPart in range (-1e14,1e14), got %d", intPart)
+	}
+	if fracPart < -Fixed14_4Denominator || fracPart > Fixed14_4Denominator {
+		return fmt.Errorf("want fracPart in range (-1e4,1e4), got %d", fracPart)
+	}
+	v.Fractional = intPart*Fixed14_4Denominator + int64(fracPart)
+	return nil
+}
+
+// Returns the integer part and fractional part of the fixed point number.
+func (v Fixed14_4) Parts() (int64, int16) {
+	return v.Fractional / Fixed14_4Denominator, int16(v.Fractional % Fixed14_4Denominator)
+}
+
+// Fixed14_4FromFractional creates a Fixed14_4 from an integer, where the
+// parameter divided by 1e4 is the fixed point value.
+func Fixed14_4FromFractional(fracValue int64) (Fixed14_4, error) {
+	var v Fixed14_4
+	err := v.SetFractional(fracValue)
+	return v, err
+}
+
+// SetFromFractional sets the value of the fixed point number, where fracValue
+// divided by 1e4 is the fixed point value. Unlike setting v.Fractional
+// directly, this checks the value.
+func (v *Fixed14_4) SetFractional(fracValue int64) error {
+	if fracValue < -Fixed14_4MaxFractional || fracValue > Fixed14_4MaxFractional {
+		return fmt.Errorf("want intPart in range (-1e18,1e18), got %d", fracValue)
+	}
+	v.Fractional = fracValue
+	return nil
+}
+
+// Fixed14_4FromFloat creates a Fixed14_4 from a float64. Returns error if the
+// float is outside the range.
+func Fixed14_4FromFloat(f float64) (Fixed14_4, error) {
+	i := int64(f * Fixed14_4Denominator)
+	return Fixed14_4FromFractional(i)
+}
+
+// SetFloat64 sets the value of the fixed point number from a float64. Returns
+// error if the float is outside the range.
+func (v *Fixed14_4) SetFloat64(f float64) error {
+	i := int64(f * Fixed14_4Denominator)
+	return v.SetFractional(i)
+}
+
+func (v Fixed14_4) Float64() float64 {
+	return float64(v.Fractional) / Fixed14_4Denominator
+}
+
+func (v Fixed14_4) String() string {
+	intPart, fracPart := v.Parts()
+	if fracPart < 0 {
+		fracPart = -fracPart
+	}
+	return fmt.Sprintf("%d.%04d", intPart, fracPart)
+}
+
+func (v *Fixed14_4) Marshal() (string, error) {
 	return v.String(), nil
 }
 
-func (v *FloatFixed14_4) Unmarshal(s string) error {
-	v2, err := strconv.ParseFloat(s, 64)
+func (v *Fixed14_4) Unmarshal(s string) error {
+	parts := strings.SplitN(s, ".", 2)
+	intPart, err := strconv.ParseInt(parts[0], 10, 64)
 	if err != nil {
 		return err
 	}
-	if v2 >= 1e14 || v2 <= -1e14 {
-		return fmt.Errorf("soap fixed14.4: value %q out of bounds", s)
+
+	var fracPart int64
+	if len(parts) >= 2 && len(parts[1]) > 0 {
+		fracStr := parts[1]
+
+		for _, r := range fracStr {
+			if r < '0' || r > '9' {
+				return fmt.Errorf("found non-digit in fractional component of %q", s)
+			}
+		}
+
+		// Take only the 4 most significant digits of the fractional component.
+		fracStr = fracStr[:min(len(fracStr), 4)]
+
+		fracPart, err = strconv.ParseInt(fracStr, 10, 16)
+		if err != nil {
+			return err
+		}
+		if fracPart < 0 {
+			// This shouldn't happen by virtue of earlier digit-only check.
+			return fmt.Errorf("got negative fractional component in %q", s)
+		}
+
+		switch len(fracStr) {
+		case 1:
+			fracPart *= 1000
+		case 2:
+			fracPart *= 100
+		case 3:
+			fracPart *= 10
+		case 4:
+			fracPart *= 1
+		}
+		if intPart < 0 {
+			fracPart = -fracPart
+		}
 	}
-	*v = FloatFixed14_4(v2)
+	v.SetParts(intPart, int16(fracPart))
 	return nil
 }
 
@@ -609,6 +728,62 @@ func (v *TimeOfDayTZ) Unmarshal(s string) error {
 	return nil
 }
 
+// Date maps to the SOAP "date" type. Marshaling and Unmarshalling does *not*
+// check if components are in range.
+type Date struct {
+	Year  int
+	Month time.Month
+	Day   int
+}
+
+var _ SOAPValue = &Date{}
+
+func DateFromTime(t time.Time) Date {
+	var d Date
+	d.SetFromTime(t)
+	return d
+}
+
+func (d *Date) SetFromTime(t time.Time) {
+	d.Year = t.Year()
+	d.Month = t.Month()
+	d.Day = t.Day()
+}
+
+// ToTime returns a time.Time from the date components, at midnight, and using
+// the given location.
+func (d *Date) ToTime(loc *time.Location) time.Time {
+	return time.Date(d.Year, d.Month, d.Day, 0, 0, 0, 0, loc)
+}
+
+func (d *Date) String() string {
+	return fmt.Sprintf("%04d-%02d-%02d", d.Year, d.Month, d.Day)
+}
+
+// CheckValid returns an error if the date components are out of range.
+func (d *Date) CheckValid() error {
+	y, m, day := d.ToTime(time.UTC).Date()
+	if y != d.Year || m != d.Month || day != d.Day {
+		return fmt.Errorf("SOAP date component(s) out of range in %v", d)
+	}
+	return nil
+}
+
+func (d *Date) Marshal() (string, error) {
+	return d.String(), nil
+}
+
+func (d *Date) Unmarshal(s string) error {
+	year, month, day, err := parseDateParts(s)
+	if err != nil {
+		return err
+	}
+	d.Year = year
+	d.Month = time.Month(month)
+	d.Day = day
+	return nil
+}
+
 // DateLocal maps time.Time to the SOAP "date" type. Dates map to midnight in
 // the local time zone. The time of day components are ignored when
 // marshalling.
@@ -861,4 +1036,11 @@ func (v *URI) Unmarshal(s string) error {
 	}
 	*v = URI(*v2)
 	return nil
+}
+
+func min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
 }
