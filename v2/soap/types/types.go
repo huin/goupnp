@@ -1,4 +1,9 @@
 // Package types defines types that encode values in SOAP requests and responses.
+//
+// Based on https://openconnectivity.org/upnp-specs/UPnP-arch-DeviceArchitecture-v2.0-20200417.pdf
+// pages 58-60.
+//
+// Date/time formats are based on http://www.w3.org/TR/1998/NOTE-datetime-19980827
 package types
 
 import (
@@ -12,13 +17,6 @@ import (
 	"strings"
 	"time"
 	"unicode/utf8"
-)
-
-var (
-	// localLoc acts like time.Local for this package, but is faked out by the
-	// unit tests to ensure that things stay constant (especially when running
-	// this test in a place where local time is UTC which might mask bugs).
-	localLoc = time.Local
 )
 
 type SOAPValue interface {
@@ -474,87 +472,23 @@ var dateRegexps = []*regexp.Regexp{
 	regexp.MustCompile(`^(\d{4})(?:(\d{2})(?:(\d{2}))?)?$`),
 }
 
-var timeRegexps = []*regexp.Regexp{
-	// hh[:mm[:ss]]
-	regexp.MustCompile(`^(\d{2})(?::(\d{2})(?::(\d{2}))?)?$`),
-	// hh[mm[ss]]
-	regexp.MustCompile(`^(\d{2})(?:(\d{2})(?:(\d{2}))?)?$`),
+type prefixRemainder struct {
+	prefix    string
+	remainder string
 }
 
-func parseTimeParts(s string) (TimeOfDay, error) {
-	var parts []string
-	for _, re := range timeRegexps {
-		parts = re.FindStringSubmatch(s)
-		if parts != nil {
-			break
-		}
+// prefixUntilAny returns a prefix of the leading string prior to any
+// characters in `chars`, and the remainder. If no character from `chars` is
+// present in `s`, then returns `s` as `prefix`, and empty remainder.
+//
+// prefixUntilAny("123/abc", "/") => {"123", "/abc"}
+// prefixUntilAny("123", "/") => {"123", ""}
+func prefixUntilAny(s string, chars string) prefixRemainder {
+	i := strings.IndexAny(s, chars)
+	if i == -1 {
+		return prefixRemainder{prefix: s, remainder: ""}
 	}
-	if parts == nil {
-		return TimeOfDay{}, fmt.Errorf("soap time: value %q is not in ISO8601 time format", s)
-	}
-
-	var err error
-	var hour, minute, second int8
-	hour = int8(parseInt(parts[1], &err))
-	if len(parts[2]) != 0 {
-		minute = int8(parseInt(parts[2], &err))
-		if len(parts[3]) != 0 {
-			second = int8(parseInt(parts[3], &err))
-		}
-	}
-
-	if err != nil {
-		return TimeOfDay{}, fmt.Errorf("soap time: %q: %v", s, err)
-	}
-
-	return TimeOfDay{hour, minute, second}, nil
-}
-
-// (+|-)hh[[:]mm]
-var timezoneRegexp = regexp.MustCompile(`^([+-])(\d{2})(?::?(\d{2}))?$`)
-
-func parseTimezone(s string) (offset int, err error) {
-	if s == "Z" {
-		return 0, nil
-	}
-	parts := timezoneRegexp.FindStringSubmatch(s)
-	if parts == nil {
-		err = fmt.Errorf("soap timezone: value %q is not in ISO8601 timezone format", s)
-		return
-	}
-
-	offset = parseInt(parts[2], &err) * 3600
-	if len(parts[3]) != 0 {
-		offset += parseInt(parts[3], &err) * 60
-	}
-	if parts[1] == "-" {
-		offset = -offset
-	}
-
-	if err != nil {
-		err = fmt.Errorf("soap timezone: %q: %v", s, err)
-	}
-
-	return
-}
-
-var completeDateTimeZoneRegexp = regexp.MustCompile(`^([^T]+)(?:T([^-+Z]+)(.+)?)?$`)
-
-// splitCompleteDateTimeZone splits date, time and timezone apart from an
-// ISO8601 string. It does not ensure that the contents of each part are
-// correct, it merely splits on certain delimiters.
-// e.g "2010-09-08T12:15:10+0700" => "2010-09-08", "12:15:10", "+0700".
-// Timezone can only be present if time is also present.
-func splitCompleteDateTimeZone(s string) (dateStr, timeStr, zoneStr string, err error) {
-	parts := completeDateTimeZoneRegexp.FindStringSubmatch(s)
-	if parts == nil {
-		err = fmt.Errorf("soap date/time/zone: value %q is not in ISO8601 datetime format", s)
-		return
-	}
-	dateStr = parts[1]
-	timeStr = parts[2]
-	zoneStr = parts[3]
-	return
+	return prefixRemainder{prefix: s[:i], remainder: s[i:]}
 }
 
 // TimeOfDay is used in cases where SOAP "time" or "time.tz" is used.
@@ -567,135 +501,131 @@ type TimeOfDay struct {
 
 var _ SOAPValue = &TimeOfDay{}
 
+func TimeOfDayFromTime(t time.Time) TimeOfDay {
+	h, m, s := t.Clock()
+	return TimeOfDay{int8(h), int8(m), int8(s)}
+}
+
+func (tod *TimeOfDay) SetFromTime(t time.Time) {
+	h, m, s := t.Clock()
+	tod.Hour = int8(h)
+	tod.Minute = int8(m)
+	tod.Second = int8(s)
+}
+
 // Sets components based on duration since midnight.
-func (v *TimeOfDay) SetFromDuration(d time.Duration) error {
+func (tod *TimeOfDay) SetFromDuration(d time.Duration) error {
 	if d < 0 || d > 24*time.Hour {
 		return fmt.Errorf("out of range of SOAP time type: %v", d)
 	}
-	v.Hour = int8(d / time.Hour)
+	tod.Hour = int8(d / time.Hour)
 	d = d % time.Hour
-	v.Minute = int8(d / time.Minute)
+	tod.Minute = int8(d / time.Minute)
 	d = d % time.Minute
-	v.Second = int8(d / time.Second)
+	tod.Second = int8(d / time.Second)
 	return nil
 }
 
 // Returns duration since midnight.
-func (v *TimeOfDay) ToDuration() time.Duration {
-	return time.Duration(v.Hour)*time.Hour +
-		time.Duration(v.Minute)*time.Minute +
-		time.Duration(v.Second)*time.Second
+func (tod TimeOfDay) ToDuration() time.Duration {
+	return time.Duration(tod.Hour)*time.Hour +
+		time.Duration(tod.Minute)*time.Minute +
+		time.Duration(tod.Second)*time.Second
 }
 
-func (v *TimeOfDay) String() string {
-	return fmt.Sprintf("%02d:%02d:%02d", v.Hour, v.Minute, v.Second)
-}
-
-func (v *TimeOfDay) Equal(o *TimeOfDay) bool {
-	return v.Hour == o.Hour && v.Minute == o.Minute && v.Second == o.Second
+func (tod TimeOfDay) String() string {
+	return fmt.Sprintf("%02d:%02d:%02d", tod.Hour, tod.Minute, tod.Second)
 }
 
 // IsValid returns true iff v is positive and <= 24 hours.
 // It allows equal to 24 hours as a special case as 24:00:00 is an allowed
 // value by the SOAP type.
-func (v *TimeOfDay) CheckValid() error {
-	if (v.Hour < 0 || v.Minute < 0 || v.Second < 0) ||
-		(v.Hour == 24 && (v.Minute > 0 || v.Second > 0)) ||
-		v.Hour > 24 || v.Minute >= 60 || v.Second >= 60 {
-		return fmt.Errorf("soap time: value %v has components(s) out of range", v)
+func (tod TimeOfDay) CheckValid() error {
+	if (tod.Hour < 0 || tod.Minute < 0 || tod.Second < 0) ||
+		(tod.Hour == 24 && (tod.Minute > 0 || tod.Second > 0)) ||
+		tod.Hour > 24 || tod.Minute >= 60 || tod.Second >= 60 {
+		return fmt.Errorf("soap time: value %v has components(s) out of range", tod)
 	}
 	return nil
 }
 
-func (v *TimeOfDay) Marshal() (string, error) {
-	if err := v.CheckValid(); err != nil {
+// clear removes data from v, setting to default values.
+func (tod *TimeOfDay) clear() {
+	tod.Hour = 0
+	tod.Minute = 0
+	tod.Second = 0
+}
+
+func (tod *TimeOfDay) Marshal() (string, error) {
+	if err := tod.CheckValid(); err != nil {
 		return "", err
 	}
-	return v.String(), nil
+	return tod.String(), nil
 }
 
-func (v *TimeOfDay) Unmarshal(s string) error {
-	var err error
-	*v, err = parseTimeParts(s)
-	if err != nil {
-		return err
+var timeRegexps = []*regexp.Regexp{
+	// hh:mm:ss
+	regexp.MustCompile(`^(\d{2})(\d{2})(\d{2})$`),
+	// hhmmss
+	regexp.MustCompile(`^(\d{2}):(\d{2}):(\d{2})$`),
+}
+
+func (tod *TimeOfDay) Unmarshal(s string) error {
+	tod.clear()
+	var parts []string
+	for _, re := range timeRegexps {
+		parts = re.FindStringSubmatch(s)
+		if parts != nil {
+			break
+		}
+	}
+	if parts == nil {
+		return fmt.Errorf("value %q is not in ISO8601 time format", s)
 	}
 
-	return v.CheckValid()
+	var err error
+	tod.Hour = int8(parseInt(parts[1], &err))
+	tod.Minute = int8(parseInt(parts[2], &err))
+	tod.Second = int8(parseInt(parts[3], &err))
+	if err != nil {
+		return fmt.Errorf("value %q is not in ISO8601 time format: %v", s, err)
+	}
+
+	return tod.CheckValid()
 }
 
-// TimeOfDayTZ is used in cases where SOAP "time.tz" is used.
+// TimeOfDayTZ maps to the SOAP "time.tz" type.
 type TimeOfDayTZ struct {
 	// Components of the time of day.
 	TimeOfDay TimeOfDay
 
-	// Set to true if Offset is specified. If false, then the timezone is
-	// unspecified (and by ISO8601 - implies some "local" time).
-	HasOffset bool
-
-	// Offset is non-zero only if time.tz is used. It is otherwise ignored. If
-	// non-zero, then it is regarded as a UTC offset in seconds. Note that the
-	// sub-minutes is ignored by the marshal function.
-	Offset int
+	// Timezone designator.
+	TZ TZD
 }
 
 var _ SOAPValue = &TimeOfDayTZ{}
 
-func (v *TimeOfDayTZ) String() string {
-	return fmt.Sprintf("%v %t %+03d:%02d:%02d", v.TimeOfDay, v.HasOffset, v.Offset/3600, (v.Offset%3600)/60, v.Offset%60)
+func (todz TimeOfDayTZ) String() string {
+	return fmt.Sprintf("%v%v", todz.TimeOfDay, todz.TZ)
 }
 
-func (v *TimeOfDayTZ) Equal(o *TimeOfDayTZ) bool {
-	return v.TimeOfDay.Equal(&o.TimeOfDay) &&
-		v.HasOffset == o.HasOffset && v.Offset == o.Offset
+// clear removes data from v, setting to default values.
+func (todz *TimeOfDayTZ) clear() {
+	todz.TimeOfDay.clear()
+	todz.TZ.clear()
 }
 
-func (v *TimeOfDayTZ) Marshal() (string, error) {
-	tod, err := v.TimeOfDay.Marshal()
-	if err != nil {
-		return "", err
-	}
-
-	tz := ""
-	if v.HasOffset {
-		if v.Offset == 0 {
-			tz = "Z"
-		} else {
-			offsetMins := v.Offset / 60
-			sign := '+'
-			if offsetMins < 1 {
-				offsetMins = -offsetMins
-				sign = '-'
-			}
-			tz = fmt.Sprintf("%c%02d:%02d", sign, offsetMins/60, offsetMins%60)
-		}
-	}
-
-	return tod + tz, nil
+func (todz *TimeOfDayTZ) Marshal() (string, error) {
+	return todz.String(), nil
 }
 
-func (v *TimeOfDayTZ) Unmarshal(s string) error {
-	zoneIndex := strings.IndexAny(s, "Z+-")
-	var timePart string
-	if zoneIndex == -1 {
-		v.HasOffset = false
-		v.Offset = 0
-		timePart = s
-	} else {
-		v.HasOffset = true
-		timePart = s[:zoneIndex]
-		var err error
-		v.Offset, err = parseTimezone(s[zoneIndex:])
-		if err != nil {
-			return err
-		}
-	}
-
-	if err := v.TimeOfDay.Unmarshal(timePart); err != nil {
+func (todz *TimeOfDayTZ) Unmarshal(s string) error {
+	todz.clear()
+	parts := prefixUntilAny(s, "Z+-")
+	if err := todz.TimeOfDay.Unmarshal(parts.prefix); err != nil {
 		return err
 	}
-
-	return nil
+	return todz.TZ.unmarshal(parts.remainder)
 }
 
 // Date maps to the SOAP "date" type. Marshaling and Unmarshalling does *not*
@@ -722,16 +652,16 @@ func (d *Date) SetFromTime(t time.Time) {
 
 // ToTime returns a time.Time from the date components, at midnight, and using
 // the given location.
-func (d *Date) ToTime(loc *time.Location) time.Time {
+func (d Date) ToTime(loc *time.Location) time.Time {
 	return time.Date(d.Year, d.Month, d.Day, 0, 0, 0, 0, loc)
 }
 
-func (d *Date) String() string {
+func (d Date) String() string {
 	return fmt.Sprintf("%04d-%02d-%02d", d.Year, d.Month, d.Day)
 }
 
 // CheckValid returns an error if the date components are out of range.
-func (d *Date) CheckValid() error {
+func (d Date) CheckValid() error {
 	y, m, day := d.ToTime(time.UTC).Date()
 	if y != d.Year || m != d.Month || day != d.Day {
 		return fmt.Errorf("SOAP date component(s) out of range in %v", d)
@@ -739,11 +669,19 @@ func (d *Date) CheckValid() error {
 	return nil
 }
 
+// clear removes data from d, setting to default (invalid/zero) values.
+func (d *Date) clear() {
+	d.Year = 0
+	d.Month = 0
+	d.Day = 0
+}
+
 func (d *Date) Marshal() (string, error) {
 	return d.String(), nil
 }
 
 func (d *Date) Unmarshal(s string) error {
+	d.clear()
 	var parts []string
 	for _, re := range dateRegexps {
 		parts = re.FindStringSubmatch(s)
@@ -773,115 +711,222 @@ func (d *Date) Unmarshal(s string) error {
 	return nil
 }
 
-// MarshalDateTime maps time.Time to SOAP "dateTime" type, with the local timezone.
-type DateTimeLocal time.Time
-
-var _ SOAPValue = &DateTimeLocal{}
-
-func NewDateTimeLocal(v time.Time) *DateTimeLocal {
-	v2 := DateTimeLocal(v)
-	return &v2
+// DateTime maps to SOAP "dateTime" type.
+type DateTime struct {
+	Date      Date
+	TimeOfDay TimeOfDay
 }
 
-func (v DateTimeLocal) String() string {
-	return v.ToTime().String()
+var _ SOAPValue = &DateTime{}
+
+func DateTimeFromTime(v time.Time) DateTime {
+	dt := DateTime{}
+	dt.Date.SetFromTime(v)
+	dt.TimeOfDay.SetFromTime(v)
+	return dt
 }
 
-func (v DateTimeLocal) ToTime() time.Time {
-	return time.Time(v)
+func (dt DateTime) String() string {
+	return fmt.Sprintf("%vT%v", dt.Date, dt.TimeOfDay)
 }
 
-func (v *DateTimeLocal) Marshal() (string, error) {
-	return v.ToTime().In(localLoc).Format("2006-01-02T15:04:05"), nil
+func (dt DateTime) ToTime(loc *time.Location) time.Time {
+	return time.Date(dt.Date.Year, dt.Date.Month, dt.Date.Day,
+		int(dt.TimeOfDay.Hour), int(dt.TimeOfDay.Minute), int(dt.TimeOfDay.Second), 0,
+		loc)
 }
 
-func (v *DateTimeLocal) Unmarshal(s string) error {
-	dateStr, timeStr, zoneStr, err := splitCompleteDateTimeZone(s)
+// clear removes data from dt, setting to default values.
+func (dt *DateTime) clear() {
+	dt.Date.clear()
+	dt.TimeOfDay.clear()
+}
+
+func (dt *DateTime) Marshal() (string, error) {
+	return dt.String(), nil
+}
+
+func (dt *DateTime) Unmarshal(s string) error {
+	dt.clear()
+	parts := prefixUntilAny(s, "T")
+	if err := dt.Date.Unmarshal(parts.prefix); err != nil {
+		return err
+	}
+
+	if parts.remainder == "" {
+		return nil
+	}
+
+	if parts.remainder[0] != 'T' {
+		return fmt.Errorf("missing 'T' time separator in dateTime %q", s)
+	}
+
+	return dt.TimeOfDay.Unmarshal(parts.remainder[1:])
+}
+
+// DateTime maps to SOAP type "dateTime.tz".
+type DateTimeTZ struct {
+	Date      Date
+	TimeOfDay TimeOfDay
+	TZ        TZD
+}
+
+var _ SOAPValue = &DateTimeTZ{}
+
+func DateTimeTZFromTime(t time.Time) DateTimeTZ {
+	return DateTimeTZ{
+		Date:      DateFromTime(t),
+		TimeOfDay: TimeOfDayFromTime(t),
+		TZ:        TZDFromTime(t),
+	}
+}
+
+func (dtz DateTimeTZ) String() string {
+	return dtz.Date.String() + "T" + dtz.TimeOfDay.String() + dtz.TZ.String()
+}
+
+// Time converts `dtz` to time.Time, using defaultLoc as the default location if
+// `dtz` contains no offset information.
+func (dtz DateTimeTZ) Time(defaultLoc *time.Location) time.Time {
+	return time.Date(
+		dtz.Date.Year,
+		dtz.Date.Month,
+		dtz.Date.Day,
+		int(dtz.TimeOfDay.Hour),
+		int(dtz.TimeOfDay.Minute),
+		int(dtz.TimeOfDay.Second),
+		0,
+		dtz.TZ.Location(defaultLoc),
+	)
+}
+
+// clear removes data from dtz, setting to default values.
+func (dtz *DateTimeTZ) clear() {
+	dtz.Date.clear()
+	dtz.TimeOfDay.clear()
+	dtz.TZ.clear()
+}
+
+func (dtz *DateTimeTZ) Marshal() (string, error) {
+	return dtz.String(), nil
+}
+
+func (dtz *DateTimeTZ) Unmarshal(s string) error {
+	dtz.clear()
+	dateParts := prefixUntilAny(s, "T")
+	if err := dtz.Date.Unmarshal(dateParts.prefix); err != nil {
+		return err
+	}
+
+	if dateParts.remainder == "" {
+		return nil
+	}
+
+	// Trim the leading "T" between date and time.
+	remainder := dateParts.remainder[1:]
+	timeParts := prefixUntilAny(remainder, "Z+-")
+	if err := dtz.TimeOfDay.Unmarshal(timeParts.prefix); err != nil {
+		return err
+	}
+
+	if timeParts.remainder == "" {
+		return nil
+	}
+
+	return dtz.TZ.unmarshal(timeParts.remainder)
+}
+
+// TZD is a timezone designator. Not a full SOAP time in itself, but used as
+// part of timezone-aware date/time types that are.
+type TZD struct {
+	// Offset is the timezone offset in seconds. Note that the SOAP encoding
+	// only encodes precisions up to minutes, this is in seconds for
+	// interoperability with time.Time.
+	Offset int
+	// HasTZ specifies if a timezone offset is specified or not.
+	HasTZ bool
+}
+
+func TZDFromTime(t time.Time) TZD {
+	_, offset := t.Zone()
+	return TZD{
+		Offset: offset,
+		HasTZ:  true,
+	}
+}
+
+func TZDOffset(secondsOffset int) TZD {
+	return TZD{
+		Offset: secondsOffset,
+		HasTZ:  true,
+	}
+}
+
+// Location returns an appropriate *time.Location (time.UTC or time.FixedZone),
+// or defaultLoc if `v` contains no offset information.
+func (tzd TZD) Location(defaultLoc *time.Location) *time.Location {
+	if !tzd.HasTZ {
+		return defaultLoc
+	}
+	if tzd.Offset == 0 {
+		return time.UTC
+	}
+	return time.FixedZone(tzd.String(), tzd.Offset)
+}
+
+func (tzd TZD) String() string {
+	if !tzd.HasTZ {
+		return ""
+	}
+
+	if tzd.Offset == 0 {
+		return "Z"
+	}
+
+	offsetMins := tzd.Offset / 60
+	sign := '+'
+	if offsetMins < 1 {
+		offsetMins = -offsetMins
+		sign = '-'
+	}
+	h, m := offsetMins/60, offsetMins%60
+	return fmt.Sprintf("%c%02d:%02d", sign, h, m)
+}
+
+// clear removes offset information from `v`.
+func (tzd *TZD) clear() {
+	tzd.Offset = 0
+	tzd.HasTZ = false
+}
+
+// (+|-)(hh):(mm)
+var timezoneRegexp = regexp.MustCompile(`^([+-])(\d{2}):(\d{2})$`)
+
+func (tzd *TZD) unmarshal(s string) error {
+	tzd.clear()
+	if s == "" {
+		return nil
+	}
+	tzd.HasTZ = true
+	if s == "Z" {
+		return nil
+	}
+	parts := timezoneRegexp.FindStringSubmatch(s)
+	if parts == nil {
+		return fmt.Errorf("value %q is not in ISO8601 timezone format", s)
+	}
+
+	var err error
+	tzd.Offset = parseInt(parts[2], &err) * 3600
+	tzd.Offset += parseInt(parts[3], &err) * 60
+	if parts[1] == "-" {
+		tzd.Offset = -tzd.Offset
+	}
+
 	if err != nil {
-		return err
+		err = fmt.Errorf("value %q is not in ISO8601 timezone format: %v", s, err)
 	}
 
-	if len(zoneStr) != 0 {
-		return fmt.Errorf("soap datetime: unexpected timezone in %q", s)
-	}
-
-	var date Date
-	if err := date.Unmarshal(dateStr); err != nil {
-		return err
-	}
-
-	var tod TimeOfDay
-	if len(timeStr) != 0 {
-		tod, err = parseTimeParts(timeStr)
-		if err != nil {
-			return err
-		}
-	}
-
-	*v = DateTimeLocal(time.Date(date.Year, time.Month(date.Month), date.Day,
-		int(tod.Hour), int(tod.Minute), int(tod.Second), 0,
-		localLoc))
-	return nil
-}
-
-// DateTimeLocal maps time.Time to SOAP "dateTime.tz" type, using the local
-// timezone when one is unspecified.
-type DateTimeTZLocal time.Time
-
-var _ SOAPValue = &DateTimeTZLocal{}
-
-func NewDateTimeTZLocal(v time.Time) *DateTimeTZLocal {
-	v2 := DateTimeTZLocal(v)
-	return &v2
-}
-
-func (v DateTimeTZLocal) String() string {
-	return v.ToTime().String()
-}
-
-func (v DateTimeTZLocal) ToTime() time.Time {
-	return time.Time(v)
-}
-
-func (v *DateTimeTZLocal) Marshal() (string, error) {
-	return time.Time(*v).Format("2006-01-02T15:04:05-07:00"), nil
-}
-
-func (v *DateTimeTZLocal) Unmarshal(s string) error {
-	dateStr, timeStr, zoneStr, err := splitCompleteDateTimeZone(s)
-	if err != nil {
-		return err
-	}
-
-	var date Date
-	if err := date.Unmarshal(dateStr); err != nil {
-		return err
-	}
-
-	var tod TimeOfDay
-	var location *time.Location = localLoc
-	if len(timeStr) != 0 {
-		tod, err = parseTimeParts(timeStr)
-		if err != nil {
-			return err
-		}
-		if len(zoneStr) != 0 {
-			var offset int
-			offset, err = parseTimezone(zoneStr)
-			if err != nil {
-				return err
-			}
-			if offset == 0 {
-				location = time.UTC
-			} else {
-				location = time.FixedZone("", offset)
-			}
-		}
-	}
-
-	*v = DateTimeTZLocal(time.Date(date.Year, time.Month(date.Month), date.Day,
-		int(tod.Hour), int(tod.Minute), int(tod.Second), 0,
-		location))
 	return nil
 }
 
