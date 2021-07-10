@@ -784,39 +784,6 @@ func (d *Date) Unmarshal(s string) error {
 	return nil
 }
 
-// DateLocal maps time.Time to the SOAP "date" type. Dates map to midnight in
-// the local time zone. The time of day components are ignored when
-// marshalling.
-type DateLocal time.Time
-
-var _ SOAPValue = &DateLocal{}
-
-func NewDateLocal(v time.Time) *DateLocal {
-	v2 := DateLocal(v)
-	return &v2
-}
-
-func (v DateLocal) String() string {
-	return v.ToTime().String()
-}
-
-func (v DateLocal) ToTime() time.Time {
-	return time.Time(v)
-}
-
-func (v *DateLocal) Marshal() (string, error) {
-	return time.Time(*v).In(localLoc).Format("2006-01-02"), nil
-}
-
-func (v *DateLocal) Unmarshal(s string) error {
-	year, month, day, err := parseDateParts(s)
-	if err != nil {
-		return err
-	}
-	*v = DateLocal(time.Date(year, time.Month(month), day, 0, 0, 0, 0, localLoc))
-	return nil
-}
-
 // MarshalDateTime maps time.Time to SOAP "dateTime" type, with the local timezone.
 type DateTimeLocal time.Time
 
