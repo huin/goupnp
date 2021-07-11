@@ -21,30 +21,37 @@ func acquireFile(specFilename string, xmlSpecURL string) error {
 		return nil
 	}
 
-	resp, err := http.Get(xmlSpecURL)
+	tmpFilename := specFilename + ".download"
+	if err := downloadFile(tmpFilename, xmlSpecURL); err != nil {
+		return err
+	}
+
+	return os.Rename(tmpFilename, specFilename)
+}
+
+func downloadFile(filename, url string) error {
+	resp, err := http.Get(url)
 	if err != nil {
 		return err
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("could not download spec %q from %q: %s",
-			specFilename, xmlSpecURL, resp.Status)
+		return fmt.Errorf("could not download %q from %q: %s",
+			filename, url, resp.Status)
 	}
 
-	tmpFilename := specFilename + ".download"
-	w, err := os.Create(tmpFilename)
-	if err != nil {
-		return err
-	}
-	defer w.Close()
-
-	_, err = io.Copy(w, resp.Body)
+	w, err := os.Create(filename)
 	if err != nil {
 		return err
 	}
 
-	return os.Rename(tmpFilename, specFilename)
+	if _, err := io.Copy(w, resp.Body); err != nil {
+		w.Close()
+		return err
+	}
+
+	return w.Close()
 }
 
 func globFiles(pattern string, archive *zip.ReadCloser) []*zip.File {
