@@ -17,6 +17,7 @@ package {{$name}}
 // ***********************************************************
 
 import (
+	"context"
 	"net/url"
 	"time"
 
@@ -115,8 +116,10 @@ func new{{$srvIdent}}ClientsFromGenericClients(genericClients []goupnp.ServiceCl
 // Return values:{{range $woutargs}}{{if .HasDoc}}
 //
 // * {{.Name}}: {{.Document}}{{end}}{{end}}{{end}}
-func (client *{{$srvIdent}}) {{.Name}}({{range $winargs -}}
-{{.AsParameter}}, {{end -}}
+func (client *{{$srvIdent}}) {{.Name}}Ctx(
+	ctx context.Context,
+{{range $winargs }}	{{.AsParameter}},
+{{end -}}
 ) ({{range $woutargs -}}
 {{.AsParameter}}, {{end}} err error) {
 	// Request structure.
@@ -132,7 +135,7 @@ func (client *{{$srvIdent}}) {{.Name}}({{range $winargs -}}
 	response := {{if $woutargs}}&{{template "argstruct" $woutargs}}{{"{}"}}{{else}}{{"interface{}(nil)"}}{{end}}
 
 	// Perform the SOAP call.
-	if err = client.SOAPClient.PerformAction({{$srv.URNParts.Const}}, "{{.Name}}", request, response); err != nil {
+	if err = client.SOAPClient.PerformActionCtx(ctx, {{$srv.URNParts.Const}}, "{{.Name}}", request, response); err != nil {
 		return
 	}
 
@@ -144,6 +147,19 @@ func (client *{{$srvIdent}}) {{.Name}}({{range $winargs -}}
 	// END Unmarshal arguments from response.
 	return
 }
+
+// {{.Name}} is the legacy version of {{.Name}}Ctx, but uses
+// context.Background() as the context.
+func (client *{{$srvIdent}}) {{.Name}}({{range $winargs -}}
+	{{.AsParameter}}, {{end -}}
+	) ({{range $woutargs -}}
+	{{.AsParameter}}, {{end}} err error) {
+	return client.{{.Name}}Ctx(context.Background(),
+	{{range $winargs }}{{.Name}},
+	{{end}}
+	)
+}
+
 {{end}}
 {{end}}
 
