@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"io"
 	"log"
 	"net"
 	"net/http"
@@ -139,7 +140,9 @@ func (httpu *HTTPUClient) Do(
 		// Parse response.
 		response, err := http.ReadResponse(bufio.NewReader(bytes.NewBuffer(responseBytes[:n])), req)
 		if err != nil {
-			log.Printf("httpu: error while parsing response: %v", err)
+			if err != io.ErrUnexpectedEOF {
+				log.Printf("httpu: error while parsing response: %v", err)
+			}
 			continue
 		}
 
