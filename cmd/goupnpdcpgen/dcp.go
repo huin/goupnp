@@ -7,10 +7,10 @@ import (
 	"os"
 	"sort"
 	"strings"
+	"text/template"
 
 	"github.com/huin/goupnp"
 	"github.com/huin/goupnp/scpd"
-	"github.com/huin/goutil/codegen"
 )
 
 // DCP collects together information about a UPnP Device Control Protocol.
@@ -86,20 +86,13 @@ func (dcp *DCP) processDeviceFile(file *zip.File) error {
 	return mainErr
 }
 
-func (dcp *DCP) writeCode(outFile string, useGofmt bool) error {
+func (dcp *DCP) writeCode(outFile string, codeTmpl *template.Template) error {
 	packageFile, err := os.Create(outFile)
 	if err != nil {
 		return err
 	}
 	var output io.WriteCloser = packageFile
-	if useGofmt {
-		if output, err = codegen.NewGofmtWriteCloser(output); err != nil {
-			packageFile.Close()
-			return err
-		}
-	}
-
-	if err = packageTmpl.Execute(output, dcp); err != nil {
+	if err = codeTmpl.Execute(output, dcp); err != nil {
 		output.Close()
 		return err
 	}
