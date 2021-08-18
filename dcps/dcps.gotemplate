@@ -121,7 +121,7 @@ func (client *{{$srvIdent}}) {{.Name}}Ctx(
 	request := {{if $winargs}}&{{template "argstruct" $winargs}}{{"{}"}}{{else}}{{"interface{}(nil)"}}{{end}}
 	// BEGIN Marshal arguments into request.
 {{range $winargs}}
-	if request.{{.Name}}, err = {{.Marshal}}; err != nil {
+	if request.{{.Name}}, err = {{.MarshalV1}}; err != nil {
 		return
 	}{{end}}
 	// END Marshal arguments into request.
@@ -136,7 +136,7 @@ func (client *{{$srvIdent}}) {{.Name}}Ctx(
 
 	// BEGIN Unmarshal arguments from response.
 {{range $woutargs}}
-	if {{.Name}}, err = {{.Unmarshal "response"}}; err != nil {
+	if {{.Name}}, err = {{.UnmarshalV1 "response"}}; err != nil {
 		return
 	}{{end}}
 	// END Unmarshal arguments from response.

@@ -11,6 +11,7 @@ import (
 
 	"github.com/huin/goupnp"
 	"github.com/huin/goupnp/scpd"
+	"github.com/huin/goupnp/soap"
 )
 
 // DCP collects together information about a UPnP Device Control Protocol.
@@ -165,25 +166,25 @@ func (s *SCPDWithURN) wrapArgument(arg *scpd.Argument) (*argumentWrapper, error)
 	if relVar == nil {
 		return nil, fmt.Errorf("no such state variable: %q, for argument %q", arg.RelatedStateVariable, arg.Name)
 	}
-	cnv, ok := typeConvs[relVar.DataType.Name]
+	cnv, ok := soap.TypeDataMap[relVar.DataType.Name]
 	if !ok {
 		return nil, fmt.Errorf("unknown data type: %q, for state variable %q, for argument %q", relVar.DataType.Type, arg.RelatedStateVariable, arg.Name)
 	}
 	return &argumentWrapper{
-		Argument: *arg,
-		relVar:   relVar,
-		conv:     cnv,
+		Argument:   *arg,
+		relVar:     relVar,
+		typeDataV1: cnv,
 	}, nil
 }
 
 type argumentWrapper struct {
 	scpd.Argument
-	relVar *scpd.StateVariable
-	conv   conv
+	relVar     *scpd.StateVariable
+	typeDataV1 soap.TypeData
 }
 
 func (arg *argumentWrapper) AsParameter() string {
-	return fmt.Sprintf("%s %s", arg.Name, arg.conv.ExtType)
+	return fmt.Sprintf("%s %s", arg.Name, arg.typeDataV1.GoTypeName())
 }
 
 func (arg *argumentWrapper) HasDoc() bool {
@@ -213,12 +214,12 @@ func (arg *argumentWrapper) Document() string {
 	return ""
 }
 
-func (arg *argumentWrapper) Marshal() string {
-	return fmt.Sprintf("soap.Marshal%s(%s)", arg.conv.FuncSuffix, arg.Name)
+func (arg *argumentWrapper) MarshalV1() string {
+	return fmt.Sprintf("soap.%s(%s)", arg.typeDataV1.MarshalFunc(), arg.Name)
 }
 
-func (arg *argumentWrapper) Unmarshal(objVar string) string {
-	return fmt.Sprintf("soap.Unmarshal%s(%s.%s)", arg.conv.FuncSuffix, objVar, arg.Name)
+func (arg *argumentWrapper) UnmarshalV1(objVar string) string {
+	return fmt.Sprintf("soap.%s(%s.%s)", arg.typeDataV1.UnmarshalFunc(), objVar, arg.Name)
 }
 
 type argumentWrapperList []*argumentWrapper
