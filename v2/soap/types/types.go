@@ -736,7 +736,7 @@ func (d *Date) clear() {
 }
 
 func (d *Date) marshalText(b []byte) []byte {
-	b = appendInt(b, int64(d.Year), 2)
+	b = appendInt(b, int64(d.Year), 4)
 	b = append(b, '-')
 	b = appendInt(b, int64(d.Month), 2)
 	b = append(b, '-')
