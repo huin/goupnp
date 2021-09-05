@@ -372,10 +372,11 @@ func Test(t *testing.T) {
 			for i, mt := range tt.marshalTests {
 				mt := mt
 				t.Run(fmt.Sprintf("marshalTest#%d_%v", i, mt.input), func(t *testing.T) {
-					got, err := mt.input.Marshal()
+					gotBytes, err := mt.input.MarshalText()
 					if err != nil {
 						t.Errorf("got unexpected error: %v", err)
 					}
+					got := string(gotBytes)
 					if got != mt.want {
 						t.Errorf("got %q, want: %q", got, mt.want)
 					}
@@ -384,7 +385,7 @@ func Test(t *testing.T) {
 			for i, input := range tt.marshalErrs {
 				input := input
 				t.Run(fmt.Sprintf("marshalErr#%d_%v", i, input), func(t *testing.T) {
-					got, err := input.Marshal()
+					got, err := input.MarshalText()
 					if err == nil {
 						t.Errorf("got %q, want error", got)
 					}
@@ -394,7 +395,7 @@ func Test(t *testing.T) {
 				ut := ut
 				t.Run(fmt.Sprintf("unmarshalTest#%d_%q", i, ut.input), func(t *testing.T) {
 					got := tt.makeValue()
-					if err := got.Unmarshal(ut.input); err != nil {
+					if err := got.UnmarshalText([]byte(ut.input)); err != nil {
 						t.Errorf("got unexpected error: %v", err)
 					}
 					if !tt.isEqual(got, ut.want) {
@@ -406,7 +407,7 @@ func Test(t *testing.T) {
 				input := input
 				t.Run(fmt.Sprintf("unmarshalErrs#%d_%q", i, input), func(t *testing.T) {
 					got := tt.makeValue()
-					if err := got.Unmarshal(input); err == nil {
+					if err := got.UnmarshalText([]byte(input)); err == nil {
 						t.Errorf("got %v, want error", got)
 					}
 				})
