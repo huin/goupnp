@@ -266,6 +266,7 @@ func (v *R8) UnmarshalText(b []byte) error {
 const Fixed14_4Denominator = 1e4
 const Fixed14_4MaxInteger = 1e14 - 1
 const Fixed14_4MaxFractional = 1e18 - 1
+const Fixed14_4MaxFrac = Fixed14_4Denominator - 1
 
 // Fixed14_4 represents a fixed point number with up to 14 decimal digits
 // before the decimal point (integer part), and up to 4 decimal digits
@@ -307,7 +308,7 @@ func (v *Fixed14_4) SetParts(intPart int64, fracPart int16) error {
 	if intPart < -Fixed14_4MaxInteger || intPart > Fixed14_4MaxInteger {
 		return fmt.Errorf("want intPart in range (-1e14,1e14), got %d", intPart)
 	}
-	if fracPart < -Fixed14_4Denominator || fracPart > Fixed14_4Denominator {
+	if fracPart < -Fixed14_4MaxFrac || fracPart > Fixed14_4MaxFrac {
 		return fmt.Errorf("want fracPart in range (-1e4,1e4), got %d", fracPart)
 	}
 	v.Fractional = intPart*Fixed14_4Denominator + int64(fracPart)
