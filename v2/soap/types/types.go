@@ -29,24 +29,13 @@ type UI1 uint8
 
 var _ SOAPValue = new(UI1)
 
-// toStringNoError converts `v` to a string, returning empty string on error.
-// This should only be used for String() implementations if no error can be
-// returned by v.MarshalText().
-func toStringNoError(v encoding.TextMarshaler) string {
-	b, err := v.MarshalText()
-	if err != nil {
-		return ""
-	}
-	return string(b)
-}
-
 func NewUI1(v uint8) *UI1 {
 	v2 := UI1(v)
 	return &v2
 }
 
 func (v *UI1) String() string {
-	return toStringNoError(v)
+	return strconv.FormatUint(uint64(*v), 10)
 }
 
 func (v *UI1) MarshalText() ([]byte, error) {
@@ -69,7 +58,7 @@ func NewUI2(v uint16) *UI2 {
 }
 
 func (v *UI2) String() string {
-	return toStringNoError(v)
+	return strconv.FormatUint(uint64(*v), 10)
 }
 
 func (v *UI2) MarshalText() ([]byte, error) {
@@ -92,7 +81,7 @@ func NewUI4(v uint32) *UI4 {
 }
 
 func (v *UI4) String() string {
-	return toStringNoError(v)
+	return strconv.FormatUint(uint64(*v), 10)
 }
 
 func (v *UI4) MarshalText() ([]byte, error) {
@@ -115,7 +104,7 @@ func NewUI8(v uint64) *UI8 {
 }
 
 func (v *UI8) String() string {
-	return toStringNoError(v)
+	return strconv.FormatUint(uint64(*v), 10)
 }
 
 func (v *UI8) MarshalText() ([]byte, error) {
@@ -138,7 +127,7 @@ func NewI1(v int8) *I1 {
 }
 
 func (v *I1) String() string {
-	return toStringNoError(v)
+	return strconv.FormatInt(int64(*v), 10)
 }
 
 func (v *I1) MarshalText() ([]byte, error) {
@@ -161,7 +150,7 @@ func NewI2(v int16) *I2 {
 }
 
 func (v *I2) String() string {
-	return toStringNoError(v)
+	return strconv.FormatInt(int64(*v), 10)
 }
 
 func (v *I2) MarshalText() ([]byte, error) {
@@ -184,7 +173,7 @@ func NewI4(v int32) *I4 {
 }
 
 func (v *I4) String() string {
-	return toStringNoError(v)
+	return strconv.FormatInt(int64(*v), 10)
 }
 
 func (v *I4) MarshalText() ([]byte, error) {
@@ -207,7 +196,7 @@ func NewI8(v int64) *I8 {
 }
 
 func (v *I8) String() string {
-	return toStringNoError(v)
+	return strconv.FormatInt(int64(*v), 10)
 }
 
 func (v *I8) MarshalText() ([]byte, error) {
@@ -230,11 +219,15 @@ func NewR4(v float32) *R4 {
 }
 
 func (v *R4) String() string {
-	return toStringNoError(v)
+	return string(v.marshalText(nil))
+}
+
+func (v *R4) marshalText(b []byte) []byte {
+	return strconv.AppendFloat(b, float64(*v), 'g', -1, 32)
 }
 
 func (v *R4) MarshalText() ([]byte, error) {
-	return strconv.AppendFloat(nil, float64(*v), 'g', -1, 32), nil
+	return v.marshalText(nil), nil
 }
 
 func (v *R4) UnmarshalText(b []byte) error {
@@ -253,11 +246,15 @@ func NewR8(v float64) *R8 {
 }
 
 func (v *R8) String() string {
-	return toStringNoError(v)
+	return string(v.marshalText(nil))
+}
+
+func (v *R8) marshalText(b []byte) []byte {
+	return strconv.AppendFloat(nil, float64(*v), 'g', -1, 64)
 }
 
 func (v *R8) MarshalText() ([]byte, error) {
-	return strconv.AppendFloat(nil, float64(*v), 'g', -1, 64), nil
+	return v.marshalText(nil), nil
 }
 
 func (v *R8) UnmarshalText(b []byte) error {
@@ -360,15 +357,22 @@ func (v Fixed14_4) Float64() float64 {
 }
 
 func (v *Fixed14_4) String() string {
-	return toStringNoError(v)
+	return string(v.marshalText(nil))
 }
 
-func (v *Fixed14_4) MarshalText() ([]byte, error) {
+func (v *Fixed14_4) marshalText(b []byte) []byte {
 	intPart, fracPart := v.Parts()
 	if fracPart < 0 {
 		fracPart = -fracPart
 	}
-	return []byte(fmt.Sprintf("%d.%04d", intPart, fracPart)), nil
+	b = strconv.AppendInt(b, intPart, 10)
+	b = append(b, '.')
+	b = appendInt(b, int64(fracPart), 4)
+	return b
+}
+
+func (v *Fixed14_4) MarshalText() ([]byte, error) {
+	return v.marshalText(nil), nil
 }
 
 var decimalByte = []byte{'.'}
@@ -482,6 +486,32 @@ func parseInt(b []byte, err *error) int {
 	return int(v)
 }
 
+var zeroDigits []byte = []byte("000")
+
+// appendInt appends `n` in decimal to `b`, with up to 3 digits of
+// zero-padding to fill to a minimum of 4 digits.
+func appendInt(b []byte, n int64, padding int) []byte {
+	if n > -1000 && n < 1000 {
+		if n < 0 {
+			n = -n
+			b = append(b, '-')
+		}
+		var digits int
+		if n < 10 {
+			digits = 1
+		} else if n < 100 {
+			digits = 2
+		} else if n < 1000 {
+			digits = 3
+		}
+		numZeros := padding - digits
+		if numZeros > 0 {
+			b = append(b, zeroDigits[:numZeros]...)
+		}
+	}
+	return strconv.AppendInt(b, n, 10)
+}
+
 var dateRegexps = []*regexp.Regexp{
 	// yyyy[-mm[-dd]]
 	regexp.MustCompile(`^(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?$`),
@@ -551,7 +581,7 @@ func (tod TimeOfDay) ToDuration() time.Duration {
 }
 
 func (tod *TimeOfDay) String() string {
-	return toStringNoError(tod)
+	return string(tod.marshalText(nil))
 }
 
 // IsValid returns true iff v is positive and <= 24 hours.
@@ -573,11 +603,20 @@ func (tod *TimeOfDay) clear() {
 	tod.Second = 0
 }
 
+func (tod *TimeOfDay) marshalText(b []byte) []byte {
+	b = appendInt(b, int64(tod.Hour), 2)
+	b = append(b, ':')
+	b = appendInt(b, int64(tod.Minute), 2)
+	b = append(b, ':')
+	b = appendInt(b, int64(tod.Second), 2)
+	return b
+}
+
 func (tod *TimeOfDay) MarshalText() ([]byte, error) {
 	if err := tod.CheckValid(); err != nil {
 		return nil, err
 	}
-	return []byte(fmt.Sprintf("%02d:%02d:%02d", tod.Hour, tod.Minute, tod.Second)), nil
+	return tod.marshalText(nil), nil
 }
 
 var timeRegexps = []*regexp.Regexp{
@@ -623,7 +662,7 @@ type TimeOfDayTZ struct {
 var _ SOAPValue = &TimeOfDayTZ{}
 
 func (todz *TimeOfDayTZ) String() string {
-	return toStringNoError(todz)
+	return string(todz.TZ.marshalText(nil))
 }
 
 // clear removes data from v, setting to default values.
@@ -633,12 +672,9 @@ func (todz *TimeOfDayTZ) clear() {
 }
 
 func (todz *TimeOfDayTZ) MarshalText() ([]byte, error) {
-	result, err := todz.TimeOfDay.MarshalText()
-	if err != nil {
-		return nil, err
-	}
-	result = append(result, []byte(todz.TZ.String())...)
-	return result, nil
+	b := todz.TimeOfDay.marshalText(nil)
+	b = todz.TZ.marshalText(b)
+	return b, nil
 }
 
 func (todz *TimeOfDayTZ) UnmarshalText(b []byte) error {
@@ -679,7 +715,7 @@ func (d Date) ToTime(loc *time.Location) time.Time {
 }
 
 func (d *Date) String() string {
-	return toStringNoError(d)
+	return string(d.marshalText(nil))
 }
 
 // CheckValid returns an error if the date components are out of range.
@@ -698,8 +734,17 @@ func (d *Date) clear() {
 	d.Day = 0
 }
 
+func (d *Date) marshalText(b []byte) []byte {
+	b = appendInt(b, int64(d.Year), 2)
+	b = append(b, '-')
+	b = appendInt(b, int64(d.Month), 2)
+	b = append(b, '-')
+	b = appendInt(b, int64(d.Day), 2)
+	return b
+}
+
 func (d *Date) MarshalText() ([]byte, error) {
-	return []byte(fmt.Sprintf("%04d-%02d-%02d", d.Year, d.Month, d.Day)), nil
+	return d.marshalText(nil), nil
 }
 
 func (d *Date) UnmarshalText(b []byte) error {
@@ -749,7 +794,7 @@ func DateTimeFromTime(v time.Time) DateTime {
 }
 
 func (dt *DateTime) String() string {
-	return toStringNoError(dt)
+	return string(dt.marshalText(nil))
 }
 
 func (dt DateTime) ToTime(loc *time.Location) time.Time {
@@ -764,20 +809,15 @@ func (dt *DateTime) clear() {
 	dt.TimeOfDay.clear()
 }
 
+func (dt *DateTime) marshalText(b []byte) []byte {
+	b = dt.Date.marshalText(b)
+	b = append(b, 'T')
+	b = dt.TimeOfDay.marshalText(b)
+	return b
+}
+
 func (dt *DateTime) MarshalText() ([]byte, error) {
-	var result []byte
-	d, err := dt.Date.MarshalText()
-	if err != nil {
-		return nil, err
-	}
-	t, err := dt.TimeOfDay.MarshalText()
-	if err != nil {
-		return nil, err
-	}
-	result = append(result, d...)
-	result = append(result, 'T')
-	result = append(result, t...)
-	return result, nil
+	return dt.marshalText(nil), nil
 }
 
 func (dt *DateTime) UnmarshalText(b []byte) error {
@@ -816,7 +856,7 @@ func DateTimeTZFromTime(t time.Time) DateTimeTZ {
 }
 
 func (dtz *DateTimeTZ) String() string {
-	return toStringNoError(dtz)
+	return string(dtz.marshalText(nil))
 }
 
 // Time converts `dtz` to time.Time, using defaultLoc as the default location if
@@ -841,21 +881,16 @@ func (dtz *DateTimeTZ) clear() {
 	dtz.TZ.clear()
 }
 
+func (dtz *DateTimeTZ) marshalText(b []byte) []byte {
+	b = dtz.Date.marshalText(b)
+	b = append(b, 'T')
+	b = dtz.TimeOfDay.marshalText(b)
+	b = dtz.TZ.marshalText(b)
+	return b
+}
+
 func (dtz *DateTimeTZ) MarshalText() ([]byte, error) {
-	var result []byte
-	d, err := dtz.Date.MarshalText()
-	if err != nil {
-		return nil, err
-	}
-	t, err := dtz.TimeOfDay.MarshalText()
-	if err != nil {
-		return nil, err
-	}
-	result = append(result, d...)
-	result = append(result, 'T')
-	result = append(result, t...)
-	result = append(result, []byte(dtz.TZ.String())...)
-	return result, nil
+	return dtz.marshalText(nil), nil
 }
 
 func (dtz *DateTimeTZ) UnmarshalText(b []byte) error {
@@ -921,29 +956,38 @@ func (tzd TZD) Location(defaultLoc *time.Location) *time.Location {
 	return time.FixedZone(tzd.String(), tzd.Offset)
 }
 
-func (tzd TZD) String() string {
-	if !tzd.HasTZ {
-		return ""
-	}
-
-	if tzd.Offset == 0 {
-		return "Z"
-	}
-
-	offsetMins := tzd.Offset / 60
-	sign := '+'
-	if offsetMins < 1 {
-		offsetMins = -offsetMins
-		sign = '-'
-	}
-	h, m := offsetMins/60, offsetMins%60
-	return fmt.Sprintf("%c%02d:%02d", sign, h, m)
+func (tzd *TZD) String() string {
+	return string(tzd.marshalText(nil))
 }
 
 // clear removes offset information from `v`.
 func (tzd *TZD) clear() {
 	tzd.Offset = 0
 	tzd.HasTZ = false
+}
+
+func (tzd *TZD) marshalText(b []byte) []byte {
+	if !tzd.HasTZ {
+		return b
+	}
+
+	if tzd.Offset == 0 {
+		b = append(b, 'Z')
+		return b
+	}
+
+	offsetMins := tzd.Offset / 60
+	var sign byte = '+'
+	if offsetMins < 1 {
+		offsetMins = -offsetMins
+		sign = '-'
+	}
+	h, m := offsetMins/60, offsetMins%60
+	b = append(b, sign)
+	b = appendInt(b, int64(h), 2)
+	b = append(b, ':')
+	b = appendInt(b, int64(m), 2)
+	return b
 }
 
 // (+|-)(hh):(mm)
