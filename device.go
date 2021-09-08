@@ -184,7 +184,7 @@ func (uf *URLField) SetURLBase(urlBase *url.URL) {
 		str = "/" + str
 	}
 
-	refUrl, err := url.Parse(uf.Str)
+	refUrl, err := url.Parse(str)
 	if err != nil {
 		uf.URL = url.URL{}
 		uf.Ok = false
