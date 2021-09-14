@@ -38,3 +38,41 @@ func TestWriteRead(t *testing.T) {
 		t.Errorf("want recvAction=%+v, got %+v", sendAction, recvAction)
 	}
 }
+
+func TestReadFault(t *testing.T) {
+	env := []byte(xml.Header + `
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"
+s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+<s:Body>
+<s:Fault>
+<faultcode>dummy code</faultcode>
+<faultstring>dummy string</faultstring>
+<faultactor>dummy actor</faultactor>
+<detail>dummy detail</detail>
+</s:Fault>
+</s:Body>
+</s:Envelope>
+`)
+
+	type args struct{}
+
+	err := Read(bytes.NewBuffer(env), &Action{Args: &args{}})
+	if err == nil {
+		t.Fatal("want err != nil, got nil")
+	}
+
+	gotFault, ok := err.(*Fault)
+	if !ok {
+		t.Fatalf("want *Fault, got %T", err)
+	}
+
+	wantFault := &Fault{
+		Code:   "dummy code",
+		String: "dummy string",
+		Actor:  "dummy actor",
+		Detail: FaultDetail{Raw: []byte("dummy detail")},
+	}
+	if !reflect.DeepEqual(wantFault, gotFault) {
+		t.Errorf("want %+v, got %+v", wantFault, gotFault)
+	}
+}
