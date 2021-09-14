@@ -7,14 +7,17 @@ import (
 	"io"
 )
 
+// FaultDetail carries XML-encoded application-specific Fault details.
+type FaultDetail struct {
+	Raw []byte `xml:",innerxml"`
+}
+
 // Fault implements error, and contains SOAP fault information.
 type Fault struct {
-	Code   string `xml:"faultcode"`
-	String string `xml:"faultstring"`
-	Actor  string `xml:"faultactor"`
-	Detail struct {
-		Raw []byte `xml:",innerxml"`
-	} `xml:"detail"`
+	Code   string      `xml:"faultcode"`
+	String string      `xml:"faultstring"`
+	Actor  string      `xml:"faultactor"`
+	Detail FaultDetail `xml:"detail"`
 }
 
 func (fe *Fault) Error() string {
@@ -32,14 +35,28 @@ var (
 	envClose = []byte(`</s:Body></s:Envelope>`)
 )
 
+// Action wraps a SOAP action to be read or written as part of a SOAP envelope.
+type Action struct {
+	// XMLName specifies the XML element namespace (URI) and name. Together
+	// these identify the SOAP action.
+	XMLName xml.Name
+	// Args is an arbitrary struct containing fields for encoding or decoding
+	// arguments. See https://pkg.go.dev/encoding/xml@go1.17.1#Marshal and
+	// https://pkg.go.dev/encoding/xml@go1.17.1#Unmarshal for details on
+	// annotating fields in the structure.
+	Args interface{} `xml:",any"`
+}
+
 // Write marshals a SOAP envelope to the writer. Errors can be from the writer
 // or XML encoding.
 func Write(w io.Writer, action *Action) error {
 	// Experiments with one router have shown that it 500s for requests where
 	// the outer default xmlns is set to the SOAP namespace, and then
 	// reassigning the default namespace within that to the service namespace.
-	// Most of the code in this function is hand-coding the outer XML to work
-	// around this.
+	// Most of the code in this function is hand-coding the outer XML to
+	// workaround this.
+	// Resolving https://github.com/golang/go/issues/9519 might remove the need
+	// for this workaround.
 
 	_, err := w.Write(envOpen)
 	if err != nil {
@@ -121,9 +138,4 @@ type envelope struct {
 type body struct {
 	Fault  *Fault  `xml:"Fault"`
 	Action *Action `xml:",any"`
-}
-
-type Action struct {
-	XMLName xml.Name
-	Args    interface{} `xml:",any"`
 }
