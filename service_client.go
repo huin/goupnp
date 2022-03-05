@@ -17,6 +17,7 @@ type ServiceClient struct {
 	RootDevice *RootDevice
 	Location   *url.URL
 	Service    *Service
+	localAddr  string
 }
 
 // NewServiceClients discovers services, and returns clients for them. err will
@@ -36,7 +37,7 @@ func NewServiceClients(searchTarget string) (clients []ServiceClient, errors []e
 			continue
 		}
 
-		deviceClients, err := NewServiceClientsFromRootDevice(maybeRootDevice.Root, maybeRootDevice.Location, searchTarget)
+		deviceClients, err := newServiceClientsFromRootDevice(maybeRootDevice.Root, maybeRootDevice.Location, searchTarget, maybeRootDevice.LocalAddr)
 		if err != nil {
 			errors = append(errors, err)
 			continue
@@ -61,6 +62,10 @@ func NewServiceClientsByURL(loc *url.URL, searchTarget string) ([]ServiceClient,
 // a given root device. The loc parameter is simply assigned to the
 // Location attribute of the returned ServiceClient(s).
 func NewServiceClientsFromRootDevice(rootDevice *RootDevice, loc *url.URL, searchTarget string) ([]ServiceClient, error) {
+	return newServiceClientsFromRootDevice(rootDevice, loc, searchTarget, "")
+}
+
+func newServiceClientsFromRootDevice(rootDevice *RootDevice, loc *url.URL, searchTarget string, lAddr string) ([]ServiceClient, error) {
 	device := &rootDevice.Device
 	srvs := device.FindService(searchTarget)
 	if len(srvs) == 0 {
@@ -75,6 +80,7 @@ func NewServiceClientsFromRootDevice(rootDevice *RootDevice, loc *url.URL, searc
 			RootDevice: rootDevice,
 			Location:   loc,
 			Service:    srv,
+			localAddr:  lAddr,
 		})
 	}
 	return clients, nil
@@ -85,4 +91,9 @@ func NewServiceClientsFromRootDevice(rootDevice *RootDevice, loc *url.URL, searc
 // wrapping type.
 func (client *ServiceClient) GetServiceClient() *ServiceClient {
 	return client
+}
+
+// LocalAddr returns the address from which the device was discovered (if known - otherwise empty).
+func (client *ServiceClient) LocalAddr() string {
+	return client.localAddr
 }

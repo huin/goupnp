@@ -143,9 +143,14 @@ func (httpu *HTTPUClient) Do(
 			continue
 		}
 
+		// Set the related local address used to discover the device.
+		response.Header.Add(LocalAddress, httpu.conn.LocalAddr().(*net.UDPAddr).IP.String())
+
 		responses = append(responses, response)
 	}
 
 	// Timeout reached - return discovered responses.
 	return responses, nil
 }
+
+const LocalAddress = "goupnp-local-address"

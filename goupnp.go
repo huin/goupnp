@@ -22,6 +22,7 @@ import (
 	"net/url"
 	"time"
 
+	"github.com/huin/goupnp/httpu"
 	"github.com/huin/goupnp/ssdp"
 )
 
@@ -63,6 +64,9 @@ type MaybeRootDevice struct {
 	// the discovery of a device, regardless of if there was an error probing it.
 	Location *url.URL
 
+	// The address from which the device was discovered (if known - otherwise nil).
+	LocalAddr string
+
 	// Any error encountered probing a discovered device.
 	Err error
 }
@@ -99,6 +103,7 @@ func DiscoverDevices(searchTarget string) ([]MaybeRootDevice, error) {
 		} else {
 			maybe.Root = root
 		}
+		maybe.LocalAddr = response.Header.Get(httpu.LocalAddress)
 	}
 
 	return results, nil
