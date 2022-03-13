@@ -29,16 +29,16 @@ import (
 var _ time.Time
 
 // Device URNs:
-const ({{range .DeviceTypes}}
+const ({{range .OrderedDeviceTypes}}
 	{{.Const}} = "{{.URN}}"{{end}}
 )
 
 // Service URNs:
-const ({{range .ServiceTypes}}
+const ({{range .OrderedServiceTypes}}
 	{{.Const}} = "{{.URN}}"{{end}}
 )
 
-{{range .Services}}
+{{range .OrderedServices}}
 {{$srv := .}}
 {{$srvIdent := printf "%s%s" .Name .Version}}
 
@@ -102,7 +102,7 @@ func new{{$srvIdent}}ClientsFromGenericClients(genericClients []goupnp.ServiceCl
 	return clients
 }
 
-{{range .SCPD.Actions}}{{/* loops over *SCPDWithURN values */}}
+{{range .SCPD.OrderedActions}}{{/* loops over *SCPDWithURN values */}}
 
 {{$winargs := $srv.WrapArguments .InputArguments}}
 {{$woutargs := $srv.WrapArguments .OutputArguments}}
