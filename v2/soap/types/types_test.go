@@ -10,10 +10,11 @@ import (
 
 var dummyLoc = time.FixedZone("DummyTZ", 6*3600)
 
-func newFixed14_4Parts(intPart int64, fracPart int16) *Fixed14_4 {
+func newFixed14_4Parts(t testing.TB, intPart int64, fracPart int16) *Fixed14_4 {
+	t.Helper()
 	v, err := Fixed14_4FromParts(intPart, fracPart)
 	if err != nil {
-		panic(err)
+		t.Fatal(err)
 	}
 	return &v
 }
@@ -145,32 +146,32 @@ func Test(t *testing.T) {
 				return got.(*Fixed14_4).Fractional == want.(*Fixed14_4).Fractional
 			},
 			marshalTests: []marshalCase{
-				{newFixed14_4Parts(0, 0), "0.0000"},
-				{newFixed14_4Parts(1, 2), "1.0002"},
-				{newFixed14_4Parts(1, 20), "1.0020"},
-				{newFixed14_4Parts(1, 200), "1.0200"},
-				{newFixed14_4Parts(1, 2000), "1.2000"},
-				{newFixed14_4Parts(-1, -2), "-1.0002"},
-				{newFixed14_4Parts(1234, 5678), "1234.5678"},
-				{newFixed14_4Parts(-1234, -5678), "-1234.5678"},
-				{newFixed14_4Parts(9999_99999_99999, 9999), "99999999999999.9999"},
-				{newFixed14_4Parts(-9999_99999_99999, -9999), "-99999999999999.9999"},
+				{newFixed14_4Parts(t, 0, 0), "0.0000"},
+				{newFixed14_4Parts(t, 1, 2), "1.0002"},
+				{newFixed14_4Parts(t, 1, 20), "1.0020"},
+				{newFixed14_4Parts(t, 1, 200), "1.0200"},
+				{newFixed14_4Parts(t, 1, 2000), "1.2000"},
+				{newFixed14_4Parts(t, -1, -2), "-1.0002"},
+				{newFixed14_4Parts(t, 1234, 5678), "1234.5678"},
+				{newFixed14_4Parts(t, -1234, -5678), "-1234.5678"},
+				{newFixed14_4Parts(t, 9999_99999_99999, 9999), "99999999999999.9999"},
+				{newFixed14_4Parts(t, -9999_99999_99999, -9999), "-99999999999999.9999"},
 			},
 			unmarshalErrs: append([]string{
 				"", ".", "0.00000000abc", "0.-5",
 			}, badNumbers...),
 			unmarshalTests: []unmarshalCase{
-				{"010", newFixed14_4Parts(10, 0)},
-				{"0", newFixed14_4Parts(0, 0)},
-				{"0.", newFixed14_4Parts(0, 0)},
-				{"0.000005", newFixed14_4Parts(0, 0)},
-				{"1.2", newFixed14_4Parts(1, 2000)},
-				{"1.20", newFixed14_4Parts(1, 2000)},
-				{"1.200", newFixed14_4Parts(1, 2000)},
-				{"1.02", newFixed14_4Parts(1, 200)},
-				{"1.020", newFixed14_4Parts(1, 200)},
-				{"1.002", newFixed14_4Parts(1, 20)},
-				{"1.00200005", newFixed14_4Parts(1, 20)},
+				{"010", newFixed14_4Parts(t, 10, 0)},
+				{"0", newFixed14_4Parts(t, 0, 0)},
+				{"0.", newFixed14_4Parts(t, 0, 0)},
+				{"0.000005", newFixed14_4Parts(t, 0, 0)},
+				{"1.2", newFixed14_4Parts(t, 1, 2000)},
+				{"1.20", newFixed14_4Parts(t, 1, 2000)},
+				{"1.200", newFixed14_4Parts(t, 1, 2000)},
+				{"1.02", newFixed14_4Parts(t, 1, 200)},
+				{"1.020", newFixed14_4Parts(t, 1, 200)},
+				{"1.002", newFixed14_4Parts(t, 1, 20)},
+				{"1.00200005", newFixed14_4Parts(t, 1, 20)},
 			},
 		},
 
@@ -462,9 +463,9 @@ func TestFixed14_4(t *testing.T) {
 			flt float64
 			fix *Fixed14_4
 		}{
-			{0, newFixed14_4Parts(0, 0)},
-			{1234.5678, newFixed14_4Parts(1234, 5678)},
-			{-1234.5678, newFixed14_4Parts(-1234, -5678)},
+			{0, newFixed14_4Parts(t, 0, 0)},
+			{1234.5678, newFixed14_4Parts(t, 1234, 5678)},
+			{-1234.5678, newFixed14_4Parts(t, -1234, -5678)},
 		}
 
 		for _, test := range tests {
