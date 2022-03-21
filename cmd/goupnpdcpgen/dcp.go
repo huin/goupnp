@@ -16,6 +16,7 @@ import (
 // DCP collects together information about a UPnP Device Control Protocol.
 type DCP struct {
 	Metadata     DCPMetadata
+	DocURLs      []string
 	DeviceTypes  map[string]*URNParts
 	ServiceTypes map[string]*URNParts
 	Services     []SCPDWithURN
@@ -29,21 +30,32 @@ func newDCP(metadata DCPMetadata) *DCP {
 	}
 }
 
-func (dcp *DCP) processZipFile(filename string) error {
-	archive, err := zip.OpenReader(filename)
-	if err != nil {
-		return fmt.Errorf("error reading zip file %q: %v", filename, err)
-	}
-	defer archive.Close()
-	for _, deviceFile := range globFiles("*/device/*.xml", archive) {
-		if err := dcp.processDeviceFile(deviceFile); err != nil {
-			return err
+func (dcp *DCP) Reset() {
+	dcp.DocURLs = nil
+	dcp.DeviceTypes = make(map[string]*URNParts)
+	dcp.ServiceTypes = make(map[string]*URNParts)
+}
+
+func (dcp *DCP) processZipFile(archive []*zip.File, devices, services []string) error {
+	var f int
+	for _, devicesGlob := range devices {
+		for _, deviceFile := range globFiles(devicesGlob, archive) {
+			if err := dcp.processDeviceFile(deviceFile); err != nil {
+				return err
+			}
+			f++
 		}
 	}
-	for _, scpdFile := range globFiles("*/service/*.xml", archive) {
-		if err := dcp.processSCPDFile(scpdFile); err != nil {
-			return err
+	for _, scpdsGlob := range services {
+		for _, scpdFile := range globFiles(scpdsGlob, archive) {
+			if err := dcp.processSCPDFile(scpdFile); err != nil {
+				return err
+			}
+			f++
 		}
+	}
+	if f < 1 {
+		return fmt.Errorf("no sdcp/device found in %q and %q", devices, services)
 	}
 	return nil
 }
