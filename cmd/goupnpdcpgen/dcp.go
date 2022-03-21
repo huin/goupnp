@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"sort"
 	"strings"
 
 	"github.com/huin/goupnp"
@@ -85,11 +86,39 @@ func (dcp *DCP) writeCode(outFile string, useGofmt bool) error {
 			return err
 		}
 	}
+
 	if err = packageTmpl.Execute(output, dcp); err != nil {
 		output.Close()
 		return err
 	}
 	return output.Close()
+}
+
+func (dcp *DCP) OrderedServices() []SCPDWithURN {
+	services := append([]SCPDWithURN{}, dcp.Services...)
+	sort.SliceStable(services, func(i, j int) bool {
+		return services[i].URNParts.URN < services[j].URNParts.URN
+	})
+	return services
+}
+
+func orderedURNParts(urnMap map[string]*URNParts) []*URNParts {
+	urns := make([]*URNParts, 0, len(urnMap))
+	for _, urn := range urnMap {
+		urns = append(urns, urn)
+	}
+	sort.SliceStable(urns, func(i, j int) bool {
+		return urns[i].URN < urns[j].URN
+	})
+	return urns
+}
+
+func (dcp *DCP) OrderedDeviceTypes() []*URNParts {
+	return orderedURNParts(dcp.DeviceTypes)
+}
+
+func (dcp *DCP) OrderedServiceTypes() []*URNParts {
+	return orderedURNParts(dcp.ServiceTypes)
 }
 
 func (dcp *DCP) processSCPDFile(file *zip.File) error {
