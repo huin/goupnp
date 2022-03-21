@@ -9,24 +9,22 @@ import (
 	"os"
 	"path"
 	"regexp"
+	"strings"
 )
 
 func acquireFile(specFilename string, xmlSpecURL string) error {
-	if f, err := os.Open(specFilename); err != nil {
-		if !os.IsNotExist(err) {
-			return err
-		}
-	} else {
-		f.Close()
+	tmpFilename := specFilename + ".download"
+	defer os.Remove(tmpFilename)
+
+	if fileExists(specFilename) {
 		return nil
 	}
 
-	tmpFilename := specFilename + ".download"
 	if err := downloadFile(tmpFilename, xmlSpecURL); err != nil {
 		return err
 	}
 
-	return os.Rename(tmpFilename, specFilename)
+	return copyFile(specFilename, tmpFilename)
 }
 
 func downloadFile(filename, url string) error {
@@ -54,10 +52,11 @@ func downloadFile(filename, url string) error {
 	return w.Close()
 }
 
-func globFiles(pattern string, archive *zip.ReadCloser) []*zip.File {
+func globFiles(pattern string, archive []*zip.File) []*zip.File {
 	var files []*zip.File
-	for _, f := range archive.File {
-		if matched, err := path.Match(pattern, f.Name); err != nil {
+	pattern = strings.ToLower(pattern)
+	for _, f := range archive {
+		if matched, err := path.Match(pattern, strings.ToLower(f.Name)); err != nil {
 			// This shouldn't happen - all patterns are hard-coded, errors in them
 			// are a programming error.
 			panic(err)
@@ -92,4 +91,31 @@ func urnPartsFromSCPDFilename(filename string) (*URNParts, error) {
 		Name:    name,
 		Version: version,
 	}, nil
+}
+
+func copyFile(dst string, src string) error {
+	f, err := os.Open(src)
+	if err != nil {
+		return err
+	}
+	return writeFile(dst, f)
+}
+
+func writeFile(dst string, r io.ReadCloser) error {
+	defer r.Close()
+	f, err := os.Create(dst)
+	if err != nil {
+		return err
+	}
+	_, err = io.Copy(f, r)
+	return err
+}
+
+func fileExists(p string) bool {
+	f, err := os.Open(p)
+	if err != nil {
+		return !os.IsNotExist(err)
+	}
+	f.Close()
+	return true
 }

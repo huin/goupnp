@@ -2,15 +2,21 @@ package main
 
 import (
 	"html/template"
+	"path/filepath"
 )
 
-var packageTmpl = template.Must(template.New("package").Parse(`{{$name := .Metadata.Name}}
+var templateFuncs = template.FuncMap{
+	"base": filepath.Base,
+}
+
+var packageTmpl = template.Must(template.New("package").Funcs(templateFuncs).Parse(`{{$name := .Metadata.Name}}
 // Client for UPnP Device Control Protocol {{.Metadata.OfficialName}}.
-// {{if .Metadata.DocURL}}
-// This DCP is documented in detail at: {{.Metadata.DocURL}}{{end}}
+// {{if .DocURLs}}
+// This DCP is documented in detail at: {{range .DocURLs}}
+// - {{.}}{{end}}{{end}}
 //
 // Typically, use one of the New* functions to create clients for services.
-package {{$name}}
+package {{$name | base}}
 
 // ***********************************************************
 // GENERATED FILE - DO NOT EDIT BY HAND. See README.md

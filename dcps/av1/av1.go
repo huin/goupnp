@@ -1,6 +1,7 @@
 // Client for UPnP Device Control Protocol MediaServer v1 and MediaRenderer v1.
 //
-// This DCP is documented in detail at: http://upnp.org/specs/av/av1/
+// This DCP is documented in detail at:
+// - http://upnp.org/specs/av/av1/
 //
 // Typically, use one of the New* functions to create clients for services.
 package av1
