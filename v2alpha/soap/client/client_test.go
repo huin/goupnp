@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/huin/goupnp/v2/soap/envelope"
+	"github.com/huin/goupnp/v2alpha/soap/envelope"
 )
 
 type ActionArgs struct {
