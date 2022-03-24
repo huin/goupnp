@@ -124,17 +124,4 @@ func fixMissingURN(missingURNs ...string) func(dcp *DCP) error {
 	}
 }
 
-func wanFirewallURNFix(dcp *DCP) error {
-	missingURN := "urn:schemas-upnp-org:service:WANIPv6FirewallControl:1"
-	if _, ok := dcp.ServiceTypes[missingURN]; ok {
-		return nil
-	}
-	urnParts, err := extractURNParts(missingURN, serviceURNPrefix)
-	if err != nil {
-		return err
-	}
-	dcp.ServiceTypes[missingURN] = urnParts
-	return nil
-}
-
 type DCPHackFn func(*DCP) error
