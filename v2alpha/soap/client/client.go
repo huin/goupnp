@@ -9,7 +9,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/huin/goupnp/v2/soap/envelope"
+	"github.com/huin/goupnp/v2alpha/soap/envelope"
 )
 
 // HttpClient defines the interface required of an HTTP client. It is a subset of *http.Client.
