@@ -2,10 +2,13 @@ package types
 
 import (
 	"bytes"
+	"encoding/xml"
 	"fmt"
 	"math"
 	"testing"
 	"time"
+
+	"github.com/google/go-cmp/cmp"
 )
 
 var dummyLoc = time.FixedZone("DummyTZ", 6*3600)
@@ -535,4 +538,73 @@ func (dtz DateTimeTZ) equal(o DateTimeTZ) bool {
 
 func (tzd TZD) equal(o TZD) bool {
 	return tzd.Offset == o.Offset && tzd.HasTZ == o.HasTZ
+}
+
+func TestStructWrapped(t *testing.T) {
+	type wrapper struct {
+		UI1Field         UI1
+		UI2Field         UI2
+		UI4Field         UI4
+		UI8Field         UI8
+		I1Field          I1
+		I2Field          I2
+		I4Field          I4
+		I8Field          I8
+		R4Field          R4
+		R8Field          R8
+		Fixed14_4Field   Fixed14_4
+		CharField        Char
+		TimeOfDayField   TimeOfDay
+		TimeOfDayTZField TimeOfDayTZ
+		DateField        Date
+		DateTimeField    DateTime
+		DateTimeTZField  DateTimeTZ
+		BooleanField     Boolean
+		BinBase64Field   BinBase64
+		BinHexField      BinHex
+		URIField         URI
+	}
+
+	f144, err := Fixed14_4FromParts(12, 3456)
+	if err != nil {
+		t.Fatal(err)
+	}
+	tod := TimeOfDay{12, 34, 56}
+	date := Date{2001, 2, 3}
+	tzd := TZD{3600, true}
+	original := &wrapper{
+		UI1Field:         1,
+		UI2Field:         2,
+		UI4Field:         4,
+		UI8Field:         8,
+		I1Field:          -1,
+		I2Field:          -2,
+		I4Field:          -4,
+		I8Field:          -8,
+		R4Field:          4.0,
+		R8Field:          8.0,
+		Fixed14_4Field:   f144,
+		CharField:        'c',
+		TimeOfDayField:   tod,
+		TimeOfDayTZField: TimeOfDayTZ{tod, tzd},
+		DateField:        date,
+		DateTimeField:    DateTime{date, tod},
+		DateTimeTZField:  DateTimeTZ{date, tod, tzd},
+		BooleanField:     true,
+		BinBase64Field:   BinBase64{1, 2, 3, 4},
+		BinHexField:      BinHex{1, 2, 3, 4},
+	}
+
+	marshalled, err := xml.Marshal(original)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	got := &wrapper{}
+	if err := xml.Unmarshal(marshalled, got); err != nil {
+		t.Fatal(err)
+	}
+	if diff := cmp.Diff(original, got); diff != "" {
+		t.Errorf("\ngot  %#v\nwant %#v\ndiff:\n%s", got, original, diff)
+	}
 }
