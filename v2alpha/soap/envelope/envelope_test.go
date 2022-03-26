@@ -3,6 +3,9 @@ package envelope
 import (
 	"bytes"
 	"encoding/xml"
+	"errors"
+	"fmt"
+	"io"
 	"reflect"
 	"testing"
 )
@@ -74,5 +77,38 @@ s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
 	}
 	if !reflect.DeepEqual(wantFault, gotFault) {
 		t.Errorf("want %+v, got %+v", wantFault, gotFault)
+	}
+}
+
+func TestFault(t *testing.T) {
+	tests := []struct {
+		name   string
+		err    error
+		wantIs bool
+	}{
+		{"plain fault", &Fault{Code: "code"}, true},
+		{"wrapped fault", fmt.Errorf("wrapper: %w", &Fault{Code: "code"}), true},
+		{"other error", io.EOF, false},
+	}
+
+	for _, test := range tests {
+		test := test // copy for closure
+		t.Run(test.name, func(t *testing.T) {
+			if got, want := errors.Is(test.err, ErrFault), test.wantIs; got != want {
+				t.Errorf("got errors.Is(%v, ErrFault)=>%t, want %t", test.err, got, want)
+			}
+			if !test.wantIs {
+				return
+			}
+
+			var fault *Fault
+			if got, want := errors.As(test.err, &fault), true; got != want {
+				t.Fatalf("got errors.As(%v, ...)=>%t, want %t", test.err, got, want)
+			}
+
+			if got, want := fault.Code, "code"; got != want {
+				t.Errorf("got fault.Code=%q, want %q", got, want)
+			}
+		})
 	}
 }

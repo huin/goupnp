@@ -3,9 +3,13 @@ package envelope
 
 import (
 	"encoding/xml"
+	"errors"
 	"fmt"
 	"io"
 )
+
+// ErrFault can be used as a target with errors.Is.
+var ErrFault error = errors.New("xml fault")
 
 // FaultDetail carries XML-encoded application-specific Fault details.
 type FaultDetail struct {
@@ -22,6 +26,10 @@ type Fault struct {
 
 func (fe *Fault) Error() string {
 	return fmt.Sprintf("SOAP fault code=%s: %s", fe.Code, fe.String)
+}
+
+func (fe *Fault) Is(target error) bool {
+	return target == ErrFault
 }
 
 // Various "constant" bytes used in the written envelope.
