@@ -5,6 +5,7 @@ import (
 	"encoding/xml"
 	"fmt"
 	"math"
+	"net/url"
 	"testing"
 	"time"
 
@@ -572,6 +573,10 @@ func TestStructWrapped(t *testing.T) {
 	tod := TimeOfDay{12, 34, 56}
 	date := Date{2001, 2, 3}
 	tzd := TZD{3600, true}
+	url, err := url.Parse("https://example.com/path?k=v")
+	if err != nil {
+		t.Fatal(err)
+	}
 	original := &wrapper{
 		UI1Field:         1,
 		UI2Field:         2,
@@ -593,6 +598,7 @@ func TestStructWrapped(t *testing.T) {
 		BooleanField:     true,
 		BinBase64Field:   BinBase64{1, 2, 3, 4},
 		BinHexField:      BinHex{1, 2, 3, 4},
+		URIField:         URI(*url),
 	}
 
 	marshalled, err := xml.Marshal(original)
