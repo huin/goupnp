@@ -91,7 +91,7 @@ func TestDo(t *testing.T) {
 
 	c := New(ts.URL + "/endpointpath")
 
-	reqAction := envelope.NewAction("http://example.com/endpointns", "Foo",
+	reqAction := envelope.NewSendAction("http://example.com/endpointns", "Foo",
 		&ActionArgs{Name: "World"})
 	reply := &ActionReply{}
 	replyAction := &envelope.Action{Args: reply}
