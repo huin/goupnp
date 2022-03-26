@@ -12,6 +12,8 @@ import (
 	"github.com/huin/goupnp/v2alpha/soap/envelope"
 )
 
+var _ HttpClient = &http.Client{}
+
 // HttpClient defines the interface required of an HTTP client. It is a subset of *http.Client.
 type HttpClient interface {
 	Do(req *http.Request) (*http.Response, error)
