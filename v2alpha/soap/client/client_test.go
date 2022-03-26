@@ -2,7 +2,6 @@ package client
 
 import (
 	"context"
-	"encoding/xml"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -92,12 +91,8 @@ func TestPerformAction(t *testing.T) {
 
 	c := New(ts.URL + "/endpointpath")
 
-	reqAction := &envelope.Action{
-		XMLName: xml.Name{Space: "http://example.com/endpointns", Local: "Foo"},
-		Args: &ActionArgs{
-			Name: "World",
-		},
-	}
+	reqAction := envelope.NewAction("http://example.com/endpointns", "Foo",
+		&ActionArgs{Name: "World"})
 	reply := &ActionReply{}
 	replyAction := &envelope.Action{Args: reply}
 
