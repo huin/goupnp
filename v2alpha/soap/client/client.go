@@ -57,18 +57,32 @@ func New(endpointURL string, opts ...Option) *Client {
 	}
 }
 
-// PerformAction makes a SOAP request, with the given action values to provide
-// arguments (`args`) and capture the `reply` into. If `client` is nil, then
-// http.DefaultClient is used.
+// PerformAction makes a SOAP request, with the given `argsIn` as input
+// arguments, and `argsOut` to capture the output arguments into.
+// `serviceType` is the SOAP service type URN, `actionName` is the action to
+// call.
+//
+// This is a convenience for calling `c.Do` without creating `*Action` values.
 func (c *Client) PerformAction(
+	ctx context.Context, serviceType, actionName string,
+	argsIn, argsOut any,
+) error {
+	actionIn := envelope.NewSendAction(serviceType, actionName, argsIn)
+	actionOut := &envelope.Action{Args: argsOut}
+	return c.Do(ctx, actionIn, actionOut)
+}
+
+// PerformAction makes a SOAP request, with the given action values to provide
+// arguments (`args`) and capture the `reply` into.
+func (c *Client) Do(
 	ctx context.Context,
-	args, reply *envelope.Action,
+	actionIn, actionOut *envelope.Action,
 ) error {
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, c.endpointURL, nil)
 	if err != nil {
 		return err
 	}
-	if err := SetRequestAction(req, args); err != nil {
+	if err := SetRequestAction(req, actionIn); err != nil {
 		return err
 	}
 
@@ -83,15 +97,18 @@ func (c *Client) PerformAction(
 			resp.Status, resp.StatusCode)
 	}
 
-	return ParseResponseAction(resp, reply)
+	return ParseResponseAction(resp, actionOut)
 }
 
 // SetRequestAction updates fields in `req` with the given SOAP action.
 // Specifically it sets Body, ContentLength, Method, and the SOAPACTION and
 // CONTENT-TYPE headers.
-func SetRequestAction(req *http.Request, args *envelope.Action) error {
+func SetRequestAction(
+	req *http.Request,
+	actionIn *envelope.Action,
+) error {
 	buf := &bytes.Buffer{}
-	err := envelope.Write(buf, args)
+	err := envelope.Write(buf, actionIn)
 	if err != nil {
 		return fmt.Errorf("encoding envelope: %w", err)
 	}
@@ -100,7 +117,7 @@ func SetRequestAction(req *http.Request, args *envelope.Action) error {
 	req.ContentLength = int64(buf.Len())
 	req.Method = http.MethodPost
 	req.Header["SOAPACTION"] = []string{fmt.Sprintf(
-		`"%s#%s"`, args.XMLName.Space, args.XMLName.Local)}
+		`"%s#%s"`, actionIn.XMLName.Space, actionIn.XMLName.Local)}
 	req.Header["CONTENT-TYPE"] = []string{`text/xml; charset="utf-8"`}
 
 	return nil
@@ -109,7 +126,10 @@ func SetRequestAction(req *http.Request, args *envelope.Action) error {
 // ParseResponse extracts a parsed action from an HTTP response.
 // The caller is responsible for calling resp.Body.Close(), but this function
 // will consume the entire response body.
-func ParseResponseAction(resp *http.Response, reply *envelope.Action) error {
+func ParseResponseAction(
+	resp *http.Response,
+	actionOut *envelope.Action,
+) error {
 	if resp.Body == nil {
 		return errors.New("missing response body")
 	}
@@ -119,7 +139,7 @@ func ParseResponseAction(resp *http.Response, reply *envelope.Action) error {
 		return fmt.Errorf("reading response body: %w", err)
 	}
 
-	if err := envelope.Read(buf, reply); err != nil {
+	if err := envelope.Read(buf, actionOut); err != nil {
 		if _, ok := err.(*envelope.Fault); ok {
 			// Parsed cleanly, got SOAP fault.
 			return err
