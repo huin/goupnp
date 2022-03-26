@@ -32,17 +32,6 @@ func (fe *Fault) Is(target error) bool {
 	return target == ErrFault
 }
 
-// Various "constant" bytes used in the written envelope.
-var (
-	envOpen  = []byte(xml.Header + `<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"><s:Body>`)
-	env1     = []byte(`<u:`)
-	env2     = []byte(` xmlns:u="`)
-	env3     = []byte(`">`)
-	env4     = []byte(`</u:`)
-	env5     = []byte(`>`)
-	envClose = []byte(`</s:Body></s:Envelope>`)
-)
-
 // Action wraps a SOAP action to be read or written as part of a SOAP envelope.
 type Action struct {
 	// XMLName specifies the XML element namespace (URI) and name. Together
@@ -52,17 +41,56 @@ type Action struct {
 	// arguments. See https://pkg.go.dev/encoding/xml@go1.17.1#Marshal and
 	// https://pkg.go.dev/encoding/xml@go1.17.1#Unmarshal for details on
 	// annotating fields in the structure.
-	Args any `xml:",any"`
+	Args any
 }
 
-// NewAction creates a SOAP action for sending with the given namespace URL,
+// NewSendAction creates a SOAP action for receiving arguments.
+func NewRecvAction(args any) *Action {
+	return &Action{Args: args}
+}
+
+// NewSendAction creates a SOAP action for sending with the given namespace URL,
 // action name, and arguments.
-func NewAction(nsURL, actionName string, args any) *Action {
+func NewSendAction(serviceType, actionName string, args any) *Action {
 	return &Action{
-		XMLName: xml.Name{Space: nsURL, Local: actionName},
+		XMLName: xml.Name{Space: serviceType, Local: actionName},
 		Args:    args,
 	}
 }
+
+var _ xml.Marshaler = &Action{}
+
+// MarshalXML implements `xml.Marshaller`.
+//
+// This is an implementation detail that allows packing elements inside the
+// action element from the struct in `a.Args`.
+func (a *Action) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
+	// Hardcodes the XML namespace. See comment in Write() for context.
+	return e.EncodeElement(a.Args, xml.StartElement{
+		Name: xml.Name{Space: "", Local: "u:" + a.XMLName.Local},
+		Attr: []xml.Attr{{
+			Name:  xml.Name{Space: "", Local: "xmlns:u"},
+			Value: a.XMLName.Space,
+		}},
+	})
+}
+
+var _ xml.Unmarshaler = &Action{}
+
+// UnmarshalXML implements `xml.Unmarshaller`.
+//
+// This is an implementation detail that allows unpacking elements inside the
+// action element into the struct in `a.Args`.
+func (a *Action) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
+	a.XMLName = start.Name
+	return d.DecodeElement(a.Args, &start)
+}
+
+// Various "constant" bytes used in the written envelope.
+var (
+	envOpen  = []byte(xml.Header + `<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"><s:Body>`)
+	envClose = []byte(`</s:Body></s:Envelope>`)
+)
 
 // Write marshals a SOAP envelope to the writer. Errors can be from the writer
 // or XML encoding.
@@ -79,47 +107,12 @@ func Write(w io.Writer, action *Action) error {
 	if err != nil {
 		return err
 	}
-	_, err = w.Write(env1)
-	if err != nil {
-		return err
-	}
-	err = xml.EscapeText(w, []byte(action.XMLName.Local))
-	if err != nil {
-		return err
-	}
-	_, err = w.Write(env2)
-	if err != nil {
-		return err
-	}
-	err = xml.EscapeText(w, []byte(action.XMLName.Space))
-	if err != nil {
-		return err
-	}
-	_, err = w.Write(env3)
-	if err != nil {
-		return err
-	}
 	enc := xml.NewEncoder(w)
-	err = enc.Encode(action.Args)
+	err = enc.Encode(action)
 	if err != nil {
 		return err
 	}
 	err = enc.Flush()
-	if err != nil {
-		return err
-	}
-	_, err = w.Write(env4)
-	if err != nil {
-		return err
-	}
-	xml.EscapeText(w, []byte(action.XMLName.Local))
-	if err != nil {
-		return err
-	}
-	_, err = w.Write(env5)
-	if err != nil {
-		return err
-	}
 	_, err = w.Write(envClose)
 	return err
 }
