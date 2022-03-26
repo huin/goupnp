@@ -55,6 +55,15 @@ type Action struct {
 	Args any `xml:",any"`
 }
 
+// NewAction creates a SOAP action for sending with the given namespace URL,
+// action name, and arguments.
+func NewAction(nsURL, actionName string, args any) *Action {
+	return &Action{
+		XMLName: xml.Name{Space: nsURL, Local: actionName},
+		Args:    args,
+	}
+}
+
 // Write marshals a SOAP envelope to the writer. Errors can be from the writer
 // or XML encoding.
 func Write(w io.Writer, action *Action) error {

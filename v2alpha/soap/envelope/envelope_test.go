@@ -16,13 +16,10 @@ func TestWriteRead(t *testing.T) {
 		Bar string `xml:"bar"`
 	}
 
-	sendAction := &Action{
-		XMLName: xml.Name{Space: "http://example.com/namespace", Local: "MyAction"},
-		Args: &Args{
-			Foo: "foo-1",
-			Bar: "bar-2",
-		},
-	}
+	sendAction := NewAction("http://example.com/namespace", "MyAction", &Args{
+		Foo: "foo-1",
+		Bar: "bar-2",
+	})
 
 	buf := &bytes.Buffer{}
 	err := Write(buf, sendAction)
