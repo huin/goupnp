@@ -44,7 +44,7 @@ type Action struct {
 	// arguments. See https://pkg.go.dev/encoding/xml@go1.17.1#Marshal and
 	// https://pkg.go.dev/encoding/xml@go1.17.1#Unmarshal for details on
 	// annotating fields in the structure.
-	Args interface{} `xml:",any"`
+	Args any `xml:",any"`
 }
 
 // Write marshals a SOAP envelope to the writer. Errors can be from the writer
