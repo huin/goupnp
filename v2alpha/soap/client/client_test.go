@@ -76,7 +76,7 @@ func (fss *fakeSoapServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func TestPerformAction(t *testing.T) {
+func TestDo(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	t.Cleanup(cancel)
 
@@ -101,7 +101,7 @@ func TestPerformAction(t *testing.T) {
 	reply := &ActionReply{}
 	replyAction := &envelope.Action{Args: reply}
 
-	if err := c.PerformAction(ctx, reqAction, replyAction); err != nil {
+	if err := c.Do(ctx, reqAction, replyAction); err != nil {
 		t.Errorf("got error: %v, want success", err)
 	} else {
 		if got, want := reply.Greeting, "Hello, World!"; got != want {
