@@ -57,21 +57,6 @@ func New(endpointURL string, opts ...Option) *Client {
 	}
 }
 
-// PerformAction makes a SOAP request, with the given `argsIn` as input
-// arguments, and `argsOut` to capture the output arguments into.
-// `serviceType` is the SOAP service type URN, `actionName` is the action to
-// call.
-//
-// This is a convenience for calling `c.Do` without creating `*Action` values.
-func (c *Client) PerformAction(
-	ctx context.Context, serviceType, actionName string,
-	argsIn, argsOut any,
-) error {
-	actionIn := envelope.NewSendAction(serviceType, actionName, argsIn)
-	actionOut := &envelope.Action{Args: argsOut}
-	return c.Do(ctx, actionIn, actionOut)
-}
-
 // PerformAction makes a SOAP request, with the given action values to provide
 // arguments (`args`) and capture the `reply` into.
 func (c *Client) Do(
@@ -98,6 +83,22 @@ func (c *Client) Do(
 	}
 
 	return ParseResponseAction(resp, actionOut)
+}
+
+// PerformAction makes a SOAP request, with the given `argsIn` as input
+// arguments, and `argsOut` to capture the output arguments into.
+// `serviceType` is the SOAP service type URN, `actionName` is the action to
+// call.
+//
+// This is a convenience for calling `Client.Do` without creating `*Action` values.
+func PerformAction(
+	ctx context.Context, c *Client,
+	serviceType, actionName string,
+	argsIn, argsOut any,
+) error {
+	actionIn := envelope.NewSendAction(serviceType, actionName, argsIn)
+	actionOut := &envelope.Action{Args: argsOut}
+	return c.Do(ctx, actionIn, actionOut)
 }
 
 // SetRequestAction updates fields in `req` with the given SOAP action.
