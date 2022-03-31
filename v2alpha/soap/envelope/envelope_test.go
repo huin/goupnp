@@ -10,12 +10,15 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/huin/goupnp/v2alpha/soap/types"
 )
 
 type testStructArgs struct {
 	Foo string
 	Bar string
 }
+
+type newString string
 
 // TestWriteRead tests the round-trip of writing an envelope and reading it back.
 func TestWriteRead(t *testing.T) {
@@ -33,12 +36,28 @@ func TestWriteRead(t *testing.T) {
 			&testStructArgs{},
 		},
 		{
-			"map",
+			"mapString",
 			map[string]string{
 				"Foo": "foo-1",
 				"Bar": "bar-2",
 			},
 			map[string]string{},
+		},
+		{
+			"mapUI2",
+			map[string]types.UI2{
+				"Foo": 1,
+				"Bar": 2,
+			},
+			map[string]types.UI2{},
+		},
+		{
+			"mapNewStringKey",
+			map[newString]string{
+				"Foo": "foo-1",
+				"Bar": "bar-2",
+			},
+			map[newString]string{},
 		},
 	}
 
@@ -52,7 +71,6 @@ func TestWriteRead(t *testing.T) {
 			if err != nil {
 				t.Fatalf("Write want success, got err=%v", err)
 			}
-			t.Logf("Encoded envelope:\n%v", buf)
 
 			actionOut := NewRecvAction(test.argsOut)
 
@@ -66,6 +84,9 @@ func TestWriteRead(t *testing.T) {
 			}
 			if diff := cmp.Diff(test.argsIn, test.argsOut); diff != "" {
 				t.Errorf("\nwant argsOut=%+v\ngot  %+v\ndiff:\n%s", test.argsIn, test.argsOut, diff)
+			}
+			if t.Failed() {
+				t.Logf("Encoded envelope:\n%v", buf)
 			}
 		})
 	}

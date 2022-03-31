@@ -60,6 +60,8 @@ func NewSendAction(serviceType, actionName string, args any) *Action {
 	}
 }
 
+var stringType = reflect.TypeOf("")
+
 var _ xml.Marshaler = &Action{}
 
 // MarshalXML implements `xml.Marshaller`.
@@ -94,8 +96,7 @@ func (a *Action) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 		iter := v.MapRange()
 		for iter.Next() {
 			k := iter.Key()
-			// TODO: does this support string newtypes? convert?
-			ks := k.Interface().(string)
+			ks := k.Convert(stringType).Interface().(string)
 			v := iter.Value()
 			ke := xml.StartElement{Name: xml.Name{Local: ks}}
 			if err := e.EncodeElement(v.Interface(), ke); err != nil {
