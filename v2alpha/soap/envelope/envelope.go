@@ -6,6 +6,8 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"reflect"
+	"strings"
 )
 
 // ErrFault can be used as a target with errors.Is.
@@ -65,14 +67,48 @@ var _ xml.Marshaler = &Action{}
 // This is an implementation detail that allows packing elements inside the
 // action element from the struct in `a.Args`.
 func (a *Action) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
-	// Hardcodes the XML namespace. See comment in Write() for context.
-	return e.EncodeElement(a.Args, xml.StartElement{
-		Name: xml.Name{Space: "", Local: "u:" + a.XMLName.Local},
+	v := reflect.Indirect(reflect.ValueOf(a.Args))
+	t := v.Type()
+	elemName := xml.Name{Space: "", Local: "u:" + a.XMLName.Local}
+	startElement := xml.StartElement{
+		Name: elemName,
 		Attr: []xml.Attr{{
 			Name:  xml.Name{Space: "", Local: "xmlns:u"},
 			Value: a.XMLName.Space,
 		}},
-	})
+	}
+	switch t.Kind() {
+	case reflect.Struct:
+		// Hardcodes the XML namespace. See comment in Write() for context.
+		return e.EncodeElement(a.Args, startElement)
+	case reflect.Map:
+		if err := e.EncodeToken(startElement); err != nil {
+			return err
+		}
+		kt := t.Key()
+		if kt.Kind() != reflect.String {
+			return fmt.Errorf(
+				"SOAP action wants string as map key in args: %w",
+				&xml.UnsupportedTypeError{Type: kt})
+		}
+		iter := v.MapRange()
+		for iter.Next() {
+			k := iter.Key()
+			// TODO: does this support string newtypes? convert?
+			ks := k.Interface().(string)
+			v := iter.Value()
+			ke := xml.StartElement{Name: xml.Name{Local: ks}}
+			if err := e.EncodeElement(v.Interface(), ke); err != nil {
+				return fmt.Errorf(
+					"SOAP action error while encoding arg %q: %w", ks, err)
+			}
+		}
+		return e.EncodeToken(xml.EndElement{Name: elemName})
+	default:
+		return fmt.Errorf(
+			"SOAP action does not support type as args: %w",
+			&xml.UnsupportedTypeError{Type: t})
+	}
 }
 
 var _ xml.Unmarshaler = &Action{}
@@ -83,7 +119,75 @@ var _ xml.Unmarshaler = &Action{}
 // action element into the struct in `a.Args`.
 func (a *Action) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 	a.XMLName = start.Name
-	return d.DecodeElement(a.Args, &start)
+	argsValue := reflect.Indirect(reflect.ValueOf(a.Args))
+	argsType := argsValue.Type()
+	switch argsType.Kind() {
+	case reflect.Struct:
+		return d.DecodeElement(a.Args, &start)
+	case reflect.Map:
+		keyType := argsType.Key()
+		if keyType.Kind() != reflect.String {
+			return fmt.Errorf(
+				"SOAP action wants string as map key in args: %w",
+				&xml.UnsupportedTypeError{Type: keyType})
+		}
+		valueType := argsType.Elem()
+		if valueType.Kind() == reflect.Interface {
+			return fmt.Errorf(
+				"SOAP action wants a concrete type as map value in args: %w",
+				&xml.UnsupportedTypeError{Type: valueType})
+		}
+		for {
+			untypedToken, err := d.Token()
+			if err != nil {
+				return err
+			}
+			switch token := untypedToken.(type) {
+			case xml.EndElement:
+				return nil
+			case xml.StartElement:
+				if len(token.Attr) > 0 {
+					return fmt.Errorf(
+						"SOAP action arg does not support attributes, got %v",
+						token.Attr)
+				}
+				if token.Name.Space != "" {
+					return fmt.Errorf(
+						"SOAP action arg does not support non-empty namespace, got %q",
+						token.Name.Space)
+				}
+				key := token.Name.Local
+				value := reflect.New(valueType)
+				if err := d.DecodeElement(value.Interface(), &token); err != nil {
+					return fmt.Errorf(
+						"SOAP action arg %q errored while decoding: %w", key, err)
+				}
+				argsValue.SetMapIndex(reflect.ValueOf(key), reflect.Indirect(value))
+			case xml.Comment:
+			case xml.ProcInst:
+				return fmt.Errorf(
+					"SOAP action args contained unexpected token %v",
+					untypedToken)
+			case xml.Directive:
+				return fmt.Errorf(
+					"SOAP action args contained unexpected token %v",
+					untypedToken)
+			case xml.CharData:
+				cd := string(token)
+				if len(strings.TrimSpace(cd)) > 0 {
+					return fmt.Errorf(
+						"SOAP action args contained stray text: %q", cd)
+				}
+			default:
+				return fmt.Errorf(
+					"SOAP action found unknown XML token type: %T", untypedToken)
+			}
+		}
+	default:
+		return fmt.Errorf(
+			"SOAP action does not support type as args: %w",
+			&xml.UnsupportedTypeError{Type: argsType})
+	}
 }
 
 // Various "constant" bytes used in the written envelope.

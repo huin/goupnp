@@ -12,39 +12,62 @@ import (
 	"github.com/google/go-cmp/cmp"
 )
 
-type testArgs struct {
+type testStructArgs struct {
 	Foo string
 	Bar string
 }
 
 // TestWriteRead tests the round-trip of writing an envelope and reading it back.
 func TestWriteRead(t *testing.T) {
-	argsIn := &testArgs{
-		Foo: "foo-1",
-		Bar: "bar-2",
+	tests := []struct {
+		name    string
+		argsIn  any
+		argsOut any
+	}{
+		{
+			"struct",
+			&testStructArgs{
+				Foo: "foo-1",
+				Bar: "bar-2",
+			},
+			&testStructArgs{},
+		},
+		{
+			"map",
+			map[string]string{
+				"Foo": "foo-1",
+				"Bar": "bar-2",
+			},
+			map[string]string{},
+		},
 	}
-	actionIn := NewSendAction("urn:schemas-upnp-org:service:FakeService:1", "MyAction", argsIn)
 
-	buf := &bytes.Buffer{}
-	err := Write(buf, actionIn)
-	if err != nil {
-		t.Fatalf("Write want success, got err=%v", err)
-	}
-	t.Logf("Encoded envelope:\n%v", buf)
+	for _, test := range tests {
+		test := test // copy for closure
+		t.Run(test.name, func(t *testing.T) {
+			actionIn := NewSendAction("urn:schemas-upnp-org:service:FakeService:1", "MyAction", test.argsIn)
 
-	argsOut := &testArgs{}
-	actionOut := NewRecvAction(argsOut)
+			buf := &bytes.Buffer{}
+			err := Write(buf, actionIn)
+			if err != nil {
+				t.Fatalf("Write want success, got err=%v", err)
+			}
+			t.Logf("Encoded envelope:\n%v", buf)
 
-	err = Read(buf, actionOut)
-	if err != nil {
-		t.Errorf("Read want success, got err=%v", err)
-	}
+			actionOut := NewRecvAction(test.argsOut)
 
-	if diff := cmp.Diff(actionIn, actionOut); diff != "" {
-		t.Errorf("\nwant actionOut=%+v\ngot  %+v\ndiff:\n%s", actionIn, actionOut, diff)
-	}
-	if diff := cmp.Diff(argsIn, argsOut); diff != "" {
-		t.Errorf("\nwant argsOut=%+v\ngot  %+v\ndiff:\n%s", argsIn, argsOut, diff)
+			err = Read(buf, actionOut)
+			if err != nil {
+				t.Errorf("Read want success, got err=%v", err)
+			}
+
+			if diff := cmp.Diff(actionIn, actionOut); diff != "" {
+				t.Errorf("\nwant actionOut=%+v\ngot  %+v\ndiff:\n%s", actionIn, actionOut, diff)
+			}
+			if diff := cmp.Diff(test.argsIn, test.argsOut); diff != "" {
+				t.Errorf("\nwant argsOut=%+v\ngot  %+v\ndiff:\n%s", test.argsIn, test.argsOut, diff)
+			}
+		})
 	}
 }
 
@@ -56,7 +79,7 @@ func TestRead(t *testing.T) {
 <Bar>bar-2</Bar>
 </u:FakeAction>
 </s:Body> </s:Envelope>`)
-	argsOut := &testArgs{}
+	argsOut := &testStructArgs{}
 
 	actionOut := NewRecvAction(argsOut)
 
@@ -64,7 +87,7 @@ func TestRead(t *testing.T) {
 		t.Fatalf("Read want success, got err=%v", err)
 	}
 
-	wantArgsOut := &testArgs{
+	wantArgsOut := &testStructArgs{
 		Foo: "foo-1",
 		Bar: "bar-2",
 	}
@@ -89,7 +112,7 @@ s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
 </s:Envelope>
 `)
 
-	err := Read(bytes.NewBuffer(env), NewRecvAction(&testArgs{}))
+	err := Read(bytes.NewBuffer(env), NewRecvAction(&testStructArgs{}))
 	if err == nil {
 		t.Fatal("want err != nil, got nil")
 	}
