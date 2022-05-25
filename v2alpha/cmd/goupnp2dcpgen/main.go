@@ -108,7 +108,7 @@ func processService(
 		}
 	}
 
-	_, err := scpd.FromXML(xmlSCPD)
+	_, err = scpd.FromXML(xmlSCPD)
 	if err != nil {
 		return err
 	}
