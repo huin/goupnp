@@ -47,6 +47,7 @@ type SpecVersion struct {
 
 // Action XML description data.
 type Action struct {
+	Optional  PresenceBool
 	Name      string      `xml:"name"`
 	Arguments []*Argument `xml:"argumentList>argument"`
 }
