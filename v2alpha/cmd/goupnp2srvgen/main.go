@@ -8,7 +8,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/huin/goupnp/v2alpha/cmd/goupnp2dcpgen/zipread"
+	"github.com/huin/goupnp/v2alpha/cmd/goupnp2srvgen/zipread"
 	"github.com/huin/goupnp/v2alpha/description/srvdesc"
 	"github.com/huin/goupnp/v2alpha/description/xmlsrvdesc"
 )
