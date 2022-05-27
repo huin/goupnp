@@ -1,12 +1,12 @@
-// Package scpd contains data structures that represent an SCPD at a higher level than XML.
-package scpd
+// Package srvdesc contains data structures that represent an SCPD at a higher level than XML.
+package srvdesc
 
 import (
 	"errors"
 	"fmt"
 	"sort"
 
-	"github.com/huin/goupnp/v2alpha/description/xmlscpd"
+	"github.com/huin/goupnp/v2alpha/description/xmlsrvdesc"
 )
 
 var (
@@ -23,7 +23,7 @@ type SCPD struct {
 // FromXML creates an SCPD from XML data.
 //
 // It assumes that xmlDesc.Clean() has been called.
-func FromXML(xmlDesc *xmlscpd.SCPD) (*SCPD, error) {
+func FromXML(xmlDesc *xmlsrvdesc.SCPD) (*SCPD, error) {
 	stateVariables := make(map[string]*StateVariable, len(xmlDesc.StateVariables))
 	for _, xmlSV := range xmlDesc.StateVariables {
 		sv, err := stateVariableFromXML(xmlSV)
@@ -82,7 +82,7 @@ type Action struct {
 }
 
 // actionFromXML creates an Action from the given XML description.
-func actionFromXML(xmlAction *xmlscpd.Action) (*Action, error) {
+func actionFromXML(xmlAction *xmlsrvdesc.Action) (*Action, error) {
 	if xmlAction.Name == "" {
 		return nil, fmt.Errorf("%w: empty action name", BadDescriptionError)
 	}
@@ -117,7 +117,7 @@ type Argument struct {
 }
 
 // argumentFromXML creates an Argument from the XML description.
-func argumentFromXML(xmlArg *xmlscpd.Argument) (*Argument, error) {
+func argumentFromXML(xmlArg *xmlsrvdesc.Argument) (*Argument, error) {
 	if xmlArg.Name == "" {
 		return nil, fmt.Errorf("%w: empty argument name", BadDescriptionError)
 	}
@@ -144,7 +144,7 @@ type StateVariable struct {
 	dataType string
 }
 
-func stateVariableFromXML(xmlSV *xmlscpd.StateVariable) (*StateVariable, error) {
+func stateVariableFromXML(xmlSV *xmlsrvdesc.StateVariable) (*StateVariable, error) {
 	if xmlSV.Name == "" {
 		return nil, fmt.Errorf("%w: empty state variable name", BadDescriptionError)
 	}

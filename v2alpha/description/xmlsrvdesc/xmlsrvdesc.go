@@ -1,8 +1,9 @@
-// Package xmlscpd contains the XML data structures used in SCPD (Service Control Protocol Description).
+// Package xmlsrvdesc contains the XML data structures used in SCPD (Service Control Protocol
+// Description).
 //
 // Described in section 2.5 of
 // https://openconnectivity.org/upnp-specs/UPnP-arch-DeviceArchitecture-v2.0-20200417.pdf.
-package xmlscpd
+package xmlsrvdesc
 
 import (
 	"bytes"

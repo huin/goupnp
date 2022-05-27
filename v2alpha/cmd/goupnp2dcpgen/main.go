@@ -9,8 +9,8 @@ import (
 	"strings"
 
 	"github.com/huin/goupnp/v2alpha/cmd/goupnp2dcpgen/zipread"
-	"github.com/huin/goupnp/v2alpha/description/scpd"
-	"github.com/huin/goupnp/v2alpha/description/xmlscpd"
+	"github.com/huin/goupnp/v2alpha/description/srvdesc"
+	"github.com/huin/goupnp/v2alpha/description/xmlsrvdesc"
 )
 
 var (
@@ -89,7 +89,7 @@ func processService(
 
 	d := xml.NewDecoder(f)
 
-	xmlSCPD := &xmlscpd.SCPD{}
+	xmlSCPD := &xmlsrvdesc.SCPD{}
 	if err := d.Decode(xmlSCPD); err != nil {
 		return err
 	}
@@ -108,7 +108,7 @@ func processService(
 		}
 	}
 
-	_, err = scpd.FromXML(xmlSCPD)
+	_, err = srvdesc.FromXML(xmlSCPD)
 	if err != nil {
 		return err
 	}
