@@ -140,8 +140,9 @@ func processService(
 	}
 
 	err = tmpl.ExecuteTemplate(os.Stdout, "service", tmplArgs{
-		Imps: imps,
-		SCPD: sd,
+		Manifest: srvManifest,
+		Imps:     imps,
+		SCPD:     sd,
 	})
 	if err != nil {
 		return fmt.Errorf("executing srv_template: %w", err)
@@ -169,8 +170,9 @@ type ServiceManifest struct {
 }
 
 type tmplArgs struct {
-	Imps *imports
-	SCPD *srvdesc.SCPD
+	Manifest *ServiceManifest
+	Imps     *imports
+	SCPD     *srvdesc.SCPD
 }
 
 type imports struct {

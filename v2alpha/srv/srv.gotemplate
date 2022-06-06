@@ -1,6 +1,6 @@
 {{define "service"}}
 {{- $Imps := .Imps}}
-package TODO
+package {{.Manifest.Package}}
 
 import (
 {{- range .Imps.ImportLines}}
