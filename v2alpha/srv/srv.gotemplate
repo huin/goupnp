@@ -7,7 +7,6 @@ import (
   {{quote .Alias}} {{.Path}}
 {{- end}}
 )
-
 {{range .SCPD.SortedActions}}
 {{- template "action" args "Action" . "Imps" $Imps}}
 {{end}}
@@ -15,11 +14,11 @@ import (
 
 {{define "action"}}
 type {{.Action.Name}}Request struct {
-{{- template "args" args "Args" .Action.InArgs "Imps" .Imps -}}
+{{- template "args" args "Args" .Action.InArgs "Imps" .Imps}}
 }
 
 type {{.Action.Name}}Response struct {
-{{- template "args" args "Args" .Action.OutArgs "Imps" .Imps  -}}
+{{- template "args" args "Args" .Action.OutArgs "Imps" .Imps}}
 }
 {{- end}}
 
@@ -27,5 +26,5 @@ type {{.Action.Name}}Response struct {
 {{- $Imps := .Imps}}
 {{- range .Args}}
   {{.Name}} {{index $Imps.TypeRefByTypeName .RelatedStateVariable.DataType}}
-{{end}}
+{{- end}}
 {{- end}}
