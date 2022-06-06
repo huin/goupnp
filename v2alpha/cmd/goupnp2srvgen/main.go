@@ -129,19 +129,6 @@ func processService(
 	}
 	xmlSCPD.Clean()
 
-	for _, action := range xmlSCPD.Actions {
-		fmt.Printf("* %s()\n", action.Name)
-		for _, arg := range action.Arguments {
-			direction := "?"
-			if arg.Direction == "in" {
-				direction = "<-"
-			} else if arg.Direction == "out" {
-				direction = "->"
-			}
-			fmt.Printf("  %s %s %s\n", direction, arg.Name, arg.RelatedStateVariable)
-		}
-	}
-
 	sd, err := srvdesc.FromXML(xmlSCPD)
 	if err != nil {
 		return fmt.Errorf("transforming service description: %w", err)
