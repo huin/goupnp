@@ -11,85 +11,84 @@ import (
 
 var (
 	BadDescriptionError         = errors.New("bad XML description")
+	MissingDefinitionError      = errors.New("missing definition")
 	UnsupportedDescriptionError = errors.New("unsupported XML description")
 )
 
 // SCPD is the top level service description.
 type SCPD struct {
-	actionByName   map[string]*Action
-	variableByName map[string]*StateVariable
+	ActionByName   map[string]*Action
+	VariableByName map[string]*StateVariable
 }
 
 // FromXML creates an SCPD from XML data.
 //
 // It assumes that xmlDesc.Clean() has been called.
 func FromXML(xmlDesc *xmlsrvdesc.SCPD) (*SCPD, error) {
-	stateVariables := make(map[string]*StateVariable, len(xmlDesc.StateVariables))
+	scpd := &SCPD{
+		ActionByName:   make(map[string]*Action, len(xmlDesc.Actions)),
+		VariableByName: make(map[string]*StateVariable, len(xmlDesc.StateVariables)),
+	}
+	stateVariables := scpd.VariableByName
 	for _, xmlSV := range xmlDesc.StateVariables {
 		sv, err := stateVariableFromXML(xmlSV)
 		if err != nil {
 			return nil, fmt.Errorf("processing state variable %q: %w", xmlSV.Name, err)
 		}
-		if _, exists := stateVariables[sv.name]; exists {
+		if _, exists := stateVariables[sv.Name]; exists {
 			return nil, fmt.Errorf("%w: multiple state variables with name %q",
-				BadDescriptionError, sv.name)
+				BadDescriptionError, sv.Name)
 		}
-		stateVariables[sv.name] = sv
+		stateVariables[sv.Name] = sv
 	}
-	actions := make(map[string]*Action, len(xmlDesc.Actions))
+	actions := scpd.ActionByName
 	for _, xmlAction := range xmlDesc.Actions {
-		action, err := actionFromXML(xmlAction)
+		action, err := actionFromXML(xmlAction, scpd)
 		if err != nil {
 			return nil, fmt.Errorf("processing action %q: %w", xmlAction.Name, err)
 		}
-		if _, exists := actions[action.name]; exists {
+		if _, exists := actions[action.Name]; exists {
 			return nil, fmt.Errorf("%w: multiple actions with name %q",
-				BadDescriptionError, action.name)
+				BadDescriptionError, action.Name)
 		}
-		actions[action.name] = action
+		actions[action.Name] = action
 	}
-	return &SCPD{
-		actionByName:   actions,
-		variableByName: stateVariables,
-	}, nil
+	return scpd, nil
 }
 
-// ActionNames returns the ordered names of each action.
-func (scpd *SCPD) ActionNames() []string {
-	names := make([]string, 0, len(scpd.actionByName))
-	for name := range scpd.actionByName {
-		names = append(names, name)
+// SortedActions returns the actions, in order of name.
+func (scpd *SCPD) SortedActions() []*Action {
+	actions := make([]*Action, 0, len(scpd.ActionByName))
+	for _, a := range scpd.ActionByName {
+		actions = append(actions, a)
 	}
-	sort.Strings(names)
-	return names
-}
-
-// Action returns an action with the given name.
-func (scpd *SCPD) Action(name string) *Action {
-	return scpd.actionByName[name]
-}
-
-// Variable returns a state variable with the given name.
-func (scpd *SCPD) Variable(name string) *StateVariable {
-	return scpd.variableByName[name]
+	sort.Slice(actions, func(i, j int) bool {
+		return actions[i].Name < actions[j].Name
+	})
+	return actions
 }
 
 // Action describes a single UPnP SOAP action.
 type Action struct {
-	name    string
-	inArgs  []*Argument
-	outArgs []*Argument
+	SCPD    *SCPD
+	Name    string
+	InArgs  []*Argument
+	OutArgs []*Argument
 }
 
 // actionFromXML creates an Action from the given XML description.
-func actionFromXML(xmlAction *xmlsrvdesc.Action) (*Action, error) {
+func actionFromXML(xmlAction *xmlsrvdesc.Action, scpd *SCPD) (*Action, error) {
 	if xmlAction.Name == "" {
 		return nil, fmt.Errorf("%w: empty action name", BadDescriptionError)
+	}
+	action := &Action{
+		SCPD: scpd,
+		Name: xmlAction.Name,
 	}
 	var inArgs []*Argument
 	var outArgs []*Argument
 	for _, xmlArg := range xmlAction.Arguments {
-		arg, err := argumentFromXML(xmlArg)
+		arg, err := argumentFromXML(xmlArg, action)
 		if err != nil {
 			return nil, fmt.Errorf("processing argument %q: %w", xmlArg.Name, err)
 		}
@@ -103,21 +102,20 @@ func actionFromXML(xmlAction *xmlsrvdesc.Action) (*Action, error) {
 				BadDescriptionError, xmlArg.Name, xmlArg.Direction)
 		}
 	}
-	return &Action{
-		name:    xmlAction.Name,
-		inArgs:  inArgs,
-		outArgs: outArgs,
-	}, nil
+	action.InArgs = inArgs
+	action.OutArgs = outArgs
+	return action, nil
 }
 
 // Argument description data.
 type Argument struct {
-	name                 string
-	relatedStateVariable string
+	Action                   *Action
+	Name                     string
+	RelatedStateVariableName string
 }
 
 // argumentFromXML creates an Argument from the XML description.
-func argumentFromXML(xmlArg *xmlsrvdesc.Argument) (*Argument, error) {
+func argumentFromXML(xmlArg *xmlsrvdesc.Argument, action *Action) (*Argument, error) {
 	if xmlArg.Name == "" {
 		return nil, fmt.Errorf("%w: empty argument name", BadDescriptionError)
 	}
@@ -125,23 +123,23 @@ func argumentFromXML(xmlArg *xmlsrvdesc.Argument) (*Argument, error) {
 		return nil, fmt.Errorf("%w: empty related state variable", BadDescriptionError)
 	}
 	return &Argument{
-		name:                 xmlArg.Name,
-		relatedStateVariable: xmlArg.RelatedStateVariable,
+		Action:                   action,
+		Name:                     xmlArg.Name,
+		RelatedStateVariableName: xmlArg.RelatedStateVariable,
 	}, nil
 }
 
-func (arg *Argument) Name() string {
-	return arg.name
-}
-
-func (arg *Argument) RelatedStateVariableName() string {
-	return arg.relatedStateVariable
+func (arg *Argument) RelatedStateVariable() (*StateVariable, error) {
+	if v, ok := arg.Action.SCPD.VariableByName[arg.RelatedStateVariableName]; ok {
+		return v, nil
+	}
+	return nil, fmt.Errorf("%w: state variable %q", MissingDefinitionError, arg.RelatedStateVariableName)
 }
 
 // StateVariable description data.
 type StateVariable struct {
-	name     string
-	dataType string
+	Name     string
+	DataType string
 }
 
 func stateVariableFromXML(xmlSV *xmlsrvdesc.StateVariable) (*StateVariable, error) {
@@ -153,15 +151,7 @@ func stateVariableFromXML(xmlSV *xmlsrvdesc.StateVariable) (*StateVariable, erro
 			UnsupportedDescriptionError, xmlSV.DataType.Type)
 	}
 	return &StateVariable{
-		name:     xmlSV.Name,
-		dataType: xmlSV.DataType.Name,
+		Name:     xmlSV.Name,
+		DataType: xmlSV.DataType.Name,
 	}, nil
-}
-
-func (sv *StateVariable) Name() string {
-	return sv.name
-}
-
-func (sv *StateVariable) DataTypeName() string {
-	return sv.dataType
 }

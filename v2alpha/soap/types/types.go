@@ -14,11 +14,46 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
+	"reflect"
 	"regexp"
 	"strconv"
 	"time"
 	"unicode/utf8"
+
+	"github.com/huin/goupnp/v2alpha/description/typedesc"
 )
+
+// TypeMap returns the builtin type map description.
+func TypeMap() typedesc.TypeMap {
+	return typedesc.TypeMap{
+		"ui1":         {GoType: reflect.TypeOf(UI1(0))},
+		"ui2":         {GoType: reflect.TypeOf(UI2(0))},
+		"ui4":         {GoType: reflect.TypeOf(UI4(0))},
+		"ui8":         {GoType: reflect.TypeOf(UI8(0))},
+		"i1":          {GoType: reflect.TypeOf(I1(0))},
+		"i2":          {GoType: reflect.TypeOf(I2(0))},
+		"i4":          {GoType: reflect.TypeOf(I4(0))},
+		"i8":          {GoType: reflect.TypeOf(I8(0))},
+		"int":         {GoType: reflect.TypeOf(I8(0))},
+		"r4":          {GoType: reflect.TypeOf(R4(0))},
+		"r8":          {GoType: reflect.TypeOf(R8(0))},
+		"number":      {GoType: reflect.TypeOf(R8(0))},
+		"fixed.14.4":  {GoType: reflect.TypeOf(Fixed14_4{})},
+		"float":       {GoType: reflect.TypeOf(R8(0))},
+		"char":        {GoType: reflect.TypeOf(Char(' '))},
+		"string":      {GoType: reflect.TypeOf("")},
+		"date":        {GoType: reflect.TypeOf(Date{})},
+		"dateTime":    {GoType: reflect.TypeOf(DateTime{})},
+		"dateTime.tz": {GoType: reflect.TypeOf(DateTimeTZ{})},
+		"time":        {GoType: reflect.TypeOf(TimeOfDay{})},
+		"time.tz":     {GoType: reflect.TypeOf(TimeOfDayTZ{})},
+		"boolean":     {GoType: reflect.TypeOf(Boolean(false))},
+		"bin.base64":  {GoType: reflect.TypeOf(BinBase64{})},
+		"bin.hex":     {GoType: reflect.TypeOf(BinHex{})},
+		"uri":         {GoType: reflect.TypeOf(URI{})},
+		"uuid":        {GoType: reflect.TypeOf("")},
+	}
+}
 
 type SOAPValue interface {
 	encoding.TextMarshaler
