@@ -184,9 +184,19 @@ type tmplArgs struct {
 
 type imports struct {
 	// Maps from a type name like "ui4" to the `alias.name` for the import.
-	TypeRefByTypeName map[string]string
+	TypeByName map[string]typeDesc
 	// Each required import line, ordered by path.
 	ImportLines []importItem
+}
+
+type typeDesc struct {
+	// How to refer to the type, e.g. `pkg.Name`.
+	Ref string
+	// How to refer to the type absolutely (but not valid Go), e.g.
+	// `"github.com/foo/bar/pkg".Name`.
+	AbsRef string
+	// Name of the type without package, e.g. `Name`.
+	Name string
 }
 
 type importItem struct {
@@ -240,24 +250,29 @@ func accumulateImports(srvDesc *srvdesc.SCPD, typeMap typedesc.TypeMap) (*import
 		aliasByPath[path] = alias
 	}
 
-	// Populate typeRefByTypeName.
-	typeRefByTypeName := make(map[string]string, len(typeNames))
+	// Populate typeByName.
+	typeByName := make(map[string]typeDesc, len(typeNames))
 	for typeName := range typeNames {
 		goType := typeMap[typeName]
 		pkgPath := goType.GoType.PkgPath()
 		alias := aliasByPath[pkgPath]
+		td := typeDesc{
+			Name: goType.GoType.Name(),
+		}
 		if alias == "" {
 			// Builtin type.
-			typeRefByTypeName[typeName] = goType.GoType.Name()
+			td.AbsRef = td.Name
+			td.Ref = td.Name
 		} else {
-			typeRefByTypeName[typeName] = fmt.Sprintf(
-				"%s.%s", alias, goType.GoType.Name())
+			td.AbsRef = strconv.Quote(pkgPath) + "." + td.Name
+			td.Ref = alias + "." + td.Name
 		}
+		typeByName[typeName] = td
 	}
 
 	return &imports{
-		TypeRefByTypeName: typeRefByTypeName,
-		ImportLines:       importLines,
+		TypeByName:  typeByName,
+		ImportLines: importLines,
 	}, nil
 }
 

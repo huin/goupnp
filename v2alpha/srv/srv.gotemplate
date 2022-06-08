@@ -1,5 +1,6 @@
 {{define "service"}}
 {{- $Imps := .Imps -}}
+// Package {{.Manifest.Package}} provides types for the {{quote .Manifest.ServiceType}} service.
 package {{.Manifest.Package}}
 
 import (
@@ -9,7 +10,6 @@ import (
 )
 
 const ServiceType = {{quote .Manifest.ServiceType}}
-
 {{range .SCPD.SortedActions}}
 {{- template "action" args "Action" . "Imps" $Imps}}
 {{end}}
@@ -17,21 +17,31 @@ const ServiceType = {{quote .Manifest.ServiceType}}
 
 {{define "action"}}
 {{- $Imps := .Imps}}
+{{- $soapActionType := index $Imps.TypeByName "SOAPActionInterface"}}
+// {{.Action.Name}} provides request and response for the action.
+//
+// ServiceType implements {{$soapActionType.AbsRef}}, self-describing the SOAP action.
 type {{.Action.Name}} struct{
   Request {{.Action.Name}}Request
   Response {{.Action.Name}}Response
 }
 
-var _ {{index $Imps.TypeRefByTypeName "SOAPActionInterface"}} = &{{.Action.Name}}{{"{}"}}
+var _ {{$soapActionType.Ref}} = &{{.Action.Name}}{{"{}"}}
 
+// ServiceType implements {{$soapActionType.AbsRef}}.
 func (a *{{.Action.Name}}) ServiceType() string { return ServiceType }
+// ActionName implements {{$soapActionType.AbsRef}}.
 func (a *{{.Action.Name}}) ActionName() string { return {{quote .Action.Name}} }
+// RefRequest implements {{$soapActionType.AbsRef}}.
 func (a *{{.Action.Name}}) RefRequest() any { return &a.Request }
+// RefResponse implements {{$soapActionType.AbsRef}}.
 func (a *{{.Action.Name}}) RefResponse() any { return &a.Response }
 
+// {{.Action.Name}}Request contains the "in" args for the {{quote .Action.Name}} action.
 type {{.Action.Name}}Request struct
 {{- template "args" args "Args" .Action.InArgs "Imps" $Imps}}
 
+// {{.Action.Name}}Response contains the "out" args for the {{quote .Action.Name}} action.
 type {{.Action.Name}}Response struct
 {{- template "args" args "Args" .Action.OutArgs "Imps" $Imps}}
 {{- end}}
@@ -40,7 +50,8 @@ type {{.Action.Name}}Response struct
 {{- $Imps := .Imps -}}
 { {{- with .Args}}
 {{- range .}}
-  {{.Name}} {{index $Imps.TypeRefByTypeName .RelatedStateVariable.DataType}}
+{{- $fieldType := index $Imps.TypeByName .RelatedStateVariable.DataType}}
+  {{.Name}} {{$fieldType.Ref}}
 {{- end}}
 {{end -}} }
 {{- end}}
