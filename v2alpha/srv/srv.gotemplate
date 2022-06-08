@@ -4,7 +4,7 @@ package {{.Manifest.Package}}
 
 import (
 {{- range .Imps.ImportLines}}
-  {{quote .Alias}} {{.Path}}
+  {{.Alias}} {{quote .Path}}
 {{- end}}
 )
 {{range .SCPD.SortedActions}}
