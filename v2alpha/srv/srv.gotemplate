@@ -1,5 +1,5 @@
 {{define "service"}}
-{{- $Imps := .Imps}}
+{{- $Imps := .Imps -}}
 package {{.Manifest.Package}}
 
 import (
@@ -13,18 +13,19 @@ import (
 {{end}}
 
 {{define "action"}}
-type {{.Action.Name}}Request struct {
-{{- template "args" args "Args" .Action.InArgs "Imps" .Imps}}
-}
+{{- $Imps := .Imps}}
+type {{.Action.Name}}Request struct
+{{- template "args" args "Args" .Action.InArgs "Imps" $Imps}}
 
-type {{.Action.Name}}Response struct {
-{{- template "args" args "Args" .Action.OutArgs "Imps" .Imps}}
-}
+type {{.Action.Name}}Response struct
+{{- template "args" args "Args" .Action.OutArgs "Imps" $Imps}}
 {{- end}}
 
 {{define "args"}}
-{{- $Imps := .Imps}}
-{{- range .Args}}
+{{- $Imps := .Imps -}}
+{ {{- with .Args}}
+{{- range .}}
   {{.Name}} {{index $Imps.TypeRefByTypeName .RelatedStateVariable.DataType}}
 {{- end}}
+{{end -}} }
 {{- end}}
