@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"reflect"
 	"sort"
 	"strconv"
 	"strings"
@@ -17,6 +18,7 @@ import (
 	"github.com/huin/goupnp/v2alpha/description/srvdesc"
 	"github.com/huin/goupnp/v2alpha/description/typedesc"
 	"github.com/huin/goupnp/v2alpha/description/xmlsrvdesc"
+	"github.com/huin/goupnp/v2alpha/soap"
 	"github.com/huin/goupnp/v2alpha/soap/types"
 )
 
@@ -24,6 +26,8 @@ var (
 	srvTemplate      = flag.String("srv_template", "", "Path to srv.gotemplate.")
 	upnpresourcesZip = flag.String("upnpresources_zip", "", "Path to upnpresources.zip.")
 )
+
+const soapActionInterface = "SOAPActionInterface"
 
 func main() {
 	flag.Parse()
@@ -63,7 +67,10 @@ func run() error {
 
 	// Use default type map for now. Addtional types could be use instead or
 	// as well as necessary for extended types.
-	typeMap := types.TypeMap()
+	typeMap := types.TypeMap().Clone()
+	typeMap[soapActionInterface] = typedesc.TypeDesc{
+		GoType: reflect.TypeOf((*soap.SOAPAction)(nil)).Elem(),
+	}
 
 	for _, m := range manifests {
 		if err := processDCP(upnpresources, m, typeMap, tmpl); err != nil {
@@ -78,14 +85,14 @@ var manifests = []*DCPSpecManifest{
 		Path: "standardizeddcps/Internet Gateway_2/UPnP-gw-IGD-TestFiles-20101210.zip",
 		Services: []*ServiceManifest{
 			{
-				Package: "lanhostconfigmanagement1",
-				Type:    "urn:schemas-upnp-org:service:LANHostConfigManagement:1",
-				Path:    "xml data files/service/LANHostConfigManagement1.xml",
+				Package:     "lanhostconfigmanagement1",
+				ServiceType: "urn:schemas-upnp-org:service:LANHostConfigManagement:1",
+				Path:        "xml data files/service/LANHostConfigManagement1.xml",
 			},
 			{
-				Package: "wanpppconnection1",
-				Type:    "urn:schemas-upnp-org:service:WANPPPConnection:1",
-				Path:    "xml data files/service/WANPPPConnection1.xml",
+				Package:     "wanpppconnection1",
+				ServiceType: "urn:schemas-upnp-org:service:WANPPPConnection:1",
+				Path:        "xml data files/service/WANPPPConnection1.xml",
 			},
 		},
 	},
@@ -103,7 +110,7 @@ func processDCP(
 	}
 	for _, srvManifest := range manifest.Services {
 		if err := processService(dcpSpecData, srvManifest, typeMap, tmpl); err != nil {
-			return fmt.Errorf("processing service %s: %w", srvManifest.Type, err)
+			return fmt.Errorf("processing service %s: %w", srvManifest.ServiceType, err)
 		}
 	}
 	return nil
@@ -162,9 +169,9 @@ type DCPSpecManifest struct {
 type ServiceManifest struct {
 	// Package is the Go package name to generate e.g. "foo1".
 	Package string
-	// Type is the SOAP namespace and service type that identifes the service e.g.
+	// ServiceType is the SOAP namespace and service type that identifes the service e.g.
 	// "urn:schemas-upnp-org:service:Foo:1"
-	Type string
+	ServiceType string
 	// Path within the DCP spec ZIP file e.g. "xml data files/service/Foo1.xml".
 	Path string
 }
@@ -189,6 +196,8 @@ type importItem struct {
 
 func accumulateImports(srvDesc *srvdesc.SCPD, typeMap typedesc.TypeMap) (*imports, error) {
 	typeNames := make(map[string]bool)
+	typeNames[soapActionInterface] = true
+
 	err := visitTypesSCPD(srvDesc, func(typeName string) {
 		typeNames[typeName] = true
 	})

@@ -7,3 +7,11 @@ type TypeDesc struct {
 }
 
 type TypeMap map[string]TypeDesc
+
+func (tm TypeMap) Clone() TypeMap {
+	r := make(TypeMap, len(tm))
+	for k, v := range tm {
+		r[k] = v
+	}
+	return r
+}

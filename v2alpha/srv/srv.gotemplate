@@ -7,6 +7,9 @@ import (
   {{.Alias}} {{quote .Path}}
 {{- end}}
 )
+
+const ServiceType = {{quote .Manifest.ServiceType}}
+
 {{range .SCPD.SortedActions}}
 {{- template "action" args "Action" . "Imps" $Imps}}
 {{end}}
@@ -14,6 +17,18 @@ import (
 
 {{define "action"}}
 {{- $Imps := .Imps}}
+type {{.Action.Name}} struct{
+  Request {{.Action.Name}}Request
+  Response {{.Action.Name}}Response
+}
+
+var _ {{index $Imps.TypeRefByTypeName "SOAPActionInterface"}} = &{{.Action.Name}}{{"{}"}}
+
+func (a *{{.Action.Name}}) ServiceType() string { return ServiceType }
+func (a *{{.Action.Name}}) ActionName() string { return {{quote .Action.Name}} }
+func (a *{{.Action.Name}}) RefRequest() any { return &a.Request }
+func (a *{{.Action.Name}}) RefResponse() any { return &a.Response }
+
 type {{.Action.Name}}Request struct
 {{- template "args" args "Args" .Action.InArgs "Imps" $Imps}}
 
