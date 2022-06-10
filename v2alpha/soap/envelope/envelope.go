@@ -157,13 +157,13 @@ func (a *Action) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 						"SOAP action arg does not support non-empty namespace, got %q",
 						token.Name.Space)
 				}
-				key := token.Name.Local
+				key := reflect.ValueOf(token.Name.Local).Convert(keyType)
 				value := reflect.New(valueType)
 				if err := d.DecodeElement(value.Interface(), &token); err != nil {
 					return fmt.Errorf(
 						"SOAP action arg %q errored while decoding: %w", key, err)
 				}
-				argsValue.SetMapIndex(reflect.ValueOf(key), reflect.Indirect(value))
+				argsValue.SetMapIndex(key, reflect.Indirect(value))
 			case xml.Comment:
 			case xml.ProcInst:
 				return fmt.Errorf(
