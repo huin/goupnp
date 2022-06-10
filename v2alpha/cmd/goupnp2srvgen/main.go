@@ -13,6 +13,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/BurntSushi/toml"
 	"github.com/huin/goupnp/v2alpha/cmd/goupnp2srvgen/tmplfuncs"
 	"github.com/huin/goupnp/v2alpha/cmd/goupnp2srvgen/zipread"
 	"github.com/huin/goupnp/v2alpha/description/srvdesc"
@@ -23,6 +24,7 @@ import (
 )
 
 var (
+	srvManifests     = flag.String("srv_manifests", "", "Path to srvmanifests.toml")
 	srvTemplate      = flag.String("srv_template", "", "Path to srv.gotemplate.")
 	upnpresourcesZip = flag.String("upnpresources_zip", "", "Path to upnpresources.zip.")
 )
@@ -41,6 +43,16 @@ func run() error {
 	if len(flag.Args()) > 0 {
 		return fmt.Errorf("unused arguments: %s", strings.Join(flag.Args(), " "))
 	}
+
+	if *srvManifests == "" {
+		return errors.New("-srv_manifests is a required flag.")
+	}
+	var manifests DCPSpecManifests
+	_, err := toml.DecodeFile(*srvManifests, &manifests)
+	if err != nil {
+		return fmt.Errorf("loading srv_manifests %q: %w", *srvManifests, err)
+	}
+
 	if *srvTemplate == "" {
 		return errors.New("-srv_template is a required flag.")
 	}
@@ -72,30 +84,12 @@ func run() error {
 		GoType: reflect.TypeOf((*soap.SOAPAction)(nil)).Elem(),
 	}
 
-	for _, m := range manifests {
+	for _, m := range manifests.DCPS {
 		if err := processDCP(upnpresources, m, typeMap, tmpl); err != nil {
 			return fmt.Errorf("processing DCP %s: %w", m.Path, err)
 		}
 	}
 	return nil
-}
-
-var manifests = []*DCPSpecManifest{
-	{
-		Path: "standardizeddcps/Internet Gateway_2/UPnP-gw-IGD-TestFiles-20101210.zip",
-		Services: []*ServiceManifest{
-			{
-				Package:     "lanhostconfigmanagement1",
-				ServiceType: "urn:schemas-upnp-org:service:LANHostConfigManagement:1",
-				Path:        "xml data files/service/LANHostConfigManagement1.xml",
-			},
-			{
-				Package:     "wanpppconnection1",
-				ServiceType: "urn:schemas-upnp-org:service:WANPPPConnection:1",
-				Path:        "xml data files/service/WANPPPConnection1.xml",
-			},
-		},
-	},
 }
 
 func processDCP(
@@ -156,6 +150,10 @@ func processService(
 	}
 
 	return nil
+}
+
+type DCPSpecManifests struct {
+	DCPS []*DCPSpecManifest
 }
 
 type DCPSpecManifest struct {

@@ -1,0 +1,10 @@
+[[DCPS]]
+Path = "standardizeddcps/Internet Gateway_2/UPnP-gw-IGD-TestFiles-20101210.zip"
+[[DCPS.Services]]
+Package = "lanhostconfigmanagement1"
+ServiceType = "urn:schemas-upnp-org:service:LANHostConfigManagement:1"
+Path = "xml data files/service/LANHostConfigManagement1.xml"
+[[DCPS.Services]]
+Package = "wanpppconnection1"
+ServiceType = "urn:schemas-upnp-org:service:WANPPPConnection:1"
+Path = "xml data files/service/WANPPPConnection1.xml"
