@@ -9,6 +9,7 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/huin/goupnp/v2alpha/soap"
 	"github.com/huin/goupnp/v2alpha/soap/envelope"
 )
 
@@ -85,19 +86,17 @@ func (c *Client) Do(
 	return ParseResponseAction(resp, actionOut)
 }
 
-// PerformAction makes a SOAP request, with the given `argsIn` as input
-// arguments, and `argsOut` to capture the output arguments into.
-// `serviceType` is the SOAP service type URN, `actionName` is the action to
-// call.
+// PerformAction makes a SOAP request, with the given action.
 //
-// This is a convenience for calling `Client.Do` without creating `*Action` values.
+// This is a convenience for calling `Client.Do` without creating
+// `*envelope.Action` values.
 func PerformAction(
 	ctx context.Context, c *Client,
-	serviceType, actionName string,
-	argsIn, argsOut any,
+	action soap.Action,
 ) error {
-	actionIn := envelope.NewSendAction(serviceType, actionName, argsIn)
-	actionOut := &envelope.Action{Args: argsOut}
+	actionIn := envelope.NewSendAction(
+		action.ServiceType(), action.ActionName(), action.RefRequest())
+	actionOut := &envelope.Action{Args: action.RefResponse()}
 	return c.Do(ctx, actionIn, actionOut)
 }
 

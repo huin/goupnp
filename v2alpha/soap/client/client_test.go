@@ -8,8 +8,24 @@ import (
 	"testing"
 	"time"
 
+	"github.com/huin/goupnp/v2alpha/soap"
 	"github.com/huin/goupnp/v2alpha/soap/envelope"
 )
+
+const serviceType = "fake:service:type"
+const actionName = "ActionName"
+
+type Action struct {
+	req  ActionArgs
+	resp ActionReply
+}
+
+var _ soap.Action = &Action{}
+
+func (a *Action) ServiceType() string { return serviceType }
+func (a *Action) ActionName() string  { return actionName }
+func (a *Action) RefRequest() any     { return &a.req }
+func (a *Action) RefResponse() any    { return &a.resp }
 
 type ActionArgs struct {
 	Name string
@@ -81,7 +97,7 @@ func TestPerformAction(t *testing.T) {
 
 	service := &fakeSoapServer{
 		responses: map[actionKey]*envelope.Action{
-			{"/endpointpath", "\"http://example.com/endpointns#Foo\""}: {
+			{"/endpointpath", fmt.Sprintf("\"%s#%s\"", serviceType, actionName)}: {
 				Args: &ActionReply{Greeting: "Hello, World!"},
 			},
 		},
@@ -91,13 +107,14 @@ func TestPerformAction(t *testing.T) {
 
 	c := New(ts.URL + "/endpointpath")
 
-	reply := &ActionReply{}
+	a := &Action{
+		req: ActionArgs{Name: "World"},
+	}
 
-	if err := PerformAction(ctx, c, "http://example.com/endpointns", "Foo",
-		&ActionArgs{Name: "World"}, reply); err != nil {
+	if err := PerformAction(ctx, c, a); err != nil {
 		t.Errorf("got error: %v, want success", err)
 	} else {
-		if got, want := reply.Greeting, "Hello, World!"; got != want {
+		if got, want := a.resp.Greeting, "Hello, World!"; got != want {
 			t.Errorf("got %q, want %q", got, want)
 		}
 	}

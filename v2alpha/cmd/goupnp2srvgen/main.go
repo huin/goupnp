@@ -81,7 +81,7 @@ func run() error {
 	// as well as necessary for extended types.
 	typeMap := types.TypeMap().Clone()
 	typeMap[soapActionInterface] = typedesc.TypeDesc{
-		GoType: reflect.TypeOf((*soap.SOAPAction)(nil)).Elem(),
+		GoType: reflect.TypeOf((*soap.Action)(nil)).Elem(),
 	}
 
 	for _, m := range manifests.DCPS {
