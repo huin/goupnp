@@ -153,25 +153,25 @@ func processService(
 }
 
 type DCPSpecManifests struct {
-	DCPS []*DCPSpecManifest
+	DCPS []*DCPSpecManifest `toml:"dcp"`
 }
 
 type DCPSpecManifest struct {
 	// Path is the file path within upnpresources.zip to the DCP spec ZIP file.
-	Path string
+	Path string `toml:"path"`
 	// Services maps from a service name (e.g. "FooBar:1") to a path within the DCP spec ZIP file
 	// (e.g. "xml data files/service/FooBar1.xml").
-	Services []*ServiceManifest
+	Services []*ServiceManifest `toml:"service"`
 }
 
 type ServiceManifest struct {
 	// Package is the Go package name to generate e.g. "foo1".
-	Package string
+	Package string `toml:"package"`
 	// ServiceType is the SOAP namespace and service type that identifes the service e.g.
 	// "urn:schemas-upnp-org:service:Foo:1"
-	ServiceType string
+	ServiceType string `toml:"type"`
 	// Path within the DCP spec ZIP file e.g. "xml data files/service/Foo1.xml".
-	Path string
+	Path string `toml:"path"`
 }
 
 type tmplArgs struct {
