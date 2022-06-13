@@ -13,7 +13,7 @@ const ServiceType = {{quote .Manifest.ServiceType}}
 {{range .SCPD.SortedActions}}
 {{- template "action" args "Action" . "Imps" $Imps}}
 {{end}}
-{{end}}
+{{- end}}
 
 {{define "action"}}
 {{- $Imps := .Imps}}
