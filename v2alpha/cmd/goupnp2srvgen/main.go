@@ -1,10 +1,13 @@
 package main
 
 import (
+	"bytes"
 	"encoding/xml"
 	"errors"
 	"flag"
 	"fmt"
+	"go/format"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -24,6 +27,7 @@ import (
 )
 
 var (
+	formatOutput     = flag.Bool("format_output", true, "If true, format the output source code.")
 	outputDir        = flag.String("output_dir", "", "Path to directory to write output in.")
 	srvManifests     = flag.String("srv_manifests", "", "Path to srvmanifests.toml")
 	srvTemplate      = flag.String("srv_template", "", "Path to srv.gotemplate.")
@@ -159,13 +163,8 @@ func processService(
 		return err
 	}
 
-	outputPath := filepath.Join(outputDir, srvManifest.Package+".go")
-	outFile, err := os.Create(outputPath)
-	if err != nil {
-		return fmt.Errorf("creating output service file %q: %w", outputPath, err)
-	}
-	defer outFile.Close()
-	err = tmpl.ExecuteTemplate(outFile, "service", tmplArgs{
+	buf := &bytes.Buffer{}
+	err = tmpl.ExecuteTemplate(buf, "service", tmplArgs{
 		Manifest: srvManifest,
 		Imps:     imps,
 		SCPD:     sd,
@@ -173,8 +172,18 @@ func processService(
 	if err != nil {
 		return fmt.Errorf("executing srv_template: %w", err)
 	}
-	if err := outFile.Close(); err != nil {
-		return fmt.Errorf("closing output service file %q: %w", outputPath, err)
+	src := buf.Bytes()
+	if *formatOutput {
+		var err error
+		src, err = format.Source(src)
+		if err != nil {
+			return fmt.Errorf("formatting output service file: %w", err)
+		}
+	}
+
+	outputPath := filepath.Join(outputDir, srvManifest.Package+".go")
+	if err := ioutil.WriteFile(outputPath, src, os.ModePerm); err != nil {
+		return fmt.Errorf("writing output service file %q: %w", outputPath, err)
 	}
 
 	return nil
