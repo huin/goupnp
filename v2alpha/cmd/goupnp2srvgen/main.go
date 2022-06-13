@@ -24,6 +24,7 @@ import (
 )
 
 var (
+	outputDir        = flag.String("output_dir", "", "Path to directory to write output in.")
 	srvManifests     = flag.String("srv_manifests", "", "Path to srvmanifests.toml")
 	srvTemplate      = flag.String("srv_template", "", "Path to srv.gotemplate.")
 	upnpresourcesZip = flag.String("upnpresources_zip", "", "Path to upnpresources.zip.")
@@ -42,6 +43,13 @@ func main() {
 func run() error {
 	if len(flag.Args()) > 0 {
 		return fmt.Errorf("unused arguments: %s", strings.Join(flag.Args(), " "))
+	}
+
+	if *outputDir == "" {
+		return errors.New("-output_dir is a required flag.")
+	}
+	if err := os.MkdirAll(*outputDir, 0); err != nil {
+		return fmt.Errorf("creating output_dir %q: %w", *outputDir, err)
 	}
 
 	if *srvManifests == "" {
@@ -85,8 +93,8 @@ func run() error {
 	}
 
 	for _, m := range manifests.DCPS {
-		if err := processDCP(upnpresources, m, typeMap, tmpl); err != nil {
-			return fmt.Errorf("processing DCP %s: %w", m.Path, err)
+		if err := processDCP(upnpresources, m, typeMap, tmpl, *outputDir); err != nil {
+			return fmt.Errorf("processing DCP %s: %w", m.SpecZipPath, err)
 		}
 	}
 	return nil
@@ -97,13 +105,18 @@ func processDCP(
 	manifest *DCPSpecManifest,
 	typeMap typedesc.TypeMap,
 	tmpl *template.Template,
+	parentOutputDir string,
 ) error {
-	dcpSpecData, err := upnpresources.OpenZip(manifest.Path)
+	outputDir := filepath.Join(parentOutputDir, manifest.OutputDir)
+	if err := os.MkdirAll(outputDir, os.ModePerm); err != nil {
+		return fmt.Errorf("creating output directory %q for DCP: %w", outputDir, err)
+	}
+	dcpSpecData, err := upnpresources.OpenZip(manifest.SpecZipPath)
 	if err != nil {
 		return err
 	}
 	for _, srvManifest := range manifest.Services {
-		if err := processService(dcpSpecData, srvManifest, typeMap, tmpl); err != nil {
+		if err := processService(dcpSpecData, srvManifest, typeMap, tmpl, outputDir); err != nil {
 			return fmt.Errorf("processing service %s: %w", srvManifest.ServiceType, err)
 		}
 	}
@@ -115,7 +128,13 @@ func processService(
 	srvManifest *ServiceManifest,
 	typeMap typedesc.TypeMap,
 	tmpl *template.Template,
+	parentOutputDir string,
 ) error {
+	outputDir := filepath.Join(parentOutputDir, srvManifest.Package)
+	if err := os.MkdirAll(outputDir, os.ModePerm); err != nil {
+		return fmt.Errorf("creating output directory %q for service: %w", outputDir, err)
+	}
+
 	f, err := dcpSpecData.Open(srvManifest.Path)
 	if err != nil {
 		return err
@@ -140,13 +159,22 @@ func processService(
 		return err
 	}
 
-	err = tmpl.ExecuteTemplate(os.Stdout, "service", tmplArgs{
+	outputPath := filepath.Join(outputDir, srvManifest.Package+".go")
+	outFile, err := os.Create(outputPath)
+	if err != nil {
+		return fmt.Errorf("creating output service file %q: %w", outputPath, err)
+	}
+	defer outFile.Close()
+	err = tmpl.ExecuteTemplate(outFile, "service", tmplArgs{
 		Manifest: srvManifest,
 		Imps:     imps,
 		SCPD:     sd,
 	})
 	if err != nil {
 		return fmt.Errorf("executing srv_template: %w", err)
+	}
+	if err := outFile.Close(); err != nil {
+		return fmt.Errorf("closing output service file %q: %w", outputPath, err)
 	}
 
 	return nil
@@ -157,8 +185,10 @@ type DCPSpecManifests struct {
 }
 
 type DCPSpecManifest struct {
-	// Path is the file path within upnpresources.zip to the DCP spec ZIP file.
-	Path string `toml:"path"`
+	// SpecZipPath is the file path within upnpresources.zip to the DCP spec ZIP file.
+	SpecZipPath string `toml:"spec_zip_path"`
+	// OutputDir is the path relative to --output_dir which the packages are written in.
+	OutputDir string `toml:"output_dir"`
 	// Services maps from a service name (e.g. "FooBar:1") to a path within the DCP spec ZIP file
 	// (e.g. "xml data files/service/FooBar1.xml").
 	Services []*ServiceManifest `toml:"service"`

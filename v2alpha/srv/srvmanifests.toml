@@ -1,10 +1,11 @@
 [[dcp]]
-path = "standardizeddcps/Internet Gateway_2/UPnP-gw-IGD-TestFiles-20101210.zip"
+spec_zip_path = "standardizeddcps/Internet Gateway_2/UPnP-gw-IGD-TestFiles-20101210.zip"
+output_dir = "inetgw2"
 [[dcp.service]]
-package = "lanhostconfigmanagement1"
+package = "lanhostcfgmng1"
 type = "urn:schemas-upnp-org:service:LANHostConfigManagement:1"
 path = "xml data files/service/LANHostConfigManagement1.xml"
 [[dcp.service]]
-package = "wanpppconnection1"
+package = "wanpppconn1"
 type = "urn:schemas-upnp-org:service:WANPPPConnection:1"
 path = "xml data files/service/WANPPPConnection1.xml"
