@@ -1,5 +1,5 @@
-// Package lanhostcfgmng1 provides types for the "urn:schemas-upnp-org:service:LANHostConfigManagement:1" service.
-package lanhostcfgmng1
+// Package lanhostcfgmgmt1 provides types for the "urn:schemas-upnp-org:service:LANHostConfigManagement:1" service.
+package lanhostcfgmgmt1
 
 import (
 	pkg1 "github.com/huin/goupnp/v2alpha/soap"

@@ -2,7 +2,7 @@
 spec_zip_path = "standardizeddcps/Internet Gateway_2/UPnP-gw-IGD-TestFiles-20101210.zip"
 output_dir = "inetgw2"
 [[dcp.service]]
-package = "lanhostcfgmng1"
+package = "lanhostcfgmgmt1"
 type = "urn:schemas-upnp-org:service:LANHostConfigManagement:1"
 path = "xml data files/service/LANHostConfigManagement1.xml"
 [[dcp.service]]
