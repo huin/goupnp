@@ -1,4 +1,6 @@
 // Package wanpppconn1 provides types for the "urn:schemas-upnp-org:service:WANPPPConnection:1" service.
+//
+// Documented at https://openconnectivity.org/wp-content/uploads/2015/11/UPnP_IGD_WANPPPConnection-1.0.pdf.
 package wanpppconn1
 
 import (

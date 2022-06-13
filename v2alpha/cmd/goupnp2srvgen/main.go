@@ -211,6 +211,9 @@ type ServiceManifest struct {
 	ServiceType string `toml:"type"`
 	// Path within the DCP spec ZIP file e.g. "xml data files/service/Foo1.xml".
 	Path string `toml:"path"`
+
+	// DocumentURL is the URL to the documentation for the service.
+	DocumentURL string `toml:"document_url"`
 }
 
 type tmplArgs struct {

@@ -1,6 +1,10 @@
 {{define "service"}}
 {{- $Imps := .Imps -}}
 // Package {{.Manifest.Package}} provides types for the {{quote .Manifest.ServiceType}} service.
+{{- with .Manifest.DocumentURL}}
+//
+// Documented at {{.}}.
+{{- end}}
 package {{.Manifest.Package}}
 
 import (

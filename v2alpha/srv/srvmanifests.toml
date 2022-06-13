@@ -1,11 +1,14 @@
 [[dcp]]
 spec_zip_path = "standardizeddcps/Internet Gateway_2/UPnP-gw-IGD-TestFiles-20101210.zip"
 output_dir = "inetgw2"
+# https://openconnectivity.org/wp-content/uploads/2015/11/UPnP-gw-InternetGatewayDevice-v2-Device-20100910.pdf
 [[dcp.service]]
 package = "lanhostcfgmgmt1"
 type = "urn:schemas-upnp-org:service:LANHostConfigManagement:1"
 path = "xml data files/service/LANHostConfigManagement1.xml"
+document_url = "https://openconnectivity.org/wp-content/uploads/2015/11/UPnP-gw-LANHostConfigManagement-v1-Service.pdf"
 [[dcp.service]]
 package = "wanpppconn1"
 type = "urn:schemas-upnp-org:service:WANPPPConnection:1"
 path = "xml data files/service/WANPPPConnection1.xml"
+document_url = "https://openconnectivity.org/wp-content/uploads/2015/11/UPnP_IGD_WANPPPConnection-1.0.pdf"

@@ -1,4 +1,6 @@
 // Package lanhostcfgmgmt1 provides types for the "urn:schemas-upnp-org:service:LANHostConfigManagement:1" service.
+//
+// Documented at https://openconnectivity.org/wp-content/uploads/2015/11/UPnP-gw-LANHostConfigManagement-v1-Service.pdf.
 package lanhostcfgmgmt1
 
 import (
