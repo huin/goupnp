@@ -51,6 +51,7 @@ type Device struct {
 	ModelDescription string    `xml:"modelDescription"`
 	ModelName        string    `xml:"modelName"`
 	ModelNumber      string    `xml:"modelNumber"`
+	ModelType        string    `xml:"modelType"`
 	ModelURL         URLField  `xml:"modelURL"`
 	SerialNumber     string    `xml:"serialNumber"`
 	UDN              string    `xml:"UDN"`
