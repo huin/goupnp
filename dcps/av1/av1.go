@@ -47,33 +47,45 @@ type AVTransport1 struct {
 	goupnp.ServiceClient
 }
 
-// NewAVTransport1Clients discovers instances of the service on the network,
+// NewAVTransport1ClientsCtx discovers instances of the service on the network,
 // and returns clients to any that are found. errors will contain an error for
 // any devices that replied but which could not be queried, and err will be set
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewAVTransport1Clients() (clients []*AVTransport1, errors []error, err error) {
+func NewAVTransport1ClientsCtx(ctx context.Context) (clients []*AVTransport1, errors []error, err error) {
 	var genericClients []goupnp.ServiceClient
-	if genericClients, errors, err = goupnp.NewServiceClients(URN_AVTransport_1); err != nil {
+	if genericClients, errors, err = goupnp.NewServiceClientsCtx(ctx, URN_AVTransport_1); err != nil {
 		return
 	}
 	clients = newAVTransport1ClientsFromGenericClients(genericClients)
 	return
 }
 
-// NewAVTransport1ClientsByURL discovers instances of the service at the given
+// NewAVTransport1Clients is the legacy version of NewAVTransport1ClientsCtx, but uses
+// context.Background() as the context.
+func NewAVTransport1Clients() (clients []*AVTransport1, errors []error, err error) {
+	return NewAVTransport1ClientsCtx(context.Background())
+}
+
+// NewAVTransport1ClientsByURLCtx discovers instances of the service at the given
 // URL, and returns clients to any that are found. An error is returned if
 // there was an error probing the service.
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
-func NewAVTransport1ClientsByURL(loc *url.URL) ([]*AVTransport1, error) {
-	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_AVTransport_1)
+func NewAVTransport1ClientsByURLCtx(ctx context.Context, loc *url.URL) ([]*AVTransport1, error) {
+	genericClients, err := goupnp.NewServiceClientsByURLCtx(ctx, loc, URN_AVTransport_1)
 	if err != nil {
 		return nil, err
 	}
 	return newAVTransport1ClientsFromGenericClients(genericClients), nil
+}
+
+// NewAVTransport1ClientsByURL is the legacy version of NewAVTransport1ClientsByURLCtx, but uses
+// context.Background() as the context.
+func NewAVTransport1ClientsByURL(loc *url.URL) ([]*AVTransport1, error) {
+	return NewAVTransport1ClientsByURLCtx(context.Background(), loc)
 }
 
 // NewAVTransport1ClientsFromRootDevice discovers instances of the service in
@@ -935,33 +947,45 @@ type AVTransport2 struct {
 	goupnp.ServiceClient
 }
 
-// NewAVTransport2Clients discovers instances of the service on the network,
+// NewAVTransport2ClientsCtx discovers instances of the service on the network,
 // and returns clients to any that are found. errors will contain an error for
 // any devices that replied but which could not be queried, and err will be set
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewAVTransport2Clients() (clients []*AVTransport2, errors []error, err error) {
+func NewAVTransport2ClientsCtx(ctx context.Context) (clients []*AVTransport2, errors []error, err error) {
 	var genericClients []goupnp.ServiceClient
-	if genericClients, errors, err = goupnp.NewServiceClients(URN_AVTransport_2); err != nil {
+	if genericClients, errors, err = goupnp.NewServiceClientsCtx(ctx, URN_AVTransport_2); err != nil {
 		return
 	}
 	clients = newAVTransport2ClientsFromGenericClients(genericClients)
 	return
 }
 
-// NewAVTransport2ClientsByURL discovers instances of the service at the given
+// NewAVTransport2Clients is the legacy version of NewAVTransport2ClientsCtx, but uses
+// context.Background() as the context.
+func NewAVTransport2Clients() (clients []*AVTransport2, errors []error, err error) {
+	return NewAVTransport2ClientsCtx(context.Background())
+}
+
+// NewAVTransport2ClientsByURLCtx discovers instances of the service at the given
 // URL, and returns clients to any that are found. An error is returned if
 // there was an error probing the service.
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
-func NewAVTransport2ClientsByURL(loc *url.URL) ([]*AVTransport2, error) {
-	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_AVTransport_2)
+func NewAVTransport2ClientsByURLCtx(ctx context.Context, loc *url.URL) ([]*AVTransport2, error) {
+	genericClients, err := goupnp.NewServiceClientsByURLCtx(ctx, loc, URN_AVTransport_2)
 	if err != nil {
 		return nil, err
 	}
 	return newAVTransport2ClientsFromGenericClients(genericClients), nil
+}
+
+// NewAVTransport2ClientsByURL is the legacy version of NewAVTransport2ClientsByURLCtx, but uses
+// context.Background() as the context.
+func NewAVTransport2ClientsByURL(loc *url.URL) ([]*AVTransport2, error) {
+	return NewAVTransport2ClientsByURLCtx(context.Background(), loc)
 }
 
 // NewAVTransport2ClientsFromRootDevice discovers instances of the service in
@@ -2067,33 +2091,45 @@ type ConnectionManager1 struct {
 	goupnp.ServiceClient
 }
 
-// NewConnectionManager1Clients discovers instances of the service on the network,
+// NewConnectionManager1ClientsCtx discovers instances of the service on the network,
 // and returns clients to any that are found. errors will contain an error for
 // any devices that replied but which could not be queried, and err will be set
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewConnectionManager1Clients() (clients []*ConnectionManager1, errors []error, err error) {
+func NewConnectionManager1ClientsCtx(ctx context.Context) (clients []*ConnectionManager1, errors []error, err error) {
 	var genericClients []goupnp.ServiceClient
-	if genericClients, errors, err = goupnp.NewServiceClients(URN_ConnectionManager_1); err != nil {
+	if genericClients, errors, err = goupnp.NewServiceClientsCtx(ctx, URN_ConnectionManager_1); err != nil {
 		return
 	}
 	clients = newConnectionManager1ClientsFromGenericClients(genericClients)
 	return
 }
 
-// NewConnectionManager1ClientsByURL discovers instances of the service at the given
+// NewConnectionManager1Clients is the legacy version of NewConnectionManager1ClientsCtx, but uses
+// context.Background() as the context.
+func NewConnectionManager1Clients() (clients []*ConnectionManager1, errors []error, err error) {
+	return NewConnectionManager1ClientsCtx(context.Background())
+}
+
+// NewConnectionManager1ClientsByURLCtx discovers instances of the service at the given
 // URL, and returns clients to any that are found. An error is returned if
 // there was an error probing the service.
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
-func NewConnectionManager1ClientsByURL(loc *url.URL) ([]*ConnectionManager1, error) {
-	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_ConnectionManager_1)
+func NewConnectionManager1ClientsByURLCtx(ctx context.Context, loc *url.URL) ([]*ConnectionManager1, error) {
+	genericClients, err := goupnp.NewServiceClientsByURLCtx(ctx, loc, URN_ConnectionManager_1)
 	if err != nil {
 		return nil, err
 	}
 	return newConnectionManager1ClientsFromGenericClients(genericClients), nil
+}
+
+// NewConnectionManager1ClientsByURL is the legacy version of NewConnectionManager1ClientsByURLCtx, but uses
+// context.Background() as the context.
+func NewConnectionManager1ClientsByURL(loc *url.URL) ([]*ConnectionManager1, error) {
+	return NewConnectionManager1ClientsByURLCtx(context.Background(), loc)
 }
 
 // NewConnectionManager1ClientsFromRootDevice discovers instances of the service in
@@ -2381,33 +2417,45 @@ type ConnectionManager2 struct {
 	goupnp.ServiceClient
 }
 
-// NewConnectionManager2Clients discovers instances of the service on the network,
+// NewConnectionManager2ClientsCtx discovers instances of the service on the network,
 // and returns clients to any that are found. errors will contain an error for
 // any devices that replied but which could not be queried, and err will be set
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewConnectionManager2Clients() (clients []*ConnectionManager2, errors []error, err error) {
+func NewConnectionManager2ClientsCtx(ctx context.Context) (clients []*ConnectionManager2, errors []error, err error) {
 	var genericClients []goupnp.ServiceClient
-	if genericClients, errors, err = goupnp.NewServiceClients(URN_ConnectionManager_2); err != nil {
+	if genericClients, errors, err = goupnp.NewServiceClientsCtx(ctx, URN_ConnectionManager_2); err != nil {
 		return
 	}
 	clients = newConnectionManager2ClientsFromGenericClients(genericClients)
 	return
 }
 
-// NewConnectionManager2ClientsByURL discovers instances of the service at the given
+// NewConnectionManager2Clients is the legacy version of NewConnectionManager2ClientsCtx, but uses
+// context.Background() as the context.
+func NewConnectionManager2Clients() (clients []*ConnectionManager2, errors []error, err error) {
+	return NewConnectionManager2ClientsCtx(context.Background())
+}
+
+// NewConnectionManager2ClientsByURLCtx discovers instances of the service at the given
 // URL, and returns clients to any that are found. An error is returned if
 // there was an error probing the service.
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
-func NewConnectionManager2ClientsByURL(loc *url.URL) ([]*ConnectionManager2, error) {
-	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_ConnectionManager_2)
+func NewConnectionManager2ClientsByURLCtx(ctx context.Context, loc *url.URL) ([]*ConnectionManager2, error) {
+	genericClients, err := goupnp.NewServiceClientsByURLCtx(ctx, loc, URN_ConnectionManager_2)
 	if err != nil {
 		return nil, err
 	}
 	return newConnectionManager2ClientsFromGenericClients(genericClients), nil
+}
+
+// NewConnectionManager2ClientsByURL is the legacy version of NewConnectionManager2ClientsByURLCtx, but uses
+// context.Background() as the context.
+func NewConnectionManager2ClientsByURL(loc *url.URL) ([]*ConnectionManager2, error) {
+	return NewConnectionManager2ClientsByURLCtx(context.Background(), loc)
 }
 
 // NewConnectionManager2ClientsFromRootDevice discovers instances of the service in
@@ -2695,33 +2743,45 @@ type ContentDirectory1 struct {
 	goupnp.ServiceClient
 }
 
-// NewContentDirectory1Clients discovers instances of the service on the network,
+// NewContentDirectory1ClientsCtx discovers instances of the service on the network,
 // and returns clients to any that are found. errors will contain an error for
 // any devices that replied but which could not be queried, and err will be set
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewContentDirectory1Clients() (clients []*ContentDirectory1, errors []error, err error) {
+func NewContentDirectory1ClientsCtx(ctx context.Context) (clients []*ContentDirectory1, errors []error, err error) {
 	var genericClients []goupnp.ServiceClient
-	if genericClients, errors, err = goupnp.NewServiceClients(URN_ContentDirectory_1); err != nil {
+	if genericClients, errors, err = goupnp.NewServiceClientsCtx(ctx, URN_ContentDirectory_1); err != nil {
 		return
 	}
 	clients = newContentDirectory1ClientsFromGenericClients(genericClients)
 	return
 }
 
-// NewContentDirectory1ClientsByURL discovers instances of the service at the given
+// NewContentDirectory1Clients is the legacy version of NewContentDirectory1ClientsCtx, but uses
+// context.Background() as the context.
+func NewContentDirectory1Clients() (clients []*ContentDirectory1, errors []error, err error) {
+	return NewContentDirectory1ClientsCtx(context.Background())
+}
+
+// NewContentDirectory1ClientsByURLCtx discovers instances of the service at the given
 // URL, and returns clients to any that are found. An error is returned if
 // there was an error probing the service.
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
-func NewContentDirectory1ClientsByURL(loc *url.URL) ([]*ContentDirectory1, error) {
-	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_ContentDirectory_1)
+func NewContentDirectory1ClientsByURLCtx(ctx context.Context, loc *url.URL) ([]*ContentDirectory1, error) {
+	genericClients, err := goupnp.NewServiceClientsByURLCtx(ctx, loc, URN_ContentDirectory_1)
 	if err != nil {
 		return nil, err
 	}
 	return newContentDirectory1ClientsFromGenericClients(genericClients), nil
+}
+
+// NewContentDirectory1ClientsByURL is the legacy version of NewContentDirectory1ClientsByURLCtx, but uses
+// context.Background() as the context.
+func NewContentDirectory1ClientsByURL(loc *url.URL) ([]*ContentDirectory1, error) {
+	return NewContentDirectory1ClientsByURLCtx(context.Background(), loc)
 }
 
 // NewContentDirectory1ClientsFromRootDevice discovers instances of the service in
@@ -3440,33 +3500,45 @@ type ContentDirectory2 struct {
 	goupnp.ServiceClient
 }
 
-// NewContentDirectory2Clients discovers instances of the service on the network,
+// NewContentDirectory2ClientsCtx discovers instances of the service on the network,
 // and returns clients to any that are found. errors will contain an error for
 // any devices that replied but which could not be queried, and err will be set
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewContentDirectory2Clients() (clients []*ContentDirectory2, errors []error, err error) {
+func NewContentDirectory2ClientsCtx(ctx context.Context) (clients []*ContentDirectory2, errors []error, err error) {
 	var genericClients []goupnp.ServiceClient
-	if genericClients, errors, err = goupnp.NewServiceClients(URN_ContentDirectory_2); err != nil {
+	if genericClients, errors, err = goupnp.NewServiceClientsCtx(ctx, URN_ContentDirectory_2); err != nil {
 		return
 	}
 	clients = newContentDirectory2ClientsFromGenericClients(genericClients)
 	return
 }
 
-// NewContentDirectory2ClientsByURL discovers instances of the service at the given
+// NewContentDirectory2Clients is the legacy version of NewContentDirectory2ClientsCtx, but uses
+// context.Background() as the context.
+func NewContentDirectory2Clients() (clients []*ContentDirectory2, errors []error, err error) {
+	return NewContentDirectory2ClientsCtx(context.Background())
+}
+
+// NewContentDirectory2ClientsByURLCtx discovers instances of the service at the given
 // URL, and returns clients to any that are found. An error is returned if
 // there was an error probing the service.
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
-func NewContentDirectory2ClientsByURL(loc *url.URL) ([]*ContentDirectory2, error) {
-	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_ContentDirectory_2)
+func NewContentDirectory2ClientsByURLCtx(ctx context.Context, loc *url.URL) ([]*ContentDirectory2, error) {
+	genericClients, err := goupnp.NewServiceClientsByURLCtx(ctx, loc, URN_ContentDirectory_2)
 	if err != nil {
 		return nil, err
 	}
 	return newContentDirectory2ClientsFromGenericClients(genericClients), nil
+}
+
+// NewContentDirectory2ClientsByURL is the legacy version of NewContentDirectory2ClientsByURLCtx, but uses
+// context.Background() as the context.
+func NewContentDirectory2ClientsByURL(loc *url.URL) ([]*ContentDirectory2, error) {
+	return NewContentDirectory2ClientsByURLCtx(context.Background(), loc)
 }
 
 // NewContentDirectory2ClientsFromRootDevice discovers instances of the service in
@@ -4301,33 +4373,45 @@ type ContentDirectory3 struct {
 	goupnp.ServiceClient
 }
 
-// NewContentDirectory3Clients discovers instances of the service on the network,
+// NewContentDirectory3ClientsCtx discovers instances of the service on the network,
 // and returns clients to any that are found. errors will contain an error for
 // any devices that replied but which could not be queried, and err will be set
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewContentDirectory3Clients() (clients []*ContentDirectory3, errors []error, err error) {
+func NewContentDirectory3ClientsCtx(ctx context.Context) (clients []*ContentDirectory3, errors []error, err error) {
 	var genericClients []goupnp.ServiceClient
-	if genericClients, errors, err = goupnp.NewServiceClients(URN_ContentDirectory_3); err != nil {
+	if genericClients, errors, err = goupnp.NewServiceClientsCtx(ctx, URN_ContentDirectory_3); err != nil {
 		return
 	}
 	clients = newContentDirectory3ClientsFromGenericClients(genericClients)
 	return
 }
 
-// NewContentDirectory3ClientsByURL discovers instances of the service at the given
+// NewContentDirectory3Clients is the legacy version of NewContentDirectory3ClientsCtx, but uses
+// context.Background() as the context.
+func NewContentDirectory3Clients() (clients []*ContentDirectory3, errors []error, err error) {
+	return NewContentDirectory3ClientsCtx(context.Background())
+}
+
+// NewContentDirectory3ClientsByURLCtx discovers instances of the service at the given
 // URL, and returns clients to any that are found. An error is returned if
 // there was an error probing the service.
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
-func NewContentDirectory3ClientsByURL(loc *url.URL) ([]*ContentDirectory3, error) {
-	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_ContentDirectory_3)
+func NewContentDirectory3ClientsByURLCtx(ctx context.Context, loc *url.URL) ([]*ContentDirectory3, error) {
+	genericClients, err := goupnp.NewServiceClientsByURLCtx(ctx, loc, URN_ContentDirectory_3)
 	if err != nil {
 		return nil, err
 	}
 	return newContentDirectory3ClientsFromGenericClients(genericClients), nil
+}
+
+// NewContentDirectory3ClientsByURL is the legacy version of NewContentDirectory3ClientsByURLCtx, but uses
+// context.Background() as the context.
+func NewContentDirectory3ClientsByURL(loc *url.URL) ([]*ContentDirectory3, error) {
+	return NewContentDirectory3ClientsByURLCtx(context.Background(), loc)
 }
 
 // NewContentDirectory3ClientsFromRootDevice discovers instances of the service in
@@ -5288,33 +5372,45 @@ type RenderingControl1 struct {
 	goupnp.ServiceClient
 }
 
-// NewRenderingControl1Clients discovers instances of the service on the network,
+// NewRenderingControl1ClientsCtx discovers instances of the service on the network,
 // and returns clients to any that are found. errors will contain an error for
 // any devices that replied but which could not be queried, and err will be set
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewRenderingControl1Clients() (clients []*RenderingControl1, errors []error, err error) {
+func NewRenderingControl1ClientsCtx(ctx context.Context) (clients []*RenderingControl1, errors []error, err error) {
 	var genericClients []goupnp.ServiceClient
-	if genericClients, errors, err = goupnp.NewServiceClients(URN_RenderingControl_1); err != nil {
+	if genericClients, errors, err = goupnp.NewServiceClientsCtx(ctx, URN_RenderingControl_1); err != nil {
 		return
 	}
 	clients = newRenderingControl1ClientsFromGenericClients(genericClients)
 	return
 }
 
-// NewRenderingControl1ClientsByURL discovers instances of the service at the given
+// NewRenderingControl1Clients is the legacy version of NewRenderingControl1ClientsCtx, but uses
+// context.Background() as the context.
+func NewRenderingControl1Clients() (clients []*RenderingControl1, errors []error, err error) {
+	return NewRenderingControl1ClientsCtx(context.Background())
+}
+
+// NewRenderingControl1ClientsByURLCtx discovers instances of the service at the given
 // URL, and returns clients to any that are found. An error is returned if
 // there was an error probing the service.
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
-func NewRenderingControl1ClientsByURL(loc *url.URL) ([]*RenderingControl1, error) {
-	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_RenderingControl_1)
+func NewRenderingControl1ClientsByURLCtx(ctx context.Context, loc *url.URL) ([]*RenderingControl1, error) {
+	genericClients, err := goupnp.NewServiceClientsByURLCtx(ctx, loc, URN_RenderingControl_1)
 	if err != nil {
 		return nil, err
 	}
 	return newRenderingControl1ClientsFromGenericClients(genericClients), nil
+}
+
+// NewRenderingControl1ClientsByURL is the legacy version of NewRenderingControl1ClientsByURLCtx, but uses
+// context.Background() as the context.
+func NewRenderingControl1ClientsByURL(loc *url.URL) ([]*RenderingControl1, error) {
+	return NewRenderingControl1ClientsByURLCtx(context.Background(), loc)
 }
 
 // NewRenderingControl1ClientsFromRootDevice discovers instances of the service in
@@ -7048,33 +7144,45 @@ type RenderingControl2 struct {
 	goupnp.ServiceClient
 }
 
-// NewRenderingControl2Clients discovers instances of the service on the network,
+// NewRenderingControl2ClientsCtx discovers instances of the service on the network,
 // and returns clients to any that are found. errors will contain an error for
 // any devices that replied but which could not be queried, and err will be set
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewRenderingControl2Clients() (clients []*RenderingControl2, errors []error, err error) {
+func NewRenderingControl2ClientsCtx(ctx context.Context) (clients []*RenderingControl2, errors []error, err error) {
 	var genericClients []goupnp.ServiceClient
-	if genericClients, errors, err = goupnp.NewServiceClients(URN_RenderingControl_2); err != nil {
+	if genericClients, errors, err = goupnp.NewServiceClientsCtx(ctx, URN_RenderingControl_2); err != nil {
 		return
 	}
 	clients = newRenderingControl2ClientsFromGenericClients(genericClients)
 	return
 }
 
-// NewRenderingControl2ClientsByURL discovers instances of the service at the given
+// NewRenderingControl2Clients is the legacy version of NewRenderingControl2ClientsCtx, but uses
+// context.Background() as the context.
+func NewRenderingControl2Clients() (clients []*RenderingControl2, errors []error, err error) {
+	return NewRenderingControl2ClientsCtx(context.Background())
+}
+
+// NewRenderingControl2ClientsByURLCtx discovers instances of the service at the given
 // URL, and returns clients to any that are found. An error is returned if
 // there was an error probing the service.
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
-func NewRenderingControl2ClientsByURL(loc *url.URL) ([]*RenderingControl2, error) {
-	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_RenderingControl_2)
+func NewRenderingControl2ClientsByURLCtx(ctx context.Context, loc *url.URL) ([]*RenderingControl2, error) {
+	genericClients, err := goupnp.NewServiceClientsByURLCtx(ctx, loc, URN_RenderingControl_2)
 	if err != nil {
 		return nil, err
 	}
 	return newRenderingControl2ClientsFromGenericClients(genericClients), nil
+}
+
+// NewRenderingControl2ClientsByURL is the legacy version of NewRenderingControl2ClientsByURLCtx, but uses
+// context.Background() as the context.
+func NewRenderingControl2ClientsByURL(loc *url.URL) ([]*RenderingControl2, error) {
+	return NewRenderingControl2ClientsByURLCtx(context.Background(), loc)
 }
 
 // NewRenderingControl2ClientsFromRootDevice discovers instances of the service in
@@ -8931,33 +9039,45 @@ type ScheduledRecording1 struct {
 	goupnp.ServiceClient
 }
 
-// NewScheduledRecording1Clients discovers instances of the service on the network,
+// NewScheduledRecording1ClientsCtx discovers instances of the service on the network,
 // and returns clients to any that are found. errors will contain an error for
 // any devices that replied but which could not be queried, and err will be set
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewScheduledRecording1Clients() (clients []*ScheduledRecording1, errors []error, err error) {
+func NewScheduledRecording1ClientsCtx(ctx context.Context) (clients []*ScheduledRecording1, errors []error, err error) {
 	var genericClients []goupnp.ServiceClient
-	if genericClients, errors, err = goupnp.NewServiceClients(URN_ScheduledRecording_1); err != nil {
+	if genericClients, errors, err = goupnp.NewServiceClientsCtx(ctx, URN_ScheduledRecording_1); err != nil {
 		return
 	}
 	clients = newScheduledRecording1ClientsFromGenericClients(genericClients)
 	return
 }
 
-// NewScheduledRecording1ClientsByURL discovers instances of the service at the given
+// NewScheduledRecording1Clients is the legacy version of NewScheduledRecording1ClientsCtx, but uses
+// context.Background() as the context.
+func NewScheduledRecording1Clients() (clients []*ScheduledRecording1, errors []error, err error) {
+	return NewScheduledRecording1ClientsCtx(context.Background())
+}
+
+// NewScheduledRecording1ClientsByURLCtx discovers instances of the service at the given
 // URL, and returns clients to any that are found. An error is returned if
 // there was an error probing the service.
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
-func NewScheduledRecording1ClientsByURL(loc *url.URL) ([]*ScheduledRecording1, error) {
-	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_ScheduledRecording_1)
+func NewScheduledRecording1ClientsByURLCtx(ctx context.Context, loc *url.URL) ([]*ScheduledRecording1, error) {
+	genericClients, err := goupnp.NewServiceClientsByURLCtx(ctx, loc, URN_ScheduledRecording_1)
 	if err != nil {
 		return nil, err
 	}
 	return newScheduledRecording1ClientsFromGenericClients(genericClients), nil
+}
+
+// NewScheduledRecording1ClientsByURL is the legacy version of NewScheduledRecording1ClientsByURLCtx, but uses
+// context.Background() as the context.
+func NewScheduledRecording1ClientsByURL(loc *url.URL) ([]*ScheduledRecording1, error) {
+	return NewScheduledRecording1ClientsByURLCtx(context.Background(), loc)
 }
 
 // NewScheduledRecording1ClientsFromRootDevice discovers instances of the service in
@@ -9818,33 +9938,45 @@ type ScheduledRecording2 struct {
 	goupnp.ServiceClient
 }
 
-// NewScheduledRecording2Clients discovers instances of the service on the network,
+// NewScheduledRecording2ClientsCtx discovers instances of the service on the network,
 // and returns clients to any that are found. errors will contain an error for
 // any devices that replied but which could not be queried, and err will be set
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func NewScheduledRecording2Clients() (clients []*ScheduledRecording2, errors []error, err error) {
+func NewScheduledRecording2ClientsCtx(ctx context.Context) (clients []*ScheduledRecording2, errors []error, err error) {
 	var genericClients []goupnp.ServiceClient
-	if genericClients, errors, err = goupnp.NewServiceClients(URN_ScheduledRecording_2); err != nil {
+	if genericClients, errors, err = goupnp.NewServiceClientsCtx(ctx, URN_ScheduledRecording_2); err != nil {
 		return
 	}
 	clients = newScheduledRecording2ClientsFromGenericClients(genericClients)
 	return
 }
 
-// NewScheduledRecording2ClientsByURL discovers instances of the service at the given
+// NewScheduledRecording2Clients is the legacy version of NewScheduledRecording2ClientsCtx, but uses
+// context.Background() as the context.
+func NewScheduledRecording2Clients() (clients []*ScheduledRecording2, errors []error, err error) {
+	return NewScheduledRecording2ClientsCtx(context.Background())
+}
+
+// NewScheduledRecording2ClientsByURLCtx discovers instances of the service at the given
 // URL, and returns clients to any that are found. An error is returned if
 // there was an error probing the service.
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
-func NewScheduledRecording2ClientsByURL(loc *url.URL) ([]*ScheduledRecording2, error) {
-	genericClients, err := goupnp.NewServiceClientsByURL(loc, URN_ScheduledRecording_2)
+func NewScheduledRecording2ClientsByURLCtx(ctx context.Context, loc *url.URL) ([]*ScheduledRecording2, error) {
+	genericClients, err := goupnp.NewServiceClientsByURLCtx(ctx, loc, URN_ScheduledRecording_2)
 	if err != nil {
 		return nil, err
 	}
 	return newScheduledRecording2ClientsFromGenericClients(genericClients), nil
+}
+
+// NewScheduledRecording2ClientsByURL is the legacy version of NewScheduledRecording2ClientsByURLCtx, but uses
+// context.Background() as the context.
+func NewScheduledRecording2ClientsByURL(loc *url.URL) ([]*ScheduledRecording2, error) {
+	return NewScheduledRecording2ClientsByURLCtx(context.Background(), loc)
 }
 
 // NewScheduledRecording2ClientsFromRootDevice discovers instances of the service in
