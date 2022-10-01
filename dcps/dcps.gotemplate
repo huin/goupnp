@@ -44,33 +44,45 @@ type {{$srvIdent}} struct {
 	goupnp.ServiceClient
 }
 
-// New{{$srvIdent}}Clients discovers instances of the service on the network,
+// New{{$srvIdent}}ClientsCtx discovers instances of the service on the network,
 // and returns clients to any that are found. errors will contain an error for
 // any devices that replied but which could not be queried, and err will be set
 // if the discovery process failed outright.
 //
 // This is a typical entry calling point into this package.
-func New{{$srvIdent}}Clients() (clients []*{{$srvIdent}}, errors []error, err error) {
+func New{{$srvIdent}}ClientsCtx(ctx context.Context) (clients []*{{$srvIdent}}, errors []error, err error) {
 	var genericClients []goupnp.ServiceClient
-	if genericClients, errors, err = goupnp.NewServiceClients({{$srv.Const}}); err != nil {
+	if genericClients, errors, err = goupnp.NewServiceClientsCtx(ctx, {{$srv.Const}}); err != nil {
 		return
 	}
 	clients = new{{$srvIdent}}ClientsFromGenericClients(genericClients)
 	return
 }
 
-// New{{$srvIdent}}ClientsByURL discovers instances of the service at the given
+// New{{$srvIdent}}Clients is the legacy version of New{{$srvIdent}}ClientsCtx, but uses
+// context.Background() as the context.
+func New{{$srvIdent}}Clients() (clients []*{{$srvIdent}}, errors []error, err error) {
+	return New{{$srvIdent}}ClientsCtx(context.Background())
+}
+
+// New{{$srvIdent}}ClientsByURLCtx discovers instances of the service at the given
 // URL, and returns clients to any that are found. An error is returned if
 // there was an error probing the service.
 //
 // This is a typical entry calling point into this package when reusing an
 // previously discovered service URL.
-func New{{$srvIdent}}ClientsByURL(loc *url.URL) ([]*{{$srvIdent}}, error) {
-	genericClients, err := goupnp.NewServiceClientsByURL(loc, {{$srv.Const}})
+func New{{$srvIdent}}ClientsByURLCtx(ctx context.Context, loc *url.URL) ([]*{{$srvIdent}}, error) {
+	genericClients, err := goupnp.NewServiceClientsByURLCtx(ctx, loc, {{$srv.Const}})
 	if err != nil {
 		return nil, err
 	}
 	return new{{$srvIdent}}ClientsFromGenericClients(genericClients), nil
+}
+
+// New{{$srvIdent}}ClientsByURL is the legacy version of New{{$srvIdent}}ClientsByURLCtx, but uses
+// context.Background() as the context.
+func New{{$srvIdent}}ClientsByURL(loc *url.URL) ([]*{{$srvIdent}}, error) {
+	return New{{$srvIdent}}ClientsByURLCtx(context.Background(), loc)
 }
 
 // New{{$srvIdent}}ClientsFromRootDevice discovers instances of the service in
