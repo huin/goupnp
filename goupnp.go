@@ -148,6 +148,10 @@ func DeviceByURL(loc *url.URL) (*RootDevice, error) {
 // but should not be changed after requesting clients.
 var CharsetReaderDefault func(charset string, input io.Reader) (io.Reader, error)
 
+// HTTPClient specifies the http.Client object used when fetching the XML from the UPnP server.
+// HTTPClient defaults the http.DefaultClient.  This may be overridden by the importing application.
+var HTTPClientDefault = http.DefaultClient
+
 func requestXml(ctx context.Context, url string, defaultSpace string, doc interface{}) error {
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
@@ -157,7 +161,7 @@ func requestXml(ctx context.Context, url string, defaultSpace string, doc interf
 		return err
 	}
 
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := HTTPClientDefault.Do(req)
 	if err != nil {
 		return err
 	}
