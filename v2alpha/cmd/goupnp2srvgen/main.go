@@ -31,7 +31,9 @@ var (
 	outputDir        = flag.String("output_dir", "", "Path to directory to write output in.")
 	srvManifests     = flag.String("srv_manifests", "", "Path to srvmanifests.toml")
 	srvTemplate      = flag.String("srv_template", "", "Path to srv.gotemplate.")
-	upnpresourcesZip = flag.String("upnpresources_zip", "", "Path to upnpresources.zip.")
+	upnpresourcesZip = flag.String("upnpresources_zip", "",
+		"Path to upnpresources.zip, downloaded from "+
+			"https://openconnectivity.org/upnp-specs/upnpresources.zip.")
 )
 
 const soapActionInterface = "SOAPActionInterface"
