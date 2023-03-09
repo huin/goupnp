@@ -321,9 +321,9 @@ var _ SOAPValue = &Fixed14_4{}
 
 // Fixed14_4FromParts creates a Fixed14_4 from components.
 // Bounds:
-//   * Both intPart and fracPart must have the same sign.
-//   * -1e14 < intPart < 1e14
-//   * -1e4 < fracPart < 1e4
+//   - Both intPart and fracPart must have the same sign.
+//   - -1e14 < intPart < 1e14
+//   - -1e4 < fracPart < 1e4
 func Fixed14_4FromParts(intPart int64, fracPart int16) (Fixed14_4, error) {
 	var v Fixed14_4
 	err := v.SetParts(intPart, fracPart)
@@ -332,9 +332,9 @@ func Fixed14_4FromParts(intPart int64, fracPart int16) (Fixed14_4, error) {
 
 // SetFromParts sets the value based on the integer component and the fractional component.
 // Bounds:
-//   * Both intPart and fracPart must have the same sign.
-//   * -1e14 < intPart < 1e14
-//   * -1e4 < fracPart < 1e4
+//   - Both intPart and fracPart must have the same sign.
+//   - -1e14 < intPart < 1e14
+//   - -1e4 < fracPart < 1e4
 func (v *Fixed14_4) SetParts(intPart int64, fracPart int16) error {
 	if (intPart < 0) != (fracPart < 0) {
 		return fmt.Errorf("want intPart and fracPart with same sign, got %d and %d",

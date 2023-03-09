@@ -75,8 +75,8 @@ type options struct {
 // Client is a SOAP client, attached to a specific SOAP endpoint.
 // the zero value is not usable, use NewClient() to create an instance.
 type Client struct {
-	httpClient            HTTPClient
-	endpointURL           string
+	httpClient  HTTPClient
+	endpointURL string
 }
 
 // New creates a new SOAP client, which will POST its requests to the
@@ -150,7 +150,7 @@ func SetRequestAction(
 	if err != nil {
 		return &SOAPError{
 			description: "encoding envelope",
-			cause: err,
+			cause:       err,
 		}
 	}
 
@@ -179,7 +179,7 @@ func ParseResponseAction(
 	if _, err := io.Copy(buf, resp.Body); err != nil {
 		return &SOAPError{
 			description: "reading HTTP response body",
-			cause: err,
+			cause:       err,
 		}
 	}
 
@@ -188,7 +188,7 @@ func ParseResponseAction(
 			// Parsed cleanly, got SOAP fault.
 			return &SOAPError{
 				description: "SOAP fault",
-				cause: err,
+				cause:       err,
 			}
 		}
 		// Parsing problem, provide some information for context.
