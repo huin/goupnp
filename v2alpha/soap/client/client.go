@@ -8,10 +8,47 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 
 	"github.com/huin/goupnp/v2alpha/soap"
 	"github.com/huin/goupnp/v2alpha/soap/envelope"
 )
+
+var (
+	// ErrSOAP can be used with errors.Is.
+	ErrSOAP = errors.New("SOAP error")
+)
+
+// SOAPError describes an error from this package, potentially including a
+// lower-level cause.
+type SOAPError struct {
+	// description describes the error from the SOAP perspective.
+	description string
+	// cause may be nil.
+	cause error
+}
+
+func (se *SOAPError) Error() string {
+	b := &strings.Builder{}
+	b.WriteString("SOAP error")
+	if se.description != "" {
+		b.WriteString(": ")
+		b.WriteString(se.description)
+	}
+	if se.cause != nil {
+		b.WriteString(": ")
+		b.WriteString(se.cause.Error())
+	}
+	return b.String()
+}
+
+func (se *SOAPError) Is(target error) bool {
+	return target == ErrSOAP
+}
+
+func (se *SOAPError) Unwrap() error {
+	return se.cause
+}
 
 var _ HttpClient = &http.Client{}
 
@@ -40,7 +77,6 @@ type options struct {
 type Client struct {
 	httpClient            HttpClient
 	endpointURL           string
-	maxErrorResponseBytes int
 }
 
 // New creates a new SOAP client, which will POST its requests to the
@@ -79,8 +115,10 @@ func (c *Client) Do(
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("SOAP request got HTTP %s (%d)",
-			resp.Status, resp.StatusCode)
+		return &SOAPError{
+			description: fmt.Sprintf("SOAP request got HTTP %s (%d)",
+				resp.Status, resp.StatusCode),
+		}
 	}
 
 	return ParseResponseAction(resp, actionOut)
@@ -110,7 +148,10 @@ func SetRequestAction(
 	buf := &bytes.Buffer{}
 	err := envelope.Write(buf, actionIn)
 	if err != nil {
-		return fmt.Errorf("encoding envelope: %w", err)
+		return &SOAPError{
+			description: "encoding envelope",
+			cause: err,
+		}
 	}
 
 	req.Body = io.NopCloser(buf)
@@ -131,31 +172,39 @@ func ParseResponseAction(
 	actionOut *envelope.Action,
 ) error {
 	if resp.Body == nil {
-		return errors.New("missing response body")
+		return &SOAPError{description: "missing HTTP response body"}
 	}
 
 	buf := &bytes.Buffer{}
 	if _, err := io.Copy(buf, resp.Body); err != nil {
-		return fmt.Errorf("reading response body: %w", err)
+		return &SOAPError{
+			description: "reading HTTP response body",
+			cause: err,
+		}
 	}
 
 	if err := envelope.Read(buf, actionOut); err != nil {
-		if _, ok := err.(*envelope.Fault); ok {
+		if errors.Is(err, envelope.ErrFault) {
 			// Parsed cleanly, got SOAP fault.
-			return err
+			return &SOAPError{
+				description: "SOAP fault",
+				cause: err,
+			}
 		}
 		// Parsing problem, provide some information for context.
 		dispLen := buf.Len()
 		truncMessage := ""
 		if dispLen > 1024 {
 			dispLen = 1024
-			truncMessage = fmt.Sprintf("first %d bytes: ", dispLen)
+			truncMessage = fmt.Sprintf("first %d bytes (total %d bytes): ", dispLen, buf.Len())
 		}
-		return fmt.Errorf(
-			"parsing response body (%s%q): %w",
-			truncMessage, buf.Bytes()[:dispLen],
-			err,
-		)
+		return &SOAPError{
+			description: fmt.Sprintf(
+				"parsing SOAP response from HTTP body (%s%q)",
+				truncMessage, buf.Bytes()[:dispLen],
+			),
+			cause: err,
+		}
 	}
 
 	return nil
