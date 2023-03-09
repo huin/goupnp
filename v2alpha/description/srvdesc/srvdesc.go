@@ -10,9 +10,9 @@ import (
 )
 
 var (
-	BadDescriptionError         = errors.New("bad XML description")
-	MissingDefinitionError      = errors.New("missing definition")
-	UnsupportedDescriptionError = errors.New("unsupported XML description")
+	ErrBadDescription         = errors.New("bad XML description")
+	ErrMissingDefinition      = errors.New("missing definition")
+	ErrUnsupportedDescription = errors.New("unsupported XML description")
 )
 
 // SCPD is the top level service description.
@@ -37,7 +37,7 @@ func FromXML(xmlDesc *xmlsrvdesc.SCPD) (*SCPD, error) {
 		}
 		if _, exists := stateVariables[sv.Name]; exists {
 			return nil, fmt.Errorf("%w: multiple state variables with name %q",
-				BadDescriptionError, sv.Name)
+				ErrBadDescription, sv.Name)
 		}
 		stateVariables[sv.Name] = sv
 	}
@@ -49,7 +49,7 @@ func FromXML(xmlDesc *xmlsrvdesc.SCPD) (*SCPD, error) {
 		}
 		if _, exists := actions[action.Name]; exists {
 			return nil, fmt.Errorf("%w: multiple actions with name %q",
-				BadDescriptionError, action.Name)
+				ErrBadDescription, action.Name)
 		}
 		actions[action.Name] = action
 	}
@@ -79,7 +79,7 @@ type Action struct {
 // actionFromXML creates an Action from the given XML description.
 func actionFromXML(xmlAction *xmlsrvdesc.Action, scpd *SCPD) (*Action, error) {
 	if xmlAction.Name == "" {
-		return nil, fmt.Errorf("%w: empty action name", BadDescriptionError)
+		return nil, fmt.Errorf("%w: empty action name", ErrBadDescription)
 	}
 	action := &Action{
 		SCPD: scpd,
@@ -99,7 +99,7 @@ func actionFromXML(xmlAction *xmlsrvdesc.Action, scpd *SCPD) (*Action, error) {
 			outArgs = append(outArgs, arg)
 		default:
 			return nil, fmt.Errorf("%w: argument %q has invalid direction %q",
-				BadDescriptionError, xmlArg.Name, xmlArg.Direction)
+				ErrBadDescription, xmlArg.Name, xmlArg.Direction)
 		}
 	}
 	action.InArgs = inArgs
@@ -117,10 +117,10 @@ type Argument struct {
 // argumentFromXML creates an Argument from the XML description.
 func argumentFromXML(xmlArg *xmlsrvdesc.Argument, action *Action) (*Argument, error) {
 	if xmlArg.Name == "" {
-		return nil, fmt.Errorf("%w: empty argument name", BadDescriptionError)
+		return nil, fmt.Errorf("%w: empty argument name", ErrBadDescription)
 	}
 	if xmlArg.RelatedStateVariable == "" {
-		return nil, fmt.Errorf("%w: empty related state variable", BadDescriptionError)
+		return nil, fmt.Errorf("%w: empty related state variable", ErrBadDescription)
 	}
 	return &Argument{
 		Action:                   action,
@@ -133,7 +133,7 @@ func (arg *Argument) RelatedStateVariable() (*StateVariable, error) {
 	if v, ok := arg.Action.SCPD.VariableByName[arg.RelatedStateVariableName]; ok {
 		return v, nil
 	}
-	return nil, fmt.Errorf("%w: state variable %q", MissingDefinitionError, arg.RelatedStateVariableName)
+	return nil, fmt.Errorf("%w: state variable %q", ErrMissingDefinition, arg.RelatedStateVariableName)
 }
 
 // StateVariable description data.
@@ -144,11 +144,11 @@ type StateVariable struct {
 
 func stateVariableFromXML(xmlSV *xmlsrvdesc.StateVariable) (*StateVariable, error) {
 	if xmlSV.Name == "" {
-		return nil, fmt.Errorf("%w: empty state variable name", BadDescriptionError)
+		return nil, fmt.Errorf("%w: empty state variable name", ErrBadDescription)
 	}
 	if xmlSV.DataType.Type != "" {
 		return nil, fmt.Errorf("%w: unsupported data type %q",
-			UnsupportedDescriptionError, xmlSV.DataType.Type)
+			ErrUnsupportedDescription, xmlSV.DataType.Type)
 	}
 	return &StateVariable{
 		Name:     xmlSV.Name,
