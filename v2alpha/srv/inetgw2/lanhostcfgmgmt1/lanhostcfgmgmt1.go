@@ -34,6 +34,7 @@ func (a *DeleteDNSServer) RefResponse() any { return &a.Response }
 
 // DeleteDNSServerRequest contains the "in" args for the "DeleteDNSServer" action.
 type DeleteDNSServerRequest struct {
+	// NewDNSServers relates to state variable DNSServers.
 	NewDNSServers string
 }
 
@@ -64,6 +65,7 @@ func (a *DeleteIPRouter) RefResponse() any { return &a.Response }
 
 // DeleteIPRouterRequest contains the "in" args for the "DeleteIPRouter" action.
 type DeleteIPRouterRequest struct {
+	// NewIPRouters relates to state variable IPRouters.
 	NewIPRouters string
 }
 
@@ -94,6 +96,7 @@ func (a *DeleteReservedAddress) RefResponse() any { return &a.Response }
 
 // DeleteReservedAddressRequest contains the "in" args for the "DeleteReservedAddress" action.
 type DeleteReservedAddressRequest struct {
+	// NewReservedAddresses relates to state variable ReservedAddresses.
 	NewReservedAddresses string
 }
 
@@ -127,7 +130,9 @@ type GetAddressRangeRequest struct{}
 
 // GetAddressRangeResponse contains the "out" args for the "GetAddressRange" action.
 type GetAddressRangeResponse struct {
+	// NewMinAddress relates to state variable MinAddress.
 	NewMinAddress string
+	// NewMaxAddress relates to state variable MaxAddress.
 	NewMaxAddress string
 }
 
@@ -158,6 +163,7 @@ type GetDHCPRelayRequest struct{}
 
 // GetDHCPRelayResponse contains the "out" args for the "GetDHCPRelay" action.
 type GetDHCPRelayResponse struct {
+	// NewDHCPRelay relates to state variable DHCPRelay.
 	NewDHCPRelay pkg2.Boolean
 }
 
@@ -188,6 +194,7 @@ type GetDHCPServerConfigurableRequest struct{}
 
 // GetDHCPServerConfigurableResponse contains the "out" args for the "GetDHCPServerConfigurable" action.
 type GetDHCPServerConfigurableResponse struct {
+	// NewDHCPServerConfigurable relates to state variable DHCPServerConfigurable.
 	NewDHCPServerConfigurable pkg2.Boolean
 }
 
@@ -218,6 +225,7 @@ type GetDNSServersRequest struct{}
 
 // GetDNSServersResponse contains the "out" args for the "GetDNSServers" action.
 type GetDNSServersResponse struct {
+	// NewDNSServers relates to state variable DNSServers.
 	NewDNSServers string
 }
 
@@ -248,6 +256,7 @@ type GetDomainNameRequest struct{}
 
 // GetDomainNameResponse contains the "out" args for the "GetDomainName" action.
 type GetDomainNameResponse struct {
+	// NewDomainName relates to state variable DomainName.
 	NewDomainName string
 }
 
@@ -278,6 +287,7 @@ type GetIPRoutersListRequest struct{}
 
 // GetIPRoutersListResponse contains the "out" args for the "GetIPRoutersList" action.
 type GetIPRoutersListResponse struct {
+	// NewIPRouters relates to state variable IPRouters.
 	NewIPRouters string
 }
 
@@ -308,6 +318,7 @@ type GetReservedAddressesRequest struct{}
 
 // GetReservedAddressesResponse contains the "out" args for the "GetReservedAddresses" action.
 type GetReservedAddressesResponse struct {
+	// NewReservedAddresses relates to state variable ReservedAddresses.
 	NewReservedAddresses string
 }
 
@@ -338,6 +349,7 @@ type GetSubnetMaskRequest struct{}
 
 // GetSubnetMaskResponse contains the "out" args for the "GetSubnetMask" action.
 type GetSubnetMaskResponse struct {
+	// NewSubnetMask relates to state variable SubnetMask.
 	NewSubnetMask string
 }
 
@@ -365,7 +377,9 @@ func (a *SetAddressRange) RefResponse() any { return &a.Response }
 
 // SetAddressRangeRequest contains the "in" args for the "SetAddressRange" action.
 type SetAddressRangeRequest struct {
+	// NewMinAddress relates to state variable MinAddress.
 	NewMinAddress string
+	// NewMaxAddress relates to state variable MaxAddress.
 	NewMaxAddress string
 }
 
@@ -396,6 +410,7 @@ func (a *SetDHCPRelay) RefResponse() any { return &a.Response }
 
 // SetDHCPRelayRequest contains the "in" args for the "SetDHCPRelay" action.
 type SetDHCPRelayRequest struct {
+	// NewDHCPRelay relates to state variable DHCPRelay.
 	NewDHCPRelay pkg2.Boolean
 }
 
@@ -426,6 +441,7 @@ func (a *SetDHCPServerConfigurable) RefResponse() any { return &a.Response }
 
 // SetDHCPServerConfigurableRequest contains the "in" args for the "SetDHCPServerConfigurable" action.
 type SetDHCPServerConfigurableRequest struct {
+	// NewDHCPServerConfigurable relates to state variable DHCPServerConfigurable.
 	NewDHCPServerConfigurable pkg2.Boolean
 }
 
@@ -456,6 +472,7 @@ func (a *SetDNSServer) RefResponse() any { return &a.Response }
 
 // SetDNSServerRequest contains the "in" args for the "SetDNSServer" action.
 type SetDNSServerRequest struct {
+	// NewDNSServers relates to state variable DNSServers.
 	NewDNSServers string
 }
 
@@ -486,6 +503,7 @@ func (a *SetDomainName) RefResponse() any { return &a.Response }
 
 // SetDomainNameRequest contains the "in" args for the "SetDomainName" action.
 type SetDomainNameRequest struct {
+	// NewDomainName relates to state variable DomainName.
 	NewDomainName string
 }
 
@@ -516,6 +534,7 @@ func (a *SetIPRouter) RefResponse() any { return &a.Response }
 
 // SetIPRouterRequest contains the "in" args for the "SetIPRouter" action.
 type SetIPRouterRequest struct {
+	// NewIPRouters relates to state variable IPRouters.
 	NewIPRouters string
 }
 
@@ -546,6 +565,7 @@ func (a *SetReservedAddress) RefResponse() any { return &a.Response }
 
 // SetReservedAddressRequest contains the "in" args for the "SetReservedAddress" action.
 type SetReservedAddressRequest struct {
+	// NewReservedAddresses relates to state variable ReservedAddresses.
 	NewReservedAddresses string
 }
 
@@ -576,6 +596,7 @@ func (a *SetSubnetMask) RefResponse() any { return &a.Response }
 
 // SetSubnetMaskRequest contains the "in" args for the "SetSubnetMask" action.
 type SetSubnetMaskRequest struct {
+	// NewSubnetMask relates to state variable SubnetMask.
 	NewSubnetMask string
 }
 

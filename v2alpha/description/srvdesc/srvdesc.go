@@ -140,6 +140,8 @@ func (arg *Argument) RelatedStateVariable() (*StateVariable, error) {
 type StateVariable struct {
 	Name     string
 	DataType string
+
+	AllowedValues []string
 }
 
 func stateVariableFromXML(xmlSV *xmlsrvdesc.StateVariable) (*StateVariable, error) {
@@ -150,8 +152,13 @@ func stateVariableFromXML(xmlSV *xmlsrvdesc.StateVariable) (*StateVariable, erro
 		return nil, fmt.Errorf("%w: unsupported data type %q",
 			ErrUnsupportedDescription, xmlSV.DataType.Type)
 	}
+	if xmlSV.DataType.Name != "string" && len(xmlSV.AllowedValues) > 0 {
+		return nil, fmt.Errorf("%w: allowedValueList is currently unsupported for type %q",
+			ErrUnsupportedDescription, xmlSV.DataType.Name)
+	}
 	return &StateVariable{
-		Name:     xmlSV.Name,
-		DataType: xmlSV.DataType.Name,
+		Name:          xmlSV.Name,
+		DataType:      xmlSV.DataType.Name,
+		AllowedValues: xmlSV.AllowedValues,
 	}, nil
 }

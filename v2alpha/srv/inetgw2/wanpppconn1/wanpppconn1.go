@@ -8,6 +8,35 @@ import (
 	pkg2 "github.com/huin/goupnp/v2alpha/soap/types"
 )
 
+// Allowed values for state variable ConnectionStatus.
+const (
+	ConnectionStatus_Unconfigured = "Unconfigured"
+	ConnectionStatus_Connected    = "Connected"
+	ConnectionStatus_Disconnected = "Disconnected"
+)
+
+// Allowed values for state variable LastConnectionError.
+const (
+	LastConnectionError_ERROR_NONE = "ERROR_NONE"
+)
+
+// Allowed values for state variable PortMappingProtocol.
+const (
+	PortMappingProtocol_TCP = "TCP"
+	PortMappingProtocol_UDP = "UDP"
+)
+
+// Allowed values for state variable PossibleConnectionTypes.
+const (
+	PossibleConnectionTypes_Unconfigured  = "Unconfigured"
+	PossibleConnectionTypes_IP_Routed     = "IP_Routed"
+	PossibleConnectionTypes_DHCP_Spoofed  = "DHCP_Spoofed"
+	PossibleConnectionTypes_PPPoE_Bridged = "PPPoE_Bridged"
+	PossibleConnectionTypes_PPTP_Relay    = "PPTP_Relay"
+	PossibleConnectionTypes_L2TP_Relay    = "L2TP_Relay"
+	PossibleConnectionTypes_PPPoE_Relay   = "PPPoE_Relay"
+)
+
 const ServiceType = "urn:schemas-upnp-org:service:WANPPPConnection:1"
 
 // AddPortMapping provides request and response for the action.
@@ -34,14 +63,22 @@ func (a *AddPortMapping) RefResponse() any { return &a.Response }
 
 // AddPortMappingRequest contains the "in" args for the "AddPortMapping" action.
 type AddPortMappingRequest struct {
-	NewRemoteHost             string
-	NewExternalPort           pkg2.UI2
-	NewProtocol               string
-	NewInternalPort           pkg2.UI2
-	NewInternalClient         string
-	NewEnabled                pkg2.Boolean
+	// NewRemoteHost relates to state variable RemoteHost.
+	NewRemoteHost string
+	// NewExternalPort relates to state variable ExternalPort.
+	NewExternalPort pkg2.UI2
+	// NewProtocol relates to state variable PortMappingProtocol (2 standard allowed values).
+	NewProtocol string
+	// NewInternalPort relates to state variable InternalPort.
+	NewInternalPort pkg2.UI2
+	// NewInternalClient relates to state variable InternalClient.
+	NewInternalClient string
+	// NewEnabled relates to state variable PortMappingEnabled.
+	NewEnabled pkg2.Boolean
+	// NewPortMappingDescription relates to state variable PortMappingDescription.
 	NewPortMappingDescription string
-	NewLeaseDuration          pkg2.UI4
+	// NewLeaseDuration relates to state variable PortMappingLeaseDuration.
+	NewLeaseDuration pkg2.UI4
 }
 
 // AddPortMappingResponse contains the "out" args for the "AddPortMapping" action.
@@ -71,7 +108,9 @@ func (a *ConfigureConnection) RefResponse() any { return &a.Response }
 
 // ConfigureConnectionRequest contains the "in" args for the "ConfigureConnection" action.
 type ConfigureConnectionRequest struct {
+	// NewUserName relates to state variable UserName.
 	NewUserName string
+	// NewPassword relates to state variable Password.
 	NewPassword string
 }
 
@@ -102,9 +141,12 @@ func (a *DeletePortMapping) RefResponse() any { return &a.Response }
 
 // DeletePortMappingRequest contains the "in" args for the "DeletePortMapping" action.
 type DeletePortMappingRequest struct {
-	NewRemoteHost   string
+	// NewRemoteHost relates to state variable RemoteHost.
+	NewRemoteHost string
+	// NewExternalPort relates to state variable ExternalPort.
 	NewExternalPort pkg2.UI2
-	NewProtocol     string
+	// NewProtocol relates to state variable PortMappingProtocol (2 standard allowed values).
+	NewProtocol string
 }
 
 // DeletePortMappingResponse contains the "out" args for the "DeletePortMapping" action.
@@ -165,6 +207,7 @@ type GetAutoDisconnectTimeRequest struct{}
 
 // GetAutoDisconnectTimeResponse contains the "out" args for the "GetAutoDisconnectTime" action.
 type GetAutoDisconnectTimeResponse struct {
+	// NewAutoDisconnectTime relates to state variable AutoDisconnectTime.
 	NewAutoDisconnectTime pkg2.UI4
 }
 
@@ -195,7 +238,9 @@ type GetConnectionTypeInfoRequest struct{}
 
 // GetConnectionTypeInfoResponse contains the "out" args for the "GetConnectionTypeInfo" action.
 type GetConnectionTypeInfoResponse struct {
-	NewConnectionType          string
+	// NewConnectionType relates to state variable ConnectionType.
+	NewConnectionType string
+	// NewPossibleConnectionTypes relates to state variable PossibleConnectionTypes (7 standard allowed values).
 	NewPossibleConnectionTypes string
 }
 
@@ -226,6 +271,7 @@ type GetExternalIPAddressRequest struct{}
 
 // GetExternalIPAddressResponse contains the "out" args for the "GetExternalIPAddress" action.
 type GetExternalIPAddressResponse struct {
+	// NewExternalIPAddress relates to state variable ExternalIPAddress.
 	NewExternalIPAddress string
 }
 
@@ -253,19 +299,28 @@ func (a *GetGenericPortMappingEntry) RefResponse() any { return &a.Response }
 
 // GetGenericPortMappingEntryRequest contains the "in" args for the "GetGenericPortMappingEntry" action.
 type GetGenericPortMappingEntryRequest struct {
+	// NewPortMappingIndex relates to state variable PortMappingNumberOfEntries.
 	NewPortMappingIndex pkg2.UI2
 }
 
 // GetGenericPortMappingEntryResponse contains the "out" args for the "GetGenericPortMappingEntry" action.
 type GetGenericPortMappingEntryResponse struct {
-	NewRemoteHost             string
-	NewExternalPort           pkg2.UI2
-	NewProtocol               string
-	NewInternalPort           pkg2.UI2
-	NewInternalClient         string
-	NewEnabled                pkg2.Boolean
+	// NewRemoteHost relates to state variable RemoteHost.
+	NewRemoteHost string
+	// NewExternalPort relates to state variable ExternalPort.
+	NewExternalPort pkg2.UI2
+	// NewProtocol relates to state variable PortMappingProtocol (2 standard allowed values).
+	NewProtocol string
+	// NewInternalPort relates to state variable InternalPort.
+	NewInternalPort pkg2.UI2
+	// NewInternalClient relates to state variable InternalClient.
+	NewInternalClient string
+	// NewEnabled relates to state variable PortMappingEnabled.
+	NewEnabled pkg2.Boolean
+	// NewPortMappingDescription relates to state variable PortMappingDescription.
 	NewPortMappingDescription string
-	NewLeaseDuration          pkg2.UI4
+	// NewLeaseDuration relates to state variable PortMappingLeaseDuration.
+	NewLeaseDuration pkg2.UI4
 }
 
 // GetIdleDisconnectTime provides request and response for the action.
@@ -295,6 +350,7 @@ type GetIdleDisconnectTimeRequest struct{}
 
 // GetIdleDisconnectTimeResponse contains the "out" args for the "GetIdleDisconnectTime" action.
 type GetIdleDisconnectTimeResponse struct {
+	// NewIdleDisconnectTime relates to state variable IdleDisconnectTime.
 	NewIdleDisconnectTime pkg2.UI4
 }
 
@@ -325,7 +381,9 @@ type GetLinkLayerMaxBitRatesRequest struct{}
 
 // GetLinkLayerMaxBitRatesResponse contains the "out" args for the "GetLinkLayerMaxBitRates" action.
 type GetLinkLayerMaxBitRatesResponse struct {
-	NewUpstreamMaxBitRate   pkg2.UI4
+	// NewUpstreamMaxBitRate relates to state variable UpstreamMaxBitRate.
+	NewUpstreamMaxBitRate pkg2.UI4
+	// NewDownstreamMaxBitRate relates to state variable DownstreamMaxBitRate.
 	NewDownstreamMaxBitRate pkg2.UI4
 }
 
@@ -356,8 +414,10 @@ type GetNATRSIPStatusRequest struct{}
 
 // GetNATRSIPStatusResponse contains the "out" args for the "GetNATRSIPStatus" action.
 type GetNATRSIPStatusResponse struct {
+	// NewRSIPAvailable relates to state variable RSIPAvailable.
 	NewRSIPAvailable pkg2.Boolean
-	NewNATEnabled    pkg2.Boolean
+	// NewNATEnabled relates to state variable NATEnabled.
+	NewNATEnabled pkg2.Boolean
 }
 
 // GetPPPAuthenticationProtocol provides request and response for the action.
@@ -387,6 +447,7 @@ type GetPPPAuthenticationProtocolRequest struct{}
 
 // GetPPPAuthenticationProtocolResponse contains the "out" args for the "GetPPPAuthenticationProtocol" action.
 type GetPPPAuthenticationProtocolResponse struct {
+	// NewPPPAuthenticationProtocol relates to state variable PPPAuthenticationProtocol.
 	NewPPPAuthenticationProtocol string
 }
 
@@ -417,6 +478,7 @@ type GetPPPCompressionProtocolRequest struct{}
 
 // GetPPPCompressionProtocolResponse contains the "out" args for the "GetPPPCompressionProtocol" action.
 type GetPPPCompressionProtocolResponse struct {
+	// NewPPPCompressionProtocol relates to state variable PPPCompressionProtocol.
 	NewPPPCompressionProtocol string
 }
 
@@ -447,6 +509,7 @@ type GetPPPEncryptionProtocolRequest struct{}
 
 // GetPPPEncryptionProtocolResponse contains the "out" args for the "GetPPPEncryptionProtocol" action.
 type GetPPPEncryptionProtocolResponse struct {
+	// NewPPPEncryptionProtocol relates to state variable PPPEncryptionProtocol.
 	NewPPPEncryptionProtocol string
 }
 
@@ -477,6 +540,7 @@ type GetPasswordRequest struct{}
 
 // GetPasswordResponse contains the "out" args for the "GetPassword" action.
 type GetPasswordResponse struct {
+	// NewPassword relates to state variable Password.
 	NewPassword string
 }
 
@@ -504,18 +568,26 @@ func (a *GetSpecificPortMappingEntry) RefResponse() any { return &a.Response }
 
 // GetSpecificPortMappingEntryRequest contains the "in" args for the "GetSpecificPortMappingEntry" action.
 type GetSpecificPortMappingEntryRequest struct {
-	NewRemoteHost   string
+	// NewRemoteHost relates to state variable RemoteHost.
+	NewRemoteHost string
+	// NewExternalPort relates to state variable ExternalPort.
 	NewExternalPort pkg2.UI2
-	NewProtocol     string
+	// NewProtocol relates to state variable PortMappingProtocol (2 standard allowed values).
+	NewProtocol string
 }
 
 // GetSpecificPortMappingEntryResponse contains the "out" args for the "GetSpecificPortMappingEntry" action.
 type GetSpecificPortMappingEntryResponse struct {
-	NewInternalPort           pkg2.UI2
-	NewInternalClient         string
-	NewEnabled                pkg2.Boolean
+	// NewInternalPort relates to state variable InternalPort.
+	NewInternalPort pkg2.UI2
+	// NewInternalClient relates to state variable InternalClient.
+	NewInternalClient string
+	// NewEnabled relates to state variable PortMappingEnabled.
+	NewEnabled pkg2.Boolean
+	// NewPortMappingDescription relates to state variable PortMappingDescription.
 	NewPortMappingDescription string
-	NewLeaseDuration          pkg2.UI4
+	// NewLeaseDuration relates to state variable PortMappingLeaseDuration.
+	NewLeaseDuration pkg2.UI4
 }
 
 // GetStatusInfo provides request and response for the action.
@@ -545,9 +617,12 @@ type GetStatusInfoRequest struct{}
 
 // GetStatusInfoResponse contains the "out" args for the "GetStatusInfo" action.
 type GetStatusInfoResponse struct {
-	NewConnectionStatus    string
+	// NewConnectionStatus relates to state variable ConnectionStatus (3 standard allowed values).
+	NewConnectionStatus string
+	// NewLastConnectionError relates to state variable LastConnectionError (1 standard allowed values).
 	NewLastConnectionError string
-	NewUptime              pkg2.UI4
+	// NewUptime relates to state variable Uptime.
+	NewUptime pkg2.UI4
 }
 
 // GetUserName provides request and response for the action.
@@ -577,6 +652,7 @@ type GetUserNameRequest struct{}
 
 // GetUserNameResponse contains the "out" args for the "GetUserName" action.
 type GetUserNameResponse struct {
+	// NewUserName relates to state variable UserName.
 	NewUserName string
 }
 
@@ -607,6 +683,7 @@ type GetWarnDisconnectDelayRequest struct{}
 
 // GetWarnDisconnectDelayResponse contains the "out" args for the "GetWarnDisconnectDelay" action.
 type GetWarnDisconnectDelayResponse struct {
+	// NewWarnDisconnectDelay relates to state variable WarnDisconnectDelay.
 	NewWarnDisconnectDelay pkg2.UI4
 }
 
@@ -690,6 +767,7 @@ func (a *SetAutoDisconnectTime) RefResponse() any { return &a.Response }
 
 // SetAutoDisconnectTimeRequest contains the "in" args for the "SetAutoDisconnectTime" action.
 type SetAutoDisconnectTimeRequest struct {
+	// NewAutoDisconnectTime relates to state variable AutoDisconnectTime.
 	NewAutoDisconnectTime pkg2.UI4
 }
 
@@ -720,6 +798,7 @@ func (a *SetConnectionType) RefResponse() any { return &a.Response }
 
 // SetConnectionTypeRequest contains the "in" args for the "SetConnectionType" action.
 type SetConnectionTypeRequest struct {
+	// NewConnectionType relates to state variable ConnectionType.
 	NewConnectionType string
 }
 
@@ -750,6 +829,7 @@ func (a *SetIdleDisconnectTime) RefResponse() any { return &a.Response }
 
 // SetIdleDisconnectTimeRequest contains the "in" args for the "SetIdleDisconnectTime" action.
 type SetIdleDisconnectTimeRequest struct {
+	// NewIdleDisconnectTime relates to state variable IdleDisconnectTime.
 	NewIdleDisconnectTime pkg2.UI4
 }
 
@@ -780,6 +860,7 @@ func (a *SetWarnDisconnectDelay) RefResponse() any { return &a.Response }
 
 // SetWarnDisconnectDelayRequest contains the "in" args for the "SetWarnDisconnectDelay" action.
 type SetWarnDisconnectDelayRequest struct {
+	// NewWarnDisconnectDelay relates to state variable WarnDisconnectDelay.
 	NewWarnDisconnectDelay pkg2.UI4
 }
 

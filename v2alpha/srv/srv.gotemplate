@@ -1,5 +1,6 @@
 {{define "service"}}
 {{- $Imps := .Imps -}}
+{{- $Types := .Types -}}
 // Package {{.Manifest.Package}} provides types for the {{quote .Manifest.ServiceType}} service.
 {{- with .Manifest.DocumentURL}}
 //
@@ -13,15 +14,28 @@ import (
 {{- end}}
 )
 
+{{range .Types.StringVarDefs}}
+{{- $Name := .Name}}
+{{- with .AllowedValues}}
+// Allowed values for state variable {{$Name}}.
+const (
+{{- range .}}
+  {{$Name}}_{{.}} = "{{.}}"
+{{- end}}
+)
+{{- end}}
+{{- end}}
+
 const ServiceType = {{quote .Manifest.ServiceType}}
 {{range .SCPD.SortedActions}}
-{{- template "action" args "Action" . "Imps" $Imps}}
+{{- template "action" args "Action" . "Imps" $Imps "Types" $Types}}
 {{end}}
 {{- end}}
 
 {{define "action"}}
 {{- $Imps := .Imps}}
-{{- $soapActionType := index $Imps.TypeByName "SOAPActionInterface"}}
+{{- $Types := .Types}}
+{{- $soapActionType := index $Types.TypeByName "SOAPActionInterface"}}
 // {{.Action.Name}} provides request and response for the action.
 //
 // ServiceType implements {{$soapActionType.AbsRef}}, self-describing the SOAP action.
@@ -43,18 +57,23 @@ func (a *{{.Action.Name}}) RefResponse() any { return &a.Response }
 
 // {{.Action.Name}}Request contains the "in" args for the {{quote .Action.Name}} action.
 type {{.Action.Name}}Request struct
-{{- template "args" args "Args" .Action.InArgs "Imps" $Imps}}
+{{- template "args" args "Args" .Action.InArgs "Imps" $Imps "Types" $Types}}
 
 // {{.Action.Name}}Response contains the "out" args for the {{quote .Action.Name}} action.
 type {{.Action.Name}}Response struct
-{{- template "args" args "Args" .Action.OutArgs "Imps" $Imps}}
+{{- template "args" args "Args" .Action.OutArgs "Imps" $Imps "Types" $Types}}
 {{- end}}
 
 {{define "args"}}
 {{- $Imps := .Imps -}}
+{{- $Types := .Types -}}
 { {{- with .Args}}
 {{- range .}}
-{{- $fieldType := index $Imps.TypeByName .RelatedStateVariable.DataType}}
+{{- $fieldType := index $Types.TypeByName .RelatedStateVariable.DataType}}
+  // {{.Name}} relates to state variable {{.RelatedStateVariable.Name}}
+{{- with .RelatedStateVariable.AllowedValues}}
+{{- ""}} ({{len .}} standard allowed values)
+{{- end }}.
   {{.Name}} {{$fieldType.Ref}}
 {{- end}}
 {{end -}} }
