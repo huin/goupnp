@@ -50,10 +50,10 @@ func (se *SOAPError) Unwrap() error {
 	return se.cause
 }
 
-var _ HttpClient = &http.Client{}
+var _ HTTPClient = &http.Client{}
 
-// HttpClient defines the interface required of an HTTP client. It is a subset of *http.Client.
-type HttpClient interface {
+// HTTPClient defines the interface required of an HTTP client. It is a subset of *http.Client.
+type HTTPClient interface {
 	Do(req *http.Request) (*http.Response, error)
 }
 
@@ -62,20 +62,20 @@ type Option func(*options)
 
 // WithHTTPClient specifies an *http.Client to use instead of
 // http.DefaultClient.
-func WithHTTPClient(httpClient HttpClient) Option {
+func WithHTTPClient(httpClient HTTPClient) Option {
 	return func(o *options) {
 		o.httpClient = httpClient
 	}
 }
 
 type options struct {
-	httpClient HttpClient
+	httpClient HTTPClient
 }
 
 // Client is a SOAP client, attached to a specific SOAP endpoint.
 // the zero value is not usable, use NewClient() to create an instance.
 type Client struct {
-	httpClient            HttpClient
+	httpClient            HTTPClient
 	endpointURL           string
 }
 
