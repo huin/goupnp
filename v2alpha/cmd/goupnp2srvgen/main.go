@@ -52,14 +52,14 @@ func run() error {
 	}
 
 	if *outputDir == "" {
-		return errors.New("-output_dir is a required flag.")
+		return errors.New("-output_dir is a required flag")
 	}
 	if err := os.MkdirAll(*outputDir, 0); err != nil {
 		return fmt.Errorf("creating output_dir %q: %w", *outputDir, err)
 	}
 
 	if *srvManifests == "" {
-		return errors.New("-srv_manifests is a required flag.")
+		return errors.New("-srv_manifests is a required flag")
 	}
 	var manifests DCPSpecManifests
 	_, err := toml.DecodeFile(*srvManifests, &manifests)
@@ -68,7 +68,7 @@ func run() error {
 	}
 
 	if *srvTemplate == "" {
-		return errors.New("-srv_template is a required flag.")
+		return errors.New("-srv_template is a required flag")
 	}
 	tmpl, err := template.New(filepath.Base(*srvTemplate)).Funcs(template.FuncMap{
 		"args":  tmplfuncs.Args,
@@ -79,7 +79,7 @@ func run() error {
 	}
 
 	if *upnpresourcesZip == "" {
-		return errors.New("-upnpresources_zip is a required flag.")
+		return errors.New("-upnpresources_zip is a required flag")
 	}
 	f, err := os.Open(*upnpresourcesZip)
 	if err != nil {
