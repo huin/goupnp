@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/url"
 	"reflect"
+	"strings"
 	"testing"
 )
 
@@ -87,6 +88,74 @@ func TestActionInputs(t *testing.T) {
 	}
 }
 
+func TestUPnPError(t *testing.T) {
+	t.Parallel()
+	url, err := url.Parse("http://example.com/soap")
+	if err != nil {
+		t.Fatal(err)
+	}
+	body := `
+	<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+		<s:Body>
+			<s:Fault>
+				<faultcode>s:Client</faultcode>
+				<faultstring>UPnPError</faultstring>
+				<detail>
+					<UPnPError xmlns="urn:schemas-upnp-org:control-1-0">
+						<errorCode>725</errorCode>
+						<errorDescription>OnlyPermanentLeasesSupported</errorDescription>
+					</UPnPError>
+				</detail>
+			</s:Fault>
+		</s:Body>
+	</s:Envelope>`
+	rt := &capturingRoundTripper{
+		resp: &http.Response{
+			StatusCode:    500,
+			ContentLength: int64(len(body)),
+			Body:          ioutil.NopCloser(bytes.NewBufferString(body)),
+		},
+	}
+	client := SOAPClient{
+		EndpointURL: *url,
+		HTTPClient: http.Client{
+			Transport: rt,
+		},
+	}
+
+	err = client.PerformAction("mynamespace", "myaction", nil, nil)
+	if err == nil {
+		t.Fatal("expected error, got nil")
+	}
+	if testing.Verbose() {
+		t.Logf("%+v\n", err)
+	}
+	soapErr, ok := err.(*SOAPFaultError)
+	if !ok {
+		t.Fatal("expected *SOAPFaultError")
+	}
+	if soapErr.FaultCode != "s:Client" {
+		t.Fatalf("unexpected FaultCode: %s", soapErr.FaultCode)
+	}
+	if soapErr.FaultString != "UPnPError" {
+		t.Fatalf("unexpected FaultString: %s", soapErr.FaultString)
+	}
+	if soapErr.Detail.UPnPError.Errorcode != 725 {
+		t.Fatalf("unexpected UPnPError Errorcode: %d", soapErr.Detail.UPnPError.Errorcode)
+	}
+	if soapErr.Detail.UPnPError.ErrorDescription != "OnlyPermanentLeasesSupported" {
+		t.Fatalf("unexpected UPnPError ErrorDescription: %s",
+			soapErr.Detail.UPnPError.ErrorDescription)
+	}
+	if !strings.EqualFold(string(soapErr.Detail.Raw), `
+							<UPnPError xmlns="urn:schemas-upnp-org:control-1-0">
+								<errorCode>725</errorCode>
+								<errorDescription>OnlyPermanentLeasesSupported</errorDescription>
+							</UPnPError>
+`) {
+		t.Fatalf("unexpected Detail.Raw, got:\n%s", string(soapErr.Detail.Raw))
+	}
+}
 
 func TestEscapeXMLText(t *testing.T) {
 	t.Parallel()
