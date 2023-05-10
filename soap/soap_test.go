@@ -2,6 +2,7 @@ package soap
 
 import (
 	"bytes"
+	"errors"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -130,8 +131,8 @@ func TestUPnPError(t *testing.T) {
 	if testing.Verbose() {
 		t.Logf("%+v\n", err)
 	}
-	soapErr, ok := err.(*SOAPFaultError)
-	if !ok {
+	soapErr := &SOAPFaultError{}
+	if ok := errors.As(err, &soapErr); !ok {
 		t.Fatal("expected *SOAPFaultError")
 	}
 	if soapErr.FaultCode != "s:Client" {
