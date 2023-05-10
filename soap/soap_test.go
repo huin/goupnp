@@ -147,12 +147,13 @@ func TestUPnPError(t *testing.T) {
 		t.Fatalf("unexpected UPnPError ErrorDescription: %s",
 			soapErr.Detail.UPnPError.ErrorDescription)
 	}
+
 	if !strings.EqualFold(string(soapErr.Detail.Raw), `
-							<UPnPError xmlns="urn:schemas-upnp-org:control-1-0">
-								<errorCode>725</errorCode>
-								<errorDescription>OnlyPermanentLeasesSupported</errorDescription>
-							</UPnPError>
-`) {
+					<UPnPError xmlns="urn:schemas-upnp-org:control-1-0">
+						<errorCode>725</errorCode>
+						<errorDescription>OnlyPermanentLeasesSupported</errorDescription>
+					</UPnPError>
+				`) {
 		t.Fatalf("unexpected Detail.Raw, got:\n%s", string(soapErr.Detail.Raw))
 	}
 }
