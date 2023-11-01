@@ -1,8 +1,13 @@
 package goupnp
 
 import (
+	"bufio"
+	"bytes"
 	"io"
 	"net"
+	"os/exec"
+	"regexp"
+	"strings"
 
 	"github.com/huin/goupnp/httpu"
 )
@@ -42,6 +47,9 @@ func httpuClient() (httpu.ClientInterfaceCtx, func(), error) {
 func localIPv4MCastAddrs() ([]string, error) {
 	ifaces, err := net.Interfaces()
 	if err != nil {
+		if addrs, err := localIPv4MCastAddrsWithIfconfig(); err == nil {
+			return addrs, nil
+		}
 		return nil, ctxError(err, "requesting host interfaces")
 	}
 
@@ -68,6 +76,46 @@ func localIPv4MCastAddrs() ([]string, error) {
 				continue
 			}
 			addrs = append(addrs, addr.IP.String())
+		}
+	}
+
+	return addrs, nil
+}
+
+func localIPv4MCastAddrsWithIfconfig() ([]string, error) {
+	output, err := exec.Command("ifconfig").Output()
+	if err != nil {
+		return nil, err
+	}
+
+	var addrs []string
+	var currvalid bool
+	reg := regexp.MustCompile(`<([^>]+)>`)
+	scanner := bufio.NewScanner(bytes.NewReader([]byte(output)))
+	for scanner.Scan() {
+		line := strings.TrimSpace(scanner.Text())
+
+		match := reg.FindStringSubmatch(line)
+		if len(match) > 1 {
+			flags := make(map[string]bool)
+			for _, flag := range strings.Split(match[1], ",") {
+				flags[flag] = true
+			}
+			currvalid = flags["MULTICAST"] && !flags["LOOPBACK"] && flags["UP"]
+		}
+		if !currvalid {
+			continue
+		}
+
+		if !strings.HasPrefix(line, "inet ") {
+			continue
+		}
+		fields := strings.Fields(line)
+		if len(fields) < 2 {
+			continue
+		}
+		if ip := net.ParseIP(fields[1]); ip != nil && ip.To4() != nil {
+			addrs = append(addrs, ip.String())
 		}
 	}
 
