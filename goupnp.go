@@ -175,7 +175,7 @@ func requestXml(ctx context.Context, url string, defaultSpace string, doc interf
 			resp.Status, url)
 	}
 
-	decoder := xml.NewDecoder(resp.Body)
+	decoder := xml.NewDecoder(NewValidUTF8Reader(resp.Body))
 	decoder.DefaultSpace = defaultSpace
 	decoder.CharsetReader = CharsetReaderDefault
 
