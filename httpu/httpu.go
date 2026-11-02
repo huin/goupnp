@@ -153,17 +153,22 @@ func (httpu *HTTPUClient) DoWithContext(
 
 	// Handle context deadline/timeout
 	ctx := req.Context()
-	deadline, ok := ctx.Deadline()
-	if ok {
-		if err = httpu.conn.SetDeadline(deadline); err != nil {
-			return nil, err
-		}
+	deadline, _ := ctx.Deadline()
+	// A zero deadline clears any deadline left by a previous request.
+	if err = httpu.conn.SetDeadline(deadline); err != nil {
+		return nil, err
 	}
 
 	// Handle context cancelation
 	done := make(chan struct{})
-	defer close(done)
+	stopped := make(chan struct{})
+	defer func() {
+		close(done)
+		// Finish cancellation before another request can acquire connLock.
+		<-stopped
+	}()
 	go func() {
+		defer close(stopped)
 		select {
 		case <-ctx.Done():
 			// if context is cancelled, stop any connections by setting time in the past.
