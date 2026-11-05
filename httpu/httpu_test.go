@@ -19,6 +19,24 @@ func TestClientReuseAfterTimeout(t *testing.T) {
 	if err := server.SetDeadline(time.Now().Add(2 * time.Second)); err != nil {
 		t.Fatal(err)
 	}
+	serverDone := make(chan error, 1)
+	go func() {
+		var packet [2048]byte
+		// The first request has a 20ms deadline and must time out.
+		// Drain it without replying, then answer the reused client request.
+		for i := 0; i < 2; i++ {
+			_, peer, readErr := server.ReadFrom(packet[:])
+			if readErr != nil {
+				serverDone <- readErr
+				return
+			}
+			if i == 1 {
+				_, writeErr := server.WriteTo([]byte("HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n"), peer)
+				serverDone <- writeErr
+			}
+		}
+	}()
+
 	client, err := NewHTTPUClientAddr("127.0.0.1")
 	if err != nil {
 		t.Fatal(err)
@@ -36,22 +54,6 @@ func TestClientReuseAfterTimeout(t *testing.T) {
 	// the expired socket deadline from Do.
 	watchdog := time.AfterFunc(time.Second, cancel)
 	defer watchdog.Stop()
-	serverDone := make(chan error, 1)
-	go func() {
-		var packet [2048]byte
-		// Drain the first request and answer the second one.
-		for i := 0; i < 2; i++ {
-			_, peer, readErr := server.ReadFrom(packet[:])
-			if readErr != nil {
-				serverDone <- readErr
-				return
-			}
-			if i == 1 {
-				_, writeErr := server.WriteTo([]byte("HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n"), peer)
-				serverDone <- writeErr
-			}
-		}
-	}()
 	responses, err = client.DoWithContext(req.WithContext(ctx), 1)
 	if err != nil || len(responses) != 1 {
 		t.Fatalf("reused request = %v, %v; want one response and no error", responses, err)
